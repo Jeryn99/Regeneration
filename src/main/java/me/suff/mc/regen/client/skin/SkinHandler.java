@@ -6,7 +6,6 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
-import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -53,7 +52,7 @@ public class SkinHandler {
             if (hasBeenModified || playerEntity.tickCount < 20) {
                 ResourceLocation skinTexture = getSkinToUse(playerEntity);
                 setPlayerSkin(playerEntity, skinTexture);
-               // setPlayerCape(playerEntity, new ResourceLocation(RConstants.MODID, "textures/entity/cape.png"));
+                // setPlayerCape(playerEntity, new ResourceLocation(RConstants.MODID, "textures/entity/cape.png"));
             }
 
             boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.currentlyAlex() : getUnmodifiedSkinType(playerEntity);

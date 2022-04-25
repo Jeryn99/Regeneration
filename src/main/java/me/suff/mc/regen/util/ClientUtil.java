@@ -74,6 +74,7 @@ import static me.suff.mc.regen.common.item.FobWatchItem.isOpen;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientUtil {
 
+    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap<Item, BipedModel<?>> ARMOR_MODELS = new HashMap<>();
 
     public static String getImgurLink(String base64Image) throws Exception {
@@ -113,7 +114,6 @@ public class ClientUtil {
             throw new Exception(JSONUtils.getAsString(jobject, "message"));
         }
     }
-
 
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
@@ -289,12 +289,9 @@ public class ClientUtil {
         }
     }
 
-    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
-
-
     public static void renderSky(MatrixStack matrixStackIn) {
         if (Minecraft.getInstance().level == null || matrixStackIn == null) return;
-        if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension().location().toString().equalsIgnoreCase("regen:gallifrey")) {
+        if (Minecraft.getInstance().level.dimension() != null && Minecraft.getInstance().level.dimension().location().toString().equalsIgnoreCase("regen:gallifrey")) {
             float scale = 30.0F;
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
             matrixStackIn.pushPose();

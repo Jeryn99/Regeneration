@@ -100,26 +100,23 @@ public class RStructures {
     /**
      * Special snowflake to account for an edge case of certain mods which try to get a structure's seperation settings before a world has loaded
      * <br> These mods take the settings from the WorldGenRegistries, before datapacks load.
-     * */
+     */
     public static <F extends Structure<?>> void addHackyStructureModCompat(F structure, StructureSeparationSettings structureSeparationSettings) {
         WorldGenRegistries.NOISE_GENERATOR_SETTINGS.forEach(settings -> {
             Map<Structure<?>, StructureSeparationSettings> structureMap = settings.structureSettings().structureConfig();
 
             //Stupid hack to account for mods if make the map immutable for some reason
-            if(structureMap instanceof ImmutableMap){
+            if (structureMap instanceof ImmutableMap) {
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
                 tempMap.put(structure, structureSeparationSettings);
                 settings.structureSettings().structureConfig = tempMap;
-            }
-            else{
+            } else {
                 structureMap.put(structure, structureSeparationSettings);
             }
             Regeneration.LOG.info("Added compatibility with other world generation mods for structure {}: Adding StructureSeperationSettings early into WorldGenRegistries!", structure.getRegistryName().toString());
             Regeneration.LOG.info("Warning: This may break compatibility with vanilla datapacks!");
         });
     }
-
-
 
 
     /**

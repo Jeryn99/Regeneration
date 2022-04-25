@@ -35,11 +35,11 @@ public class CommonSkin {
     public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
     public static final File THUMBNAILS = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/thumbnails/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
+    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/mineskin");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/mineskin");
     public static final File SKIN_DIRECTORY_MALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/male");
     public static final File SKIN_DIRECTORY_FEMALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/female");
-    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/mineskin");
-    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/mineskin");
 
     public static ResourceLocation fileTotexture(File file) {
         NativeImage nativeImage = null;
@@ -219,7 +219,7 @@ public class CommonSkin {
                         temp.delete();
                     }
                     File extract = new File(String.valueOf(uncompressedFilePath));
-                    if(extract.exists()) {
+                    if (extract.exists()) {
                         extract.delete();
                     }
                     Files.createFile(uncompressedFilePath);

@@ -3,7 +3,6 @@ package me.suff.mc.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.objects.REntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Rotation;

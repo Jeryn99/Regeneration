@@ -14,17 +14,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
 //https://github.com/micdoodle8/Galacticraft/
-public abstract class AbstractTab extends Button
-{
-    ResourceLocation texture = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
-    ItemStack renderStack;
+public abstract class AbstractTab extends Button {
     public int potionOffsetLast;
     protected ItemRenderer itemRender;
+    ResourceLocation texture = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
+    ItemStack renderStack;
     private int index;
 
-    public AbstractTab(int index, ItemStack renderStack)
-    {
-        super(0, 0, 28, 32, StringTextComponent.EMPTY, (b) -> { ((AbstractTab) b).onTabClicked(); });
+    public AbstractTab(int index, ItemStack renderStack) {
+        super(0, 0, 28, 32, StringTextComponent.EMPTY, (b) -> {
+            ((AbstractTab) b).onTabClicked();
+        });
         this.renderStack = renderStack;
         this.itemRender = Minecraft.getInstance().getItemRenderer();
         this.index = index;
@@ -42,17 +42,14 @@ public abstract class AbstractTab extends Button
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         int newPotionOffset = TabRegistry.getPotionOffsetNEI();
         Screen screen = Minecraft.getInstance().screen;
-        if (screen instanceof InventoryScreen)
-        {
+        if (screen instanceof InventoryScreen) {
             newPotionOffset += TabRegistry.getRecipeBookOffset((InventoryScreen) screen) - TabRegistry.recipeBookOffset;
         }
-        if (newPotionOffset != this.potionOffsetLast)
-        {
+        if (newPotionOffset != this.potionOffsetLast) {
             this.x += newPotionOffset - this.potionOffsetLast;
             this.potionOffsetLast = newPotionOffset;
         }
-        if (this.visible)
-        {
+        if (this.visible) {
             GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
             int yTexPos = this.active ? 3 : 32;
@@ -82,8 +79,7 @@ public abstract class AbstractTab extends Button
     public boolean mouseClicked(double mouseX, double mouseY, int i) {
         boolean inWindow = this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
-        if (inWindow)
-        {
+        if (inWindow) {
             this.onTabClicked();
         }
 

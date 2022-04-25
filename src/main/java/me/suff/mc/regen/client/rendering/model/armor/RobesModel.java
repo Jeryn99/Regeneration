@@ -5,7 +5,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
@@ -102,7 +101,7 @@ public class RobesModel extends BipedModel<LivingEntity> implements LivingArmor 
             Body.visible = true;
             Collar.visible = true;
 
-            if(slot == EquipmentSlotType.HEAD) return;
+            if (slot == EquipmentSlotType.HEAD) return;
             mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
             capeBob(this.Cape, livingEntity.tickCount);

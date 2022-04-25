@@ -2,10 +2,8 @@ package me.suff.mc.regen.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.skin.CommonSkin;
-import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +11,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,21 +26,35 @@ import java.util.stream.Stream;
 public class SkinpackGalleryScreen extends Screen {
 
     private static final TranslationTextComponent TITLE = new TranslationTextComponent("nicephore.gui.screenshots");
-    private static File SCREENSHOTS_DIR = CommonSkin.THUMBNAILS;
     private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+    private static final int ROW = 2;
+    private static final int COLUMN = 4;
+    private static final int IMAGES_TO_DISPLAY = ROW * COLUMN;
+    private static File SCREENSHOTS_DIR = CommonSkin.THUMBNAILS;
     private static ArrayList<ResourceLocation> THUMBNAILS = new ArrayList<>();
     private ArrayList<File> allThumbnails;
     private ArrayList<List<File>> pagesOfThumbnails;
     private int index;
     private float aspectRatio;
 
-    private static final int ROW = 2;
-    private static final int COLUMN = 4;
-    private static final int IMAGES_TO_DISPLAY = ROW * COLUMN;
-
     public SkinpackGalleryScreen(int index) {
         super(TITLE);
         this.index = index;
+    }
+
+    public static <T> Stream<List<T>> batches(List<T> source, int length) {
+        if (length <= 0)
+            throw new IllegalArgumentException("length = " + length);
+        int size = source.size();
+        if (size <= 0)
+            return Stream.empty();
+        int fullChunks = (size - 1) / length;
+        return IntStream.range(0, fullChunks + 1).mapToObj(
+                n -> source.subList(n * length, n == fullChunks ? size : (n + 1) * length));
+    }
+
+    public static boolean canBeShow() {
+        return SCREENSHOTS_DIR.exists() && SCREENSHOTS_DIR.list().length > 0;
     }
 
     @Override
@@ -85,18 +96,6 @@ public class SkinpackGalleryScreen extends Screen {
         }
     }
 
-
-    public static <T> Stream<List<T>> batches(List<T> source, int length) {
-        if (length <= 0)
-            throw new IllegalArgumentException("length = " + length);
-        int size = source.size();
-        if (size <= 0)
-            return Stream.empty();
-        int fullChunks = (size - 1) / length;
-        return IntStream.range(0, fullChunks + 1).mapToObj(
-                n -> source.subList(n * length, n == fullChunks ? size : (n + 1) * length));
-    }
-
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         final int centerX = this.width / 2;
@@ -118,34 +117,34 @@ public class SkinpackGalleryScreen extends Screen {
                 switch (imageIndex) {
                     case 0:
                         blit(matrixStack, centerX - 15 - 2 * imageWidth, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX - 15 - 2 * imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX - 15 - 2 * imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                     case 1:
                         blit(matrixStack, centerX - 5 - imageWidth, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX - 5 - imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX - 5 - imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                     case 2:
                         blit(matrixStack, centerX + 5, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX + 5, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX + 5, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                     case 3:
                         blit(matrixStack, centerX + 15 + imageWidth, 50, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX + 15 + imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX + 15 + imageWidth, 55 + imageHeight, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                     case 4:
                         blit(matrixStack, centerX - 15 - 2 * imageWidth, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX - 15 - 2 * imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX - 15 - 2 * imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text, button)));
                     case 5:
                         blit(matrixStack, centerX - 5 - imageWidth, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX - 5 - imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX - 5 - imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                     case 6:
                         blit(matrixStack, centerX + 5, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX + 5, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX + 5, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                     case 7:
                         blit(matrixStack, centerX + 15 + imageWidth, imageHeight + 80, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-                        this.addButton(new Button(centerX + 15 + imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text,button)));
+                        this.addButton(new Button(centerX + 15 + imageWidth, 2 * imageHeight + 85, imageWidth, 20, text, button -> lookNDownload(text, button)));
                         break;
                 }
             }
@@ -155,7 +154,7 @@ public class SkinpackGalleryScreen extends Screen {
     private void lookNDownload(TranslationTextComponent indexOf, Button button) {
         String name = indexOf.getString();
         for (SkinPack skinPack : SkinPack.getAll()) {
-            if(skinPack.location().getPath().equalsIgnoreCase(name)){
+            if (skinPack.location().getPath().equalsIgnoreCase(name)) {
                 CommonSkin.downloadOnCommand(skinPack);
                 button.visible = false;
             }
@@ -176,7 +175,6 @@ public class SkinpackGalleryScreen extends Screen {
         init();
     }
 
-
     private int getIndex() {
         if (index >= pagesOfThumbnails.size() || index < 0) {
             index = pagesOfThumbnails.size() - 1;
@@ -186,9 +184,5 @@ public class SkinpackGalleryScreen extends Screen {
 
     private void closeScreen(String textComponentId) {
         this.onClose();
-    }
-
-    public static boolean canBeShow() {
-        return SCREENSHOTS_DIR.exists() && SCREENSHOTS_DIR.list().length > 0;
     }
 }

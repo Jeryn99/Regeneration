@@ -14,58 +14,47 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TabRegistry
-{
+public class TabRegistry {
+    public static Class<?> clazzNEIConfig = null;
+    public static int recipeBookOffset;
     private static ArrayList<AbstractTab> tabList = new ArrayList<AbstractTab>();
     private static Class<?> clazzJEIConfig = null;
-    public static Class<?> clazzNEIConfig = null;
+    private static Minecraft mc = Minecraft.getInstance();
+    private static boolean initWithPotion;
 
-    static
-    {
-        try
-        {
+    static {
+        try {
             //Checks for JEI by looking for this class instead of a ModList.get().isLoaded() check
             clazzJEIConfig = Class.forName("mezz.jei.config.Config");
-        }
-        catch (Exception ignore)
-        {
+        } catch (Exception ignore) {
             //no log spam
         }
         //Only activate NEI feature if NEI is standalone
-        if (clazzJEIConfig == null)
-        {
-            try
-            {
+        if (clazzJEIConfig == null) {
+            try {
                 clazzNEIConfig = Class.forName("codechicken.nei.NEIClientConfig");
-            }
-            catch (Throwable ignore)
-            {
+            } catch (Throwable ignore) {
                 //no log spam
             }
         }
     }
 
-    public static void registerEventListeners(IEventBus bus)
-    {
+    public static void registerEventListeners(IEventBus bus) {
         bus.addListener(TabRegistry::guiPostInit);
     }
 
-    public static void registerTab(AbstractTab tab)
-    {
+    public static void registerTab(AbstractTab tab) {
         TabRegistry.tabList.add(tab);
     }
 
-    public static ArrayList<AbstractTab> getTabList()
-    {
+    public static ArrayList<AbstractTab> getTabList() {
         return TabRegistry.tabList;
     }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public static void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event)
-    {
-        if (event.getGui() instanceof InventoryScreen)
-        {
+    public static void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (event.getGui() instanceof InventoryScreen) {
             int guiLeft = (event.getGui().width - 176) / 2;
             int guiTop = (event.getGui().height - 166) / 2;
             recipeBookOffset = getRecipeBookOffset((InventoryScreen) event.getGui());
@@ -76,26 +65,18 @@ public class TabRegistry
         }
     }
 
-    private static Minecraft mc = Minecraft.getInstance();
-    private static boolean initWithPotion;
-    public static int recipeBookOffset;
-
-    public static void openInventoryGui()
-    {
+    public static void openInventoryGui() {
         TabRegistry.mc.player.connection.send(new CCloseWindowPacket(mc.player.containerMenu.containerId));
         InventoryScreen inventory = new InventoryScreen(TabRegistry.mc.player);
         TabRegistry.mc.setScreen(inventory);
     }
 
-    public static void updateTabValues(int cornerX, int cornerY, Class<?> selectedButton)
-    {
+    public static void updateTabValues(int cornerX, int cornerY, Class<?> selectedButton) {
         int count = 2;
-        for (int i = 0; i < TabRegistry.tabList.size(); i++)
-        {
+        for (int i = 0; i < TabRegistry.tabList.size(); i++) {
             AbstractTab t = TabRegistry.tabList.get(i);
 
-            if (t.shouldAddToList())
-            {
+            if (t.shouldAddToList()) {
                 t.setIndex(count);
                 t.x = cornerX + (count - 2) * 28;
                 t.y = cornerY - 28;
@@ -106,19 +87,15 @@ public class TabRegistry
         }
     }
 
-    public static void addTabsToList(Consumer<Widget> add)
-    {
-        for (AbstractTab tab : TabRegistry.tabList)
-        {
-            if (tab.shouldAddToList())
-            {
+    public static void addTabsToList(Consumer<Widget> add) {
+        for (AbstractTab tab : TabRegistry.tabList) {
+            if (tab.shouldAddToList()) {
                 add.accept(tab);
             }
         }
     }
 
-    public static int getPotionOffset()
-    {
+    public static int getPotionOffset() {
 /*Disabled in 1.12.2 because a vanilla bug means potion offsets are currently not a thing
  *The vanilla bug is that GuiInventory.init() resets GuiLeft to the recipe book version of GuiLeft,
  *and in GuiRecipeBook.updateScreenPosition() it takes no account of potion offset even if the recipe book is inactive.
@@ -135,66 +112,49 @@ public class TabRegistry
         return 0;
     }
 
-    public static boolean doPotionOffsetVanilla()
-    {
-        for (EffectInstance potioneffect : mc.player.getActiveEffects())
-        {
-            if (potioneffect.getEffect().shouldRender(potioneffect))
-            {
+    public static boolean doPotionOffsetVanilla() {
+        for (EffectInstance potioneffect : mc.player.getActiveEffects()) {
+            if (potioneffect.getEffect().shouldRender(potioneffect)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static int getPotionOffsetJEI()
-    {
-        if (clazzJEIConfig != null)
-        {
-            try
-            {
+    public static int getPotionOffsetJEI() {
+        if (clazzJEIConfig != null) {
+            try {
                 Object enabled = clazzJEIConfig.getMethod("isOverlayEnabled").invoke(null);
-                if (enabled instanceof Boolean)
-                {
-                    if (!((Boolean)enabled))
-                    {
+                if (enabled instanceof Boolean) {
+                    if (!((Boolean) enabled)) {
                         // If JEI is disabled, no special change to getPotionOffset()
                         return 0;
                     }
                     //Active JEI undoes the standard potion offset (they listen for GuiScreenEvent.PotionShiftEvent)
                     return -60;
                 }
-            }
-            catch (Exception ignore)
-            {
+            } catch (Exception ignore) {
                 //no log spam
             }
         }
         return 0;
     }
 
-    public static int getPotionOffsetNEI()
-    {
-        if (initWithPotion && clazzNEIConfig != null)
-        {
-            try
-            {
+    public static int getPotionOffsetNEI() {
+        if (initWithPotion && clazzNEIConfig != null) {
+            try {
                 // Check whether NEI is hidden and enabled
                 Object hidden = clazzNEIConfig.getMethod("isHidden").invoke(null);
                 Object enabled = clazzNEIConfig.getMethod("isEnabled").invoke(null);
-                if (hidden instanceof Boolean && enabled instanceof Boolean)
-                {
-                    if ((Boolean)hidden || !((Boolean)enabled))
-                    {
+                if (hidden instanceof Boolean && enabled instanceof Boolean) {
+                    if ((Boolean) hidden || !((Boolean) enabled)) {
                         // If NEI is disabled or hidden, it does not affect the tabs offset with potions
                         return 0;
                     }
                     //But active NEI undoes the standard potion offset
                     return -60;
                 }
-            }
-            catch (Exception ignore)
-            {
+            } catch (Exception ignore) {
                 //no log spam
             }
         }
@@ -202,8 +162,7 @@ public class TabRegistry
         return 0;
     }
 
-    public static int getRecipeBookOffset(InventoryScreen gui)
-    {
+    public static int getRecipeBookOffset(InventoryScreen gui) {
         boolean widthTooNarrow = gui.width < 379;
         gui.getRecipeBookComponent().init(gui.width, gui.height, mc, widthTooNarrow, Minecraft.getInstance().player.inventoryMenu);
         return gui.getRecipeBookComponent().updateScreenPosition(widthTooNarrow, gui.width, gui.getXSize()) - (gui.width - 176) / 2;

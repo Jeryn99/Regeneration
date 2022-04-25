@@ -1,12 +1,10 @@
 package me.suff.mc.regen.common.world.gen;
 
-import com.google.common.collect.ImmutableMap;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.block.Blocks;
-import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
@@ -23,7 +21,6 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class HutPieces {

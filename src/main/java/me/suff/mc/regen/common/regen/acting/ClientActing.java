@@ -14,7 +14,6 @@ import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;

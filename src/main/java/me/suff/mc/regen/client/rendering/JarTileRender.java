@@ -80,8 +80,8 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
             boolean isAlex = HandItem.isAlex(tileEntityIn.getHand());
             mainModel = isAlex ? armModel : steveArmModel;
             matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotation));
-            matrixStackIn.scale(0.8F,0.8F,0.8F);
-            matrixStackIn.translate(0,0.1F,0.04);
+            matrixStackIn.scale(0.8F, 0.8F, 0.8F);
+            matrixStackIn.translate(0, 0.1F, 0.04);
             mainModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
             matrixStackIn.popPose();
         } else {
@@ -92,10 +92,11 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
         matrixStackIn.pushPose();
         matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180));
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
-        matrixStackIn.translate(0.5,-1.5,0.5);
-        matrixStackIn.translate(-1,0,-1);
+        matrixStackIn.translate(0.5, -1.5, 0.5);
+        matrixStackIn.translate(-1, 0, -1);
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotation));
-        containerModel.Lid.xRot = -(tileEntityIn.getOpenAmount() * ((float) Math.PI / 3F));;
+        containerModel.Lid.xRot = -(tileEntityIn.getOpenAmount() * ((float) Math.PI / 3F));
+        ;
         containerModel.Lid.yRot = 0;
         containerModel.Lid.zRot = 0;
         containerModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(ContainerModel.CONTAINER_TEXTURE)), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);

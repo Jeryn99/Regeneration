@@ -2,29 +2,24 @@ package me.suff.mc.regen.compat;
 
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.entities.TimelordEntity;
-import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.IRegen;
-import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.acting.Acting;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.tardis.mod.ars.ConsoleRoom;
 import net.tardis.mod.entity.hostile.dalek.DalekEntity;
@@ -34,7 +29,6 @@ import net.tardis.mod.misc.CrashType;
 import net.tardis.mod.sounds.TSounds;
 import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.tileentities.ConsoleTile;
-import net.tardis.mod.tileentities.console.misc.IAlarmType;
 import net.tardis.mod.world.dimensions.TDimensions;
 
 import java.util.List;
@@ -161,6 +155,7 @@ public class TardisMod implements Acting {
 
     /**
      * Called on the last tick of a players Regeneration
+     *
      * @param cap
      */
     @Override
@@ -168,9 +163,9 @@ public class TardisMod implements Acting {
         World world = cap.getLiving().level;
         if (isTardis(cap.getLiving().level)) {
             ConsoleTile console = (ConsoleTile) world.getBlockEntity(TardisHelper.TARDIS_POS);
-            if(cap.getLiving() instanceof PlayerEntity){
+            if (cap.getLiving() instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) cap.getLiving();
-                console.getEmotionHandler().setLoyalty(playerEntity.getUUID(), console.getEmotionHandler().getLoyalty(playerEntity.getUUID())- RegenUtil.RAND.nextInt(25));
+                console.getEmotionHandler().setLoyalty(playerEntity.getUUID(), console.getEmotionHandler().getLoyalty(playerEntity.getUUID()) - RegenUtil.RAND.nextInt(25));
                 console.getInteriorManager().setAlarmOn(false);
                 console.getUnlockManager().addConsoleRoom(ConsoleRoom.getRegistry().get(new ResourceLocation(RConstants.MODID, "mccoy")));
             }

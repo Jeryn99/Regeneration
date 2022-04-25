@@ -60,15 +60,15 @@ public class ClientEvents {
     private static ISound iSound = null;
 
     @SubscribeEvent
-    public static void on(ClientChatEvent event){
+    public static void on(ClientChatEvent event) {
 
     }
 
 
     // TODO Make this code cleaner
-    public static void updateShaders(Entity entity){
-        if(!RegenConfig.CLIENT.shaders.get()) return;
-        if(!(entity instanceof LivingEntity)){
+    public static void updateShaders(Entity entity) {
+        if (!RegenConfig.CLIENT.shaders.get()) return;
+        if (!(entity instanceof LivingEntity)) {
             return;
         }
         GameRenderer renderer = Minecraft.getInstance().gameRenderer;
@@ -80,36 +80,36 @@ public class ClientEvents {
             boolean regeneratingTroughton = iRegen.regenState() == RegenStates.REGENERATING && iRegen.transitionType() == TransitionTypes.TROUGHTON.get();
 
 
-            if(iRegen.regenState() == RegenStates.ALIVE || iRegen.regenState() == RegenStates.REGENERATING && !regeneratingTroughton || PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity)){
-                if(shouldReset) {
+            if (iRegen.regenState() == RegenStates.ALIVE || iRegen.regenState() == RegenStates.REGENERATING && !regeneratingTroughton || PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity)) {
+                if (shouldReset) {
                     renderer.shutdownEffect();
                     return;
                 }
             }
 
-            if((iRegen.regenState() == RegenStates.GRACE || regeneratingTroughton) && !checkShaderLoaded(renderer, "desaturate")){
+            if ((iRegen.regenState() == RegenStates.GRACE || regeneratingTroughton) && !checkShaderLoaded(renderer, "desaturate")) {
                 shader.set("desaturate");
                 shouldReset = true;
             }
 
-            if(iRegen.regenState() == RegenStates.GRACE_CRIT && !checkShaderLoaded(renderer, "blur")){
+            if (iRegen.regenState() == RegenStates.GRACE_CRIT && !checkShaderLoaded(renderer, "blur")) {
                 shader.set("blur");
                 shouldReset = true;
             }
 
-            if(iRegen.regenState() == RegenStates.POST && !PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity) && !checkShaderLoaded(renderer, "deconverge")){
+            if (iRegen.regenState() == RegenStates.POST && !PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity) && !checkShaderLoaded(renderer, "deconverge")) {
                 shader.set("deconverge");
                 shouldReset = true;
             }
         });
 
-        if(shader.get() != null){
-            renderer.loadEffect(new ResourceLocation("shaders/post/"+shader+".json"));
+        if (shader.get() != null) {
+            renderer.loadEffect(new ResourceLocation("shaders/post/" + shader + ".json"));
         }
     }
 
     private static boolean checkShaderLoaded(GameRenderer renderer, String blur) {
-        if(renderer.currentEffect() == null) return false;
+        if (renderer.currentEffect() == null) return false;
         return renderer.currentEffect().getName().toLowerCase().contains(blur);
     }
 
@@ -117,7 +117,7 @@ public class ClientEvents {
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.regenState() == RegenStates.POST && !PlayerUtil.isPlayerAboveZeroGrid(player)|| iRegen.regenState() == RegenStates.GRACE_CRIT) {
+            if (iRegen.regenState() == RegenStates.POST && !PlayerUtil.isPlayerAboveZeroGrid(player) || iRegen.regenState() == RegenStates.GRACE_CRIT) {
                 event.setContent(new StringTextComponent(TextFormatting.OBFUSCATED + event.getContent().getString()));
             }
         });

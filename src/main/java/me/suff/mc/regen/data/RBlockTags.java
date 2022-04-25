@@ -6,11 +6,9 @@ import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.block.Block;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 
 /* Created by Craig on 08/03/2021 */
 public class RBlockTags extends BlockTagsProvider {

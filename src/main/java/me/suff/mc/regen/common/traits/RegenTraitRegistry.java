@@ -14,7 +14,6 @@ import net.minecraftforge.registries.RegistryBuilder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -67,10 +66,10 @@ public class RegenTraitRegistry {
     }
 
     public static boolean stripElixir(ItemStack stack) {
-        if(stack.getItem() instanceof ElixirItem){
+        if (stack.getItem() instanceof ElixirItem) {
             AbstractTrait trait = ElixirItem.getTrait(stack);
             for (String s : RegenConfig.COMMON.disabledTraits.get()) {
-                if(s.equalsIgnoreCase(trait.getRegistryName().toString())){
+                if (s.equalsIgnoreCase(trait.getRegistryName().toString())) {
                     return true;
                 }
             }

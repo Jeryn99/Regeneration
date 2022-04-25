@@ -62,6 +62,14 @@ import java.util.Map;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
 
+    /**
+     * Adds the structure's spacing for modded code made dimensions so that the structure's spacing remains
+     * correct in any dimension or worldtype instead of not spawning.
+     * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#DEFAULTS}
+     * but this sometimes does not work in code made dimensions.
+     */
+    private static Method GETCODEC_METHOD;
+
     /* Attach Capability to all LivingEntities */
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
@@ -213,7 +221,6 @@ public class CommonEvents {
         RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.regenState() == RegenStates.REGENERATING));
     }
 
-
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         Capability.IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
@@ -277,15 +284,6 @@ public class CommonEvents {
             });
         }
     }
-
-
-    /**
-     * Adds the structure's spacing for modded code made dimensions so that the structure's spacing remains
-     * correct in any dimension or worldtype instead of not spawning.
-     * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#DEFAULTS}
-     * but this sometimes does not work in code made dimensions.
-     */
-    private static Method GETCODEC_METHOD;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void space(final WorldEvent.Load event) {

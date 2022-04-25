@@ -6,7 +6,6 @@ import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -58,7 +57,7 @@ public class GunItem extends Item {
             if (hasAmmo(entityLiving, stack) && stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
                 worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
                 playerIn.getCooldowns().addCooldown(this, cooldown);
-                if (worldIn.random.nextInt(40) < 10  && !playerIn.isCreative()) {
+                if (worldIn.random.nextInt(40) < 10 && !playerIn.isCreative()) {
                     setDamage(stack, getDamage(stack) + 10);
                 }
                 if (!worldIn.isClientSide) {
@@ -86,7 +85,7 @@ public class GunItem extends Item {
                 }
             }
             playerEntity.getCooldowns().addCooldown(this, 10);
-            playerEntity.playSound(RSounds.GUN_EMPTY.get(), 1,1);
+            playerEntity.playSound(RSounds.GUN_EMPTY.get(), 1, 1);
 
         }
         return false;

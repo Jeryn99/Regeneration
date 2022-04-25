@@ -50,7 +50,7 @@ public class RegenUtil {
             TranslationTextComponent click = new TranslationTextComponent("Download");
             click.setStyle(Style.EMPTY.setUnderlined(true).withColor(TextFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/regeneration/files")));
 
-            TranslationTextComponent translationTextComponent = new TranslationTextComponent(TextFormatting.BOLD+"[" + TextFormatting.RESET + TextFormatting.YELLOW + "Regeneration" + TextFormatting.RESET + TextFormatting.BOLD + "]");
+            TranslationTextComponent translationTextComponent = new TranslationTextComponent(TextFormatting.BOLD + "[" + TextFormatting.RESET + TextFormatting.YELLOW + "Regeneration" + TextFormatting.RESET + TextFormatting.BOLD + "]");
             translationTextComponent.append(new TranslationTextComponent(" New Update Found: (" + version.target + ") ").append(click));
 
             PlayerUtil.sendMessage(playerEntity, translationTextComponent, false);
