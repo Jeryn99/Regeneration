@@ -9,15 +9,21 @@ import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AnimationHandler {
+
+
+    public static Item[] LEG_ITEMS = new Item[]{RItems.F_ROBES_LEGS.get(), RItems.M_ROBES_LEGS.get(), RItems.GUARD_LEGS.get(), RItems.ROBES_FEET.get()};
+    public static Item[] BODY_ITEMS = new Item[]{RItems.F_ROBES_CHEST.get(), RItems.GUARD_CHEST.get(), RItems.M_ROBES_CHEST.get()};
 
     public static void setRotationAnglesCallback(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
@@ -44,12 +50,12 @@ public class AnimationHandler {
     }
 
     public static void handleArmor(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (bipedModel instanceof PlayerModel) {
-            PlayerModel playerModel = (PlayerModel) bipedModel;
-            playerModel.jacket.visible = hideBodyWear(livingEntity.getItemBySlot(EquipmentSlot.CHEST));
+        if (bipedModel instanceof PlayerModel playerModel) {
+            playerModel.jacket.visible = hideModelPartIf(livingEntity, BODY_ITEMS, PlayerModelPart.JACKET, EquipmentSlot.CHEST);
             playerModel.leftSleeve.visible = playerModel.rightSleeve.visible = livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() != RItems.GUARD_CHEST.get();
-            playerModel.leftPants.visible = playerModel.rightPants.visible = hideLegWear(livingEntity.getItemBySlot(EquipmentSlot.LEGS));
-            playerModel.leftSleeve.visible = playerModel.leftArm.visible = showArms(livingEntity);
+            playerModel.leftPants.visible = hideModelPartIf(livingEntity, LEG_ITEMS, PlayerModelPart.LEFT_PANTS_LEG, EquipmentSlot.LEGS);
+            playerModel.rightPants.visible = hideModelPartIf(livingEntity, LEG_ITEMS, PlayerModelPart.RIGHT_PANTS_LEG, EquipmentSlot.LEGS);
+            playerModel.leftSleeve.visible = playerModel.leftArm.visible = showArms(livingEntity); // Cut off Arm
         }
     }
 
@@ -61,36 +67,29 @@ public class AnimationHandler {
         return !show.get();
     }
 
-    public static boolean hideLegWear(ItemStack stack) {
-        Item[] items = new Item[]{RItems.F_ROBES_LEGS.get(), RItems.M_ROBES_LEGS.get(), RItems.GUARD_LEGS.get(), RItems.ROBES_FEET.get()};
-        for (Item item : items) {
-            if (item == stack.getItem()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean hideBodyWear(ItemStack stack) {
-        Item[] items = new Item[]{RItems.F_ROBES_CHEST.get(), RItems.GUARD_CHEST.get(), RItems.M_ROBES_CHEST.get()};
-        for (Item item : items) {
-            if (item == stack.getItem()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     public static void correctPlayerModel(HumanoidModel bipedModel) {
-        if (bipedModel instanceof PlayerModel) {
-            PlayerModel playerModel = (PlayerModel) bipedModel;
+        if (bipedModel instanceof PlayerModel playerModel) {
             playerModel.hat.copyFrom(playerModel.head);
             playerModel.leftSleeve.copyFrom(playerModel.leftArm);
             playerModel.rightSleeve.copyFrom(playerModel.rightArm);
             playerModel.leftPants.copyFrom(playerModel.leftLeg);
             playerModel.rightPants.copyFrom(playerModel.rightLeg);
         }
+    }
+
+    /* Return false to hide, true to show */
+    public static boolean hideModelPartIf(LivingEntity livingEntity, Item[] items, PlayerModelPart part, EquipmentSlot slot) {
+        for (Item item : items) {
+            if(livingEntity.getItemBySlot(slot).getItem() == item){
+                return false;
+            }
+        }
+
+        if (livingEntity instanceof AbstractClientPlayer player) {
+            return player.isModelPartShown(part);
+        }
+
+        return true;
     }
 
 

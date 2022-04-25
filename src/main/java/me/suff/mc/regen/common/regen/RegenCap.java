@@ -106,9 +106,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
-
-        if (!livingEntity.level.isClientSide) {
-
+        if(livingEntity.level.isClientSide) return;
             //Login setup
             if (!didSetup) {
                 syncToClients(null);
@@ -131,7 +129,6 @@ public class RegenCap implements IRegen {
                 return;
             }
             animationTicks = 0;
-        }
     }
 
     @Override
