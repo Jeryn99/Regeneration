@@ -31,7 +31,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'official', version: '1.18.1'
+    mappings channel: 'official', version: '1.18.2'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // Currently, this location cannot be changed from the default.
@@ -136,7 +136,7 @@ minecraft.runs.all {
     }
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.85'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.21'
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
@@ -168,8 +168,7 @@ curseforge {
             changelog = new File("${project.projectDir}/changelog.html").text
             changelogType = 'html'
             releaseType = 'release'
-            addGameVersion '1.18'
-            addGameVersion '1.18.1'
+            addGameVersion '1.18.2'
             mainArtifact(jar) {
                 displayName = "[1.18.X] Regeneration - $project.version"
             }
