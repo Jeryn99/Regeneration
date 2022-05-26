@@ -1,5 +1,5 @@
 [![](https://i.imgur.com/GcUuiUW.png#center)](https://www.curseforge.com/minecraft/mc-mods/regeneration/files)
-
+[![Crowdin](https://badges.crowdin.net/regeneration/localized.svg)](https://crowdin.com/project/regeneration)
 <p align="center">
 <a href="https://www.curseforge.com/minecraft/mc-mods/regeneration/files">
   <img src="https://cf.way2muchnoise.eu/versions/regeneration.svg" alt="Regeneration Versions">
