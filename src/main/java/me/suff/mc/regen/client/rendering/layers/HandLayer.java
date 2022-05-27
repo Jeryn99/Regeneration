@@ -36,6 +36,7 @@ public class HandLayer extends LayerRenderer {
         EntityModel<?> model = getParentModel();
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 
+            matrixStackIn.pushPose();
             if (entitylivingbaseIn.isShiftKeyDown()) {
                 matrixStackIn.translate(0.0F, 0.2F, 0.0F);
             }
@@ -51,6 +52,7 @@ public class HandLayer extends LayerRenderer {
                 TransitionTypeRenderers.get(iRegen.transitionType()).thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
                 matrixStackIn.popPose();
             }
+            matrixStackIn.popPose();
         });
     }
 }
