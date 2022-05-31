@@ -179,6 +179,11 @@ public class CommonSkin {
         for (SkinPack skinPack : SkinPack.getAll()) {
             CommonSkin.downloadOnCommand(skinPack);
         }
+
+        File tempFolder = new File(SKIN_DIRECTORY + File.separator + "temp");
+        if (tempFolder.exists()) {
+            FileUtils.forceDelete(tempFolder.getParentFile());
+        }
     }
 
     public static boolean isAlexSkin(BufferedImage image) {
@@ -196,7 +201,7 @@ public class CommonSkin {
     }
 
     public static void unzipSkinPack(String url) throws IOException {
-        File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
+        File tempZip = new File(SKIN_DIRECTORY + "/temp/" + RegenUtil.randomCode() + ".zip");
         Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
         FileUtils.copyURLToFile(new URL(url), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {
@@ -230,10 +235,6 @@ public class CommonSkin {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        if (tempZip.exists()) {
-            FileUtils.forceDelete(tempZip.getParentFile());
         }
     }
 

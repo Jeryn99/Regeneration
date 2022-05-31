@@ -14,12 +14,10 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -79,6 +77,7 @@ public class FobWatchItem extends Item {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
+
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 
@@ -86,12 +85,17 @@ public class FobWatchItem extends Item {
         IRegen cap = RegenCap.get(player).orElseGet(null);
 
         if (!player.isShiftKeyDown()) { // transferring watch->player
-            if (getDamage(stack) == RegenConfig.COMMON.regenCapacity.get())
+            if (getDamage(stack) == RegenConfig.COMMON.regenCapacity.get() && RegenConfig.COMMON.regenCapacity.get() != 0) {
                 return msgUsageFailed(player, "regen.messages.transfer.empty_watch", stack);
-            else if (cap.regens() == RegenConfig.COMMON.regenCapacity.get())
+            } else if (cap.regens() == RegenConfig.COMMON.regenCapacity.get())
                 return msgUsageFailed(player, "regen.messages.transfer.max_regens", stack);
 
             int supply = RegenConfig.COMMON.regenCapacity.get() - getDamage(stack), needed = RegenConfig.COMMON.regenCapacity.get() - cap.regens(), used = Math.min(supply, needed);
+
+            //BANDAIIIIIIIIIIIIIID
+            if (RegenConfig.COMMON.regenCapacity.get() == 0) {
+                supply = 12;
+            }
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
@@ -200,5 +204,14 @@ public class FobWatchItem extends Item {
     @Override
     public int getMaxDamage(ItemStack stack) {
         return RegenConfig.COMMON.regenCapacity.get();
+    }
+
+    @Override
+    public void fillItemCategory(ItemGroup itemGroup, NonNullList<ItemStack> stackList) {
+        if (this.allowdedIn(itemGroup)) {
+            ItemStack itemStack = new ItemStack(this);
+            setDamage(itemStack, 0);
+            stackList.add(itemStack);
+        }
     }
 }

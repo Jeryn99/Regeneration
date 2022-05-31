@@ -25,6 +25,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import java.util.UUID;
 
 import static me.suff.mc.regen.Regeneration.GSON;
 
@@ -128,6 +129,11 @@ public class RegenUtil {
             hex.insert(0, "0");
         }
         return "#" + hex;
+    }
+
+    public static String randomCode() {
+        String code = String.valueOf(UUID.randomUUID());
+        return code.replaceAll("-", "").replaceAll("_", "");
     }
 
     public interface IEnum<E extends Enum<E>> {
