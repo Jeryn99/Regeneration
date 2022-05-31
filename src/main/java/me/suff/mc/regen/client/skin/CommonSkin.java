@@ -5,10 +5,7 @@ import com.google.gson.JsonObject;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.screen.SkinPack;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.util.DownloadSkinsThread;
-import me.suff.mc.regen.util.MineSkin;
-import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.util.RegenUtil;
+import me.suff.mc.regen.util.*;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
@@ -44,7 +41,8 @@ public class CommonSkin {
     public static ResourceLocation fileTotexture(File file) {
         NativeImage nativeImage = null;
         try {
-            nativeImage = NativeImage.read(new FileInputStream(file));
+            nativeImage = NativeImage.read(Files.newInputStream(file.toPath()));
+            nativeImage = TexUtil.processLegacySkin(nativeImage);
         } catch (IOException e) {
             e.printStackTrace();
         }

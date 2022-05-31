@@ -6,6 +6,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
+import me.suff.mc.regen.util.TexUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -89,7 +90,8 @@ public class SkinHandler {
 
     public static ResourceLocation loadImage(NativeImage nativeImage) {
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        return textureManager.register("player_", new DynamicTexture(nativeImage));
+        NativeImage converted = TexUtil.processLegacySkin(nativeImage);
+        return textureManager.register("player_", new DynamicTexture(converted));
     }
 
     public static NativeImage genSkinNative(byte[] skinArray) {
