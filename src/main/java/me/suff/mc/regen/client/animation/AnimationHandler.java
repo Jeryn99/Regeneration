@@ -15,7 +15,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -80,7 +79,7 @@ public class AnimationHandler {
     /* Return false to hide, true to show */
     public static boolean hideModelPartIf(LivingEntity livingEntity, Item[] items, PlayerModelPart part, EquipmentSlot slot) {
         for (Item item : items) {
-            if(livingEntity.getItemBySlot(slot).getItem() == item){
+            if (livingEntity.getItemBySlot(slot).getItem() == item) {
                 return false;
             }
         }

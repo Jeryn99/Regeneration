@@ -106,29 +106,29 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
-        if(livingEntity.level.isClientSide) return;
-            //Login setup
-            if (!didSetup) {
-                syncToClients(null);
-                didSetup = true;
-            }
+        if (livingEntity.level.isClientSide) return;
+        //Login setup
+        if (!didSetup) {
+            syncToClients(null);
+            didSetup = true;
+        }
 
-            //Tick Trait
-            if (traitActive) {
-                currentTrait.tick(this);
-            }
-            if (stateManager != null && currentState != RegenStates.ALIVE) {
-                stateManager.tick();
-            }
+        //Tick Trait
+        if (traitActive) {
+            currentTrait.tick(this);
+        }
+        if (stateManager != null && currentState != RegenStates.ALIVE) {
+            stateManager.tick();
+        }
 
-            //Tick Regenerating
-            if (currentState == RegenStates.REGENERATING) {
-                animationTicks++;
-                transitionType.onUpdateMidRegen(this);
-                syncToClients(null);
-                return;
-            }
-            animationTicks = 0;
+        //Tick Regenerating
+        if (currentState == RegenStates.REGENERATING) {
+            animationTicks++;
+            transitionType.onUpdateMidRegen(this);
+            syncToClients(null);
+            return;
+        }
+        animationTicks = 0;
     }
 
     @Override

@@ -20,7 +20,7 @@ import java.util.Random;
 
 /* Created by Craig on 10/03/2021 */
 public class RGlobalLoot {
-    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, RConstants.MODID);
+    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, RConstants.MODID);
 
     public static final RegistryObject<RegenerationLoot.Serializer> REGEN_LOOT = GLM.register("loot", RegenerationLoot.Serializer::new);
 

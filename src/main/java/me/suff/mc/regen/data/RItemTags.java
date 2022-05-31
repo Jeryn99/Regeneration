@@ -7,6 +7,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -26,11 +27,11 @@ public class RItemTags extends ItemTagsProvider {
         add(RegenUtil.ZINC_INGOT, RItems.ZINC.get());
     }
 
-    public void add(Tag.Named<Item> branch, Item item) {
+    public void add(TagKey<Item> branch, Item item) {
         this.tag(branch).add(item);
     }
 
-    public void add(Tag.Named<Item> branch, Item... item) {
+    public void add(TagKey<Item> branch, Item... item) {
         this.tag(branch).add(item);
     }
 }

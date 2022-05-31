@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -21,21 +22,21 @@ import static me.suff.mc.regen.Regeneration.GSON;
 
 public class RegenUtil {
 
-    public static Tag.Named<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
-    public static Tag.Named<Block> ARS = makeBlock("tardis", "ars");
-    public static Tag.Named<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
-    public static Tag.Named<Block> ZINC = makeBlock("forge", "ores/zinc");
-    public static Tag.Named<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
+    public static TagKey<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
+    public static TagKey<Block> ARS = makeBlock("tardis", "ars");
+    public static TagKey<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
+    public static TagKey<Block> ZINC = makeBlock("forge", "ores/zinc");
+    public static TagKey<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
 
-    public static Tag.Named<Block> makeBlock(String domain, String path) {
-        return BlockTags.createOptional(new ResourceLocation(domain, path));
+    public static TagKey<Block> makeBlock(String domain, String path) {
+        return BlockTags.create(new ResourceLocation(domain, path));
     }
 
-    public static Tag.Named<Item> makeItem(String domain, String path) {
-        return ItemTags.createOptional(new ResourceLocation(domain, path));
+    public static TagKey<Item> makeItem(String domain, String path) {
+        return ItemTags.create(new ResourceLocation(domain, path));
     }
 
     public static double round(float value, int scale) {
@@ -47,7 +48,7 @@ public class RegenUtil {
             try {
 
                 ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
-                InputStream stream = ServerLifecycleHooks.getCurrentServer().getServerResources().getResourceManager().getResource(resourceLocation).getInputStream();
+                InputStream stream = ServerLifecycleHooks.getCurrentServer().getServerResources().resourceManager().getResource(resourceLocation).getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder sb = new StringBuilder();
 

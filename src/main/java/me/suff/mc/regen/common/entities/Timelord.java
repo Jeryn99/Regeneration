@@ -59,10 +59,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Created by Suff
@@ -148,9 +151,11 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
 
         if (getTimelordType() == TimelordType.COUNCIL) {
-            for (Item item : RegenUtil.TIMELORD_CURRENCY.getValues()) {
+
+            ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> {
                 this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false));
-            }
+            });
+
             this.goalSelector.addGoal(1, new LookAtTradingPlayerGoal(this));
             this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
@@ -392,9 +397,11 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
             for (int i = random.nextInt(7); i > 0; i--) {
                 AbstractTrait trait = RegenTraitRegistry.getRandomTrait(random, false);
                 ItemStack item = new ItemStack(RItems.ELIXIR.get());
-                Item[] currency = RegenUtil.TIMELORD_CURRENCY.getValues().toArray(new Item[0]);
+
+                ITag<Item> currency = ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY);
+
                 ElixirItem.setTrait(item, trait);
-                TimelordTrade[] trades = new TimelordTrade[]{new Timelord.TimelordTrade(new ItemStack(currency[random.nextInt(currency.length)], Mth.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
+                TimelordTrade[] trades = new TimelordTrade[]{new Timelord.TimelordTrade(new ItemStack(currency.getRandomElement(RegenUtil.RAND).get(), Mth.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
                 this.addOffersFromItemListings(merchantoffers, trades, 5);
             }
 

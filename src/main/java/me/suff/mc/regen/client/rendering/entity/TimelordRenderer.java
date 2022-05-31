@@ -103,7 +103,8 @@ public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel
     public ResourceLocation getTextureLocation(Timelord entity) {
         String gender = entity.male() ? "male" : "female";
         return switch (entity.getTimelordType()) {
-            case COUNCIL -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
+            case COUNCIL ->
+                    new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
             case GUARD -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/guards/timelord_guard.png");
         };
     }

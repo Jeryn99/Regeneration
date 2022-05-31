@@ -16,8 +16,6 @@ import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
-import me.suff.mc.regen.level.RFeatures;
-import me.suff.mc.regen.level.RWorldHelper;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
@@ -29,7 +27,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -66,10 +63,10 @@ public class Regeneration {
         RGlobalLoot.GLM.register(modBus);
         RegenTraitRegistry.TRAITS.register(modBus);
         TransitionTypes.TRANSITION_TYPES.register(modBus);
-        RFeatures.DEFERRED_REGISTRY_STRUCTURE.register(modBus);
+   //     RFeatures.DEFERRED_REGISTRY_STRUCTURE.register(modBus);
 
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-        forgeBus.addListener(EventPriority.NORMAL, RWorldHelper::addDimensionalSpacing);
+        // forgeBus.addListener(EventPriority.NORMAL, RWorldHelper::addDimensionalSpacing);
 
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
@@ -97,9 +94,9 @@ public class Regeneration {
         TriggerManager.init();
         event.enqueueWork(() ->
         {
-            RFeatures.ores();
-            RFeatures.setupStructures();
-            RWorldHelper.registerConfiguredStructures();
+            //   RFeatures.ores();
+            //    RFeatures.setupStructures();
+            //    RWorldHelper.registerConfiguredStructures();
         });
     }
 
