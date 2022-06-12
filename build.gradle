@@ -173,6 +173,8 @@ curseforge {
                 displayName = "[1.18.2] Regeneration - $project.version"
             }
         }
+    } else {
+        printf("CurseForge API key not present!");
     }
 }
 
