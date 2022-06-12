@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -42,7 +43,7 @@ class CommonActing implements Acting {
     public CommonActing() {
     }
 
-    public static SoundEvent getRandomSound(Random random, IRegen cap) {
+    public static SoundEvent getRandomSound(RandomSource random, IRegen cap) {
         SoundEvent[] soundEvents = cap.transitionType().getRegeneratingSounds();
         return soundEvents[random.nextInt(soundEvents.length)];
     }

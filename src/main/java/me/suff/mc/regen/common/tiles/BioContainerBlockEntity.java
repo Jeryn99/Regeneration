@@ -12,6 +12,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +43,7 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     public static void spawnParticles(Level world, BlockPos blockPos) {
-        Random random = world.random;
+        RandomSource random = world.random;
 
         for (Direction direction : Direction.values()) {
             BlockPos blockpos = blockPos.relative(direction);

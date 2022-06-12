@@ -1,28 +1,24 @@
 package me.suff.mc.regen.common.world;
 
+import com.mojang.serialization.Codec;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.world.structures.TimelordSettlementHut;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.placement.*;
-import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashSet;
@@ -31,9 +27,13 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class RFeatures {
 
-    public static final DeferredRegister<StructureFeature<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, RConstants.MODID);
+    public static final DeferredRegister<StructureType<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegister.create(Registry.STRUCTURE_TYPE_REGISTRY, RConstants.MODID);
 
-    public static final RegistryObject<StructureFeature<?>> SETTLEMENT_HUT = DEFERRED_REGISTRY_STRUCTURE.register("timelord_settlement", () -> new TimelordSettlementHut(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<StructureType<?>> SETTLEMENT_HUT = DEFERRED_REGISTRY_STRUCTURE.register("timelord_settlement", () -> typeConvert(TimelordSettlementHut.CODEC));
+
+    private static <S extends Structure> StructureType<S> typeConvert(Codec<S> codec) {
+        return () -> codec;
+    }
 
     private static final HashSet<Holder<PlacedFeature>> ORES = new HashSet<>();
 
@@ -48,16 +48,6 @@ public class RFeatures {
         Holder<PlacedFeature> placedFeatureMiddle = PlacementUtils.register("kontron_ore_middle", feature, commonOrePlacement(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-24), VerticalAnchor.absolute(56))));
         ORES.add(placedFeatureUpper);
         ORES.add(placedFeatureMiddle);
-    }
-
-    @SubscribeEvent
-    public static void gen(BiomeLoadingEvent event) {
-        BiomeGenerationSettingsBuilder gen = event.getGeneration();
-        if (event.getCategory() != Biome.BiomeCategory.NETHER && event.getCategory() != Biome.BiomeCategory.THEEND) {
-            for (Holder<PlacedFeature> feature : ORES) {
-                gen.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, feature);
-            }
-        }
     }
 
     private static List<PlacementModifier> orePlacement(PlacementModifier p_195347_, PlacementModifier p_195348_) {

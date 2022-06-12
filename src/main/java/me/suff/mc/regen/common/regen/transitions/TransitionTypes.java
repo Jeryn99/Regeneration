@@ -1,19 +1,23 @@
 package me.suff.mc.regen.common.regen.transitions;
 
 import me.suff.mc.regen.util.RConstants;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
+import static me.suff.mc.regen.util.RConstants.MODID;
+import static me.suff.mc.regen.util.RConstants.TRANSITION_TYPE;
+
 /**
  * Created by Craig
  * on 06/05/2020 @ 14:09
  */
-@Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TransitionTypes {
 
-    public static final DeferredRegister<TransitionType> TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
+    public static final DeferredRegister<TransitionType> TRANSITION_TYPES = DeferredRegister.create(new ResourceLocation(MODID, "transition_types"), MODID);
     public static final RegistryObject<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
     public static final RegistryObject<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
     public static final RegistryObject<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
@@ -21,7 +25,7 @@ public class TransitionTypes {
     public static final RegistryObject<TransitionType> ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
     public static final RegistryObject<TransitionType> BLAZE = TRANSITION_TYPES.register("blaze", (BlazeTranstion::new));
     public static TransitionType[] TYPES = new TransitionType[]{};
-    public static Supplier<IForgeRegistry<TransitionType>> TRANSITION_TYPES_REGISTRY = TRANSITION_TYPES.makeRegistry("transition_types", () -> new RegistryBuilder<TransitionType>().setMaxID(Integer.MAX_VALUE - 1));
+    public static Supplier<IForgeRegistry<TransitionType>> TRANSITION_TYPES_REGISTRY = TRANSITION_TYPES.makeRegistry(() -> new RegistryBuilder<TransitionType>().setMaxID(Integer.MAX_VALUE - 1));
 
     public static int getPosition(TransitionType rrRegenType) {
         if (TYPES.length <= 0) {
@@ -45,6 +49,10 @@ public class TransitionTypes {
     public static TransitionType getRandomTimelordType() {
         TransitionType[] timelordTypes = new TransitionType[]{FIERY.get(), ENDER_DRAGON.get(), BLAZE.get()};
         return timelordTypes[(int) (System.currentTimeMillis() % timelordTypes.length)];
+    }
+
+    public static ResourceLocation getTransitionId(TransitionType transitionType){
+        return TRANSITION_TYPES_REGISTRY.get().getKey(transitionType);
     }
 
 

@@ -27,8 +27,7 @@ public class EnderDragonTransition extends TransitionType {
             }
         }
 
-        if (cap.getLiving() instanceof Player) {
-            Player serverPlayerEntity = (Player) cap.getLiving();
+        if (cap.getLiving() instanceof Player serverPlayerEntity) {
             serverPlayerEntity.getAbilities().mayfly = RegenConfig.COMMON.allowUpwardsMotion.get();
             serverPlayerEntity.getAbilities().flying = RegenConfig.COMMON.allowUpwardsMotion.get();
         }
@@ -36,8 +35,7 @@ public class EnderDragonTransition extends TransitionType {
 
     @Override
     public void onFinishRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayer) {
-            ServerPlayer serverPlayerEntity = (ServerPlayer) cap.getLiving();
+        if (cap.getLiving() instanceof ServerPlayer serverPlayerEntity) {
             serverPlayerEntity.getAbilities().mayfly = serverPlayerEntity.isCreative();
             serverPlayerEntity.getAbilities().flying = false;
 

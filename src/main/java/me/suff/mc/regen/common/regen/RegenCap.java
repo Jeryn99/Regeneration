@@ -230,12 +230,12 @@ public class RegenCap implements IRegen {
             transitionType = TransitionTypes.FIERY.get();
         }
 
-        compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
+        compoundNBT.putString(RConstants.TRANSITION_TYPE, TransitionTypes.getTransitionId(transitionType).toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());
-        compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
-        compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
+        compoundNBT.putString(RConstants.CURRENT_TRAIT, RegenTraitRegistry.getTraitLocation(currentTrait).toString());
+        compoundNBT.putString(RConstants.NEXT_TRAIT, RegenTraitRegistry.getTraitLocation(nextTrait).toString());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
         compoundNBT.putBoolean(RConstants.IS_TRAIT_ACTIVE, traitActive);

@@ -9,16 +9,16 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class RegenTraitRegistry {
 
-    public static final DeferredRegister<AbstractTrait> TRAITS = DeferredRegister.create(AbstractTrait.class, RConstants.MODID);
+    public static final DeferredRegister<AbstractTrait> TRAITS = DeferredRegister.create(new ResourceLocation(RConstants.MODID, "traits"), RConstants.MODID);
     public static final RegistryObject<AbstractTrait> QUICK = TRAITS.register("quick", (TraitQuick::new));
     public static final RegistryObject<AbstractTrait> BORING = TRAITS.register("boring", () -> new TraitBase(3484199));
     public static final RegistryObject<AbstractTrait> SMART = TRAITS.register("smart", () -> new TraitBase(3381504));
@@ -33,7 +33,7 @@ public class RegenTraitRegistry {
     public static final RegistryObject<AbstractTrait> ENDER_HURT = TRAITS.register("ender_hurt", () -> new TraitBase(Color.MAGENTA.getRGB()));
     public static final RegistryObject<AbstractTrait> WATER_STRIDE = TRAITS.register("water_stride", () -> new TraitBase(Color.WHITE.getRGB()));
     public static final RegistryObject<AbstractTrait> PHOTOSYNTHETIC = TRAITS.register("photosynthetic", () -> new TraitBase(Color.ORANGE.getRGB()));
-    public static Supplier<IForgeRegistry<AbstractTrait>> TRAIT_REGISTRY = TRAITS.makeRegistry("regeneration_traits", () -> new RegistryBuilder<AbstractTrait>().setMaxID(Integer.MAX_VALUE - 1));
+    public static Supplier<IForgeRegistry<AbstractTrait>> TRAIT_REGISTRY = TRAITS.makeRegistry(() -> new RegistryBuilder<AbstractTrait>().setMaxID(Integer.MAX_VALUE - 1));
 
 
     //Create Registry
@@ -59,15 +59,20 @@ public class RegenTraitRegistry {
     public static AbstractTrait getRandomTrait(RandomSource random, boolean isMob) {
         Collection<AbstractTrait> value = TRAIT_REGISTRY.get().getValues();
         ArrayList<AbstractTrait> traits = new ArrayList<>(value);
-        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(RegenTraitRegistry.BORING.get().getRegistryName()));
+        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || getTraitLocation(trait).equals(getTraitLocation(BORING.get())));
         for (AbstractTrait trait : traits) {
             for (String s : RegenConfig.COMMON.disabledTraits.get()) {
-                if (trait.getRegistryName().toString().contains(s)) {
+                if (getTraitLocation(trait).toString().contains(s)) {
                     traits.remove(trait);
                 }
             }
         }
         int i = random.nextInt(value.size());
         return Iterables.get(value, i);
+    }
+
+    public static ResourceLocation getTraitLocation(AbstractTrait abstractTrait) {
+        @Nullable ResourceLocation traitRl = RegenTraitRegistry.TRAIT_REGISTRY.get().getKey(abstractTrait);
+        return traitRl;
     }
 }

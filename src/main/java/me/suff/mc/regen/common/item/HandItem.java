@@ -49,7 +49,7 @@ public class HandItem extends Item {
 
     //Trait
     public static void setTrait(AbstractTrait traitBase, ItemStack stack) {
-        stack.getOrCreateTag().putString("trait", traitBase.getRegistryName().toString());
+        stack.getOrCreateTag().putString("trait", RegenTraitRegistry.getTraitLocation(traitBase).toString());
     }
 
     public static AbstractTrait getTrait(ItemStack stack) {

@@ -14,12 +14,12 @@ public abstract class AbstractTrait {
     public abstract void tick(IRegen data);
 
     public MutableComponent translation() {
-        ResourceLocation regName = getRegistryName();
+        ResourceLocation regName = RegenTraitRegistry.TRAIT_REGISTRY.get().getKey(this);
         return Component.translatable("trait." + regName.getNamespace() + "." + regName.getPath());
     }
 
     public MutableComponent description() {
-        ResourceLocation regName = getRegistryName();
+        ResourceLocation regName = RegenTraitRegistry.TRAIT_REGISTRY.get().getKey(this);
         return Component.translatable("trait." + regName.getNamespace() + "." + regName.getPath() + ".description");
     }
 

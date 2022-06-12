@@ -8,6 +8,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -25,7 +26,7 @@ public class ClothingItem extends ArmorItem {
         if (slot == EquipmentSlot.CHEST) {
             gender = (ClientUtil.isAlex(entity) ? "_alex" : "_steve");
         }
-        return "regen:textures/entity/armour/" + stack.getItem().getRegistryName().getPath() + gender + ".png";
+        return "regen:textures/entity/armour/" + ForgeRegistries.ITEMS.getKey(stack.getItem()).getPath() + gender + ".png";
     }
 
     @Override

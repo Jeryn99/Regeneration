@@ -30,7 +30,7 @@ public class ElixirItem extends Item {
     }
 
     public static void setTrait(ItemStack stack, AbstractTrait iTrait) {
-        stack.getOrCreateTag().putString("trait", iTrait.getRegistryName().toString());
+        stack.getOrCreateTag().putString("trait", RegenTraitRegistry.getTraitLocation(iTrait).toString());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ElixirItem extends Item {
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (allowedIn(group)) {
             for (AbstractTrait trait : RegenTraitRegistry.TRAIT_REGISTRY.get().getValues()) {
-                if (trait.getRegistryName() != RegenTraitRegistry.BORING.get().getRegistryName()) {
+                if (RegenTraitRegistry.getTraitLocation(trait) != RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.BORING.get())) {
                     ItemStack stack = new ItemStack(this);
                     setTrait(stack, trait);
                     items.add(stack);

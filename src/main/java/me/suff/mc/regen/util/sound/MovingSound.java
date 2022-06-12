@@ -6,6 +6,7 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -17,8 +18,8 @@ public class MovingSound extends AbstractTickableSoundInstance {
     private final Supplier<Boolean> stopCondition;
     private boolean donePlaying = false;
 
-    public MovingSound(Object object, SoundEvent soundIn, SoundSource categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
-        super(soundIn, categoryIn);
+    public MovingSound(Object object, SoundEvent soundIn, SoundSource categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx, RandomSource randomSource) {
+        super(soundIn, categoryIn, randomSource);
         this.entity = object;
         this.stopCondition = stopCondition;
         super.looping = repeat;

@@ -112,15 +112,15 @@ public class Regeneration {
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
-        generator.addProvider(new EnglishLang(generator));
-        generator.addProvider(new RBlockLootTableGen(generator));
-        generator.addProvider(new LootGen(generator));
+        generator.addProvider(true, new EnglishLang(generator));
+        generator.addProvider(true, new RBlockLootTableGen(generator));
+        generator.addProvider(true, new LootGen(generator));
         RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
-        generator.addProvider(blockTags);
-        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
-        generator.addProvider(new RRecipeGen(generator));
-        generator.addProvider(new AdvancementGen(generator));
-        generator.addProvider(new RBiomes(generator, existingFileHelper));
+        generator.addProvider(true, blockTags);
+        generator.addProvider(true, new RItemTags(generator, blockTags, existingFileHelper));
+        generator.addProvider(true, new RRecipeGen(generator));
+        generator.addProvider(true, new AdvancementGen(generator));
+        generator.addProvider(true, new RBiomes(generator, existingFileHelper));
     }
 
 }

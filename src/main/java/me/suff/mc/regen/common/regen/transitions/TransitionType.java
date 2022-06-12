@@ -33,7 +33,7 @@ public abstract class TransitionType {
     public abstract Vec3 getDefaultSecondaryColor();
 
     public MutableComponent getTranslation() {
-        return Component.translatable("type.regeneration." + getRegistryName().getPath());
+        return Component.translatable("type.regeneration." + TransitionTypes.getTransitionId(this).getPath());
     }
 
     public void tick(IRegen cap) {

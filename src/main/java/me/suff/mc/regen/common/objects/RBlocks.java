@@ -38,12 +38,6 @@ public class RBlocks {
         return (state) -> state.getValue(BlockStateProperties.LIT) ? lightValue : 0;
     }
 
-    private static void genBlockItems(Block... blocks) {
-        for (Block block : blocks) {
-            RItems.ITEMS.register(block.getRegistryName().getPath(), () -> new BlockItem(block, new Item.Properties().tab(MAIN)));
-        }
-    }
-
     /**
      * Registers a Block and BlockItem to the ItemGroup of your choice
      */

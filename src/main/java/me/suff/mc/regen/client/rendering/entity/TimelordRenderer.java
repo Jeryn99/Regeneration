@@ -50,7 +50,7 @@ public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel
         mainModel = councilModel;
         addLayer(new RenderRegenLayer(this));
         addLayer(new HandLayer(this));
-        addLayer(new ItemInHandLayer<>(this));
+        //TODO addLayer(new ItemInHandLayer<>(this));
         addLayer(new ArrowLayer(entityRendererManager, this));
         addLayer(new TimelordHeadLayer(this));
     }

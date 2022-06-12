@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RedstoneTorchBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -41,7 +43,7 @@ public class ROreBlock extends Block {
     }
 
     private static void spawnParticles(Level world, BlockPos worldIn) {
-        Random random = world.random;
+        RandomSource random = world.random;
 
         for (Direction direction : Direction.values()) {
             BlockPos blockpos = worldIn.relative(direction);
@@ -87,20 +89,15 @@ public class ROreBlock extends Block {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
         if (state.getValue(LIT)) {
             worldIn.setBlock(pos, state.setValue(LIT, Boolean.FALSE), 3);
         }
     }
 
     @Override
-    public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack) {
-        super.spawnAfterBreak(state, worldIn, pos, stack);
-    }
-
-    @Override
-    public int getExpDrop(BlockState state, net.minecraft.world.level.LevelReader world, BlockPos pos, int fortune, int silktouch) {
-        return silktouch == 0 ? 1 + RANDOM.nextInt(5) : 0;
+    public int getExpDrop(BlockState state, LevelReader level, RandomSource randomSource, BlockPos pos, int fortuneLevel, int silkTouchLevel) {
+        return silkTouchLevel == 0 ? 1 + randomSource.nextInt(5) : 0;
     }
 
     @OnlyIn(Dist.CLIENT)

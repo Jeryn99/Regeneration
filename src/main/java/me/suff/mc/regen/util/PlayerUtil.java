@@ -39,7 +39,7 @@ public class PlayerUtil {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
             for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
                 for (MobEffect effect : ForgeRegistries.MOB_EFFECTS.getValues()) {
-                    if (name.contentEquals(effect.getRegistryName().toString())) {
+                    if (name.contentEquals(ForgeRegistries.MOB_EFFECTS.getKey(effect).toString())) {
                         POTIONS.add(effect);
                     }
                 }
@@ -73,7 +73,7 @@ public class PlayerUtil {
 
     public static void globalChat(Component body, MinecraftServer server) {
         if (server == null) return;
-        server.getPlayerList().broadcast(body, ChatType.SYSTEM, Util.NIL_UUID);
+        //TODO server.getPlayerList().broadcast(body, ChatType.SYSTEM, Util.NIL_UUID);
     }
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {

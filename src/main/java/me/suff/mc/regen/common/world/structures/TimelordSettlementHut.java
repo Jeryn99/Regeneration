@@ -9,6 +9,8 @@ import me.suff.mc.regen.util.RConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -16,48 +18,59 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
-import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
-import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
-import java.util.Random;
+import java.util.Optional;
 import java.util.function.Function;
 
-public class TimelordSettlementHut extends StructureFeature<NoneFeatureConfiguration> {
+public class TimelordSettlementHut extends Structure {
 
 
-    public TimelordSettlementHut(Codec<NoneFeatureConfiguration> p_72474_) {
-        super(p_72474_, PieceGeneratorSupplier.simple(TimelordSettlementHut::checkLocation, TimelordSettlementHut::generatePieces));
+    public static final Codec<TimelordSettlementHut> CODEC = simpleCodec(TimelordSettlementHut::new);
+
+    public TimelordSettlementHut(StructureSettings structureSettings) {
+        super(structureSettings);
     }
 
-    private static boolean checkLocation(PieceGeneratorSupplier.Context<NoneFeatureConfiguration> p_197155_) {
-        return p_197155_.validBiomeOnTop(Heightmap.Types.WORLD_SURFACE_WG);
+    @Override
+    public Optional<GenerationStub> findGenerationPoint(Structure.GenerationContext p_227595_) {
+        return onTopOfChunkCenter(p_227595_, Heightmap.Types.WORLD_SURFACE_WG, (p_227598_) -> {
+            this.generatePieces(p_227598_, p_227595_);
+        });
     }
 
-    private static void addPiece(StructureManager structureManager, BlockPos blockPos, Rotation rotation, StructurePiecesBuilder structurePieceAccessor, Random random, NoneFeatureConfiguration noneFeatureConfiguration) {
+    private void generatePieces(StructurePiecesBuilder structurePiecesBuilder, Structure.GenerationContext generationContext) {
+        ChunkPos chunkpos = generationContext.chunkPos();
+        WorldgenRandom worldgenrandom = generationContext.random();
+        BlockPos blockpos = new BlockPos(chunkpos.getMinBlockX(), 90, chunkpos.getMinBlockZ());
+        Rotation rotation = Rotation.getRandom(worldgenrandom);
+        TimelordSettlementHut.addPiece(generationContext.structureTemplateManager(), blockpos, rotation, structurePiecesBuilder, worldgenrandom);
+    }
+
+    private static void addPiece(StructureTemplateManager structureManager, BlockPos blockPos, Rotation rotation, StructurePiecesBuilder structurePieceAccessor, WorldgenRandom random) {
         ResourceLocation piece = HutPiece.HUTS[random.nextInt(HutPiece.HUTS.length)];
         structurePieceAccessor.addPiece(new HutPiece(0, structureManager, piece, piece.toString(), HutPiece.makeSettings(rotation), blockPos));
     }
 
-    private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> configurationContext) {
-        int height = configurationContext.chunkGenerator().getFirstFreeHeight(configurationContext.chunkPos().getMinBlockX(), configurationContext.chunkPos().getMinBlockZ(), Heightmap.Types.WORLD_SURFACE_WG, configurationContext.heightAccessor());
-        BlockPos blockpos = new BlockPos(configurationContext.chunkPos().getMinBlockX(), height, configurationContext.chunkPos().getMinBlockZ());
-        Rotation rotation = Rotation.getRandom(configurationContext.random());
-        addPiece(configurationContext.structureManager(), blockpos, rotation, structurePiecesBuilder, configurationContext.random(), configurationContext.config());
-    }
 
     @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.SURFACE_STRUCTURES;
+    }
+
+    @Override
+    public StructureType<?> type() {
+        return StructureType.BURIED_TREASURE;
     }
 
     public static class HutPiece extends TemplateStructurePiece {
@@ -66,17 +79,16 @@ public class TimelordSettlementHut extends StructureFeature<NoneFeatureConfigura
         private static final ResourceLocation HUT_C = new ResourceLocation(RConstants.MODID, "gallifrey_barn_d");
         private static final ResourceLocation[] HUTS = new ResourceLocation[]{HUT, HUT_C, HUT_D};
 
-
-        public HutPiece(int p_163661_, StructureManager p_163662_, ResourceLocation p_163663_, String p_163664_, StructurePlaceSettings p_163665_, BlockPos p_163666_) {
+        public HutPiece(int p_163661_, StructureTemplateManager p_163662_, ResourceLocation p_163663_, String p_163664_, StructurePlaceSettings p_163665_, BlockPos p_163666_) {
             super(RPieces.TIMELORD_HUT, p_163661_, p_163662_, p_163663_, p_163664_, p_163665_, p_163666_);
         }
 
-        public HutPiece(CompoundTag p_192678_, StructureManager p_192679_, Function<ResourceLocation, StructurePlaceSettings> p_192680_) {
+        public HutPiece(CompoundTag p_192678_, StructureTemplateManager p_192679_, Function<ResourceLocation, StructurePlaceSettings> p_192680_) {
             super(RPieces.TIMELORD_HUT, p_192678_, p_192679_, p_192680_);
         }
 
         public HutPiece(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag tag) {
-            super(RPieces.TIMELORD_HUT, tag, structurePieceSerializationContext.structureManager(), (p_162451_) -> makeSettings(Rotation.NONE));
+            super(RPieces.TIMELORD_HUT, tag, structurePieceSerializationContext.structureTemplateManager(), (p_162451_) -> makeSettings(Rotation.NONE));
         }
 
 
@@ -86,7 +98,7 @@ public class TimelordSettlementHut extends StructureFeature<NoneFeatureConfigura
 
 
         @Override
-        protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox p_73687_) {
+        protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, RandomSource rand, BoundingBox p_73687_) {
             if ("timelord".equals(function)) {
                 Timelord timelord = REntities.TIMELORD.get().create(worldIn.getLevel());
                 RegenCap.get(timelord).ifPresent(iRegen -> {
@@ -105,7 +117,6 @@ public class TimelordSettlementHut extends StructureFeature<NoneFeatureConfigura
                 worldIn.setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
             }
         }
-
     }
 
 }
