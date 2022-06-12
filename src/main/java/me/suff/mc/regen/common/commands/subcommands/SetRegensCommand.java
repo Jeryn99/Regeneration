@@ -12,8 +12,8 @@ import me.suff.mc.regen.util.RTextHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.BaseComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -36,21 +36,21 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
     }
 
     private static int setRegenForSingleEntity(CommandContext<CommandSourceStack> context, Entity entity, int amount) {
-        BaseComponent entityText = RTextHelper.getEntityTextObject(context.getSource().getLevel(), entity.getUUID());
+        MutableComponent entityText = RTextHelper.getEntityTextObject(context.getSource().getLevel(), entity.getUUID());
         //Need a special case Armor Stands, for some reason they are classified as LivingEntities...
         if (entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND && entity != null) {
             if (RegenConfig.COMMON.mobsHaveRegens.get() || entity instanceof ServerPlayer) {//If the config option allows mobs to have regens, continue
                 LivingEntity ent = (LivingEntity) entity;
                 RegenCap.get(ent).ifPresent((cap) -> cap.setRegens(amount));
-                context.getSource().sendSuccess(new TranslatableComponent("command.regen.set_regen.success", entityText, amount), false);
+                context.getSource().sendSuccess(Component.translatable("command.regen.set_regen.success", entityText, amount), false);
                 return Command.SINGLE_SUCCESS;
             } else {//Send error message if the config option doesn't allow for it
                 String configOptionKey = "config.regen.mobsHaveRegens";
-                context.getSource().sendFailure(new TranslatableComponent("command.regen.set_regen.config_off", entityText, new TranslatableComponent(configOptionKey).getString(), RegenConfig.COMMON.mobsHaveRegens.get()));
+                context.getSource().sendFailure(Component.translatable("command.regen.set_regen.config_off", entityText, Component.translatable(configOptionKey).getString(), RegenConfig.COMMON.mobsHaveRegens.get()));
                 return 0;
             }
         } else { //Don't make this work for non living entities
-            context.getSource().sendFailure(new TranslatableComponent("command.regen.set_regen.invalid_entity", amount, entityText));
+            context.getSource().sendFailure(Component.translatable("command.regen.set_regen.invalid_entity", amount, entityText));
             return 0;
         }
     }

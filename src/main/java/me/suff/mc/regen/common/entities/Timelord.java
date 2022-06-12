@@ -18,7 +18,7 @@ import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,6 +27,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -197,7 +198,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
                 data.setTransitionType(TransitionTypes.getRandomTimelordType());
                 initSkin(data);
                 genName();
-                populateDefaultEquipmentSlots(level.getCurrentDifficultyAt(blockPosition()));
+                populateDefaultEquipmentSlots(random, level.getCurrentDifficultyAt(blockPosition()));
                 getEntityData().set(HAS_SETUP, true);
             });
         }
@@ -244,7 +245,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         if (RegenUtil.USERNAMES.length <= 0) {
             RegenUtil.setupNames();
         }
-        setCustomName(new TranslatableComponent(RegenUtil.USERNAMES[random.nextInt(RegenUtil.USERNAMES.length - 1)]));
+        setCustomName(Component.literal(RegenUtil.USERNAMES[random.nextInt(RegenUtil.USERNAMES.length - 1)]));
     }
 
     @Override
@@ -414,7 +415,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+    protected void populateDefaultEquipmentSlots(RandomSource p_217055_, DifficultyInstance d) {
         if (getTimelordType() == TimelordType.GUARD) {
             Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(stack));
@@ -424,6 +425,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
 
     }
+
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
@@ -538,7 +540,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
 
         @Override
-        public MerchantOffer getOffer(Entity trader, Random rand) {
+        public MerchantOffer getOffer(Entity trader, RandomSource rand) {
             return new MerchantOffer(coin, coin2, wares, stock, xp, 0F);
         }
     }

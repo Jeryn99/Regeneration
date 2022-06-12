@@ -7,7 +7,7 @@ import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -35,13 +35,13 @@ public class ElixirItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
-        TextComponent prefix = new TextComponent("Elixir: ");
-        return prefix.append(getTrait(stack).translation());
+        MutableComponent prefix = Component.literal("Elixir: ");
+        return prefix.append((getTrait(stack).translation()));
     }
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (allowdedIn(group)) {
+        if (allowedIn(group)) {
             for (AbstractTrait trait : RegenTraitRegistry.TRAIT_REGISTRY.get().getValues()) {
                 if (trait.getRegistryName() != RegenTraitRegistry.BORING.get().getRegistryName()) {
                     ItemStack stack = new ItemStack(this);

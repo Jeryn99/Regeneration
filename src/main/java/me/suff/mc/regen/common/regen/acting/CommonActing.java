@@ -13,7 +13,7 @@ import me.suff.mc.regen.network.messages.SFXMessage;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -139,7 +139,7 @@ class CommonActing implements Acting {
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
-        PlayerUtil.sendMessage(cap.getLiving(), new TranslatableComponent("regen.messages.regen_warning"), true);
+        PlayerUtil.sendMessage(cap.getLiving(), Component.translatable("regen.messages.regen_warning"), true);
     }
 
     @Override
@@ -178,7 +178,7 @@ class CommonActing implements Acting {
             cap.setTrait(next);
             cap.setNextTrait(RegenTraitRegistry.BORING.get());
 
-            PlayerUtil.sendMessage(player, new TranslatableComponent("regen.messages.new_trait", next.translation().getString()), true);
+            PlayerUtil.sendMessage(player, Component.translatable("regen.messages.new_trait", next.translation().getString()), true);
         } else {
             cap.trait().remove(cap);
             cap.setTrait(RegenTraitRegistry.BORING.get());

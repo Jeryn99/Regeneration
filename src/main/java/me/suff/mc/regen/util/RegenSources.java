@@ -1,7 +1,6 @@
 package me.suff.mc.regen.util;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -26,6 +25,6 @@ public class RegenSources extends DamageSource {
 
     @Override
     public Component getLocalizedDeathMessage(LivingEntity entityLivingBaseIn) {
-        return new TranslatableComponent("regen.source." + message, entityLivingBaseIn.getName());
+        return Component.translatable("regen.source." + message, entityLivingBaseIn.getName());
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +31,7 @@ public class RegenUtil {
     public static TagKey<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
     public static TagKey<Biome> TIMELORD_SETTLEMENT = makeBiome("has_structure/timelord_settlement");
 
-    public static Random RAND = new Random();
+    public static RandomSource RAND = RandomSource.create();
     public static String[] USERNAMES = new String[]{};
 
     public static TagKey<Block> makeBlock(String domain, String path) {
@@ -54,7 +55,7 @@ public class RegenUtil {
             try {
 
                 ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
-                InputStream stream = ServerLifecycleHooks.getCurrentServer().getServerResources().resourceManager().getResource(resourceLocation).getInputStream();
+                InputStream stream = ServerLifecycleHooks.getCurrentServer().getServerResources().resourceManager().getResource(resourceLocation).get().open();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder sb = new StringBuilder();
 

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,7 +15,7 @@ public abstract class AbstractTab extends AbstractButton {
     ItemStack renderStack;
 
     public AbstractTab(int id, int posX, int posY, ItemStack renderStack) {
-        super(posX, posY, 28, 32, new TranslatableComponent(""));
+        super(posX, posY, 28, 32, Component.literal(""));
         this.renderStack = renderStack;
         this.id = id;
     }

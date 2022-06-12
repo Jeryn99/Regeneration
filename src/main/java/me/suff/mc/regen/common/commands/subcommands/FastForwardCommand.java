@@ -12,7 +12,7 @@ import me.suff.mc.regen.network.messages.RemoveSkinPlayerMessage;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.network.PacketDistributor;
 
 public class FastForwardCommand implements Command<CommandSourceStack> {
@@ -36,7 +36,7 @@ public class FastForwardCommand implements Command<CommandSourceStack> {
                     e.printStackTrace();
                 }
             } else {
-                throw new CommandRuntimeException(new TranslatableComponent("regen.messages.fast_forward_cmd_fail"));
+                throw new CommandRuntimeException(Component.translatable("regen.messages.fast_forward_cmd_fail"));
             }
         });
         return Command.SINGLE_SUCCESS;

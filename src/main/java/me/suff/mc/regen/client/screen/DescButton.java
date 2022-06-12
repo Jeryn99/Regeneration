@@ -2,7 +2,6 @@ package me.suff.mc.regen.client.screen;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class DescButton extends Button {
     public DescButton setDescription(String[] description) {
         ArrayList<FormattedCharSequence> reorderingProcessors = new ArrayList<>();
         for (String textComponent : description) {
-            reorderingProcessors.add(new TranslatableComponent(textComponent).getVisualOrderText());
+            reorderingProcessors.add(Component.translatable(textComponent).getVisualOrderText());
         }
         this.description = reorderingProcessors;
         return this;

@@ -14,8 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
@@ -29,7 +28,7 @@ public class ColorScreen extends AbstractContainerScreen {
     private ColorWidget colorChooserPrimary, colorChooserSecondary;
 
     public ColorScreen() {
-        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), new TranslatableComponent("regen.gui.color_gui"));
+        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), Component.translatable("regen.gui.color_gui"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -54,7 +53,7 @@ public class ColorScreen extends AbstractContainerScreen {
 
 
         // Reset Style Button
-        this.addRenderableWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.undo"), button -> {
+        this.addRenderableWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.undo"), button -> {
             Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
             Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
             colorChooserPrimary.setColor(primaryColour.getRGB());
@@ -63,10 +62,10 @@ public class ColorScreen extends AbstractContainerScreen {
         }));
 
         // Close Button
-        this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
+        this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
 
         // Default Button
-        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.default"), button -> {
+        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.default"), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 TransitionType regenType = data.transitionType();
                 Vec3 primColor = regenType.getDefaultPrimaryColor();
@@ -80,9 +79,9 @@ public class ColorScreen extends AbstractContainerScreen {
 
         }));
 
-        colorChooserPrimary = new ColorWidget(font, cx + 20, cy + 35, 70, 20, new TextComponent("Regen"), new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
+        colorChooserPrimary = new ColorWidget(font, cx + 20, cy + 35, 70, 20, Component.literal("Regen"), new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
-        colorChooserSecondary = new ColorWidget(font, cx + 150, cy + 35, 70, 20, new TextComponent("Regen"), new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
+        colorChooserSecondary = new ColorWidget(font, cx + 150, cy + 35, 70, 20, Component.literal("Regen"), new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
         addRenderableWidget(colorChooserPrimary);
         addRenderableWidget(colorChooserSecondary);
@@ -127,12 +126,12 @@ public class ColorScreen extends AbstractContainerScreen {
         int cy = (height - imageHeight) / 2;
 
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
-            String str = new TranslatableComponent("regen.gui.primary").getString();
+            String str = Component.translatable("regen.gui.primary").getString();
             int length = getMinecraft().font.width(str);
-            this.font.draw(matrixStack, new TextComponent(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
-            str = new TranslatableComponent("regen.gui.secondary").getString();
+            this.font.draw(matrixStack, Component.literal(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
+            str = Component.translatable("regen.gui.secondary").getString();
             length = font.width(str);
-            this.font.draw(matrixStack, new TextComponent(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
+            this.font.draw(matrixStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
 
         colorChooserPrimary.render(matrixStack, x, y, partialTicks);

@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * on 06/05/2020 @ 14:09
  */
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
+public class TransitionTypes {
 
     public static final DeferredRegister<TransitionType> TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
     public static final RegistryObject<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));

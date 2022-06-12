@@ -12,7 +12,7 @@ import me.suff.mc.regen.network.messages.SkinMessage;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -85,7 +85,7 @@ class ClientActing implements Acting {
     public void onGoCritical(IRegen cap) {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
-                ClientUtil.createToast(new TranslatableComponent("regen.toast.enter_critical"), new TranslatableComponent("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
+                ClientUtil.createToast(Component.translatable("regen.toast.enter_critical"), Component.translatable("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
                 ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F);
             }
         }

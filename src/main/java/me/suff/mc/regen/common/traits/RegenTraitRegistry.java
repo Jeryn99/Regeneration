@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -55,7 +56,7 @@ public class RegenTraitRegistry {
     }
 
 
-    public static AbstractTrait getRandomTrait(Random random, boolean isMob) {
+    public static AbstractTrait getRandomTrait(RandomSource random, boolean isMob) {
         Collection<AbstractTrait> value = TRAIT_REGISTRY.get().getValues();
         ArrayList<AbstractTrait> traits = new ArrayList<>(value);
         traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(RegenTraitRegistry.BORING.get().getRegistryName()));

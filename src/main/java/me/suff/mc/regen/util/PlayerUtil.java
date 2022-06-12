@@ -9,7 +9,7 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -73,21 +73,17 @@ public class PlayerUtil {
 
     public static void globalChat(Component body, MinecraftServer server) {
         if (server == null) return;
-        server.getPlayerList().broadcastMessage(body, ChatType.SYSTEM, Util.NIL_UUID);
-    }
-
-    public static void chatAs(Entity from, Component body) {
-        from.getServer().getPlayerList().broadcastMessage(new TranslatableComponent("chat.type.text", from.getDisplayName(), body), ChatType.CHAT, from.getUUID());
+        server.getPlayerList().broadcast(body, ChatType.SYSTEM, Util.NIL_UUID);
     }
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof Player player)) return;
         if (!player.level.isClientSide) {
-            player.displayClientMessage(new TranslatableComponent(message), hotBar);
+            player.displayClientMessage(Component.translatable(message), hotBar);
         }
     }
 
-    public static void sendMessage(LivingEntity livingEntity, TranslatableComponent translation, boolean hotBar) {
+    public static void sendMessage(LivingEntity livingEntity, MutableComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof Player player)) return;
         if (!player.level.isClientSide) {
             player.displayClientMessage(translation, hotBar);

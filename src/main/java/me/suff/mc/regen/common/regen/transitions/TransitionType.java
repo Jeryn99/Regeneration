@@ -1,12 +1,12 @@
 package me.suff.mc.regen.common.regen.transitions;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class TransitionType extends ForgeRegistryEntry<TransitionType> {
+public abstract class TransitionType {
 
     /**
      * @return in ticks
@@ -32,8 +32,8 @@ public abstract class TransitionType extends ForgeRegistryEntry<TransitionType> 
 
     public abstract Vec3 getDefaultSecondaryColor();
 
-    public TranslatableComponent getTranslation() {
-        return new TranslatableComponent("type.regeneration." + getRegistryName().getPath());
+    public MutableComponent getTranslation() {
+        return Component.translatable("type.regeneration." + getRegistryName().getPath());
     }
 
     public void tick(IRegen cap) {

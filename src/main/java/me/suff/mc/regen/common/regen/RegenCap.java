@@ -16,9 +16,9 @@ import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -558,7 +558,7 @@ public class RegenCap implements IRegen {
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
                 entity.heal(healthNeeded);
                 if (livingEntity instanceof Player) {
-                    PlayerUtil.sendMessage(livingEntity, new TranslatableComponent("regen.messages.healed", entity.getName()), true);
+                    PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.healed", entity.getName()), true);
                 }
                 event.setAmount(0.0F);
                 livingEntity.hurt(RegenSources.REGEN_DMG_HEALING, healthNeeded);
@@ -584,7 +584,7 @@ public class RegenCap implements IRegen {
                 scheduleNextHandGlow();
                 if (!e.getEntityLiving().level.isClientSide) {
                     if (e.getEntityLiving() instanceof Player) {
-                        PlayerUtil.sendMessage(e.getEntityLiving(), new TranslatableComponent("regen.messages.regen_delayed"), true);
+                        PlayerUtil.sendMessage(e.getEntityLiving(), Component.literal("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something
@@ -616,8 +616,8 @@ public class RegenCap implements IRegen {
 
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof Player) {
-                    TranslatableComponent text = new TranslatableComponent("regen.messages.regen_death_msg", livingEntity.getName());
-                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(deathMessage()))));
+                    MutableComponent text = Component.translatable("regen.messages.regen_death_msg", livingEntity.getName());
+                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(deathMessage()))));
                     PlayerUtil.globalChat(text, Objects.requireNonNull(livingEntity.getServer()));
                 }
             }
@@ -636,8 +636,7 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.GRACE_CRIT;
             scheduleTransitionInSeconds(RegenStates.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
             ActingForwarder.onGoCritical(RegenCap.this);
-            if (livingEntity instanceof ServerPlayer) {
-                ServerPlayer playerEntity = (ServerPlayer) livingEntity;
+            if (livingEntity instanceof ServerPlayer playerEntity) {
                 TriggerManager.CRITICAL.trigger(playerEntity);
             }
             syncToClients(null);
@@ -662,7 +661,7 @@ public class RegenCap implements IRegen {
             syncToClients(null);
             nextTransition = null;
             if (livingEntity instanceof Player) {
-                PlayerUtil.sendMessage(livingEntity, new TranslatableComponent("regen.messages.post_ended"), true);
+                PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.post_ended"), true);
             }
             handState = Hand.NO_GONE;
         }

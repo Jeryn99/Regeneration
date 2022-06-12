@@ -14,7 +14,7 @@ import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -139,7 +139,7 @@ public class CommonEvents {
             //Handle Post
             if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
-                PlayerUtil.sendMessage(livingEntity, new TranslatableComponent("regen.messages.reduced_dmg"), true);
+                PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
             }
 
             //Handle Death

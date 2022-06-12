@@ -11,10 +11,11 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +42,7 @@ public class AdvancementGen implements DataProvider {
 
 
     @Override
-    public void run(HashCache hashCache) throws IOException {
+    public void run(CachedOutput hashCache) throws IOException {
         Path path = this.generator.getOutputFolder();
         TriggerManager.init();
         Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.TriggerInstance.hasItems(RItems.FOB.get()), null, FrameType.GOAL);
@@ -62,7 +63,7 @@ public class AdvancementGen implements DataProvider {
         Advancement council = this.createAdvancement("council", new ItemStack(RItems.M_ROBES_HEAD.get()), new BaseTrigger.Instance(TriggerManager.COUNCIL.getId()), trade);
 
         for (Advancement adv : advancements) {
-            DataProvider.save(GSON, hashCache, adv.deconstruct().serializeToJson(), getPath(path, adv));
+            DataProvider.saveStable(hashCache, adv.deconstruct().serializeToJson(), getPath(path, adv));
         }
     }
 
@@ -78,8 +79,8 @@ public class AdvancementGen implements DataProvider {
         Advancement.Builder adv = Advancement.Builder.advancement()
                 .display(
                         display.getItem(),
-                        new TranslatableComponent("advancements.regen.title." + title),
-                        new TranslatableComponent("advancements.regen.desc." + title),
+                        Component.translatable("advancements.regen.title." + title),
+                        Component.translatable("advancements.regen.desc." + title),
                         new ResourceLocation("regen:textures/block/zero_roundel_half.png"),
                         frameType,
                         true,

@@ -11,6 +11,7 @@ import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -51,7 +52,7 @@ public class CommonSkin {
     }
 
     //Choose a random PNG from a folder
-    public static File chooseRandomSkin(Random rand, boolean isAlex, boolean isTimelord) {
+    public static File chooseRandomSkin(RandomSource rand, boolean isAlex, boolean isTimelord) {
         File skins = isTimelord ? (isAlex ? SKIN_DIRECTORY_FEMALE_TIMELORD : SKIN_DIRECTORY_MALE_TIMELORD) : (isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE);
 
         if (!skins.exists()) {

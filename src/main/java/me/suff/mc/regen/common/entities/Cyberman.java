@@ -7,7 +7,6 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
@@ -37,16 +36,20 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     }
 
     @Override
-    public void killed(ServerLevel serverLevel, LivingEntity livingEntity) {
-        super.killed(serverLevel, livingEntity);
+    public boolean wasKilled(ServerLevel serverLevel, LivingEntity livingEntity) {
+        boolean wasKilled = super.wasKilled(serverLevel, livingEntity);
 
-        if (ForgeEventFactory.canLivingConvert(livingEntity, REntities.TIMELORD.get(), (timer) -> {
-        }) && livingEntity instanceof Timelord timelord) {
-            Component customName = timelord.getCustomName();
-            Cyberman cyberman = timelord.convertTo(REntities.CYBERLORD.get(), true);
-            cyberman.setCustomName(new TextComponent("Cyber-" + customName.getString()));
+        if(wasKilled) {
+            if (ForgeEventFactory.canLivingConvert(livingEntity, REntities.TIMELORD.get(), (timer) -> {
+            }) && livingEntity instanceof Timelord timelord) {
+                Component customName = timelord.getCustomName();
+                Cyberman cyberman = timelord.convertTo(REntities.CYBERLORD.get(), true);
+                cyberman.setCustomName(Component.literal("Cyber-" + customName.getString()));
+            }
         }
+        return wasKilled;
     }
+
 
     @Nullable
     @Override

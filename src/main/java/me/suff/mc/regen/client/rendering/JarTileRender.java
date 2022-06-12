@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,8 +61,8 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
             matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = matrixStackIn.last().pose();
             Font fontrenderer = Minecraft.getInstance().font;
-            float f2 = (float) (-fontrenderer.width(new TranslatableComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
-            fontrenderer.drawInBatch(new TranslatableComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
+            float f2 = (float) (-fontrenderer.width(Component.translatable(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
+            fontrenderer.drawInBatch(Component.translatable(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
             matrixStackIn.popPose();
         }
 

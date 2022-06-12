@@ -13,8 +13,8 @@ import me.suff.mc.regen.util.RTextHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.BaseComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -33,11 +33,11 @@ public class SetTraitsCommand implements Command<CommandSourceStack> {
         CommandSourceStack source = context.getSource();
         AbstractTrait trait = context.getArgument("trait", AbstractTrait.class);
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
-        BaseComponent playerText = RTextHelper.getPlayerTextObject(source.getLevel(), player.getUUID());
-        BaseComponent traitText = RTextHelper.getTraitTextObject(trait);
+        MutableComponent playerText = RTextHelper.getPlayerTextObject(source.getLevel(), player.getUUID());
+        MutableComponent traitText = RTextHelper.getTraitTextObject(trait);
 
         if (player == null || trait == null) {
-            source.sendFailure(new TranslatableComponent("command.regen.set_trait.error", playerText, traitText));
+            source.sendFailure(Component.translatable("command.regen.set_trait.error", playerText, traitText));
             return 0; //Zero is error
         }
         RegenCap.get(player).ifPresent((data) -> {
@@ -46,7 +46,7 @@ public class SetTraitsCommand implements Command<CommandSourceStack> {
             oldTrait.remove(data);
             data.setTrait(trait);
             trait.apply(data);
-            source.sendSuccess(new TranslatableComponent("command.regen.set_trait.success", playerText, traitText), false);
+            source.sendSuccess(Component.translatable("command.regen.set_trait.success", playerText, traitText), false);
         });
         return Command.SINGLE_SUCCESS;
     }

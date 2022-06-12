@@ -18,7 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
@@ -31,7 +32,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType skinType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
 
     public PreferencesScreen() {
-        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), new TranslatableComponent("Regeneration"));
+        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), Component.literal("Regeneration"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -48,9 +49,9 @@ public class PreferencesScreen extends AbstractContainerScreen {
         int cy = (height - imageHeight) / 2;
         final int btnW = 66, btnH = 20;
 
-        Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslatableComponent("regen.gui.close"), onPress -> Minecraft.getInstance().setScreen(null));
+        Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, Component.translatable("regen.gui.close"), onPress -> Minecraft.getInstance().setScreen(null));
 
-        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH, new TranslatableComponent("regen.gui.sound_scheme." + soundScheme.name().toLowerCase()), button -> {
+        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH, Component.translatable("regen.gui.sound_scheme." + soundScheme.name().toLowerCase()), button -> {
 
             IRegen.TimelordSound newOne;
             IRegen.TimelordSound[] values = soundScheme.getAllValues();
@@ -61,7 +62,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
             } else {
                 newOne = soundScheme = soundScheme.next();
             }
-            button.setMessage(new TranslatableComponent("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
+            button.setMessage(Component.translatable("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ChangeSoundScheme(newOne));
         });
 
@@ -77,20 +78,20 @@ public class PreferencesScreen extends AbstractContainerScreen {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW, btnH, new TranslatableComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW, btnH, Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
             if (skinType.next() != null) {
                 skinType = skinType.next();
             } else {
                 skinType = PlayerUtil.SkinType.ALEX;
             }
-            button.setMessage(new TranslatableComponent("regeneration.skin_type." + skinType.name().toLowerCase()));
+            button.setMessage(Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase()));
             PlayerUtil.updateModel(skinType);
         });
         btnRegenType.setMessage(transitionType.getTranslation());
 
-        Button btnColor = new Button(width / 2 + 50 - 66, cy + 103, btnW, btnH, new TranslatableComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
+        Button btnColor = new Button(width / 2 + 50 - 66, cy + 103, btnW, btnH, Component.translatable("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 
-        Button btnSkinChoice = new Button(width / 2 + 50 + 2, cy + 103, btnW - 2, btnH, new TranslatableComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
+        Button btnSkinChoice = new Button(width / 2 + 50 + 2, cy + 103, btnW - 2, btnH, Component.translatable("regen.gui.skin_choice"), p_onPress_1_ -> {
             Minecraft.getInstance().setScreen(new IncarnationScreen());
         });
 
@@ -112,13 +113,13 @@ public class PreferencesScreen extends AbstractContainerScreen {
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
         InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - x, (float) (topPos + 75 - 50) - y, Minecraft.getInstance().player);
-        String str = new TranslatableComponent("regen.gui.remaining_regens.status", data.regens()).getString();
+        String str = Component.translatable("regen.gui.remaining_regens.status", data.regens()).getString();
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
             int color = iRegen.traitActive() ? Color.GREEN.getRGB() : Color.RED.getRGB();
-            TranslatableComponent traitLang = data.trait().translation();
+            MutableComponent traitLang = data.trait().translation();
             font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 35, color);
-            TranslatableComponent traitLangDesc = data.trait().description();
+            MutableComponent traitLangDesc = data.trait().description();
             font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 45, color);
         });
 

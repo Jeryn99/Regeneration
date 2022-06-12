@@ -13,7 +13,7 @@ import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -96,11 +96,11 @@ public class FobWatchItem extends Item {
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
-                PlayerUtil.sendMessage(player, new TranslatableComponent("regen.messages.gained_regens", used), true);
+                PlayerUtil.sendMessage(player, Component.translatable("regen.messages.gained_regens", used), true);
             } else {
                 if (!world.isClientSide) {
                     setOpen(stack, true);
-                    PlayerUtil.sendMessage(player, new TranslatableComponent("regen.messages.now_timelord"), true);
+                    PlayerUtil.sendMessage(player, Component.translatable("regen.messages.now_timelord"), true);
                 }
             }
 

@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -40,7 +39,7 @@ public class SpawnItem extends Item {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (allowdedIn(group)) {
+        if (allowedIn(group)) {
             for (Timelord timelordType : SpawnItem.Timelord.values()) {
                 ItemStack itemstack = new ItemStack(this);
                 setType(itemstack, timelordType);
@@ -52,7 +51,7 @@ public class SpawnItem extends Item {
     @Override
     public Component getName(ItemStack stack) {
         Timelord name = getType(stack);
-        return new TranslatableComponent("regen.timelord_type." + name.name().toLowerCase());
+        return Component.translatable("regen.timelord_type." + name.name().toLowerCase());
     }
 
     @Override

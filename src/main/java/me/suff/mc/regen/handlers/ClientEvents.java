@@ -30,8 +30,6 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -59,7 +57,7 @@ public class ClientEvents {
         LocalPlayer player = Minecraft.getInstance().player;
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
-                event.setContent(new TextComponent(ChatFormatting.OBFUSCATED + event.getContent().getString()));
+                event.setContent(Component.literal(ChatFormatting.OBFUSCATED + event.getContent().getString()));
             }
         });
     }
@@ -177,11 +175,11 @@ public class ClientEvents {
             switch (cap.regenState()) {
                 case GRACE:
                     RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
-                    warning = new TranslatableComponent("regen.messages.warning.grace", forceKeybind.getString()).getString();
+                    warning = Component.translatable("regen.messages.warning.grace", forceKeybind.getString()).getString();
                     break;
                 case GRACE_CRIT:
                     RenderHelp.renderVig(new Vec3(1, 0, 0), 0.5F);
-                    warning = new TranslatableComponent("regen.messages.warning.grace_critical", forceKeybind.getString()).getString();
+                    warning = Component.translatable("regen.messages.warning.grace_critical", forceKeybind.getString()).getString();
                     break;
 
                 case REGENERATING:
@@ -216,12 +214,12 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
+    public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
         Entity viewer = Minecraft.getInstance().getCameraEntity();
         if (viewer instanceof LivingEntity livingEntity) {
             RegenCap.get(livingEntity).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.GRACE_CRIT) {
-                    event.setCanceled(true);
+                    event.setCanceled(true); //TODO dumb math
                     event.setDensity(35F);
                 }
                 if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.updateTicks() > 0) {
