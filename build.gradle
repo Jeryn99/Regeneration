@@ -22,7 +22,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 
 
-version = '1.0.1'
+version = '40.0.1'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'regen'
 
@@ -170,7 +170,7 @@ curseforge {
             releaseType = 'release'
             addGameVersion '1.18.2'
             mainArtifact(jar) {
-                displayName = "[1.18.X] Regeneration - $project.version"
+                displayName = "[1.18.2] Regeneration - $project.version"
             }
         }
     }

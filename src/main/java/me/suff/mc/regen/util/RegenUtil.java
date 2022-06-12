@@ -1,12 +1,13 @@
 package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.Regeneration;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.commons.codec.binary.Base64;
@@ -27,12 +28,17 @@ public class RegenUtil {
     public static TagKey<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
     public static TagKey<Block> ZINC = makeBlock("forge", "ores/zinc");
     public static TagKey<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
+    public static TagKey<Biome> TIMELORD_SETTLEMENT = makeBiome("has_structure/timelord_settlement");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
 
     public static TagKey<Block> makeBlock(String domain, String path) {
         return BlockTags.create(new ResourceLocation(domain, path));
+    }
+
+    private static TagKey<Biome> makeBiome(String name) {
+        return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(RConstants.MODID, name));
     }
 
     public static TagKey<Item> makeItem(String domain, String path) {

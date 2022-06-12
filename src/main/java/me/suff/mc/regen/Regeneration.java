@@ -14,6 +14,8 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
+import me.suff.mc.regen.common.world.RFeatures;
+import me.suff.mc.regen.common.world.structures.pieces.RPieces;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
@@ -63,10 +65,8 @@ public class Regeneration {
         RGlobalLoot.GLM.register(modBus);
         RegenTraitRegistry.TRAITS.register(modBus);
         TransitionTypes.TRANSITION_TYPES.register(modBus);
-   //     RFeatures.DEFERRED_REGISTRY_STRUCTURE.register(modBus);
+        RFeatures.DEFERRED_REGISTRY_STRUCTURE.register(modBus);
 
-        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-        // forgeBus.addListener(EventPriority.NORMAL, RWorldHelper::addDimensionalSpacing);
 
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
@@ -92,12 +92,8 @@ public class Regeneration {
         DownloadSkinsThread.setup();
         RSoundSchemes.init();
         TriggerManager.init();
-        event.enqueueWork(() ->
-        {
-            //   RFeatures.ores();
-            //    RFeatures.setupStructures();
-            //    RWorldHelper.registerConfiguredStructures();
-        });
+        event.enqueueWork(RFeatures::ores);
+        RPieces.init();
     }
 
     @SubscribeEvent
@@ -124,6 +120,7 @@ public class Regeneration {
         generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementGen(generator));
+        generator.addProvider(new RBiomes(generator, existingFileHelper));
     }
 
 }
