@@ -1,24 +1,24 @@
 {
   "parent": "regen:change_refusal",
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:critical_period"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:clock"
-    },
-    "title": {
-      "translate": "advancements.regen.title.critical_period"
-    },
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
       "translate": "advancements.regen.desc.critical_period"
     },
     "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
     "hidden": false,
-    "background": "regen:textures/block/zero_roundel_half.png"
-  },
-  "criteria": {
-    "0": {
-      "trigger": "minecraft:critical_period"
+    "icon": {
+      "item": "minecraft:clock"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.regen.title.critical_period"
     }
   },
   "requirements": [

@@ -63,7 +63,6 @@ public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArm
 
     @Override
     public void renderToBuffer(@NotNull PoseStack matrixStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-
         if (slot == EquipmentSlot.HEAD) {
             matrixStack.pushPose();
             if (livingEntity.isShiftKeyDown()) {
@@ -82,6 +81,7 @@ public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArm
             leftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
         }
     }
+
 
     @Override
     public LivingEntity getLiving() {

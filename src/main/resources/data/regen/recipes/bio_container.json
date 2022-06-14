@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "F": {
+      "item": "minecraft:iron_ingot"
+    },
+    "O": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "P": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "Z": {
+      "item": "regen:zinc"
+    }
+  },
   "pattern": [
     "FZF",
     "FPF",
     "FOF"
   ],
-  "key": {
-    "Z": {
-      "item": "regen:zinc"
-    },
-    "F": {
-      "item": "minecraft:iron_ingot"
-    },
-    "P": {
-      "item": "minecraft:rotten_flesh"
-    },
-    "O": {
-      "item": "minecraft:glowstone_dust"
-    }
-  },
   "result": {
     "item": "regen:bio_container"
   }

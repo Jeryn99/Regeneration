@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "entries": [
     "regen:chests/stronghold_library",
     "regen:gameplay/hero_of_the_village/librarian_gift",
@@ -12,5 +11,6 @@
     "regen:chests/woodland_mansion",
     "regen:chests/buried_treasure",
     "regen:chests/shipwreck_supply"
-  ]
+  ],
+  "replace": false
 }

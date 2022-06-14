@@ -1,9 +1,9 @@
 {
   "type": "minecraft:blasting",
+  "cookingtime": 150,
+  "experience": 0.8,
   "ingredient": {
     "item": "regen:deepslate_zinc_ore"
   },
-  "result": "regen:zinc",
-  "experience": 0.8,
-  "cookingtime": 150
+  "result": "regen:zinc"
 }

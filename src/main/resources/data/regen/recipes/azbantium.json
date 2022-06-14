@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ZZZ",
-    "Z Z",
-    "ZZZ"
-  ],
   "key": {
     "Z": {
       "item": "regen:zinc"
     }
   },
+  "pattern": [
+    "ZZZ",
+    "Z Z",
+    "ZZZ"
+  ],
   "result": {
-    "item": "regen:azbantium",
-    "count": 2
+    "count": 2,
+    "item": "regen:azbantium"
   }
 }

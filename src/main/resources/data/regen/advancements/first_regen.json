@@ -1,24 +1,24 @@
 {
   "parent": "regen:watch_is_me",
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:first_regen"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:player_head"
-    },
-    "title": {
-      "translate": "advancements.regen.title.first_regen"
-    },
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
       "translate": "advancements.regen.desc.first_regen"
     },
     "frame": "challenge",
-    "show_toast": true,
-    "announce_to_chat": true,
     "hidden": false,
-    "background": "regen:textures/block/zero_roundel_half.png"
-  },
-  "criteria": {
-    "0": {
-      "trigger": "minecraft:first_regen"
+    "icon": {
+      "item": "minecraft:player_head"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.regen.title.first_regen"
     }
   },
   "requirements": [

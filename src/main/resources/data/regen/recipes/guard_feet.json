@@ -1,11 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "regen",
-  "pattern": [
-    "   ",
-    "I I",
-    "Z Z"
-  ],
   "key": {
     "I": {
       "item": "minecraft:iron_ingot"
@@ -14,6 +9,11 @@
       "item": "regen:zinc"
     }
   },
+  "pattern": [
+    "   ",
+    "I I",
+    "Z Z"
+  ],
   "result": {
     "item": "regen:guard_feet"
   }

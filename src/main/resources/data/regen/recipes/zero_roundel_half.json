@@ -1,11 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "regen",
-  "pattern": [
-    "   ",
-    "ZIZ",
-    "ZZZ"
-  ],
   "key": {
     "I": {
       "item": "regen:zinc"
@@ -14,6 +9,11 @@
       "tag": "minecraft:stone_bricks"
     }
   },
+  "pattern": [
+    "   ",
+    "ZIZ",
+    "ZZZ"
+  ],
   "result": {
     "item": "regen:zero_roundel_half"
   }

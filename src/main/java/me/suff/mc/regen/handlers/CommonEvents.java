@@ -229,7 +229,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
-        RegenCommand.register(event.getDispatcher());
+        //TODO RegenCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
