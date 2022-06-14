@@ -6,6 +6,7 @@
   },
   "biomes": "#regen:has_structure/timelord_settlement",
   "step": "surface_structures",
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
   "adapt_noise": true,
   "spawn_overrides": {
     "monster": {
