@@ -30,7 +30,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Iterator;
-import java.util.Random;
 import java.util.UUID;
 
 class CommonActing implements Acting {
@@ -170,7 +169,7 @@ class CommonActing implements Acting {
 
             //Get the new Trait
             AbstractTrait next = cap.getNextTrait();
-            if (next.getRegistryName().toString().equals(RegenTraitRegistry.BORING.get().getRegistryName().toString())) {
+            if (RegenTraitRegistry.getTraitLocation(next).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.BORING.get()).toString())) {
                 next = RegenTraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof Player));
             }
             next.apply(cap);
@@ -194,7 +193,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getCommandSenderWorld().dimension()), new SFXMessage(getRandomSound(living.getRandom(), cap).getRegistryName(), living.getId()));
+        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getCommandSenderWorld().dimension()), new SFXMessage(getRandomSound(living.getRandom(), cap).getLocation(), living.getId()));
 
         living.getAttribute(Attributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);

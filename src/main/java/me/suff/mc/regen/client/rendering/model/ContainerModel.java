@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerModel extends EntityModel {
     public static ResourceLocation CONTAINER_TEXTURE = new ResourceLocation(RConstants.MODID, "textures/tile/container.png");
@@ -43,13 +44,13 @@ public class ContainerModel extends EntityModel {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         lid.render(poseStack, buffer, packedLight, packedOverlay);
         jar.render(poseStack, buffer, packedLight, packedOverlay);
     }
 
     @Override
-    public void setupAnim(Entity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {
+    public void setupAnim(@NotNull Entity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {
 
     }
 }

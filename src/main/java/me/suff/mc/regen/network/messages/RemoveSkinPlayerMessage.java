@@ -21,9 +21,7 @@ public class RemoveSkinPlayerMessage {
     }
 
     public static void handle(RemoveSkinPlayerMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Minecraft.getInstance().submitAsync(() -> {
-            SkinHandler.removePlayerSkin(message.livingEntity);
-        });
+        Minecraft.getInstance().submitAsync(() -> SkinHandler.removePlayerSkin(message.livingEntity));
         ctx.get().setPacketHandled(true);
     }
 

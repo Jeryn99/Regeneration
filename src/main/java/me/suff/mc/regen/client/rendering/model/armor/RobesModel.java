@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArmor {
 
@@ -61,7 +62,7 @@ public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArm
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@NotNull PoseStack matrixStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         if (slot == EquipmentSlot.HEAD) {
             matrixStack.pushPose();

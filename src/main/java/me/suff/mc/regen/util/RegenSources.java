@@ -3,6 +3,7 @@ package me.suff.mc.regen.util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class RegenSources extends DamageSource {
 
@@ -24,7 +25,7 @@ public class RegenSources extends DamageSource {
     }
 
     @Override
-    public Component getLocalizedDeathMessage(LivingEntity entityLivingBaseIn) {
+    public @NotNull Component getLocalizedDeathMessage(LivingEntity entityLivingBaseIn) {
         return Component.translatable("regen.source." + message, entityLivingBaseIn.getName());
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class RenderRegenLayer extends RenderLayer {
 
@@ -42,7 +43,7 @@ public class RenderRegenLayer extends RenderLayer {
 
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entitylivingbaseIn instanceof LivingEntity livingEntity) {
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
                 TransitionType type = iRegen.transitionType();

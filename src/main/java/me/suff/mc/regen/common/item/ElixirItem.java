@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,13 +35,13 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public @NotNull Component getName(@NotNull ItemStack stack) {
         MutableComponent prefix = Component.literal("Elixir: ");
         return prefix.append((getTrait(stack).translation()));
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (allowedIn(group)) {
             for (AbstractTrait trait : RegenTraitRegistry.TRAIT_REGISTRY.get().getValues()) {
                 if (RegenTraitRegistry.getTraitLocation(trait) != RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.BORING.get())) {
@@ -53,7 +54,7 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (itemstack.getItem() instanceof ElixirItem) {
             playerIn.startUsingItem(handIn);
@@ -63,17 +64,17 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.EAT;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 32;
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+    public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, Level worldIn, @NotNull LivingEntity entityLiving) {
         if (worldIn.isClientSide) return super.finishUsingItem(stack, worldIn, entityLiving);
         RegenCap.get(entityLiving).ifPresent(iRegen -> {
             if (iRegen.canRegenerate()) {
@@ -89,7 +90,7 @@ public class ElixirItem extends Item {
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(getTrait(stack).description());
     }

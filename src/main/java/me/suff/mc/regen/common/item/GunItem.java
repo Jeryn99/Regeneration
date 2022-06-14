@@ -18,6 +18,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 /* Created by Craig on 01/03/2021 */
 public class GunItem extends Item {
@@ -32,7 +33,7 @@ public class GunItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack itemStack) {
+    public int getUseDuration(@NotNull ItemStack itemStack) {
         return 72000;
     }
 
@@ -42,7 +43,7 @@ public class GunItem extends Item {
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull LivingEntity entityLiving, int timeLeft) {
 
         if (entityLiving instanceof Player playerIn) {
             boolean isPistol = this == RItems.PISTOL.get();
@@ -84,7 +85,7 @@ public class GunItem extends Item {
 
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand interactionHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player player, @NotNull InteractionHand interactionHand) {
         player.startUsingItem(interactionHand);
         return super.use(worldIn, player, interactionHand);
     }
@@ -94,18 +95,18 @@ public class GunItem extends Item {
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack p_41452_) {
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack p_41452_) {
         return UseAnim.NONE;
     }
 
 
     @Override
-    public boolean isValidRepairItem(ItemStack p_82789_1_, ItemStack p_82789_2_) {
+    public boolean isValidRepairItem(@NotNull ItemStack p_82789_1_, ItemStack p_82789_2_) {
         return p_82789_2_.getItem() == RItems.ZINC.get();
     }
 
     @Override
-    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
+    public boolean canAttackBlock(@NotNull BlockState p_41441_, @NotNull Level p_41442_, @NotNull BlockPos p_41443_, @NotNull Player p_41444_) {
         return false;
     }
 }

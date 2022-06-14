@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -43,7 +44,7 @@ public class ColorWidget extends AbstractWidget {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             for (int x = -radius; x < radius; x++) {
                 for (int y = -radius; y < radius; y++) {
@@ -146,7 +147,7 @@ public class ColorWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
 
     }
 }

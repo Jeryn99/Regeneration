@@ -13,6 +13,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -22,7 +23,7 @@ public class RRecipeGen extends RecipeProvider {
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(RItems.FOB.get()).pattern("QIG").pattern("SES").pattern("IGI").define('G', Items.GHAST_TEAR).define('I', Items.IRON_INGOT).define('E', RItems.ZINC.get()).define('S', Items.SPIDER_EYE).define('Q', Items.BLAZE_ROD).group("regen").unlockedBy("has_crafting_table", has(Blocks.CRAFTING_TABLE)).save(consumer);
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.7F, 300).unlockedBy("has_any_zinc", has(RBlocks.ZINC_ORE.get().asItem())).save(consumer, new ResourceLocation(RConstants.MODID, "smelt_zinc"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.8F, 150).unlockedBy("has_any_zinc", has(RBlocks.ZINC_ORE.get().asItem())).save(consumer, new ResourceLocation(RConstants.MODID, "blast_zinc"));

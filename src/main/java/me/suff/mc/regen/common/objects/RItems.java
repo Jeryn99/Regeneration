@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.item.ArmorMaterials.LEATHER;
 
@@ -18,7 +19,7 @@ public class RItems {
     public static RegistryObject<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));    //Item group
     public static RegistryObject<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));    public static CreativeModeTab MAIN = new CreativeModeTab("regen") {
         @Override
-        public ItemStack makeIcon() {
+        public @NotNull ItemStack makeIcon() {
             return new ItemStack(RItems.FOB.get());
         }
     };

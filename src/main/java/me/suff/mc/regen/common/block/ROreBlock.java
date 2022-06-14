@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -59,20 +60,20 @@ public class ROreBlock extends Block {
     }
 
     @Override
-    public void attack(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public void attack(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull Player player) {
         activate(state, worldIn, pos);
         super.attack(state, worldIn, pos, player);
     }
 
 
     @Override
-    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+    public void stepOn(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Entity entity) {
         activate(level.getBlockState(blockPos), level, blockPos);
         super.stepOn(level, blockPos, blockState, entity);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (worldIn.isClientSide) {
             spawnParticles(worldIn, pos);
         } else {
@@ -89,7 +90,7 @@ public class ROreBlock extends Block {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, @NotNull ServerLevel worldIn, @NotNull BlockPos pos, @NotNull RandomSource random) {
         if (state.getValue(LIT)) {
             worldIn.setBlock(pos, state.setValue(LIT, Boolean.FALSE), 3);
         }

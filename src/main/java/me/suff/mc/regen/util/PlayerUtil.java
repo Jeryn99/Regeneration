@@ -5,9 +5,7 @@ import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ModelMessage;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -103,8 +101,7 @@ public class PlayerUtil {
 
     public static void explodeKnockback(Entity exploder, Level world, BlockPos pos, double knockback, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
-            if (entity instanceof LivingEntity && exploder.isAlive()) {
-                LivingEntity victim = (LivingEntity) entity;
+            if (entity instanceof LivingEntity victim && exploder.isAlive()) {
 
                 if (entity instanceof Player && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimensions())
                     return;

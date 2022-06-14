@@ -14,12 +14,12 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -42,7 +42,7 @@ public class AdvancementGen implements DataProvider {
 
 
     @Override
-    public void run(CachedOutput hashCache) throws IOException {
+    public void run(@NotNull CachedOutput hashCache) throws IOException {
         Path path = this.generator.getOutputFolder();
         TriggerManager.init();
         Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.TriggerInstance.hasItems(RItems.FOB.get()), null, FrameType.GOAL);
@@ -70,7 +70,7 @@ public class AdvancementGen implements DataProvider {
     /**
      * Gets a name for this provider, to use in logging.
      */
-    public String getName() {
+    public @NotNull String getName() {
         return "Advancements";
     }
 

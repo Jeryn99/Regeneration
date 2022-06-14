@@ -18,6 +18,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 /* Created by Craig on 01/03/2021 */
 public class Laser extends ThrowableProjectile {
@@ -78,7 +79,7 @@ public class Laser extends ThrowableProjectile {
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
         if (this.level.isClientSide()) {
             this.level.addParticle(ParticleTypes.SMOKE, true, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
@@ -109,7 +110,7 @@ public class Laser extends ThrowableProjectile {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public @NotNull Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

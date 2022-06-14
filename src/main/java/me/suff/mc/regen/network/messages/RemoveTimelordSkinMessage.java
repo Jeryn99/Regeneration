@@ -22,9 +22,7 @@ public class RemoveTimelordSkinMessage {
     }
 
     public static void handle(RemoveTimelordSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Minecraft.getInstance().submitAsync(() -> {
-            TimelordRenderer.TIMELORDS.remove(message.livingEntity);
-        });
+        Minecraft.getInstance().submitAsync(() -> TimelordRenderer.TIMELORDS.remove(message.livingEntity));
         ctx.get().setPacketHandled(true);
     }
 

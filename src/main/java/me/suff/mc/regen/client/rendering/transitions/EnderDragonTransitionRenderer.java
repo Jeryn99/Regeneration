@@ -61,30 +61,28 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void layer(HumanoidModel<?> bipedModel, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        PoseStack matrix = matrixStackIn;
-        ;
 
-        RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
+        RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
             int ticksAnimating = iRegen.updateTicks() / 2;
             if (ticksAnimating > 0 && iRegen.regenState() == RegenStates.REGENERATING) {
                 float f5 = ((float) ticksAnimating + Minecraft.getInstance().getFrameTime()) / 200.0F;
                 float f7 = Math.min(f5 > 0.8F ? (f5 - 0.8F) / 0.2F : 0.0F, 1.0F);
                 Random random = new Random(432L);
                 VertexConsumer vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
-                matrix.pushPose();
-                bipedModel.body.translateAndRotate(matrix);
-                matrix.translate(0.0D, 0.5D, 0);
+                matrixStackIn.pushPose();
+                bipedModel.body.translateAndRotate(matrixStackIn);
+                matrixStackIn.translate(0.0D, 0.5D, 0);
 
                 for (int i = 0; (float) i < (f5 + f5 * f5) / 2.0F * 60.0F; ++i) {
-                    matrix.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
+                    matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
                     float randomFloat = random.nextFloat() * 20.0F + 5.0F + f7 * 10.0F;
                     float randomFloat2 = random.nextFloat() * 2.0F + 1.0F + f7 * 2.0F;
-                    Matrix4f matrix4f = matrix.last().pose();
+                    Matrix4f matrix4f = matrixStackIn.last().pose();
                     int j = (int) (255.0F * (1.0F - f7));
                     vertex01(vertexBuilder, matrix4f, j);
                     vertex2(vertexBuilder, matrix4f, randomFloat, randomFloat2);
@@ -96,7 +94,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
                     vertex4(vertexBuilder, matrix4f, randomFloat, randomFloat2);
                     vertex2(vertexBuilder, matrix4f, randomFloat, randomFloat2);
                 }
-                matrix.popPose();
+                matrixStackIn.popPose();
             }
         });
     }

@@ -19,12 +19,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -85,7 +84,7 @@ public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel
     }
 
     @Override
-    public void render(Timelord entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(Timelord entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         switch (entityIn.getTimelordType()) {
             case GUARD -> mainModel = guardModel;
             case COUNCIL -> mainModel = councilModel;
@@ -98,9 +97,8 @@ public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel
     }
 
 
-    @Nullable
     @Override
-    public ResourceLocation getTextureLocation(Timelord entity) {
+    public @NotNull ResourceLocation getTextureLocation(Timelord entity) {
         String gender = entity.male() ? "male" : "female";
         return switch (entity.getTimelordType()) {
             case COUNCIL ->

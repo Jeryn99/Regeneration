@@ -11,6 +11,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 public class TimelordModel extends PlayerModel<Timelord> {
 
@@ -62,12 +63,12 @@ public class TimelordModel extends PlayerModel<Timelord> {
     }
 
     @Override
-    public void renderCloak(PoseStack p_103412_, VertexConsumer p_103413_, int p_103414_, int p_103415_) {
+    public void renderCloak(@NotNull PoseStack p_103412_, @NotNull VertexConsumer p_103413_, int p_103414_, int p_103415_) {
 
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrixStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.pushPose();
         Head.render(matrixStack, buffer, packedLight, packedOverlay);
         Body.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -86,7 +87,7 @@ public class TimelordModel extends PlayerModel<Timelord> {
     }
 
     @Override
-    public void setupAnim(Timelord timelord, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull Timelord timelord, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(timelord, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         Head.copyFrom(head);
         Body.copyFrom(body);

@@ -1,6 +1,5 @@
 package me.suff.mc.regen.util;
 
-import me.suff.mc.regen.Regeneration;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -18,7 +17,6 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 import static me.suff.mc.regen.Regeneration.GSON;
 
@@ -52,25 +50,25 @@ public class RegenUtil {
 
     public static void setupNames() {
         if (USERNAMES.length == 0) {
-            try {
+            ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
+            ServerLifecycleHooks.getCurrentServer().getServerResources().resourceManager().getResource(resourceLocation).ifPresent(resource -> {
+                try {
+                    InputStream stream = resource.open();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuilder sb = new StringBuilder();
 
-                ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
-                InputStream stream = ServerLifecycleHooks.getCurrentServer().getServerResources().resourceManager().getResource(resourceLocation).get().open();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                StringBuilder sb = new StringBuilder();
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    reader.close();
+                    stream.close();
 
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
+                    USERNAMES = GSON.fromJson(sb.toString(), String[].class);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                reader.close();
-                stream.close();
-
-                USERNAMES = GSON.fromJson(sb.toString(), String[].class);
-
-            } catch (IOException e) {
-                Regeneration.LOG.catching(e);
-            }
+            });
         }
     }
 

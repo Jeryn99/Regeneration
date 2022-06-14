@@ -63,8 +63,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     @Override
     public void thirdPersonHand(HumanoidArm side, PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entitylivingbaseIn instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entitylivingbaseIn;
-            RegenCap.get(livingEntity).ifPresent(iRegen -> {
+            RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
 
                 if (iRegen.regenState() == RegenStates.REGENERATING) {
                     double x = iRegen.updateTicks();
@@ -78,8 +77,8 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
                     Vec3 primaryColors = iRegen.getPrimaryColors();
                     Vec3 secondaryColors = iRegen.getSecondaryColors();
-                    renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
-                    renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
+                    renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, entitylivingbaseIn, primaryScale, primaryScale, primaryColors);
+                    renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, entitylivingbaseIn, secondaryScale, secondaryScale, secondaryColors);
                 }
 
             });
@@ -89,7 +88,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void layer(HumanoidModel<?> bipedModel, PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
+        RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 // === Head Cone ===
                 matrix.pushPose();
@@ -115,11 +114,11 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             }
 
             //Render player overlay
-            if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING) {
+            if (entitylivingbaseIn.hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn instanceof Timelord) return;
                 float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
-                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
-                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
             }
 
         });

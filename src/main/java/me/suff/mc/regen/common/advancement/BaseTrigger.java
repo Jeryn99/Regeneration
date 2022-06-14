@@ -11,6 +11,7 @@ import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
      * @see net.minecraft.advancements.ICriterionTrigger#getId()
      */
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return RL;
     }
 
@@ -54,7 +55,7 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, CriterionTrigger.Listener<BaseTrigger.Instance> listener) {
+    public void addPlayerListener(@NotNull PlayerAdvancements playerAdvancementsIn, CriterionTrigger.@NotNull Listener<BaseTrigger.Instance> listener) {
         BaseTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (myCustomTrigger$listeners == null) {
@@ -70,7 +71,7 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, CriterionTrigger.Listener<BaseTrigger.Instance> listener) {
+    public void removePlayerListener(@NotNull PlayerAdvancements playerAdvancementsIn, CriterionTrigger.@NotNull Listener<BaseTrigger.Instance> listener) {
         BaseTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null) {
@@ -83,12 +84,12 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
     }
 
     @Override
-    public void removePlayerListeners(PlayerAdvancements playerAdvancementsIn) {
+    public void removePlayerListeners(@NotNull PlayerAdvancements playerAdvancementsIn) {
         listeners.remove(playerAdvancementsIn);
     }
 
     @Override
-    public Instance createInstance(JsonObject p_230307_1_, DeserializationContext p_230307_2_) {
+    public @NotNull Instance createInstance(@NotNull JsonObject p_230307_1_, @NotNull DeserializationContext p_230307_2_) {
         return new BaseTrigger.Instance(getId());
     }
 
@@ -128,12 +129,12 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
         }
 
         @Override
-        public ResourceLocation getCriterion() {
+        public @NotNull ResourceLocation getCriterion() {
             return id;
         }
 
         @Override
-        public JsonObject serializeToJson(SerializationContext p_230240_1_) {
+        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext p_230240_1_) {
             return new JsonObject();
         }
     }

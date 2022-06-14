@@ -18,9 +18,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Random;
-
 /* Created by Craig on 10/03/2021 */
 public class RGlobalLoot {
     public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.Keys.LOOT_MODIFIER_SERIALIZERS, RConstants.MODID);

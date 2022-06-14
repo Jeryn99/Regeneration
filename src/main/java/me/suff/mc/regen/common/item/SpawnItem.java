@@ -18,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class SpawnItem extends Item {
 
@@ -38,7 +39,7 @@ public class SpawnItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (allowedIn(group)) {
             for (Timelord timelordType : SpawnItem.Timelord.values()) {
                 ItemStack itemstack = new ItemStack(this);
@@ -49,13 +50,13 @@ public class SpawnItem extends Item {
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public @NotNull Component getName(@NotNull ItemStack stack) {
         Timelord name = getType(stack);
         return Component.translatable("regen.timelord_type." + name.name().toLowerCase());
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         Level worldIn = context.getLevel();
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();

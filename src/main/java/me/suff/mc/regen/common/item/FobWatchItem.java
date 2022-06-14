@@ -25,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -62,14 +63,14 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack stack, Level worldIn, Player playerIn) {
+    public void onCraftedBy(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull Player playerIn) {
         super.onCraftedBy(stack, worldIn, playerIn);
         setDamage(stack, 0);
         setOpen(stack, false);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
         if (stack.getItem() instanceof FobWatchItem) {
             if (isOpen(stack)) {
                 if (entityIn.tickCount % 600 == 0) {
@@ -81,7 +82,7 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
 
         ItemStack stack = player.getItemInHand(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
@@ -153,7 +154,7 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean isEnchantable(@NotNull ItemStack stack) {
         return false;
     }
 
@@ -174,12 +175,12 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
         return false;
     }
 
     @Override
-    public boolean isRepairable(ItemStack stack) {
+    public boolean isRepairable(@NotNull ItemStack stack) {
         return false;
     }
 

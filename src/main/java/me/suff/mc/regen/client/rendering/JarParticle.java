@@ -7,12 +7,13 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class JarParticle extends TextureSheetParticle {
     private JarParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z, motionX, motionY, motionZ);
-        Vec3 color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultSecondaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
+        Vec3 color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultPrimaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
         this.rCol = (float) color.x;
         this.gCol = (float) color.y;
         this.bCol = (float) color.z;
@@ -26,7 +27,7 @@ public class JarParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
+    public @NotNull ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
@@ -52,17 +53,12 @@ public class JarParticle extends TextureSheetParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet spriteSet;
+        public record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
 
-        public Factory(SpriteSet spriteSet) {
-            this.spriteSet = spriteSet;
+        public Particle createParticle(@NotNull SimpleParticleType typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+                JarParticle jarParticle = new JarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
+                jarParticle.pickSprite(this.spriteSet);
+                return jarParticle;
+            }
         }
-
-        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            JarParticle jarParticle = new JarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
-            jarParticle.pickSprite(this.spriteSet);
-            return jarParticle;
-        }
-    }
 }

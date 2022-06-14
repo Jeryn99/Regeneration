@@ -28,6 +28,7 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -106,11 +107,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
-      /*  try {
-            getHash();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         if (skins.isEmpty()) {
             Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
         }
@@ -185,12 +181,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
         }).setDescription(new String[]{"button.tooltip.save_skin"});
 
-        DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), new Button.OnPress() {
-            @Override
-            public void onPress(Button button) {
-                SkinHandler.sendResetMessage();
-            }
-        }).setDescription(new String[]{"button.tooltip.reset_mojang"});
+        DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> SkinHandler.sendResetMessage()).setDescription(new String[]{"button.tooltip.reset_mojang"});
 
         this.excludeTrending = new RCheckbox(cx + 10, cy + 25, 150, 20, Component.translatable("Trending?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {
@@ -237,7 +228,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
         this.renderBackground(matrixStack);
         RenderSystem.setShaderTexture(0, screenBackground);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
@@ -301,12 +292,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int x, int y) {
+    protected void renderLabels(@NotNull PoseStack matrixStack, int x, int y) {
         this.font.draw(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.searchField.tick();
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);

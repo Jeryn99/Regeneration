@@ -65,8 +65,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Created by Suff
@@ -103,12 +101,12 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    public AttributeMap getAttributes() {
+    public @NotNull AttributeMap getAttributes() {
         return new AttributeMap(createAttributes().build());
     }
 
     @Override
-    public Villager getBreedOffspring(ServerLevel world, AgeableMob mate) {
+    public Villager getBreedOffspring(@NotNull ServerLevel world, @NotNull AgeableMob mate) {
         return null;
     }
 
@@ -153,9 +151,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
 
         if (getTimelordType() == TimelordType.COUNCIL) {
 
-            ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> {
-                this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false));
-            });
+            ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false)));
 
             this.goalSelector.addGoal(1, new LookAtTradingPlayerGoal(this));
             this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
@@ -205,7 +201,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    protected SoundEvent getTradeUpdatedSound(boolean getYesSound) {
+    protected @NotNull SoundEvent getTradeUpdatedSound(boolean getYesSound) {
         SoundScheme personality = getPersonality();
         if (!getYesSound) {
             setUnhappyCounter(40);
@@ -223,7 +219,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return getPersonality().getDeathSound();
+        return getPersonality().deathSound();
     }
 
     @Override
@@ -249,7 +245,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    public void die(DamageSource cause) {
+    public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (!level.isClientSide) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
@@ -307,8 +303,8 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
 
                     if (data.regenState() == RegenStates.REGENERATING) {
                         if (data.updateTicks() == 10) {
-                            if (getPersonality().getScreamSound() != null) {
-                                playSound(getPersonality().getScreamSound(), 1, 1);
+                            if (getPersonality().screamSound() != null) {
+                                playSound(getPersonality().screamSound(), 1, 1);
                             }
                         }
                         if (data.updateTicks() == 100) {
@@ -354,7 +350,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("timelord_type", getTimelordType().name());
         compound.putBoolean("is_male", male());
@@ -363,7 +359,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("timelord_type")) {
             setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
@@ -415,7 +411,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     @Override
-    protected void populateDefaultEquipmentSlots(RandomSource p_217055_, DifficultyInstance d) {
+    protected void populateDefaultEquipmentSlots(@NotNull RandomSource p_217055_, @NotNull DifficultyInstance d) {
         if (getTimelordType() == TimelordType.GUARD) {
             Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(stack));
@@ -428,8 +424,8 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
 
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return getPersonality().getHurtSound();
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
+        return getPersonality().hurtSound();
     }
 
     @Override
@@ -467,7 +463,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
 
 
     @Override
-    public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
+    public @NotNull InteractionResult mobInteract(Player p_230254_1_, @NotNull InteractionHand p_230254_2_) {
         ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
         if (itemstack.getItem() != RItems.SPAWN_ITEM.get() && this.isAlive() && !this.isTrading() && !this.isBaby()) {
             if (this.getOffers().isEmpty()) {
@@ -540,7 +536,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
 
         @Override
-        public MerchantOffer getOffer(Entity trader, RandomSource rand) {
+        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource rand) {
             return new MerchantOffer(coin, coin2, wares, stock, xp, 0F);
         }
     }

@@ -26,6 +26,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -36,10 +37,10 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     }
 
     @Override
-    public boolean wasKilled(ServerLevel serverLevel, LivingEntity livingEntity) {
+    public boolean wasKilled(@NotNull ServerLevel serverLevel, @NotNull LivingEntity livingEntity) {
         boolean wasKilled = super.wasKilled(serverLevel, livingEntity);
 
-        if(wasKilled) {
+        if (wasKilled) {
             if (ForgeEventFactory.canLivingConvert(livingEntity, REntities.TIMELORD.get(), (timer) -> {
             }) && livingEntity instanceof Timelord timelord) {
                 Component customName = timelord.getCustomName();
@@ -53,7 +54,7 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor p_21434_, @NotNull DifficultyInstance p_21435_, @NotNull MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
         RegenCap.get(this).ifPresent((data) -> data.addRegens(level.getRandom().nextInt(12)));
         return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
     }
@@ -91,19 +92,19 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     }
 
     @Override
-    public AttributeMap getAttributes() {
+    public @NotNull AttributeMap getAttributes() {
         return new AttributeMap(Timelord.createAttributes().build());
     }
 
     @Override
-    protected void playStepSound(BlockPos blockPos, BlockState blockState) {
+    protected void playStepSound(@NotNull BlockPos blockPos, BlockState blockState) {
         if (!blockState.getMaterial().isLiquid()) {
             this.playSound(RSounds.CYBER_WALK.get(), 0.15F, 1);
         }
     }
 
     @Override
-    public void performRangedAttack(LivingEntity livingEntity, float p_33318_) {
+    public void performRangedAttack(@NotNull LivingEntity livingEntity, float p_33318_) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.regenState() != RegenStates.REGENERATING) {
                 Laser laser = new Laser(REntities.LASER.get(), this, level);

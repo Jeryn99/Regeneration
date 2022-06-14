@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.NotNull;
 
 /* Created by Craig on 03/03/2021 */
 public class RMaterials {
@@ -44,18 +45,18 @@ public class RMaterials {
         }
 
         @Override
-        public SoundEvent getEquipSound() {
+        public @NotNull SoundEvent getEquipSound() {
             return SoundEvents.ARMOR_EQUIP_DIAMOND;
         }
 
         @Override
-        public Ingredient getRepairIngredient() {
+        public @NotNull Ingredient getRepairIngredient() {
             return Ingredient.of(RItems.ZINC.get());
         }
 
         //ClientSide only variable
         @Override
-        public String getName() {
+        public @NotNull String getName() {
             return "timelord";
         }
 

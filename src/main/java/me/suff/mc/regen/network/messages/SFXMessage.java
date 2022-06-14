@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
@@ -31,7 +32,7 @@ public class SFXMessage {
         Minecraft.getInstance().submitAsync(() -> {
             Entity player = Minecraft.getInstance().level.getEntity(message.playerUUID);
             if (player != null) {
-                RegenCap.get((LivingEntity) player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundSource.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F));
+                RegenCap.get((LivingEntity) player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundSource.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F, RandomSource.create()));
             }
         });
         ctx.get().setPacketHandled(true);

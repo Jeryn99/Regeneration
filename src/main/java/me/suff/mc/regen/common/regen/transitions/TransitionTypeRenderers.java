@@ -19,7 +19,7 @@ public class TransitionTypeRenderers {
         if (TRANSITION_RENDERERS.containsKey(transitionType)) {
             return TRANSITION_RENDERERS.get(transitionType);
         }
-        Regeneration.LOG.error("No Renderer registered for " + transitionType.getRegistryName());
+        Regeneration.LOG.error("No Renderer registered for " + TransitionTypes.getTransitionId(transitionType));
         return null;
     }
 

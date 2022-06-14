@@ -40,7 +40,7 @@ public class BlazeTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void layer(HumanoidModel<?> bipedModel, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
+        RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn.level.random.nextInt(24) == 0) {
                     entitylivingbaseIn.level.playLocalSound(entitylivingbaseIn.getX() + 0.5D, entitylivingbaseIn.getY() + 0.5D, entitylivingbaseIn.getZ() + 0.5D, SoundEvents.BLAZE_BURN, entitylivingbaseIn.getSoundSource(), 1.0F + entitylivingbaseIn.level.random.nextFloat(), entitylivingbaseIn.level.random.nextFloat() * 0.7F + 0.3F, false);

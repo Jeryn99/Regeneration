@@ -2,6 +2,7 @@ package me.suff.mc.regen.util;
 
 import com.mojang.authlib.GameProfile;
 import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -19,17 +20,15 @@ public class RTextHelper {
     public static MutableComponent createTextComponentWithTip(String text, String tooltipText) {
         //Always surround tool tip items with brackets
         MutableComponent textComponent = Component.literal("[" + text + "]");
-        textComponent.withStyle(style -> {
-            return style.applyFormat(ChatFormatting.GREEN)//color tool tip items green
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tooltipText)))
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, tooltipText));
-        });
+        textComponent.withStyle(style -> style.applyFormat(ChatFormatting.GREEN)//color tool tip items green
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tooltipText)))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, tooltipText)));
         return textComponent;
     }
 
     public static MutableComponent getTraitTextObject(AbstractTrait trait) {
         if (trait != null)
-            return createTextComponentWithTip(formatTraitName(trait), trait.getRegistryName().toString());
+            return createTextComponentWithTip(formatTraitName(trait), RegenTraitRegistry.getTraitLocation(trait).toString());
         return createTextComponentWithTip("Null Trait", "Null");
     }
 
@@ -49,7 +48,7 @@ public class RTextHelper {
     }
 
     public static String formatTraitName(AbstractTrait trait) {
-        String original = trait.getRegistryName().getPath().trim().replace("	", "").replace("_", " ");
+        String original = RegenTraitRegistry.getTraitLocation(trait).getPath().trim().replace("	", "").replace("_", " ");
         String output = Arrays.stream(original.split("\\s+"))
                 .map(t -> t.substring(0, 1).toUpperCase() + t.substring(1))
                 .collect(Collectors.joining(" "));

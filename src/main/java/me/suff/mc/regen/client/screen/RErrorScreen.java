@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ public class RErrorScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
+    public void render(@NotNull PoseStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
         this.fillGradient(matrixStack, 0, 0, this.width, this.height, -12574688, -11530224);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 90, 16777215);
         drawCenteredString(matrixStack, this.font, this.message, this.width / 2, 110, 16777215);

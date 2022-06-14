@@ -215,7 +215,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
-        Entity viewer = Minecraft.getInstance().getCameraEntity();
+//TODO
+        /*        Entity viewer = Minecraft.getInstance().getCameraEntity();
         if (viewer instanceof LivingEntity livingEntity) {
             RegenCap.get(livingEntity).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.GRACE_CRIT) {
@@ -227,7 +228,7 @@ public class ClientEvents {
                     event.setDensity(17);
                 }
             });
-        }
+        }*/
     }
 
     @SubscribeEvent

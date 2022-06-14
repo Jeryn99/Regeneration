@@ -7,6 +7,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -61,7 +62,7 @@ public class CybermanModel extends HumanoidModel<Cyberman> {
     }
 
     @Override
-    public void setupAnim(Cyberman cyberman, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull Cyberman cyberman, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(cyberman, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         rightArm.xRot = (float) Math.toRadians(-90);

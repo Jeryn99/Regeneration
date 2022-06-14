@@ -118,13 +118,12 @@ public class CommonSkin {
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
         BufferedImage img = ImageIO.read(uc.getInputStream());
         //  img= toBlackAndWhite(img);
-        File file = specific;
-        if (!file.exists()) {
-            file.mkdirs();
+        if (!specific.exists()) {
+            specific.mkdirs();
         }
 
-        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
-        ImageIO.write(img, "png", new File(file, filename + ".png"));
+        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, specific.getPath());
+        ImageIO.write(img, "png", new File(specific, filename + ".png"));
     }
 
     public static BufferedImage toBlackAndWhite(BufferedImage img) {

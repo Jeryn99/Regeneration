@@ -5,6 +5,7 @@ import me.suff.mc.regen.common.objects.RItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class RegenPrefTab extends AbstractTab {
     public RegenPrefTab() {
@@ -22,7 +23,7 @@ public class RegenPrefTab extends AbstractTab {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput p_169152_) {
+    public void updateNarration(@NotNull NarrationElementOutput p_169152_) {
 
     }
 }

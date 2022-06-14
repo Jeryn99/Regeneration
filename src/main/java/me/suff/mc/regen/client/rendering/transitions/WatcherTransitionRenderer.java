@@ -2,7 +2,6 @@ package me.suff.mc.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import me.suff.mc.regen.client.animation.AnimationHandler;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
@@ -72,12 +71,9 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
                     matrixStackIn.pushPose();
                     matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
                     matrixStackIn.translate(0, -1.5, 1);
-                    FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vec3(1, 1, 1), new AnimationHandler.Animation() {
-                        @Override
-                        public void animate(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-                            bipedModel.head.xRot = (float) Math.toRadians(40);
-                            bipedModel.hat.xRot = (float) Math.toRadians(40);
-                        }
+                    FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vec3(1, 1, 1), (bipedModel1, livingEntity, limbSwing1, limbSwingAmount1, ageInTicks1, netHeadYaw1, headPitch1) -> {
+                        bipedModel1.head.xRot = (float) Math.toRadians(40);
+                        bipedModel1.hat.xRot = (float) Math.toRadians(40);
                     });
                     matrixStackIn.popPose();
                 }

@@ -247,8 +247,7 @@ public class ClientUtil {
         });
 
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
-            if (entityRenderer instanceof HumanoidMobRenderer) {
-                HumanoidMobRenderer<?, ?> bipedRenderer = (HumanoidMobRenderer<?, ?>) entityRenderer;
+            if (entityRenderer instanceof HumanoidMobRenderer<?, ?> bipedRenderer) {
                 bipedRenderer.addLayer(new RenderRegenLayer(bipedRenderer));
                 bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
             }

@@ -14,7 +14,7 @@ public class TypeMessage {
     private final String type;
 
     public TypeMessage(TransitionType type) {
-        this.type = type.getRegistryName().toString();
+        this.type = TransitionTypes.getTransitionId(type).toString();
     }
 
     public TypeMessage(FriendlyByteBuf buffer) {

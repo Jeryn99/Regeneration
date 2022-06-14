@@ -45,9 +45,6 @@ public class ViewUtil {
         if (viewBlocked(livingBase, angel)) {
             return false;
         }
-        if (livingBase instanceof Player) {
-            return isInFrontOfEntity(livingBase, angel);
-        }
         return isInFrontOfEntity(livingBase, angel);
     }
 

@@ -509,24 +509,25 @@ public class RegenCap implements IRegen {
             }
 
             switch (currentState) {
-                case ALIVE:
+                case ALIVE -> {
                     if (!canRegenerate()) // that's too bad :(
                         return false;
 
                     // We're entering grace period...
                     scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
                     scheduleHandGlowTrigger();
-
                     currentState = RegenStates.GRACE;
                     syncToClients(null);
                     ActingForwarder.onEnterGrace(RegenCap.this);
                     return true;
-                case REGENERATING:
+                }
+                case REGENERATING -> {
                     // We've been killed mid regeneration!
                     nextTransition.cancel(); // ... cancel the finishing of the regeneration
                     midSequenceKill(false);
                     return false;
-                case GRACE_CRIT:
+                }
+                case GRACE_CRIT -> {
                     nextTransition.cancel();
                     if (source == RegenSources.REGEN_DMG_FORCED) {
                         triggerRegeneration();
@@ -535,16 +536,19 @@ public class RegenCap implements IRegen {
                         midSequenceKill(true);
                         return false;
                     }
-                case POST:
+                }
+                case POST -> {
                     currentState = RegenStates.ALIVE;
                     nextTransition.cancel();
                     return false;
-                case GRACE:
+                }
+                case GRACE -> {
                     // We're being forced to regenerate...
                     triggerRegeneration();
                     return true;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
             return false;
         }
@@ -729,18 +733,11 @@ public class RegenCap implements IRegen {
             if (nbt.contains("handGlowState")) {
                 RegenStates.Transition transition = RegenStates.Transition.valueOf(nbt.getString("handGlowState"));
 
-                Runnable callback;
-
-                switch (transition) {
-                    case HAND_GLOW_START:
-                        callback = this::scheduleHandGlowTrigger;
-                        break;
-                    case HAND_GLOW_TRIGGER:
-                        callback = this::triggerRegeneration;
-                        break;
-                    default:
-                        throw new IllegalStateException("Illegal hand glow timer transition");
-                }
+                Runnable callback = switch (transition) {
+                    case HAND_GLOW_START -> this::scheduleHandGlowTrigger;
+                    case HAND_GLOW_TRIGGER -> this::triggerRegeneration;
+                    default -> throw new IllegalStateException("Illegal hand glow timer transition");
+                };
 
                 handGlowTimer = new RegenScheduledAction(transition, livingEntity, callback, nbt.getLong("handGlowScheduledTicks"));
             }

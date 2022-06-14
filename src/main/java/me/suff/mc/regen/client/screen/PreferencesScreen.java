@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -91,9 +92,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
 
         Button btnColor = new Button(width / 2 + 50 - 66, cy + 103, btnW, btnH, Component.translatable("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 
-        Button btnSkinChoice = new Button(width / 2 + 50 + 2, cy + 103, btnW - 2, btnH, Component.translatable("regen.gui.skin_choice"), p_onPress_1_ -> {
-            Minecraft.getInstance().setScreen(new IncarnationScreen());
-        });
+        Button btnSkinChoice = new Button(width / 2 + 50 + 2, cy + 103, btnW - 2, btnH, Component.translatable("regen.gui.skin_choice"), p_onPress_1_ -> Minecraft.getInstance().setScreen(new IncarnationScreen()));
 
         addRenderableWidget(btnRegenType);
         addRenderableWidget(btnSkinChoice);
@@ -106,7 +105,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.setShaderTexture(0, screenBackground);
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElseGet(null);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
@@ -126,12 +125,12 @@ public class PreferencesScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int x, int y) {
+    protected void renderLabels(@NotNull PoseStack matrixStack, int x, int y) {
         this.font.draw(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

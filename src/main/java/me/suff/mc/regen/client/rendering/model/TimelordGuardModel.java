@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import org.jetbrains.annotations.NotNull;
 
 public class TimelordGuardModel extends PlayerModel<Timelord> {
     private final ModelPart Head;
@@ -59,7 +60,7 @@ public class TimelordGuardModel extends PlayerModel<Timelord> {
     }
 
     @Override
-    public void setupAnim(Timelord timelord, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull Timelord timelord, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(timelord).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 rightArmPose = ArmPose.EMPTY;
@@ -92,7 +93,7 @@ public class TimelordGuardModel extends PlayerModel<Timelord> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         jacket.visible = false;
         leftSleeve.visible = false;

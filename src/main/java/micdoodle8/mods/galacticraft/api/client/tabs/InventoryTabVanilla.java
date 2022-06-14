@@ -3,6 +3,7 @@ package micdoodle8.mods.galacticraft.api.client.tabs;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 public class InventoryTabVanilla extends AbstractTab {
     public InventoryTabVanilla() {
@@ -20,7 +21,7 @@ public class InventoryTabVanilla extends AbstractTab {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput p_169152_) {
+    public void updateNarration(@NotNull NarrationElementOutput p_169152_) {
 
     }
 }

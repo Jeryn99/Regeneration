@@ -35,6 +35,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 
@@ -96,7 +97,7 @@ public class CommonEvents {
     public static void noFall(LivingFallEvent event) {
         if (event.getEntityLiving() == null) return;
         RegenCap.get(event.getEntityLiving()).ifPresent((iRegen -> {
-            if (iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.LEAP.get().getRegistryName().toString())) {
+            if (RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.LEAP.get()).toString())) {
                 event.setCanceled(true);
             }
         }));
@@ -111,7 +112,7 @@ public class CommonEvents {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
             Entity trueSource = event.getSource().getEntity();
-            if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.FIRE.get().getRegistryName().toString())) {
+            if (event.getSource().isFire() && RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.FIRE.get()).toString())) {
                 event.setCanceled(true);
                 event.setAmount(0.0F);
                 return;
@@ -129,7 +130,7 @@ public class CommonEvents {
             iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
             //Stop falling for leap trait
-            if (iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.LEAP.get().getRegistryName().toString())) {
+            if (RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.LEAP.get()).toString())) {
                 if (event.getSource() == DamageSource.FALL) {
                     event.setCanceled(true);//cancels damage, in case the above didn't cut it
                     return;
@@ -191,23 +192,9 @@ public class CommonEvents {
         RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.regenState() == RegenStates.REGENERATING));
     }
 
-
-    //TODO
- /*   @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        Capability.ICapabilitySerializable <IRegen> storage = RegenCap.CAPABILITY.getStorage();
-        event.getOriginal().revive();
-        RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
-            CompoundTag nbt = (CompoundTag) storage.writeNBT(RegenCap.CAPABILITY, old, null);
-            storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
-        }));
-    }*/
-
     @SubscribeEvent
     public static void onTrackPlayer(PlayerEvent.StartTracking startTracking) {
-        RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> {
-            iRegen.syncToClients(null);
-        });
+        RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> iRegen.syncToClients(null));
     }
 
     @SubscribeEvent
@@ -233,7 +220,7 @@ public class CommonEvents {
                 EquipmentSlot.LEGS,
                 EquipmentSlot.FEET};
         for (EquipmentSlot equipmentSlotType : equipmentSlotTypes) {
-            if (!serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem().getRegistryName().getPath().contains("robes")) {
+            if (!ForgeRegistries.ITEMS.getKey(serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem()).getPath().contains("robes")) {
                 return false;
             }
         }

@@ -36,6 +36,10 @@ public abstract class TransitionType {
         return Component.translatable("type.regeneration." + TransitionTypes.getTransitionId(this).getPath());
     }
 
+    public String getTranslationKey() {
+        return "type.regeneration." + TransitionTypes.getTransitionId(this).getPath();
+    }
+
     public void tick(IRegen cap) {
     }
 

@@ -29,6 +29,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnorePr
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -43,7 +44,7 @@ public class TimelordSettlementHut extends Structure {
     }
 
     @Override
-    public Optional<GenerationStub> findGenerationPoint(Structure.GenerationContext p_227595_) {
+    public @NotNull Optional<GenerationStub> findGenerationPoint(Structure.@NotNull GenerationContext p_227595_) {
         return onTopOfChunkCenter(p_227595_, Heightmap.Types.WORLD_SURFACE_WG, (p_227598_) -> {
             this.generatePieces(p_227598_, p_227595_);
         });
@@ -64,12 +65,12 @@ public class TimelordSettlementHut extends Structure {
 
 
     @Override
-    public GenerationStep.Decoration step() {
+    public GenerationStep.@NotNull Decoration step() {
         return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
     @Override
-    public StructureType<?> type() {
+    public @NotNull StructureType<?> type() {
         return StructureType.BURIED_TREASURE;
     }
 
@@ -98,7 +99,7 @@ public class TimelordSettlementHut extends Structure {
 
 
         @Override
-        protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, RandomSource rand, BoundingBox p_73687_) {
+        protected void handleDataMarker(@NotNull String function, @NotNull BlockPos pos, @NotNull ServerLevelAccessor worldIn, @NotNull RandomSource rand, @NotNull BoundingBox p_73687_) {
             if ("timelord".equals(function)) {
                 Timelord timelord = REntities.TIMELORD.get().create(worldIn.getLevel());
                 RegenCap.get(timelord).ifPresent(iRegen -> {

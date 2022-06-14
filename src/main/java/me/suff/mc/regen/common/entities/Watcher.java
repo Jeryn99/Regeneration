@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class Watcher extends Mob {
 
@@ -80,12 +81,12 @@ public class Watcher extends Mob {
     }
 
     @Override
-    public AttributeMap getAttributes() {
+    public @NotNull AttributeMap getAttributes() {
         return new AttributeMap(createAttributes().build());
     }
 
     @Override
-    protected boolean canRide(Entity entityIn) {
+    protected boolean canRide(@NotNull Entity entityIn) {
         return false;
     }
 
@@ -105,12 +106,12 @@ public class Watcher extends Mob {
     }
 
     @Override
-    protected AABB getBoundingBoxForPose(Pose pose) {
+    protected @NotNull AABB getBoundingBoxForPose(@NotNull Pose pose) {
         return new AABB(0, 0, 0, 0, 0, 0);
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         return false;
     }
 

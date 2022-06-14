@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class CyberRender extends LivingEntityRenderer<Cyberman, CybermanModel> {
 
@@ -25,7 +26,7 @@ public class CyberRender extends LivingEntityRenderer<Cyberman, CybermanModel> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Cyberman cyberman) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull Cyberman cyberman) {
         return TEXTURE;
     }
 }

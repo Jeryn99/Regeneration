@@ -5,13 +5,13 @@ import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -33,7 +33,7 @@ public class RBlockLootTableGen extends LootTableProvider {
     }
 
     public static Path getPath(Path base, Block block) {
-        ResourceLocation key = block.getRegistryName();
+        ResourceLocation key = ForgeRegistries.BLOCKS.getKey(block);
         return base.resolve("data/" + key.getNamespace() + "/loot_tables/blocks/" + key.getPath() + ".json");
     }
 
@@ -42,12 +42,12 @@ public class RBlockLootTableGen extends LootTableProvider {
     }
 
     @Override
-    public void run(CachedOutput cache) {
+    public void run(@NotNull CachedOutput cache) {
 
         Path path = this.generator.getOutputFolder();
 
         for (Block block : ForgeRegistries.BLOCKS) {
-            if (block.getRegistryName().getNamespace().contentEquals(RConstants.MODID)) {
+            if (ForgeRegistries.BLOCKS.getKey(block).getNamespace().contentEquals(RConstants.MODID)) {
                 if (block.asItem() != null && block.asItem() != Items.AIR) {
                     if (block instanceof SlabBlock) {
                         this.generateSelfSlabTable(block, cache, path);
@@ -61,11 +61,11 @@ public class RBlockLootTableGen extends LootTableProvider {
     }
 
     public void generateSelfTable(Block block, CachedOutput cache, Path base) {
-        this.generateTable(cache, getPath(base, block.getRegistryName()), () -> this.createSingleDropTable(block.getRegistryName().toString()));
+        this.generateTable(cache, getPath(base, ForgeRegistries.BLOCKS.getKey(block)), () -> this.createSingleDropTable(ForgeRegistries.BLOCKS.getKey(block).toString()));
     }
 
     public void generateSelfSlabTable(Block block, CachedOutput cache, Path base) {
-        this.generateTable(cache, getPath(base, block.getRegistryName()), () -> this.createSlabDropTable(block.getRegistryName().toString()));
+        this.generateTable(cache, getPath(base, ForgeRegistries.BLOCKS.getKey(block)), () -> this.createSlabDropTable(ForgeRegistries.BLOCKS.getKey(block).toString()));
     }
 
     public void generateTable(CachedOutput cache, Path path, Supplier<JsonElement> element) {
@@ -77,7 +77,7 @@ public class RBlockLootTableGen extends LootTableProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Regeneration Block Loot Gen";
     }
 

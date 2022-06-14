@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RTextHelper;
@@ -57,7 +56,7 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
 
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) {
         return 0;
     }
 }

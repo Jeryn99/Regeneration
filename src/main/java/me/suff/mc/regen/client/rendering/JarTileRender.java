@@ -25,6 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -47,7 +48,7 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
     }
 
     @Override
-    public void render(BioContainerBlockEntity tileEntityIn, float p_112308_, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int ov) {
+    public void render(BioContainerBlockEntity tileEntityIn, float p_112308_, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int ov) {
 
         matrixStackIn.pushPose();
         BlockState blockstate = tileEntityIn.getBlockState();

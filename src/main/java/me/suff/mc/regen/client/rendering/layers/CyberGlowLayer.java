@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class CyberGlowLayer extends RenderLayer<Cyberman, CybermanModel> {
 
@@ -25,7 +26,7 @@ public class CyberGlowLayer extends RenderLayer<Cyberman, CybermanModel> {
 
 
     @Override
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Cyberman cyberman, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(@NotNull PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, @NotNull Cyberman cyberman, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
         cyberModel.prepareMobModel(cyberman, limbSwing, limbSwingAmount, partialTicks);
         cyberModel.setAllVisible(false);

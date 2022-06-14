@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.UsernameCache;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -92,7 +93,7 @@ public class HandItem extends Item {
     }
 
     @Override
-    public Component getName(ItemStack stack) {
+    public @NotNull Component getName(ItemStack stack) {
         if (stack.getOrCreateTag().contains("user")) {
             return Component.translatable("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack)) + "'s");
         }
@@ -100,7 +101,7 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (allowedIn(group)) {
             for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
                 if (skinType != PlayerUtil.SkinType.EITHER) {
@@ -113,7 +114,7 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(Component.translatable(ChatFormatting.WHITE + "Trait: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).translation().getString()));
         tooltip.add(Component.translatable(ChatFormatting.WHITE + "Energy: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));

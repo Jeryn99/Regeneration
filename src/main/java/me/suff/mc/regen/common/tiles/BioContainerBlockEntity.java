@@ -25,10 +25,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
@@ -86,7 +86,7 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    public void tick(Level p_155253_, BlockPos p_155254_, BlockState p_155255_, BioContainerBlockEntity p_155256_) {
+    public void tick(@NotNull Level p_155253_, @NotNull BlockPos p_155254_, @NotNull BlockState p_155255_, @NotNull BioContainerBlockEntity p_155256_) {
 
         isOpen = getHand().isEmpty();
 
@@ -145,7 +145,7 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag compoundTag = new CompoundTag();
         saveAdditional(compoundTag);
         return compoundTag;

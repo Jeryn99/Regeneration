@@ -18,6 +18,16 @@ public abstract class AbstractTrait {
         return Component.translatable("trait." + regName.getNamespace() + "." + regName.getPath());
     }
 
+    public String translationKey() {
+        ResourceLocation regName = RegenTraitRegistry.TRAIT_REGISTRY.get().getKey(this);
+        return "trait." + regName.getNamespace() + "." + regName.getPath();
+    }
+
+    public String descriptionKey() {
+        ResourceLocation regName = RegenTraitRegistry.TRAIT_REGISTRY.get().getKey(this);
+        return "trait." + regName.getNamespace() + "." + regName.getPath() + ".description";
+    }
+
     public MutableComponent description() {
         ResourceLocation regName = RegenTraitRegistry.TRAIT_REGISTRY.get().getKey(this);
         return Component.translatable("trait." + regName.getNamespace() + "." + regName.getPath() + ".description");

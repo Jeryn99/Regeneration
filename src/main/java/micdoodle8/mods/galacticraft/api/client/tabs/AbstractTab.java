@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractTab extends AbstractButton {
     public int id;
@@ -22,7 +23,7 @@ public abstract class AbstractTab extends AbstractButton {
 
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             Minecraft mc = Minecraft.getInstance();

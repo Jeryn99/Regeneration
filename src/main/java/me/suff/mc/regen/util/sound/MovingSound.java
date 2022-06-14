@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -35,7 +36,7 @@ public class MovingSound extends AbstractTickableSoundInstance {
             }
 
             // I promise this is the only case specific thing I am putting in here ~ Craig
-            if (sound.getLocation().equals(RSounds.GRACE_HUM.get().getRegistryName())) {
+            if (sound.getLocation().equals(RSounds.GRACE_HUM.get().getLocation())) {
                 volume = RegenUtil.randFloat(1.5F, 6F);
             }
 
@@ -85,7 +86,7 @@ public class MovingSound extends AbstractTickableSoundInstance {
     }
 
     @Override
-    public Attenuation getAttenuation() {
+    public @NotNull Attenuation getAttenuation() {
         return Attenuation.LINEAR;
     }
 }

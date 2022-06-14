@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -65,19 +66,16 @@ public class ColorScreen extends AbstractContainerScreen {
         this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
 
         // Default Button
-        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.default"), button -> {
-            RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
-                TransitionType regenType = data.transitionType();
-                Vec3 primColor = regenType.getDefaultPrimaryColor();
-                Vec3 secColor = regenType.getDefaultSecondaryColor();
-                Color primaryColour = new Color((float) primColor.x, (float) primColor.y, (float) primColor.z);
-                Color secondaryColour = new Color((float) secColor.x, (float) secColor.y, (float) secColor.z);
-                colorChooserPrimary.setColor(primaryColour.getRGB());
-                colorChooserSecondary.setColor(secondaryColour.getRGB());
-                updateScreenAndServer();
-            });
-
-        }));
+        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.default"), button -> RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
+            TransitionType regenType = data.transitionType();
+            Vec3 primColor = regenType.getDefaultPrimaryColor();
+            Vec3 secColor = regenType.getDefaultSecondaryColor();
+            Color primaryColour = new Color((float) primColor.x, (float) primColor.y, (float) primColor.z);
+            Color secondaryColour = new Color((float) secColor.x, (float) secColor.y, (float) secColor.z);
+            colorChooserPrimary.setColor(primaryColour.getRGB());
+            colorChooserSecondary.setColor(secondaryColour.getRGB());
+            updateScreenAndServer();
+        })));
 
         colorChooserPrimary = new ColorWidget(font, cx + 20, cy + 35, 70, 20, Component.literal("Regen"), new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
@@ -88,7 +86,7 @@ public class ColorScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderLabels(PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+    protected void renderLabels(@NotNull PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
         this.font.draw(p_230451_1_, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
@@ -107,7 +105,7 @@ public class ColorScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
 
         super.tick();
         colorChooserPrimary.tick();

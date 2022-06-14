@@ -27,7 +27,7 @@ public final class VoxelShapeUtils {
     }
 
     /**
-     * Prints out a set of strings that make copy pasting easier, for simplifying a voxel shape
+     * Prints out a set of strings that make copying and pasting easier, for simplifying a voxel shape
      */
     public static void printSimplified(String name, VoxelShape shape) {
         System.out.println("Simplified: " + name);
@@ -42,42 +42,30 @@ public final class VoxelShapeUtils {
      * @return The rotated {@link net.minecraft.world.level.levelgen.structure.BoundingBox}
      */
     public static AABB rotate(AABB box, Direction side) {
-        switch (side) {
-            case DOWN:
-                return box;
-            case UP:
-                return new AABB(box.minX, -box.minY, -box.minZ, box.maxX, -box.maxY, -box.maxZ);
-            case NORTH:
-                return new AABB(box.minX, -box.minZ, box.minY, box.maxX, -box.maxZ, box.maxY);
-            case SOUTH:
-                return new AABB(-box.minX, box.minZ, -box.minY, -box.maxX, box.maxZ, -box.maxY);
-            case WEST:
-                return new AABB(box.minY, -box.minZ, -box.minX, box.maxY, -box.maxZ, -box.maxX);
-            case EAST:
-                return new AABB(-box.minY, box.minZ, box.minX, -box.maxY, box.maxZ, box.maxX);
-        }
-        return box;
+        return switch (side) {
+            case DOWN -> box;
+            case UP -> new AABB(box.minX, -box.minY, -box.minZ, box.maxX, -box.maxY, -box.maxZ);
+            case NORTH -> new AABB(box.minX, -box.minZ, box.minY, box.maxX, -box.maxZ, box.maxY);
+            case SOUTH -> new AABB(-box.minX, box.minZ, -box.minY, -box.maxX, box.maxZ, -box.maxY);
+            case WEST -> new AABB(box.minY, -box.minZ, -box.minX, box.maxY, -box.maxZ, -box.maxX);
+            case EAST -> new AABB(-box.minY, box.minZ, box.minX, -box.maxY, box.maxZ, box.maxX);
+        };
     }
 
     /**
-     * Rotates an {@link BoundingBox} to a according to a specific rotation.
+     * Rotates an {@link BoundingBox} to an according to a specific rotation.
      *
      * @param box      The {@link BoundingBox} to rotate
      * @param rotation The rotation we are performing.
      * @return The rotated {@link BoundingBox}
      */
     public static AABB rotate(AABB box, Rotation rotation) {
-        switch (rotation) {
-            case NONE:
-                return box;
-            case CLOCKWISE_90:
-                return new AABB(-box.minZ, box.minY, box.minX, -box.maxZ, box.maxY, box.maxX);
-            case CLOCKWISE_180:
-                return new AABB(-box.minX, box.minY, -box.minZ, -box.maxX, box.maxY, -box.maxZ);
-            case COUNTERCLOCKWISE_90:
-                return new AABB(box.minZ, box.minY, -box.minX, box.maxZ, box.maxY, -box.maxX);
-        }
-        return box;
+        return switch (rotation) {
+            case NONE -> box;
+            case CLOCKWISE_90 -> new AABB(-box.minZ, box.minY, box.minX, -box.maxZ, box.maxY, box.maxX);
+            case CLOCKWISE_180 -> new AABB(-box.minX, box.minY, -box.minZ, -box.maxX, box.maxY, -box.maxZ);
+            case COUNTERCLOCKWISE_90 -> new AABB(box.minZ, box.minY, -box.minX, box.maxZ, box.maxY, -box.maxX);
+        };
     }
 
     /**
@@ -161,7 +149,7 @@ public final class VoxelShapeUtils {
      * Used for mass combining shapes
      *
      * @param shapes The list of {@link VoxelShape}s to include
-     * @return A simplified {@link VoxelShape} including everything that is part of any of the input shapes.
+     * @return A simplified {@link VoxelShape} including everything that is part of the input shapes.
      */
     public static VoxelShape combine(VoxelShape... shapes) {
         return batchCombine(Shapes.empty(), BooleanOp.OR, true, shapes);
@@ -171,7 +159,7 @@ public final class VoxelShapeUtils {
      * Used for mass combining shapes
      *
      * @param shapes The collection of {@link VoxelShape}s to include
-     * @return A simplified {@link VoxelShape} including everything that is part of any of the input shapes.
+     * @return A simplified {@link VoxelShape} including everything that is part of the input shapes.
      */
     public static VoxelShape combine(Collection<VoxelShape> shapes) {
         return combine(shapes, true);
@@ -185,7 +173,7 @@ public final class VoxelShapeUtils {
      * Used for cutting shapes out of a full cube
      *
      * @param shapes The list of {@link VoxelShape}s to cut out
-     * @return A {@link VoxelShape} including everything that is not part of any of the input shapes.
+     * @return A {@link VoxelShape} including everything that is not part of the input shapes.
      */
     public static VoxelShape exclude(VoxelShape... shapes) {
         return batchCombine(Shapes.block(), BooleanOp.ONLY_FIRST, true, shapes);

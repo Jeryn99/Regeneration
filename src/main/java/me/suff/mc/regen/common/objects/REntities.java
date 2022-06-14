@@ -56,8 +56,7 @@ public class REntities {
         builder.fireImmune();
         builder.sized(width, height);
         builder.setCustomClientFactory((spawnEntity, world) -> client.spawn(world));
-        EntityType<T> type = builder.build(loc.toString());
-        return type;
+        return builder.build(loc.toString());
     }
 
     private static <T extends Entity> EntityType<T> registerFireResistMob(EntityType.EntityFactory<T> factory, IClientSpawner<T> client, MobCategory classification, float width, float height, String name, boolean velocity) {

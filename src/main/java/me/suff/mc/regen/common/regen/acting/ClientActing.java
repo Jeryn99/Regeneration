@@ -15,7 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
 
@@ -35,8 +37,8 @@ class ClientActing implements Acting {
     public void onEnterGrace(IRegen cap) {
         if (cap.getLiving().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             SoundEvent ambientSound = cap.getTimelordSound().getSound();
-            ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundSource.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F);
-            ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundSource.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F);
+            ClientUtil.playSound(cap.getLiving(), ForgeRegistries.SOUND_EVENTS.getKey(RSounds.HEART_BEAT.get()), SoundSource.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F, cap.getLiving().getRandom());
+            ClientUtil.playSound(cap.getLiving(), ForgeRegistries.SOUND_EVENTS.getKey(ambientSound), SoundSource.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F, cap.getLiving().getRandom());
         }
         //TODO - LP - STOP MUSIC PLAYING IN GRACE Minecraft.getInstance().getSoundHandler().stop(null, SoundCategory.MUSIC);
     }
@@ -44,7 +46,7 @@ class ClientActing implements Acting {
     @Override
     public void onHandsStartGlowing(IRegen cap) {
         if (cap.getLiving().getType() == EntityType.PLAYER) {
-            ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundSource.PLAYERS, true, () -> !cap.glowing(), 1.0F);
+            ClientUtil.playSound(cap.getLiving(), ForgeRegistries.SOUND_EVENTS.getKey(RSounds.HAND_GLOW.get()), SoundSource.PLAYERS, true, () -> !cap.glowing(), 1.0F, cap.getLiving().getRandom());
         }
     }
 
@@ -71,7 +73,7 @@ class ClientActing implements Acting {
                     if (!cap.isNextSkinValid()) {
                         File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
                         boolean isAlex = file.getAbsolutePath().contains("\\skins\\alex");
-                        Regeneration.LOG.info("Choosen Skin: " + file);
+                        Regeneration.LOG.info("Chosen Skin: " + file);
                         NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
                     }
                 });
@@ -86,7 +88,7 @@ class ClientActing implements Acting {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
                 ClientUtil.createToast(Component.translatable("regen.toast.enter_critical"), Component.translatable("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
-                ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F);
+                ClientUtil.playSound(cap.getLiving(), ForgeRegistries.SOUND_EVENTS.getKey(RSounds.CRITICAL_STAGE.get()), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F, RandomSource.create());
             }
         }
     }

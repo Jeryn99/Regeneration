@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /* Created by Craig on 01/03/2021 */
 public class RenderLaser extends EntityRenderer<Laser> {
@@ -44,7 +45,7 @@ public class RenderLaser extends EntityRenderer<Laser> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Laser entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull Laser entity) {
         return null;
     }
 

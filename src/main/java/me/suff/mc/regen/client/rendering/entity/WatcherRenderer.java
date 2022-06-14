@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -24,18 +25,18 @@ public class WatcherRenderer extends HumanoidMobRenderer<Watcher, PlayerModel<Wa
     }
 
     @Override
-    public void render(Watcher entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(@NotNull Watcher entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     @Nullable
     @Override
-    protected RenderType getRenderType(Watcher watcher, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {
+    protected RenderType getRenderType(@NotNull Watcher watcher, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {
         return RenderTypes.entityCutout(getTextureLocation(watcher));
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Watcher entity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull Watcher entity) {
         return TEXTURE;
     }
 }

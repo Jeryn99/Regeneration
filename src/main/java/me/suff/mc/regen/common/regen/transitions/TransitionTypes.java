@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.regen.transitions;
 
-import me.suff.mc.regen.util.RConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.*;
@@ -8,7 +7,6 @@ import net.minecraftforge.registries.*;
 import java.util.function.Supplier;
 
 import static me.suff.mc.regen.util.RConstants.MODID;
-import static me.suff.mc.regen.util.RConstants.TRANSITION_TYPE;
 
 /**
  * Created by Craig

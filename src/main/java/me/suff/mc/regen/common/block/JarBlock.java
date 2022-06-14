@@ -22,10 +22,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -45,12 +45,12 @@ public class JarBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
+    public @NotNull BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(ROTATION, rot.rotate(state.getValue(ROTATION), 16));
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+    public @NotNull BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.setValue(ROTATION, mirrorIn.mirror(state.getValue(ROTATION), 16));
     }
 
@@ -62,7 +62,7 @@ public class JarBlock extends Block implements EntityBlock {
 
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide()) {
             BioContainerBlockEntity jarTile = (BioContainerBlockEntity) worldIn.getBlockEntity(pos);
             if (handIn == InteractionHand.MAIN_HAND) {
@@ -101,7 +101,7 @@ public class JarBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, BlockState newState, boolean isMoving) {
         if (!newState.is(this)) {
             if (!worldIn.isClientSide()) {
                 BioContainerBlockEntity jarTile = (BioContainerBlockEntity) worldIn.getBlockEntity(pos);
@@ -124,19 +124,19 @@ public class JarBlock extends Block implements EntityBlock {
 
 
     @Override
-    public RenderShape getRenderShape(BlockState p_60550_) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState p_60550_) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         return new BioContainerBlockEntity(blockPos, blockState);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level p_153212_, @NotNull BlockState p_153213_, @NotNull BlockEntityType<T> p_153214_) {
         return EntityBlock.super.getTicker(p_153212_, p_153213_, p_153214_);
     }
 }
