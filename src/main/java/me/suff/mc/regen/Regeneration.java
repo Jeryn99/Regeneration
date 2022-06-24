@@ -42,6 +42,8 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 @Mod("regen")
 public class Regeneration {
 
@@ -73,6 +75,7 @@ public class Regeneration {
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+
     }
 
     @SubscribeEvent

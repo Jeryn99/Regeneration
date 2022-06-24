@@ -20,15 +20,16 @@ public class DownloadSkinsThread extends Thread {
 
     @Override
     public void run() {
+
         try {
             folderSetup();
+            newSkins();
             File tempZip = new File(SKIN_DIRECTORY + "/temp");
             if (tempZip.exists()) {
                 FileUtils.cleanDirectory(tempZip);
             }
             trending();
             timelord();
-            skinpacks();
         } catch (Exception exception) {
             exception.printStackTrace();
         }

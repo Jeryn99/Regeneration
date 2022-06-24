@@ -32,7 +32,7 @@ import java.util.zip.ZipFile;
 
 public class CommonSkin {
 
-    public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
+    public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/regeneration_skins/skins/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/mineskin");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
@@ -132,6 +132,29 @@ public class CommonSkin {
         return op.filter(img, gray);
     }
 
+    public static void newSkins() throws IOException {
+        if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        String packsUrl = "https://mc-api.craig.software/skins";
+        JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
+        System.out.println(links);
+
+        for (int skins = links.getAsJsonArray("data").size() - 1; skins >= 0; skins--) {
+            JsonArray data = links.getAsJsonArray("data");
+            JsonObject currentSkin = data.get(skins).getAsJsonObject();
+            String packName = currentSkin.get("name").getAsString();
+            String downloadLink = currentSkin.get("url").getAsString();
+            String destination = currentSkin.get("destination").getAsString();
+
+
+            File skinPackDir = new File(SKIN_DIRECTORY + "/" + destination);
+            if (skinPackDir.exists()) {
+                skinPackDir.mkdirs();
+            }
+            downloadSkinsSpecific(new URL(downloadLink), packName, skinPackDir);
+
+        }
+    }
+
     public static void skinpacks() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
@@ -141,19 +164,19 @@ public class CommonSkin {
 
         for (int skins = links.getAsJsonArray("packs").size() - 1; skins >= 0; skins--) {
             JsonArray packs = links.getAsJsonArray("packs");
-            JsonObject currentPack = packs.get(skins).getAsJsonObject();
-            String packName = currentPack.get("name").getAsString();
-            JsonArray authorsJson = currentPack.get("authors").getAsJsonArray();
+            JsonObject currentSkin = packs.get(skins).getAsJsonObject();
+            String packName = currentSkin.get("name").getAsString();
+            JsonArray authorsJson = currentSkin.get("authors").getAsJsonArray();
 
             ArrayList<String> authors = new ArrayList<>();
             for (int i = 0; i < authorsJson.size(); i++) {
                 authors.add(authorsJson.get(i).getAsString());
             }
 
-            String downloadLink = currentPack.get("download_url").getAsString();
-            ResourceLocation namespace = new ResourceLocation(currentPack.get("namespace").getAsString());
-            String desc = currentPack.get("description").getAsString();
-            String thumbnail = currentPack.get("thumbnail").getAsString();
+            String downloadLink = currentSkin.get("download_url").getAsString();
+            ResourceLocation namespace = new ResourceLocation(currentSkin.get("namespace").getAsString());
+            String desc = currentSkin.get("description").getAsString();
+            String thumbnail = currentSkin.get("thumbnail").getAsString();
 
             SkinPack.add(new SkinPack(packName, authors, downloadLink, thumbnail, namespace));
 
@@ -167,6 +190,12 @@ public class CommonSkin {
                 unzipSkinPack(downloadLink);
             }
         }
+
+      /*  try {
+            Skins.gen();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     public static boolean isAlexSkin(BufferedImage image) {
