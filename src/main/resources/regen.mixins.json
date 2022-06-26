@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "me.suff.mc.regen.mixin",
+  "package": "craig.software.mc.regen.mixin",
   "refmap": "regen.refmap.json",
   "client": [
     "BipedBodyMixin",
