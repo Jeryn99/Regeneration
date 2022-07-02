@@ -29,8 +29,7 @@ import java.util.zip.ZipFile;
 
 public class CommonSkin {
 
-    public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
-    public static final File THUMBNAILS = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/thumbnails/");
+    public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/regeneration_skins/skins/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/mineskin");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
@@ -72,27 +71,10 @@ public class CommonSkin {
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
-    public static void downloadOnCommand(SkinPack skinPack) {
-        Thread thread = new Thread(() -> {
-            ResourceLocation namespace = skinPack.location();
-            File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
-            if (!skinPackDir.exists()) {
-                skinPackDir.delete();
-            }
-            skinPackDir.mkdirs();
-            Regeneration.LOG.info("Downloading " + skinPack.getName() + " by " + skinPack.getAuthors() + " " + skinPack.getName());
-            try {
-                unzipSkinPack(skinPack.getDownloadUrl());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-    }
 
 
     public static void folderSetup() throws IOException {
-        File[] folders = new File[]{THUMBNAILS, SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
+        File[] folders = new File[]{SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
         for (File folder : folders) {
             if (!folder.exists()) {
                 FileUtils.forceMkdir(folder);
@@ -150,39 +132,25 @@ public class CommonSkin {
         return op.filter(img, gray);
     }
 
-    public static void skinpacks() throws IOException {
+    public static void newSkins() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
-
-        Regeneration.LOG.info("Downloading Remote Skinpacks");
-        String packsUrl = "https://api.who-craft.com/get/regen/skins";
+        String packsUrl = "https://mc-api.craig.software/skins";
         JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
 
-        for (int skins = links.getAsJsonArray("packs").size() - 1; skins >= 0; skins--) {
-            JsonArray packs = links.getAsJsonArray("packs");
-            JsonObject currentPack = packs.get(skins).getAsJsonObject();
-            String packName = currentPack.get("name").getAsString();
-            JsonArray authorsJson = currentPack.get("authors").getAsJsonArray();
+        for (int skins = links.getAsJsonArray("data").size() - 1; skins >= 0; skins--) {
+            JsonArray data = links.getAsJsonArray("data");
+            JsonObject currentSkin = data.get(skins).getAsJsonObject();
+            String packName = currentSkin.get("name").getAsString();
+            String downloadLink = currentSkin.get("url").getAsString();
+            String destination = currentSkin.get("destination").getAsString();
 
-            ArrayList<String> authors = new ArrayList<>();
-            for (int i = 0; i < authorsJson.size(); i++) {
-                authors.add(authorsJson.get(i).getAsString());
+
+            File skinPackDir = new File(SKIN_DIRECTORY + "/" + destination);
+            if (skinPackDir.exists()) {
+                skinPackDir.mkdirs();
             }
+            downloadSkinsSpecific(new URL(downloadLink), packName, skinPackDir);
 
-            String downloadLink = currentPack.get("download_url").getAsString();
-            ResourceLocation namespace = new ResourceLocation(currentPack.get("namespace").getAsString());
-            String desc = currentPack.get("description").getAsString();
-            String thumbnail = currentPack.get("thumbnail").getAsString();
-            SkinPack.add(new SkinPack(packName, authors, downloadLink, thumbnail, namespace));
-            //CommonSkin.downloadSkinsSpecific(new URL(thumbnail), namespace.getPath(), THUMBNAILS);
-        }
-
-        for (SkinPack skinPack : SkinPack.getAll()) {
-            CommonSkin.downloadOnCommand(skinPack);
-        }
-
-        File tempFolder = new File(SKIN_DIRECTORY + File.separator + "temp");
-        if (tempFolder.exists()) {
-            FileUtils.forceDelete(tempFolder.getParentFile());
         }
     }
 
@@ -199,45 +167,6 @@ public class CommonSkin {
         int pixel = image.getRGB(x, y);
         return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
     }
-
-    public static void unzipSkinPack(String url) throws IOException {
-        File tempZip = new File(SKIN_DIRECTORY + "/temp/" + RegenUtil.randomCode() + ".zip");
-        Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
-        FileUtils.copyURLToFile(new URL(url), tempZip);
-        try (ZipFile file = new ZipFile(tempZip)) {
-            FileSystem fileSystem = FileSystems.getDefault();
-            Enumeration<? extends ZipEntry> entries = file.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                if (entry.isDirectory()) {
-                    Files.createDirectories(fileSystem.getPath(SKIN_DIRECTORY + File.separator + entry.getName()));
-                } else {
-                    InputStream is = file.getInputStream(entry);
-                    BufferedInputStream bis = new BufferedInputStream(is);
-                    String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
-                    Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
-                    Regeneration.LOG.info(entry.getName());
-                    File temp = uncompressedFilePath.toFile();
-                    if (temp.exists()) {
-                        temp.delete();
-                    }
-                    File extract = new File(String.valueOf(uncompressedFilePath));
-                    if (extract.exists()) {
-                        extract.delete();
-                    }
-                    Files.createFile(uncompressedFilePath);
-                    FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);
-                    while (bis.available() > 0) {
-                        fileOutput.write(bis.read());
-                    }
-                    fileOutput.close();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
         File directory = null;

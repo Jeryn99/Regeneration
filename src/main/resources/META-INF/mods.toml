@@ -1,13 +1,13 @@
 modLoader = "javafml" #mandatory
 loaderVersion = "[34,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-license = "https://raw.githubusercontent.com/WhoCraft/Regeneration/1.16/LICENSE"
-issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
+license = "https://raw.githubusercontent.com/Suff99/Regeneration/1.16/LICENSE"
+issueTrackerURL = "https://github.com/Suff99/Regeneration/issues"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 itemIcon = "regen:fobwatch"
 modId = "regen" #mandatory
-version = "2.0.9" #mandatory
-updateJSONURL = "https://api.who-craft.com/get/regen/update" #optional
+version = "36.0.0" #mandatory
+updateJSONURL = "https://mc-api.craig.software/update?mod=regen" #optional
 displayName = "Regeneration" #mandatory
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional
 logoFile = "regen.png" #optional
@@ -23,7 +23,7 @@ modId = "forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
 mandatory = true #mandatory
 # The version range of the dependency
-versionRange = "[34,)" #mandatory
+versionRange = "[36,)" #mandatory
 # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
 ordering = "NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
