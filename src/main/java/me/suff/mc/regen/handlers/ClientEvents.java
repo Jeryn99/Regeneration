@@ -108,9 +108,9 @@ public class ClientEvents {
         }
     }
 
-    private static boolean checkShaderLoaded(GameRenderer renderer, String blur) {
+    private static boolean checkShaderLoaded(GameRenderer renderer, String shader) {
         if (renderer.currentEffect() == null) return false;
-        return renderer.currentEffect().getName().toLowerCase().contains(blur);
+        return renderer.currentEffect().getName().toLowerCase().contains(shader);
     }
 
     @SubscribeEvent
@@ -126,7 +126,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre playerEvent) {
         PlayerEntity player = playerEvent.getPlayer();
-        SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
+        SkinHandler.tick((ClientPlayerEntity) playerEvent.getPlayer());
         RegenCap.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
             TransitionTypeRenderers.get(type).onPlayerRenderPre(playerEvent);

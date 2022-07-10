@@ -4,6 +4,7 @@ package me.suff.mc.regen.client.skin;
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
 import me.suff.mc.regen.util.TexUtil;
@@ -29,9 +30,10 @@ public class SkinHandler {
     //Skin Storage
     public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
-    public static void tick(AbstractClientPlayerEntity playerEntity) {
+    public static void tick(ClientPlayerEntity playerEntity) {
+
+
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
-            boolean hasBeenModified = false;
 
             byte[] skin = iRegen.skin();
             UUID uuid = playerEntity.getUUID();
@@ -40,24 +42,14 @@ public class SkinHandler {
 
             // Check if the player has a MOD skin and if the cache is present
             // if these conditions are true, we want to generate and cache the skin
-            if (validSkin && !hasPlayerSkin(uuid) || iRegen.updateTicks() >= 140) {
+            if (validSkin && !hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= 140) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
+                    boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.currentlyAlex() : getUnmodifiedSkinType(playerEntity);
+                    setPlayerSkinType(playerEntity, isAlex);
                     addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
-                    hasBeenModified = true;
                 }
             }
-
-
-            //Update the skin if required.
-            if (hasBeenModified || playerEntity.tickCount < 20) {
-                ResourceLocation skinTexture = getSkinToUse(playerEntity);
-                setPlayerSkin(playerEntity, skinTexture);
-                // setPlayerCape(playerEntity, new ResourceLocation(RConstants.MODID, "textures/entity/cape.png"));
-            }
-
-            boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.currentlyAlex() : getUnmodifiedSkinType(playerEntity);
-            setPlayerSkinType(playerEntity, isAlex);
         });
     }
 
