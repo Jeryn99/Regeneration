@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class RTiles {
 
-    public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, RConstants.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, RConstants.MODID);
 
     private static <T extends BlockEntity> BlockEntityType<T> registerTiles(BlockEntityType.BlockEntitySupplier<T> tile, Block validBlock) {
         return BlockEntityType.Builder.of(tile, validBlock).build(null);

@@ -64,7 +64,7 @@ public class TabRegistry {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void guiPostInit(ScreenEvent.InitScreenEvent.Post event) {
+    public void guiPostInit(ScreenEvent.Init.Post event) {
         if (event.getScreen() instanceof InventoryScreen) {
             int guiLeft = (event.getScreen().width - 176) / 2;
             int guiTop = (event.getScreen().height - 166) / 2;

@@ -55,7 +55,7 @@ public class ClientEvents {
     private static SoundInstance iSound = null;
 
     @SubscribeEvent
-    public static void onName(RenderNameplateEvent event) {
+    public static void onName(RenderNameTagEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
@@ -66,8 +66,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre playerEvent) {
-        Player player = playerEvent.getPlayer();
-        SkinHandler.tick((AbstractClientPlayer) playerEvent.getPlayer());
+        Player player = playerEvent.getEntity();
+        SkinHandler.tick((AbstractClientPlayer) playerEvent.getEntity());
         RegenCap.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
             TransitionTypeRenderers.get(type).onPlayerRenderPre(playerEvent);
@@ -75,8 +75,15 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void keyMapping(RegisterKeyMappingsEvent event){
+        event.register(RKeybinds.FORCE_REGEN);
+        event.register(RKeybinds.REGEN_GUI);
+        event.register(RKeybinds.TOGGLE_TRAIT);
+    }
+
+    @SubscribeEvent
     public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
-        Player player = playerEvent.getPlayer();
+        Player player = playerEvent.getEntity();
         RegenCap.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
             TransitionTypeRenderers.get(type).onPlayerRenderPost(playerEvent);
@@ -135,7 +142,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
+    public static void onColorFog(ViewportEvent.ComputeFogColor e) {
         Entity renderView = Minecraft.getInstance().getCameraEntity();
         if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity)) {
             return;
@@ -158,7 +165,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onRenderOverlay(RenderGameOverlayEvent.Pre event) {
+    public static void onRenderOverlay(RenderGuiOverlayEvent.Pre event) {
         LocalPlayer player = Minecraft.getInstance().player;
         RegenCap.get(player).ifPresent((cap) -> {
             String warning = null;
@@ -167,7 +174,7 @@ public class ClientEvents {
 
             // if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
 
-            if (cap.regenState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+            if (cap.regenState() == RegenStates.REGENERATING && event.getType() == ElementType.ALL) {
                 event.setCanceled(true);
             }
 
@@ -206,7 +213,7 @@ public class ClientEvents {
         });
     }
 
-    private static void handleGunCrosshair(RenderGameOverlayEvent.Pre event, LocalPlayer player, IRegen cap) {
+    private static void handleGunCrosshair(RenderGuiOverlayEvent.Pre event, LocalPlayer player, IRegen cap) {
         boolean gunSight = player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0;
         boolean healthCheck = event.getType().name().toLowerCase().contains("health");
         if (gunSight && healthCheck) {
@@ -216,7 +223,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
+    public static void onSetupFogDensity(ViewportEvent.RenderFog event) {
         Entity viewer = Minecraft.getInstance().getCameraEntity();
         if (viewer instanceof LivingEntity livingEntity) {
             RegenCap.get(livingEntity).ifPresent((data) -> {
@@ -242,7 +249,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent e) {
-        if (e.getEntityLiving() instanceof Player player) {
+        if (e.getEntity() instanceof Player player) {
             SkinHandler.PLAYER_SKINS.remove(player.getUUID());
 
             if (player.getUUID().equals(Minecraft.getInstance().player.getUUID())) {

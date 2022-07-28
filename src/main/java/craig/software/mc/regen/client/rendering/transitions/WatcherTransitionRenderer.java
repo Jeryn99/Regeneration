@@ -25,7 +25,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
-        Player player = pre.getPlayer();
+        Player player = pre.getEntity();
 
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
@@ -39,7 +39,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
-        Player player = post.getPlayer();
+        Player player = post.getEntity();
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = player.yHeadRot;

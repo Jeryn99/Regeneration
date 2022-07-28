@@ -29,7 +29,7 @@ public class LootGen extends GlobalLootModifierProvider {
         };
 
         for (ResourceLocation currentTable : fobWatchTables) {
-            add(currentTable.getPath(), RGlobalLoot.REGEN_LOOT.get(), new RGlobalLoot.RegenerationLoot(
+            add(currentTable.getPath(), new RGlobalLoot.RegenerationLoot(
                     new LootItemCondition[]{LootTableIdCondition.builder(currentTable).build()}, 15)
             );
         }
@@ -37,7 +37,7 @@ public class LootGen extends GlobalLootModifierProvider {
         for (ResourceLocation resourceLocation : BuiltInLootTables.all()) {
             //Fob Treasure
             if (resourceLocation.getPath().contains("treasure")) {
-                add(resourceLocation.getPath(), RGlobalLoot.REGEN_LOOT.get(), new RGlobalLoot.RegenerationLoot(
+                add(resourceLocation.getPath(), new RGlobalLoot.RegenerationLoot(
                         new LootItemCondition[]{LootTableIdCondition.builder(resourceLocation).build()}, 40)
                 );
             }

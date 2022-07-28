@@ -17,7 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class REntities {
 
 
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, RConstants.MODID);
     public static RegistryObject<EntityType<Timelord>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(Timelord::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
     public static RegistryObject<EntityType<Watcher>> WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(Watcher::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
     public static RegistryObject<EntityType<Laser>> LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(Laser::new, MobCategory.MISC, 0.25F, 0.25F, 128, 1, true, "laser"));

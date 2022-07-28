@@ -56,6 +56,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.PacketDistributor;
@@ -122,6 +123,12 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         setup();
     }
 
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_35282_, DifficultyInstance p_35283_, MobSpawnType p_35284_, @org.jetbrains.annotations.Nullable SpawnGroupData p_35285_, @org.jetbrains.annotations.Nullable CompoundTag p_35286_) {
+        populateDefaultEquipmentSlots(random, level.getCurrentDifficultyAt(blockPosition()));
+        return super.finalizeSpawn(p_35282_, p_35283_, p_35284_, p_35285_, p_35286_);
+    }
 
     @Override
     public void updateSwimming() {
@@ -226,7 +233,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     protected void tickDeath() {
         super.tickDeath();
         if (ModList.get().isLoaded("weeping_angels") && !level.isClientSide) {
-            EntityType<?> weepingAngel = ForgeRegistries.ENTITIES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
+            EntityType<?> weepingAngel = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
             if (weepingAngel != null) {
                 if (level.random.nextInt(100) < 10) {
                     Entity entity = weepingAngel.create(level);

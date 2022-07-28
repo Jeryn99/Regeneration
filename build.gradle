@@ -176,7 +176,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.22'
+    minecraft 'net.minecraftforge:forge:1.19-41.1.0'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -200,6 +201,12 @@ jar {
 jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 // publish.dependsOn('reobfJar')
+
+mixin {
+    add sourceSets.main, "regen.refmap.json"
+
+    config "regen.mixins.json"
+}
 
 publishing {
     publications {

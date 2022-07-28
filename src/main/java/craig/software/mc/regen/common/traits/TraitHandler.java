@@ -22,7 +22,7 @@ public class TraitHandler {
 
     @SubscribeEvent
     public static void onExperienceGain(PlayerXpEvent.PickupXp event) {
-        RegenCap.get(event.getPlayer()).ifPresent(iRegen -> {
+        RegenCap.get(event.getEntity()).ifPresent(iRegen -> {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.SMART.get()) {
                 event.getOrb().value *= 1.5;
             }
@@ -62,8 +62,8 @@ public class TraitHandler {
 
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
-        LivingEntity living = event.getEntityLiving();
-        RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
+        LivingEntity living = event.getEntity();
+        RegenCap.get(living).ifPresent(iRegen -> {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.ENDER_HURT.get()) {
                 for (int i = 0; i < 16; ++i) {
                     double d3 = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
@@ -84,7 +84,7 @@ public class TraitHandler {
 
     @SubscribeEvent
     public static void onMineBlock(PlayerEvent.BreakSpeed event) {
-        RegenCap.get(event.getPlayer()).ifPresent(iRegen -> {
+        RegenCap.get(event.getEntity()).ifPresent(iRegen -> {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.FAST_MINE.get()) {
                 event.setNewSpeed(event.getOriginalSpeed() * 5);
             }
@@ -93,7 +93,7 @@ public class TraitHandler {
 
     @SubscribeEvent
     public static void onKnockback(LivingKnockBackEvent event) {
-        RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
+        RegenCap.get(event.getEntity()).ifPresent(iRegen -> {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.KNOCKBACK.get()) {
                 event.setCanceled(true);
             }
@@ -102,9 +102,9 @@ public class TraitHandler {
 
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent event) {
-        RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
+        RegenCap.get(event.getEntity()).ifPresent(iRegen -> {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.LEAP.get()) {
-                event.getEntityLiving().setDeltaMovement(event.getEntityLiving().getDeltaMovement().x, event.getEntityLiving().getDeltaMovement().y + 0.1F * 2, event.getEntityLiving().getDeltaMovement().z);
+                event.getEntity().setDeltaMovement(event.getEntity().getDeltaMovement().x, event.getEntity().getDeltaMovement().y + 0.1F * 2, event.getEntity().getDeltaMovement().z);
             }
         });
     }

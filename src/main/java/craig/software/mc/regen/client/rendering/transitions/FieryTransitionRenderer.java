@@ -10,6 +10,10 @@ import craig.software.mc.regen.common.regen.RegenCap;
 import craig.software.mc.regen.common.regen.state.RegenStates;
 import craig.software.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.animation.AnimationChannel;
+import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.Keyframe;
+import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -59,12 +63,10 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
     }
 
-
     @Override
     public void thirdPersonHand(HumanoidArm side, PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entitylivingbaseIn instanceof LivingEntity) {
+        if (entitylivingbaseIn != null) {
             RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
-
                 if (iRegen.regenState() == RegenStates.REGENERATING) {
                     double x = iRegen.updateTicks();
                     double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers

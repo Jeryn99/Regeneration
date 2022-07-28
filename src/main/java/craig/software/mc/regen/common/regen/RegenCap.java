@@ -556,7 +556,7 @@ public class RegenCap implements IRegen {
 
         @Override
         public void onPunchEntity(LivingHurtEvent event) {
-            LivingEntity entity = event.getEntityLiving();
+            LivingEntity entity = event.getEntity();
             // We're healing mobs...
             if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && glowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
@@ -574,21 +574,21 @@ public class RegenCap implements IRegen {
 
             if (currentState.isGraceful() && glowing()) {
 
-                BlockState block = e.getWorld().getBlockState(e.getPos());
+                BlockState block = e.getLevel().getBlockState(e.getPos());
 
                 if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
-                    e.getWorld().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
+                    e.getLevel().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
                 }
-                if (e.getEntityLiving() instanceof ServerPlayer) {
+                if (e.getEntity() instanceof ServerPlayer) {
                     ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                     TriggerManager.CHANGE_REFUSAL.trigger(playerEntity);
                 }
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
-                if (!e.getEntityLiving().level.isClientSide) {
-                    if (e.getEntityLiving() instanceof Player) {
-                        PlayerUtil.sendMessage(e.getEntityLiving(), Component.literal("regen.messages.regen_delayed"), true);
+                if (!e.getEntity().level.isClientSide) {
+                    if (e.getEntity() != null) {
+                        PlayerUtil.sendMessage(e.getEntity(), Component.literal("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something

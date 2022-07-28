@@ -85,8 +85,8 @@ public class CommonEvents {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void noFire(LivingAttackEvent event) {
-        if (event.getEntityLiving() == null) return;
-        RegenCap.get(event.getEntityLiving()).ifPresent((iRegen -> {
+        if (event.getEntity() == null) return;
+        RegenCap.get(event.getEntity()).ifPresent((iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
                 event.setCanceled(true);
             }
@@ -95,8 +95,8 @@ public class CommonEvents {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void noFall(LivingFallEvent event) {
-        if (event.getEntityLiving() == null) return;
-        RegenCap.get(event.getEntityLiving()).ifPresent((iRegen -> {
+        if (event.getEntity() == null) return;
+        RegenCap.get(event.getEntity()).ifPresent((iRegen -> {
             if (RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.LEAP.get()).toString())) {
                 event.setCanceled(true);
             }
@@ -105,7 +105,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity livingEntity = event.getEntity();
 
         if (livingEntity == null) return;
 
@@ -118,7 +118,7 @@ public class CommonEvents {
                 return;
             }
 
-            if (trueSource instanceof Player player && event.getEntityLiving() != null) {
+            if (trueSource instanceof Player player && event.getEntity() != null) {
                 RegenCap.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
             }
 
@@ -155,9 +155,9 @@ public class CommonEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void adMortemInimicusButForGrace(LivingDamageEvent event) {
-        if (event.getEntityLiving() == null) return;
-        RegenCap.get(event.getEntityLiving()).ifPresent((cap -> {
-            if ((cap.regenState().isGraceful()) && event.getEntityLiving().getHealth() - event.getAmount() < 0) {
+        if (event.getEntity() == null) return;
+        RegenCap.get(event.getEntity()).ifPresent((cap -> {
+            if ((cap.regenState().isGraceful()) && event.getEntity().getHealth() - event.getAmount() < 0) {
                 //uh oh, we're dying in grace. Forcibly regenerate before all (?) death prevention mods
                 boolean notDead = cap.stateManager().onKilled(event.getSource());
                 event.setCanceled(notDead);
@@ -168,15 +168,15 @@ public class CommonEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void adMortemInimicus(LivingDeathEvent event) {
-        if (event.getEntityLiving() == null) return;
-        RegenCap.get(event.getEntityLiving()).ifPresent((cap) -> {
+        if (event.getEntity() == null) return;
+        RegenCap.get(event.getEntity()).ifPresent((cap) -> {
             if ((event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)) {
                 cap.setTrait(RegenTraitRegistry.BORING.get());
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                     cap.extractRegens(cap.regens());
                 }
-                if (event.getEntityLiving() instanceof ServerPlayer)
-                    cap.syncToClients((ServerPlayer) event.getEntityLiving());
+                if (event.getEntity() instanceof ServerPlayer)
+                    cap.syncToClients((ServerPlayer) event.getEntity());
                 return;
             }
             if (cap.stateManager() == null) return;
@@ -188,28 +188,28 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onKnockback(LivingKnockBackEvent event) {
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity livingEntity = event.getEntity();
         RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.regenState() == RegenStates.REGENERATING));
     }
 
     @SubscribeEvent
     public static void onTrackPlayer(PlayerEvent.StartTracking startTracking) {
-        RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> iRegen.syncToClients(null));
+        RegenCap.get(startTracking.getEntity()).ifPresent(iRegen -> iRegen.syncToClients(null));
     }
 
     @SubscribeEvent
     public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getPlayer().level.isClientSide) return;
-        RegenCap.get(e.getPlayer()).ifPresent((data) -> data.stateManager().onPunchBlock(e));
+        if (e.getEntity().level.isClientSide) return;
+        RegenCap.get(e.getEntity()).ifPresent((data) -> data.stateManager().onPunchBlock(e));
     }
 
     @SubscribeEvent
-    public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
-        RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
+    public static void onLive(LivingEvent.LivingTickEvent livingUpdateEvent) {
+        RegenCap.get(livingUpdateEvent.getEntity()).ifPresent(IRegen::tick);
 
-        if (livingUpdateEvent.getEntityLiving() instanceof ServerPlayer) {
+        if (livingUpdateEvent.getEntity() instanceof ServerPlayer) {
             if (shouldGiveCouncilAdvancement((ServerPlayer) livingUpdateEvent.getEntity())) {
-                TriggerManager.COUNCIL.trigger((ServerPlayer) livingUpdateEvent.getEntityLiving());
+                TriggerManager.COUNCIL.trigger((ServerPlayer) livingUpdateEvent.getEntity());
             }
         }
     }
@@ -235,7 +235,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onCut(PlayerInteractEvent.RightClickItem event) {
         if (event.getItemStack().getItem() instanceof DiggerItem || event.getItemStack().getItem() instanceof SwordItem) {
-            Player player = event.getPlayer();
+            Player player = event.getEntity();
             RegenCap.get(player).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
                     HandItem.createHand(player);

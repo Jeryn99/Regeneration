@@ -58,7 +58,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -128,8 +128,8 @@ public class ClientUtil {
 
 
     @SubscribeEvent
-    public static void registerParticles(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particleEngine.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
     }
 
     public static boolean isAlex(Entity livingEntity) {
@@ -216,7 +216,6 @@ public class ClientUtil {
         itemPredicates();
         setupTabs();
         transitionTypes();
-        RKeybinds.init();
         BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
 
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
