@@ -5,7 +5,7 @@ issueTrackerURL = "https://github.com/Suff99/Regeneration"
 [[mods]]
 itemIcon = "regen:fobwatch"
 modId = "regen"
-version = "41.0.1"
+version = "41.0.2"
 displayName = "Regeneration"
 updateJSONURL = "https://mc-api.craig.software/update?mod=regen"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration"
@@ -18,7 +18,7 @@ Minecraft Mod that allows for players to given themselves the power of Regenerat
 [[dependencies.regen]]
 modId = "forge"
 mandatory = true
-versionRange = "[39.0.45,)"
+versionRange = "[41.1.0,)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.regen]]

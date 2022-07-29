@@ -21,7 +21,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '41.0.1'
+version = '41.0.2'
 group = 'craig.software.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'regen'
 
@@ -140,8 +140,9 @@ curseforge {
             changelogType = 'html'
             releaseType = 'release'
             addGameVersion '1.19'
+            addGameVersion '1.19.1'
             mainArtifact(jar) {
-                displayName = "[1.19] Regeneration - $project.version"
+                displayName = "[1.19.x] Regeneration - $project.version"
             }
         }
     } else {
