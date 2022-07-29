@@ -35,6 +35,7 @@ public class LootGen extends GlobalLootModifierProvider {
         }
 
         for (ResourceLocation resourceLocation : BuiltInLootTables.all()) {
+
             //Fob Treasure
             if (resourceLocation.getPath().contains("treasure")) {
                 add(resourceLocation.getPath(), new RGlobalLoot.RegenerationLoot(

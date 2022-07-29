@@ -27,12 +27,14 @@ public class StateMessage {
 
     public static void handle(StateMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> {
-
-            Entity entity = Minecraft.getInstance().level.getEntity(message.livingEntity);
-            if (entity instanceof LivingEntity livingEntity) {
-                RegenCap.get(livingEntity).ifPresent(iRegen -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), iRegen));
+            if (Minecraft.getInstance().level != null) {
+                Entity entity = Minecraft.getInstance().level.getEntity(message.livingEntity);
+                if (entity instanceof LivingEntity livingEntity) {
+                    RegenCap.get(livingEntity).ifPresent(iRegen -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), iRegen));
+                }
             }
         });
+
         ctx.get().setPacketHandled(true);
     }
 

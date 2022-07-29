@@ -30,9 +30,11 @@ public class SFXMessage {
 
     public static void handle(SFXMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> {
-            Entity player = Minecraft.getInstance().level.getEntity(message.playerUUID);
-            if (player != null) {
-                RegenCap.get((LivingEntity) player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundSource.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F, RandomSource.create()));
+            if (Minecraft.getInstance().level != null) {
+                Entity player = Minecraft.getInstance().level.getEntity(message.playerUUID);
+                if (player != null) {
+                    RegenCap.get((LivingEntity) player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundSource.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F, RandomSource.create()));
+                }
             }
         });
         ctx.get().setPacketHandled(true);

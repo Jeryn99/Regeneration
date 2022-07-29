@@ -174,8 +174,10 @@ public class ClientEvents {
 
             // if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
 
-            if (cap.regenState() == RegenStates.REGENERATING && event.getType() == ElementType.ALL) {
+            // TODO Test
+            if (cap.regenState() == RegenStates.REGENERATING) {
                 event.setCanceled(true);
+                return;
             }
 
             Component forceKeybind = RKeybinds.FORCE_REGEN.getKey().getDisplayName();
@@ -215,7 +217,7 @@ public class ClientEvents {
 
     private static void handleGunCrosshair(RenderGuiOverlayEvent.Pre event, LocalPlayer player, IRegen cap) {
         boolean gunSight = player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0;
-        boolean healthCheck = event.getType().name().toLowerCase().contains("health");
+        boolean healthCheck = event.getOverlay().id().toString().contains("health");
         if (gunSight && healthCheck) {
             event.setCanceled(true);
         }

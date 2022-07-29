@@ -82,7 +82,6 @@ public class Regeneration {
         RFeatures.PLACED_FEATURES.register(modBus);
 
         NetworkDispatcher.init();
-        PlayerUtil.setupPotions();
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
@@ -106,6 +105,7 @@ public class Regeneration {
         RSoundSchemes.init();
         TriggerManager.init();
         RPieces.init();
+        PlayerUtil.setupPotions();
     }
 
     @SubscribeEvent

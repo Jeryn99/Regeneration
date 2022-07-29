@@ -2,6 +2,7 @@ package craig.software.mc.regen.network.messages;
 
 import craig.software.mc.regen.common.regen.RegenCap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +31,9 @@ public class SyncMessage {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        Entity entity = Minecraft.getInstance().level.getEntity(this.entityID);
+        ClientLevel level = Minecraft.getInstance().level;
+        if(level == null) return;
+        Entity entity = level.getEntity(this.entityID);
 
         ctx.get().enqueueWork(() -> {
             if (entity != null)
