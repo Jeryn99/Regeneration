@@ -3,7 +3,6 @@ package me.suff.mc.regen.client.skin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.suff.mc.regen.Regeneration;
-import me.suff.mc.regen.client.screen.SkinPack;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.*;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -16,16 +15,12 @@ import javax.imageio.ImageIO;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 public class CommonSkin {
 
@@ -113,6 +108,8 @@ public class CommonSkin {
     }
 
     public static void downloadSkinsSpecific(URL url, String filename, File specific) throws IOException {
+        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, specific.getPath());
+
         URLConnection uc = url.openConnection();
         uc.connect();
         uc = url.openConnection();
@@ -122,7 +119,6 @@ public class CommonSkin {
             specific.mkdirs();
         }
 
-        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, specific.getPath());
         ImageIO.write(img, "png", new File(specific, filename + ".png"));
     }
 

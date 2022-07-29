@@ -21,7 +21,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.GameRenderer;
@@ -85,11 +84,6 @@ public class ClientEvents {
                     renderer.shutdownEffect();
                     return;
                 }
-            }
-
-            if ((iRegen.regenState() == RegenStates.GRACE || regeneratingTroughton) && !checkShaderLoaded(renderer, "desaturate")) {
-                shader.set("desaturate");
-                shouldReset = true;
             }
 
             if (iRegen.regenState() == RegenStates.GRACE_CRIT && !checkShaderLoaded(renderer, "blur")) {

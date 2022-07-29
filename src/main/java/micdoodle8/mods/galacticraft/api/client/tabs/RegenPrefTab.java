@@ -19,4 +19,6 @@ public class RegenPrefTab extends AbstractTab {
     public boolean shouldAddToList() {
         return true;
     }
+
+
 }
