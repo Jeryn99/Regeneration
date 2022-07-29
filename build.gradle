@@ -20,7 +20,7 @@ apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '36.0.0'
+version = '36.0.1'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 
