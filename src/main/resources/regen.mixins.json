@@ -3,6 +3,7 @@
   "package": "craig.software.mc.regen.mixin",
   "refmap": "regen.refmap.json",
   "client": [
+    "AbstractClientPlayerMixin",
     "BipedBodyMixin",
     "RenderPlayerMixin",
     "SoundSourceMixin"
