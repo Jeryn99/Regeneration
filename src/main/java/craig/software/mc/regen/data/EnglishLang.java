@@ -252,6 +252,7 @@ public class EnglishLang extends LanguageProvider {
         add(TransitionTypes.FIERY.get().getTranslationKey(), "Fiery");
         add(TransitionTypes.TROUGHTON.get().getTranslationKey(), "Troughton");
         add(TransitionTypes.BLAZE.get().getTranslationKey(), "Blaze");
+        add(TransitionTypes.TRISTIS_IGNIS.get().getTranslationKey(), "Tristis Ignis");
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");

@@ -9,6 +9,7 @@ import craig.software.mc.regen.util.RegenUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -17,6 +18,8 @@ import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public interface IRegen extends INBTSerializable<CompoundTag> {
+
+    AnimationState getAnimationState();
 
     int regens();
 

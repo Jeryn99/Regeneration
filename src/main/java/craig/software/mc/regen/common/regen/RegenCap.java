@@ -24,6 +24,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
@@ -65,7 +66,7 @@ public class RegenCap implements IRegen {
     private int regensLeft = 0, animationTicks = 0;
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
-    private TransitionType transitionType = TransitionTypes.FIERY.get();
+    private TransitionType transitionType = TransitionTypes.TRISTIS_IGNIS.get();
     private boolean areHandsGlowing = false, traitActive = true;
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
@@ -93,6 +94,13 @@ public class RegenCap implements IRegen {
         return player.getCapability(RegenCap.CAPABILITY, null);
     }
 
+    public AnimationState regen = new AnimationState();
+
+    @Override
+    public AnimationState getAnimationState() {
+        return regen;
+    }
+
     @Override
     public int regens() {
         return regensLeft;
@@ -106,6 +114,15 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
+
+        if(regenState() ==  RegenStates.REGENERATING){
+            if(!getAnimationState().isStarted()){
+                getAnimationState().start(livingEntity.tickCount);
+            }
+        } else {
+            getAnimationState().stop();
+        }
+
         if (livingEntity.level.isClientSide) return;
         //Login setup
         if (!didSetup) {

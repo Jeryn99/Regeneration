@@ -1,0 +1,6 @@
+// 1.19	2022-08-05T14:22:06.6131512	Tags for minecraft:block
+0fae77a77f270f7b3b1b69cd4b935606bad5f1de data/forge/tags/blocks/ores.json
+0fae77a77f270f7b3b1b69cd4b935606bad5f1de data/forge/tags/blocks/ores/zinc.json
+618e8d4707d32d1253a86f7550863ba47d9b6e9e data/minecraft/tags/blocks/mineable/pickaxe.json
+13e0a7c5268a4b97bd42f8e866b45b85791c4a92 data/tardis/tags/blocks/ars.json
+e9d83009b2d27610fcc5b25d67ab732653de132b data/weeping_angels/tags/blocks/angel_proof.json

@@ -1,8 +1,15 @@
 package craig.software.mc.regen.mixin;
 
+import craig.software.mc.regen.client.RegenAnimations;
 import craig.software.mc.regen.client.animation.AnimationHandler;
 import craig.software.mc.regen.common.objects.RItems;
+import craig.software.mc.regen.common.regen.RegenCap;
+import craig.software.mc.regen.common.regen.state.RegenStates;
+import craig.software.mc.regen.common.regen.transitions.TransitionType;
+import craig.software.mc.regen.common.regen.transitions.TransitionTypes;
+import craig.software.mc.regen.util.AnimationUtil;
 import craig.software.mc.regen.util.PlayerUtil;
+import craig.software.mc.regen.util.RegenUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -12,8 +19,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static craig.software.mc.regen.client.animation.AnimationHandler.correctPlayerModel;
+
 @Mixin(HumanoidModel.class)
 public class BipedBodyMixin {
+
+    @Inject(at = @At("HEAD"), cancellable = true, method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
+    private void setupAnimPre(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {
+        HumanoidModel<LivingEntity> bipedModel = (HumanoidModel) (Object) this;
+        RegenCap.get(livingEntity).ifPresent(iCap -> {
+            // Regeneration Animation
+            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS.get()) {
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(), RegenAnimations.REGEN, ageInTicks, 1);
+                correctPlayerModel(bipedModel);
+
+                callbackInfo.cancel();
+            }
+        });
+    }
 
     @Inject(at = @At("TAIL"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void setupAnim(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {

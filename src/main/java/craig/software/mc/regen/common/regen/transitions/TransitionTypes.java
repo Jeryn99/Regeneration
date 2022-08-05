@@ -25,6 +25,7 @@ public class TransitionTypes {
     public static final RegistryObject<TransitionType> SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
     public static final RegistryObject<TransitionType> ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
     public static final RegistryObject<TransitionType> BLAZE = TRANSITION_TYPES.register("blaze", (BlazeTranstion::new));
+    public static final RegistryObject<TransitionType> TRISTIS_IGNIS = TRANSITION_TYPES.register("tristis_ignis", (SadFieryTransition::new));
     public static TransitionType[] TYPES = new TransitionType[]{};
     public static Supplier<IForgeRegistry<TransitionType>> TRANSITION_TYPES_REGISTRY = TRANSITION_TYPES.makeRegistry(() -> new RegistryBuilder<TransitionType>().setMaxID(Integer.MAX_VALUE - 1));
 

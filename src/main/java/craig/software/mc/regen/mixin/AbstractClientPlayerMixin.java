@@ -18,7 +18,6 @@ public abstract class AbstractClientPlayerMixin {
 
     @Inject(at = @At("TAIL"), cancellable = true, method = "getSkinTextureLocation()Lnet/minecraft/resources/ResourceLocation;")
     protected void getSkinTextureLocation(CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
-        System.out.println(getPlayerInfo());
         if (SkinHandler.PLAYER_SKINS.containsKey(getPlayerInfo().getProfile().getId())) {
             ResourceLocation skin = SkinHandler.PLAYER_SKINS.get(getPlayerInfo().getProfile().getId());
             callbackInfoReturnable.setReturnValue(skin);

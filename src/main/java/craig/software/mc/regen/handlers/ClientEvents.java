@@ -40,6 +40,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -172,13 +173,8 @@ public class ClientEvents {
 
             handleGunCrosshair(event, player, cap);
 
-            // if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
+             if (event.getOverlay().id() != VanillaGuiOverlay.HELMET.id()) return;
 
-            // TODO Test
-            if (cap.regenState() == RegenStates.REGENERATING) {
-                event.setCanceled(true);
-                return;
-            }
 
             Component forceKeybind = RKeybinds.FORCE_REGEN.getKey().getDisplayName();
             RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
@@ -217,7 +213,7 @@ public class ClientEvents {
 
     private static void handleGunCrosshair(RenderGuiOverlayEvent.Pre event, LocalPlayer player, IRegen cap) {
         boolean gunSight = player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0;
-        boolean healthCheck = event.getOverlay().id().toString().contains("health");
+        boolean healthCheck = event.getOverlay().id() == VanillaGuiOverlay.PLAYER_HEALTH.id() || event.getOverlay().id() == VanillaGuiOverlay.MOUNT_HEALTH.id();
         if (gunSight && healthCheck) {
             event.setCanceled(true);
         }

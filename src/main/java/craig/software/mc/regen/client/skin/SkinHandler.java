@@ -38,7 +38,7 @@ public class SkinHandler {
 
             // Check if the player has a MOD skin and if the cache is present
             // if these conditions are true, we want to generate and cache the skin
-            if (validSkin && !hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= 140) {
+            if (validSkin && !hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2)) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
                     boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.currentlyAlex() : getUnmodifiedSkinType(playerEntity);
