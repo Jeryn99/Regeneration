@@ -101,6 +101,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
                 add(Attributes.ARMOR, 2.0D);
     }
 
+
     @Override
     public @NotNull AttributeMap getAttributes() {
         return new AttributeMap(createAttributes().build());
@@ -306,23 +307,23 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
                     data.syncToClients(null);
                 }
 
-                if (data.regenState().isGraceful() && data.glowing())
 
-                    if (data.regenState() == RegenStates.REGENERATING) {
-                        if (data.updateTicks() == 10) {
-                            if (getPersonality().screamSound() != null) {
-                                playSound(getPersonality().screamSound(), 1, 1);
-                            }
+                if (data.regenState() == RegenStates.REGENERATING) {
+                    if (data.updateTicks() == 10) {
+                        if (getPersonality().screamSound() != null) {
+                            playSound(getPersonality().screamSound(), 1, 1);
                         }
-                        if (data.updateTicks() == 100) {
-                            setMale(random.nextBoolean());
-                            setPersonality(RSoundSchemes.getRandom(male()).identify());
-                            initSkin(data);
-                        }
-                        setNoAi(true);
-                        setInvulnerable(true);
-                        return;
                     }
+                    if (data.updateTicks() == (data.transitionType().getAnimationLength() / 2)) {
+                        setMale(random.nextBoolean());
+                        setPersonality(RSoundSchemes.getRandom(male()).identify());
+                        initSkin(data);
+                    }
+                    setDeltaMovement(0,0,0);
+                    setNoAi(true);
+                    setInvulnerable(true);
+                    return;
+                }
                 setNoAi(false);
                 setInvulnerable(false);
             }

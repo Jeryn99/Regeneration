@@ -77,7 +77,7 @@ public class SadFieryTransition extends TransitionType {
 
     @Override
     public SoundEvent[] getRegeneratingSounds() {
-        return new SoundEvent[]{RSounds.REGENERATION_0.get(), RSounds.REGENERATION_1.get(), RSounds.REGENERATION_2.get(), RSounds.REGENERATION_3.get(), RSounds.REGENERATION_4.get(), RSounds.REGENERATION_5.get(), RSounds.REGENERATION_6.get(), RSounds.REGENERATION_7.get()};
+        return new SoundEvent[]{RSounds.HAND_GLOW.get()};
     }
 
     @Override

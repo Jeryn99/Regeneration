@@ -35,6 +35,13 @@ public class BipedBodyMixin {
 
                 callbackInfo.cancel();
             }
+
+            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE.get()) {
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(), RegenAnimations.REGEN_11_12, ageInTicks, 1);
+                correctPlayerModel(bipedModel);
+
+                callbackInfo.cancel();
+            }
         });
     }
 

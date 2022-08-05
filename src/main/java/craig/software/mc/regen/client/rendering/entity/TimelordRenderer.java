@@ -16,6 +16,7 @@ import craig.software.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
@@ -23,6 +24,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -81,6 +83,13 @@ public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel
         TIMELORDS.put(timelord.getUUID(), location);
         return location;
 
+    }
+
+
+    @Nullable
+    @Override
+    protected RenderType getRenderType(Timelord p_115322_, boolean p_115323_, boolean p_115324_, boolean p_115325_) {
+        return RenderType.entityTranslucent(getTextureLocation(p_115322_));
     }
 
     @Override

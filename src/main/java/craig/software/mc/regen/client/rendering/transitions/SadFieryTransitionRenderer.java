@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import craig.software.mc.regen.client.animation.AnimationHandler;
-import craig.software.mc.regen.client.rendering.layers.HandLayer;
+import craig.software.mc.regen.client.rendering.layers.RenderRegenLayer;
 import craig.software.mc.regen.client.rendering.types.RenderTypes;
 import craig.software.mc.regen.common.entities.Timelord;
 import craig.software.mc.regen.common.regen.RegenCap;
@@ -81,9 +81,12 @@ public class SadFieryTransitionRenderer implements TransitionRenderer {
                         renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, entitylivingbaseIn, primaryScale, primaryScale, primaryColors);
                         renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, entitylivingbaseIn, secondaryScale, secondaryScale, secondaryColors);
                     } else {
-                        matrix.pushPose();
-                        HandLayer.renderGlowingHands(entitylivingbaseIn, matrix, bufferIn, packedLightIn, side);
-                        matrix.popPose();
+                        if (iRegen.updateTicks() < 560) {
+                            Vec3 primaryColors = iRegen.getPrimaryColors();
+                            Vec3 secondaryColors = iRegen.getSecondaryColors();
+                            RenderRegenLayer.renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, entitylivingbaseIn, 0.5F, 0.5F, primaryColors);
+                            RenderRegenLayer.renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, entitylivingbaseIn, 0.7F, 0.7F, secondaryColors);
+                        }
                     }
                 }
             });

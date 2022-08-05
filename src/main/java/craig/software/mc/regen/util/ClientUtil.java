@@ -20,6 +20,7 @@ import craig.software.mc.regen.common.objects.RBlocks;
 import craig.software.mc.regen.common.objects.RItems;
 import craig.software.mc.regen.common.objects.RParticles;
 import craig.software.mc.regen.common.objects.RTiles;
+import craig.software.mc.regen.common.regen.transitions.SneezeTransition;
 import craig.software.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import craig.software.mc.regen.common.regen.transitions.TransitionTypes;
 import craig.software.mc.regen.config.RegenConfig;
@@ -235,6 +236,7 @@ public class ClientUtil {
         TransitionTypeRenderers.add(TransitionTypes.SPARKLE.get(), SparkleTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.BLAZE.get(), BlazeTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.ENDER_DRAGON.get(), EnderDragonTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.SNEEZE.get(), SneezeTransitionRenderer.INSTANCE);
     }
 
 
