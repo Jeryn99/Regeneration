@@ -67,7 +67,7 @@ public class SadFieryTransitionRenderer implements TransitionRenderer {
                 if (iRegen.regenState() == RegenStates.REGENERATING) {
 
                     double x = iRegen.updateTicks();
-                    if (iRegen.updateTicks() > 300 && iRegen.updateTicks() < 920) {
+                    if (iRegen.updateTicks() > 280 && iRegen.updateTicks() < 560) {
                         double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                         double r = 0.09890109890109888;
                         double f = p * Math.pow(x, 2) - r;
@@ -94,7 +94,7 @@ public class SadFieryTransitionRenderer implements TransitionRenderer {
     @Override
     public void layer(HumanoidModel<?> bipedModel, PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
-            if (iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() > 300 && iRegen.updateTicks() < 920) {
+            if (iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() > 280 && iRegen.updateTicks() < 560) {
                 // === Head Cone ===
                 matrix.pushPose();
                 bipedModel.head.translateAndRotate(matrix);
@@ -119,7 +119,7 @@ public class SadFieryTransitionRenderer implements TransitionRenderer {
             }
 
             //Render player overlay
-            if (entitylivingbaseIn.hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() > 300 && iRegen.updateTicks() < 920) {
+            if (entitylivingbaseIn.hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() > 280 && iRegen.updateTicks() < 560) {
                 if (entitylivingbaseIn instanceof Timelord) return;
                 float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());

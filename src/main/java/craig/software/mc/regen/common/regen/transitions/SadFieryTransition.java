@@ -36,7 +36,7 @@ public class SadFieryTransition extends TransitionType {
 
         if (livingEntity.level.isClientSide) return;
 
-        if (livingEntity.getType() == EntityType.PLAYER && capability.updateTicks() > 300 && capability.updateTicks() < 920) {
+        if (livingEntity.getType() == EntityType.PLAYER && capability.updateTicks() > 280 && capability.updateTicks() < 560) {
             BlockPos livingPos = new BlockPos(livingEntity.position());
             if (livingEntity.level.getBlockState(livingPos).getBlock() instanceof FireBlock)
                 livingEntity.level.removeBlock(livingPos, false);
@@ -72,7 +72,7 @@ public class SadFieryTransition extends TransitionType {
 
     @Override
     public int getAnimationLength() {
-        return 1120; // 56 seconds of 20 ticks
+        return 1020; // 56 seconds of 20 ticks
     }
 
     @Override
