@@ -100,6 +100,7 @@ public class RSounds {
 
     public static final RegistryObject<SoundEvent> STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
     public static final RegistryObject<SoundEvent> RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
+    public static final RegistryObject<SoundEvent> REGEN_LONG = SOUNDS.register("regen_long", () -> setUpSound("regen_long"));
 
     private static SoundEvent setUpSound(String soundName) {
         return new SoundEvent(new ResourceLocation(RConstants.MODID, soundName));

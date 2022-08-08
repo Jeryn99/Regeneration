@@ -478,6 +478,12 @@
       "regen:regen/regen_watcher"
     ]
   },
+  "regen_long": {
+    "subtitle": "regen.sound.regen_long",
+    "sounds": [
+      "regen:regen/regen_long"
+    ]
+  },
   "rifle": {
     "subtitle": "regen.sound.rifle",
     "sounds": [

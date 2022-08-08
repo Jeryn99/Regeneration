@@ -1,6 +1,7 @@
 package craig.software.mc.regen.util;
 
 import com.mojang.math.Vector3f;
+import craig.software.mc.regen.client.RegenAnimations;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -31,7 +32,6 @@ public class AnimationUtil {
 
     public static void animate(HumanoidModel<?> humanoidModel, AnimationDefinition animationDefinition, long p_232322_, float p_232323_, Vector3f p_232324_) {
         float elapsedSeconds = getElapsedSeconds(animationDefinition, p_232322_);
-
         for (Map.Entry<String, List<AnimationChannel>> entry : animationDefinition.boneAnimations().entrySet()) {
             ModelPart optional = getAnyDescendantWithName(humanoidModel, entry.getKey());
 

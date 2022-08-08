@@ -46,7 +46,7 @@ public class SadFieryTransition extends TransitionType {
             double x = livingEntity.getX() + livingEntity.getRandom().nextGaussian() * 2;
             double y = livingEntity.getY() + 0.5 + livingEntity.getRandom().nextGaussian() * 2;
             double z = livingEntity.getZ() + livingEntity.getRandom().nextGaussian() * 2;
-            if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
+            if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && livingEntity.tickCount % 40 == 0) {
                 livingEntity.level.explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.BlockInteraction.NONE);
             }
             Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
@@ -77,7 +77,7 @@ public class SadFieryTransition extends TransitionType {
 
     @Override
     public SoundEvent[] getRegeneratingSounds() {
-        return new SoundEvent[]{RSounds.HAND_GLOW.get()};
+        return new SoundEvent[]{RSounds.REGEN_LONG.get()};
     }
 
     @Override

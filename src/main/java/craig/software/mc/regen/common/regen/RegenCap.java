@@ -95,10 +95,14 @@ public class RegenCap implements IRegen {
     }
 
     public AnimationState regen = new AnimationState();
+    public AnimationState grace = new AnimationState();
 
     @Override
-    public AnimationState getAnimationState() {
-        return regen;
+    public AnimationState getAnimationState(RegenAnimation regenAnimation) {
+        return switch (regenAnimation) {
+            case GRACE -> grace;
+            case REGEN -> regen;
+        };
     }
 
     @Override
@@ -114,13 +118,23 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
+        AnimationState regenAnimState = getAnimationState(RegenAnimation.REGEN);
+        AnimationState graceAnimState = getAnimationState(RegenAnimation.GRACE);
 
-        if(regenState() ==  RegenStates.REGENERATING){
-            if(!getAnimationState().isStarted()){
-                getAnimationState().start(livingEntity.tickCount);
+        if (regenState() == RegenStates.REGENERATING) {
+            if (!regenAnimState.isStarted()) {
+                regenAnimState.start(livingEntity.tickCount);
             }
         } else {
-            getAnimationState().stop();
+            regenAnimState.stop();
+        }
+
+        if (regenState() == RegenStates.GRACE_CRIT) {
+            if (!graceAnimState.isStarted()) {
+                graceAnimState.start(livingEntity.tickCount);
+            }
+        } else {
+            graceAnimState.stop();
         }
 
         if (livingEntity.level.isClientSide) return;
@@ -605,7 +619,7 @@ public class RegenCap implements IRegen {
                 scheduleNextHandGlow();
                 if (!e.getEntity().level.isClientSide) {
                     if (e.getEntity() != null) {
-                        PlayerUtil.sendMessage(e.getEntity(), Component.literal("regen.messages.regen_delayed"), true);
+                        PlayerUtil.sendMessage(e.getEntity(), Component.translatable("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something

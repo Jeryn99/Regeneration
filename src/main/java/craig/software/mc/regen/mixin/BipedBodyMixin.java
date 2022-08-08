@@ -3,13 +3,12 @@ package craig.software.mc.regen.mixin;
 import craig.software.mc.regen.client.RegenAnimations;
 import craig.software.mc.regen.client.animation.AnimationHandler;
 import craig.software.mc.regen.common.objects.RItems;
+import craig.software.mc.regen.common.regen.IRegen;
 import craig.software.mc.regen.common.regen.RegenCap;
 import craig.software.mc.regen.common.regen.state.RegenStates;
-import craig.software.mc.regen.common.regen.transitions.TransitionType;
 import craig.software.mc.regen.common.regen.transitions.TransitionTypes;
 import craig.software.mc.regen.util.AnimationUtil;
 import craig.software.mc.regen.util.PlayerUtil;
-import craig.software.mc.regen.util.RegenUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
@@ -40,27 +39,37 @@ public class BipedBodyMixin {
 
             // Regeneration Animation
             if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS.get()) {
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(), RegenAnimations.REGEN, ageInTicks, 1);
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), RegenAnimations.REGEN, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
-
                 callbackInfo.cancel();
             }
 
-            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE.get()) {
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(), RegenAnimations.REGEN_11_12, ageInTicks, 1);
-                correctPlayerModel(bipedModel);
+            //TODO Animations have bugged?
 
+            // "Sneeze" animation
+            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE.get()) {
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), RegenAnimations.REGEN_11_12, ageInTicks, 1);
+                correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
         });
     }
 
-    @Inject(at = @At("TAIL"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
+    @Inject(at = @At("TAIL"), cancellable = true, method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void setupAnim(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {
         HumanoidModel<LivingEntity> bipedModel = (HumanoidModel) (Object) this;
 
         AnimationHandler.setRotationAnglesCallback(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
+        RegenCap.get(livingEntity).ifPresent(iCap -> {
+            if (iCap.regenState() == RegenStates.GRACE_CRIT) {
+                bipedModel.leftArm.getAllParts().forEach(ModelPart::resetPose);
+                bipedModel.rightArm.getAllParts().forEach(ModelPart::resetPose);
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.GRACE), RegenAnimations.GRACE, ageInTicks, 1);
+                correctPlayerModel(bipedModel);
+                callbackInfo.cancel();
+            }
+        });
 
         if (livingEntity.getType() == EntityType.PLAYER) {
             if (livingEntity.getUseItemRemainingTicks() > 0 && (PlayerUtil.isInEitherHand(livingEntity, RItems.PISTOL.get()) || PlayerUtil.isInEitherHand(livingEntity, RItems.RIFLE.get()))) {

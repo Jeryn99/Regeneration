@@ -21,7 +21,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '41.0.2'
+version = '43.0.2'
 group = 'craig.software.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'regen'
 
@@ -31,7 +31,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
 
-    mappings channel: 'official', version: '1.19'
+    mappings channel: 'official', version: '1.19.2'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // Currently, this location cannot be changed from the default.
@@ -139,10 +139,9 @@ curseforge {
             changelog = new File("${project.projectDir}/changelog.html").text
             changelogType = 'html'
             releaseType = 'release'
-            addGameVersion '1.19'
-            addGameVersion '1.19.1'
+            addGameVersion '1.19.2'
             mainArtifact(jar) {
-                displayName = "[1.19.x] Regeneration - $project.version"
+                displayName = "[1.19.2] Regeneration - $project.version"
             }
         }
     } else {
@@ -177,7 +176,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.1.0'
+    minecraft 'net.minecraftforge:forge:1.19.2-43.0.2'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

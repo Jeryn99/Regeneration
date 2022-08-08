@@ -1,4 +1,4 @@
-// 1.19	2022-08-05T14:22:06.6146528	Global Loot Modifiers : regen
+// 1.19.2	2022-08-08T17:12:50.3868236	Global Loot Modifiers : regen
 e7e64f644e3110c42babf9faa6c84d7999a943df data/forge/loot_modifiers/global_loot_modifiers.json
 4bac45557fb2b81da4d0b55879c29ab414fbfcc2 data/regen/loot_modifiers/chests/abandoned_mineshaft.json
 d3a28e289050cc797b02fd2fb9587b8f78435783 data/regen/loot_modifiers/chests/bastion_bridge.json

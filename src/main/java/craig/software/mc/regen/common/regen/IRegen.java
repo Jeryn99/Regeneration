@@ -1,5 +1,6 @@
 package craig.software.mc.regen.common.regen;
 
+import craig.software.mc.regen.client.RegenAnimations;
 import craig.software.mc.regen.common.objects.RSounds;
 import craig.software.mc.regen.common.regen.state.RegenStates;
 import craig.software.mc.regen.common.regen.transitions.TransitionType;
@@ -19,7 +20,11 @@ import java.util.function.Supplier;
 
 public interface IRegen extends INBTSerializable<CompoundTag> {
 
-    AnimationState getAnimationState();
+    public enum RegenAnimation {
+        REGEN, GRACE
+    }
+
+    AnimationState getAnimationState(RegenAnimation regenAnimation);
 
     int regens();
 
