@@ -111,8 +111,10 @@ public class CommonSkin {
         ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
-    public static void downloadSkinsSpecific(URL url, String filename, File specific) throws IOException {
-        URLConnection uc = url.openConnection();
+    public static void downloadSkinsSpecific(URL url, String filename, File specific) {
+        URLConnection uc = null;
+        try {
+            uc = url.openConnection();
         uc.connect();
         uc = url.openConnection();
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
@@ -124,6 +126,10 @@ public class CommonSkin {
 
         Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, specific.getPath());
         ImageIO.write(img, "png", new File(specific, filename + ".png"));
+        } catch (IOException e) {
+            Regeneration.LOG.debug("Failed to Download: " + url.getPath());
+            throw new RuntimeException(e);
+        }
     }
 
     public static BufferedImage toBlackAndWhite(BufferedImage img) {

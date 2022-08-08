@@ -1,5 +1,6 @@
 package craig.software.mc.regen.common.entities;
 
+import com.google.common.collect.Sets;
 import craig.software.mc.regen.client.skin.CommonSkin;
 import craig.software.mc.regen.common.advancement.TriggerManager;
 import craig.software.mc.regen.common.entities.ai.TimelordAttackGoal;
@@ -23,7 +24,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -45,14 +45,13 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
@@ -66,12 +65,13 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Set;
 
 /**
  * Created by Suff
  * on 03/05/2020 @ 18:50
  */
-public class Timelord extends AbstractVillager implements RangedAttackMob {
+public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant {
 
     private static final EntityDataAccessor<String> TYPE = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> PERSONALITY = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.STRING);
@@ -81,6 +81,11 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     private static final EntityDataAccessor<Float> AIMING_TICKS = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.FLOAT);
     protected final WaterBoundPathNavigation waterNavigator;
     protected final GroundPathNavigation groundNavigator;
+
+    @Nullable
+    private Player tradingPlayer;
+    @Nullable
+    protected MerchantOffers offers;
 
     public Timelord(Level world) {
         this(REntities.TIMELORD.get(), world);
@@ -105,11 +110,6 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     @Override
     public @NotNull AttributeMap getAttributes() {
         return new AttributeMap(createAttributes().build());
-    }
-
-    @Override
-    public Villager getBreedOffspring(@NotNull ServerLevel world, @NotNull AgeableMob mate) {
-        return null;
     }
 
     @Override
@@ -158,10 +158,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
 
         if (getTimelordType() == TimelordType.COUNCIL) {
-
             ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false)));
-
-            this.goalSelector.addGoal(1, new LookAtTradingPlayerGoal(this));
             this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         }
@@ -175,14 +172,6 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Zombie.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Skeleton.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Cyberman.class, false));
-    }
-
-    @Override
-    protected void rewardTradeXp(MerchantOffer offer) {
-        if (offer.shouldRewardExp()) {
-            int i = 3 + this.random.nextInt(4);
-            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
-        }
     }
 
     public void setup() {
@@ -207,16 +196,6 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
             });
         }
     }
-
-    @Override
-    protected @NotNull SoundEvent getTradeUpdatedSound(boolean getYesSound) {
-        SoundScheme personality = getPersonality();
-        if (!getYesSound) {
-            setUnhappyCounter(40);
-        }
-        return getYesSound ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound();
-    }
-
 
     @Nullable
     @Override
@@ -318,6 +297,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
                         setMale(random.nextBoolean());
                         setPersonality(RSoundSchemes.getRandom(male()).identify());
                         initSkin(data);
+                        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
                     }
                     setDeltaMovement(0,0,0);
                     setNoAi(true);
@@ -394,7 +374,6 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         getEntityData().set(IS_MALE, male);
     }
 
-    @Override
     protected void updateTrades() {
         if (getTimelordType() == TimelordType.COUNCIL) {
             MerchantOffers merchantoffers = this.getOffers();
@@ -418,18 +397,38 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
     }
 
-    @Override
-    protected void populateDefaultEquipmentSlots(@NotNull RandomSource p_217055_, @NotNull DifficultyInstance d) {
-        if (getTimelordType() == TimelordType.GUARD) {
-            Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(stack));
+    protected void addOffersFromItemListings(MerchantOffers p_35278_, VillagerTrades.ItemListing[] p_35279_, int p_35280_) {
+        Set<Integer> set = Sets.newHashSet();
+        if (p_35279_.length > p_35280_) {
+            while (set.size() < p_35280_) {
+                set.add(this.random.nextInt(p_35279_.length));
+            }
+        } else {
+            for (int i = 0; i < p_35279_.length; ++i) {
+                set.add(i);
+            }
         }
-        if (getTimelordType() == TimelordType.COUNCIL) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.ENCHANTED_BOOK));
+
+        for (Integer integer : set) {
+            VillagerTrades.ItemListing villagertrades$itemlisting = p_35279_[integer];
+            MerchantOffer merchantoffer = villagertrades$itemlisting.getOffer(this, this.random);
+            if (merchantoffer != null) {
+                p_35278_.add(merchantoffer);
+            }
         }
 
     }
 
+    @Override
+    protected void populateDefaultEquipmentSlots(@NotNull RandomSource p_217055_, @NotNull DifficultyInstance d) {
+        if (getTimelordType() == TimelordType.GUARD) {
+            Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
+            this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(stack));
+        }
+        if (getTimelordType() == TimelordType.COUNCIL) {
+            this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.ENCHANTED_BOOK));
+        }
+    }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
@@ -469,6 +468,9 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         getEntityData().set(AIMING_TICKS, isAiming);
     }
 
+    public boolean isTrading() {
+        return this.tradingPlayer != null;
+    }
 
     @Override
     public @NotNull InteractionResult mobInteract(Player p_230254_1_, @NotNull InteractionHand p_230254_2_) {
@@ -507,6 +509,75 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
         }
         return null;
     }
+
+    @Override
+    public void setTradingPlayer(@Nullable Player player) {
+        this.tradingPlayer = player;
+    }
+
+    @Override
+    public Player getTradingPlayer() {
+        return this.tradingPlayer;
+    }
+
+    @Override
+    public MerchantOffers getOffers() {
+        if (this.offers == null) {
+            this.offers = new MerchantOffers();
+            this.updateTrades();
+        }
+
+        return this.offers;
+    }
+
+    @Override
+    public void overrideOffers(MerchantOffers p_45306_) {
+
+    }
+
+    @Override
+    public void notifyTrade(MerchantOffer merchantOffer) {
+        merchantOffer.increaseUses();
+        if (merchantOffer.shouldRewardExp()) {
+            int i = 3 + this.random.nextInt(4);
+            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
+        }
+    }
+
+    @Override
+    public void notifyTradeUpdated(ItemStack itemStack) {
+        if (!this.level.isClientSide && this.ambientSoundTime > -this.getAmbientSoundInterval() + 20) {
+            this.ambientSoundTime = -this.getAmbientSoundInterval();
+            SoundScheme personality = getPersonality();
+            this.playSound(!itemStack.isEmpty() ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound());
+        }
+    }
+
+    @Override
+    public int getVillagerXp() {
+        return 0;
+    }
+
+    @Override
+    public void overrideXp(int p_45309_) {
+
+    }
+
+    @Override
+    public boolean showProgressBar() {
+        return true;
+    }
+
+    @Override
+    public SoundEvent getNotifyTradeSound() {
+        return null;
+    }
+
+    @Override
+    public boolean isClientSide() {
+        return this.level.isClientSide;
+    }
+
 
     public enum TimelordType {
         COUNCIL("timelord"), GUARD("guards");

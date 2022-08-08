@@ -19,7 +19,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +38,7 @@ import java.util.UUID;
  * Created by Craig
  * on 03/05/2020 @ 19:02
  */
-public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel<Timelord>> {
+public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord>> {
 
     public static PlayerModel mainModel;
     public static TimelordModel councilModel;
@@ -51,7 +53,13 @@ public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel
         mainModel = councilModel;
         addLayer(new RenderRegenLayer(this));
         addLayer(new HandLayer(this));
-        //TODO addLayer(new ItemInHandLayer<>(this));
+        this.addLayer(new ItemInHandLayer<>(this, entityRendererManager.getItemInHandRenderer()) {
+
+            @Override
+            public void render(PoseStack p_114569_, MultiBufferSource p_114570_, int p_114571_, Timelord p_114572_, float p_114573_, float p_114574_, float p_114575_, float p_114576_, float p_114577_, float p_114578_) {
+                super.render(p_114569_, p_114570_, p_114571_, p_114572_, p_114573_, p_114574_, p_114575_, p_114576_, p_114577_, p_114578_);
+            }
+        });
         addLayer(new ArrowLayer(entityRendererManager, this));
         addLayer(new TimelordHeadLayer(this));
     }

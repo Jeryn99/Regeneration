@@ -67,7 +67,7 @@ public class SadFieryTransitionRenderer implements TransitionRenderer {
                 if (iRegen.regenState() == RegenStates.REGENERATING) {
 
                     double x = iRegen.updateTicks();
-                    if (iRegen.updateTicks() > 280 && iRegen.updateTicks() < 560) {
+                    if (iRegen.updateTicks() > 300 && iRegen.updateTicks() < 560) {
                         double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                         double r = 0.09890109890109888;
                         double f = p * Math.pow(x, 2) - r;

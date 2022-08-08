@@ -95,11 +95,5 @@ public class TimelordModel extends PlayerModel<Timelord> {
         RightArm.copyFrom(rightArm);
         RightLeg.copyFrom(rightLeg);
         LeftLeg.copyFrom(leftLeg);
-        boolean flag = timelord.getUnhappyCounter() > 0;
-        if (flag) {
-            this.Head.yRot = 0.3F * Mth.sin(1.45F * ageInTicks);
-        } else {
-            this.Head.zRot = 0.0F;
-        }
     }
 }
