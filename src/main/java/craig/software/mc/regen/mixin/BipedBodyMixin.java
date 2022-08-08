@@ -11,6 +11,7 @@ import craig.software.mc.regen.util.AnimationUtil;
 import craig.software.mc.regen.util.PlayerUtil;
 import craig.software.mc.regen.util.RegenUtil;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +28,16 @@ public class BipedBodyMixin {
     @Inject(at = @At("HEAD"), cancellable = true, method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void setupAnimPre(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {
         HumanoidModel<LivingEntity> bipedModel = (HumanoidModel) (Object) this;
+
+        bipedModel.head.getAllParts().forEach(ModelPart::resetPose);
+        bipedModel.body.getAllParts().forEach(ModelPart::resetPose);
+        bipedModel.leftArm.getAllParts().forEach(ModelPart::resetPose);
+        bipedModel.rightArm.getAllParts().forEach(ModelPart::resetPose);
+        bipedModel.leftLeg.getAllParts().forEach(ModelPart::resetPose);
+        bipedModel.rightLeg.getAllParts().forEach(ModelPart::resetPose);
+
         RegenCap.get(livingEntity).ifPresent(iCap -> {
+
             // Regeneration Animation
             if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS.get()) {
                 AnimationUtil.animate(bipedModel, iCap.getAnimationState(), RegenAnimations.REGEN, ageInTicks, 1);
