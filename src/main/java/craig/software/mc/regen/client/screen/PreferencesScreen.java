@@ -16,14 +16,17 @@ import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.function.Function;
 
 public class PreferencesScreen extends AbstractContainerScreen {
 
@@ -79,15 +82,10 @@ public class PreferencesScreen extends AbstractContainerScreen {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW, btnH, Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
-            if (skinType.next() != null) {
-                skinType = skinType.next();
-            } else {
-                skinType = PlayerUtil.SkinType.ALEX;
-            }
-            button.setMessage(Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase()));
+        this.addRenderableWidget(CycleButton.builder((Function<PlayerUtil.SkinType, Component>) skinType -> Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase())).withValues(PlayerUtil.SkinType.values()).withInitialValue(skinType).create(width / 2 + 50 - 66, cy + 81, btnW, btnH,  Component.nullToEmpty(""), (skinTypeCycleButton, skinType) -> {
             PlayerUtil.updateModel(skinType);
-        });
+        }));
+
         btnRegenType.setMessage(transitionType.getTranslation());
 
         Button btnColor = new Button(width / 2 + 50 - 66, cy + 103, btnW, btnH, Component.translatable("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
@@ -98,7 +96,6 @@ public class PreferencesScreen extends AbstractContainerScreen {
         addRenderableWidget(btnSkinChoice);
         addRenderableWidget(btnClose);
         addRenderableWidget(btnColor);
-        addRenderableWidget(btnSkinType);
         addRenderableWidget(btnScheme);
 
         transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();

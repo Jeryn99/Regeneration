@@ -53,8 +53,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private final ArrayList<DescButton> descButtons = new ArrayList<>();
     private RCheckbox excludeTrending;
     private EditBox searchField;
-    private Button uploadToMcBtn;
-
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), Component.literal("Next Incarnation"));
@@ -71,23 +69,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         }
     }
 
-    public static void getHash() throws IOException {
-        StringBuilder end = new StringBuilder();
-        for (File file : skins) {
-            if (!file.getName().startsWith("mk_")) {
-                String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(new FileInputStream(file));
-
-                String md5Line = "\n&quot;" + md5 + "&quot;:{";
-                String authorLine = "\n&quot;author&quot;:&quot;" + "author_here" + "&quot;";
-                String nameLine = "\n&quot;name&quot;:&quot;" + file.getName() + "&quot;}\n";
-
-                String line = md5Line + authorLine + nameLine;
-                end.append(line);
-            }
-        }
-        System.out.println(end);
-    }
-
     @Override
     public boolean isPauseScreen() {
         return true;
@@ -101,7 +82,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         for (AbstractTab button : TabRegistry.tabList) {
             addRenderableWidget(button);
         }
-        int buttonOffset = 35;
+        int buttonOffset = 15;
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
         final int btnW = 55, btnH = 18;
@@ -111,11 +92,16 @@ public class IncarnationScreen extends AbstractContainerScreen {
             Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
         }
 
-        this.searchField = new EditBox(this.font, cx + 15, cy + 145, imageWidth - 70, 20, this.searchField, Component.translatable("skins.search"));
+        int lower = 30;
 
-        this.searchField.setResponder((p_214329_1_) -> {
+        this.searchField = new EditBox(this.font, cx + 10, cy + 30 + buttonOffset, cx - 15, 20, this.searchField, Component.translatable("skins.search"));
+
+        this.searchField.setMaxLength(128);
+        this.searchField.setFocus(true);
+
+        this.searchField.setResponder((s) -> {
             position = 0;
-            skins.removeIf(file -> !file.getName().toLowerCase().contains(searchField.getValue().toLowerCase()));
+            skins.removeIf(file -> !file.getName().toLowerCase().contains(s.toLowerCase()));
             if (skins.isEmpty() || searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
@@ -123,19 +109,10 @@ public class IncarnationScreen extends AbstractContainerScreen {
             Collections.sort(skins);
             updateModels();
         });
-        this.renderables.add(this.searchField);
         this.setInitialFocus(this.searchField);
+        this.addWidget(this.searchField);
 
-        uploadToMcBtn = new DescButton(cx + 10, cy + 105, btnW * 2 + 5, btnH + 2, Component.translatable("Upload to Minecraft"), button -> {
-            String imgurLink = null;
-            try {
-                imgurLink = ClientUtil.getImgurLink(RegenUtil.encodeFileToBase64Binary(skins.get(position)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            String url = "https://www.minecraft.net/en-us/profile/skin/remote?url=" + imgurLink + "&model=" + (isAlex ? "slim" : "classic");
-            Util.getPlatform().openUri(url);
-        }).setDescription(new String[]{"button.tooltip.upload2mc"});
+
 
         DescButton btnPrevious = new DescButton(cx + 140, cy + 60, 20, 20, Component.translatable("regen.gui.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
@@ -183,7 +160,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> SkinHandler.sendResetMessage()).setDescription(new String[]{"button.tooltip.reset_mojang"});
 
-        this.excludeTrending = new RCheckbox(cx + 10, cy + 25, 150, 20, Component.translatable("Trending?"), true, checkboxButton -> {
+        this.excludeTrending = new RCheckbox( cx + 10, cy + 145, 150, 20, Component.translatable("Trending?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {
                 position = 0;
                 searchField.setValue("");
@@ -203,7 +180,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         addRenderableWidget(btnBack);
         addRenderableWidget(btnSave);
         addRenderableWidget(btnResetSkin);
-        addRenderableWidget(this.uploadToMcBtn);
 
         for (Widget widget : renderables) {
             if (widget instanceof DescButton) {
@@ -240,7 +216,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
             renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
             matrixStack.popPose();
         }
-        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("Search"), width / 2 - 95, height / 2 + 45, Color.WHITE.getRGB());
+        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("Search"), (width - imageWidth) / 2 + 28, (height - imageHeight) / 2 + 20 + 15, Color.WHITE.getRGB());
     }
 
     private void renderSkinToGui(PoseStack matrixStack, int x, int y) {
@@ -257,8 +233,17 @@ public class IncarnationScreen extends AbstractContainerScreen {
     }
 
     @Override
+    public void resize(Minecraft p_96575_, int p_96576_, int p_96577_) {
+        String s = this.searchField.getValue();
+        super.resize(p_96575_, p_96576_, p_96577_);
+        this.searchField.setValue(s);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        this.searchField.keyPressed(keyCode, scanCode, modifiers);
+
+        searchField.keyPressed(keyCode, scanCode, modifiers);
+
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
             if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position >= skins.size() - 1) {
@@ -298,7 +283,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
     @Override
     public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.searchField.tick();
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
