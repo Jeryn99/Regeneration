@@ -1,5 +1,6 @@
 package craig.software.mc.regen.common.objects;
 
+import craig.software.mc.regen.Regeneration;
 import craig.software.mc.regen.common.entities.Cyberman;
 import craig.software.mc.regen.common.entities.Laser;
 import craig.software.mc.regen.common.entities.Timelord;
@@ -25,7 +26,7 @@ public class REntities {
 
     // Entity Creation
     private static <T extends Entity> EntityType<T> registerNoSpawnerBase(EntityType.EntityFactory<T> factory, MobCategory classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
-        ResourceLocation loc = new ResourceLocation(RConstants.MODID, name);
+        ResourceLocation loc = Regeneration.location(name);
         EntityType.Builder<T> builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
@@ -36,7 +37,7 @@ public class REntities {
     }
 
     private static <T extends Entity> EntityType<T> registerBase(EntityType.EntityFactory<T> factory, IClientSpawner<T> client, MobCategory classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
-        ResourceLocation loc = new ResourceLocation(RConstants.MODID, name);
+        ResourceLocation loc = Regeneration.location(name);
         EntityType.Builder<T> builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
@@ -48,7 +49,7 @@ public class REntities {
 
     // Fire Resistant Entity Creation
     private static <T extends Entity> EntityType<T> registerFireImmuneBase(EntityType.EntityFactory<T> factory, IClientSpawner<T> client, MobCategory classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
-        ResourceLocation loc = new ResourceLocation(RConstants.MODID, name);
+        ResourceLocation loc = Regeneration.location(name);
         EntityType.Builder<T> builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);

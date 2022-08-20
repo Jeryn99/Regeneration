@@ -127,7 +127,7 @@ public class CommonSkin {
         Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, specific.getPath());
         ImageIO.write(img, "png", new File(specific, filename + ".png"));
         } catch (IOException e) {
-            Regeneration.LOG.debug("Failed to Download: " + url.getPath());
+            Regeneration.LOG.debug("Failed to Download: " + url);
             throw new RuntimeException(e);
         }
     }

@@ -1,9 +1,5 @@
 package craig.software.mc.regen.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import craig.software.mc.regen.client.RKeybinds;
 import craig.software.mc.regen.client.rendering.JarParticle;
 import craig.software.mc.regen.client.rendering.JarTileRender;
 import craig.software.mc.regen.client.rendering.layers.HandLayer;
@@ -20,7 +16,6 @@ import craig.software.mc.regen.common.objects.RBlocks;
 import craig.software.mc.regen.common.objects.RItems;
 import craig.software.mc.regen.common.objects.RParticles;
 import craig.software.mc.regen.common.objects.RTiles;
-import craig.software.mc.regen.common.regen.transitions.SneezeTransition;
 import craig.software.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import craig.software.mc.regen.common.regen.transitions.TransitionTypes;
 import craig.software.mc.regen.config.RegenConfig;
@@ -33,7 +28,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -49,7 +43,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -64,13 +57,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -83,49 +69,6 @@ public class ClientUtil {
 
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
-
-
-    public static ModelPart getPlayerModel(boolean slim) {
-        return Minecraft.getInstance().getEntityModels().bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER);
-    }
-
-    public static String getImgurLink(String base64Image) throws Exception {
-        URL url;
-        url = new URL("https://who-craft.com/api/index.php");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-        String data = URLEncoder.encode("image", StandardCharsets.UTF_8) + "="
-                + URLEncoder.encode(base64Image, StandardCharsets.UTF_8);
-
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.connect();
-        StringBuilder stb = new StringBuilder();
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-        wr.write(data);
-        wr.flush();
-
-
-        // Get the response
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            stb.append(line).append("\n");
-        }
-        wr.close();
-        rd.close();
-
-        JsonElement jelement = new JsonParser().parse(stb.toString());
-        JsonObject jobject = jelement.getAsJsonObject();
-
-        if (GsonHelper.isValidNode(jobject, "link")) {
-            return GsonHelper.getAsString(jobject, "link");
-        } else {
-            throw new Exception(GsonHelper.getAsString(jobject, "message"));
-        }
-    }
 
 
     @SubscribeEvent

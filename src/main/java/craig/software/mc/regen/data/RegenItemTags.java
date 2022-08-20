@@ -14,9 +14,9 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import javax.annotation.Nullable;
 
 /* Created by Craig on 17/03/2021 */
-public class RItemTags extends ItemTagsProvider {
+public class RegenItemTags extends ItemTagsProvider {
 
-    public RItemTags(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider, @Nullable ExistingFileHelper existingFileHelper) {
+    public RegenItemTags(DataGenerator dataGenerator, BlockTagsProvider blockTagsProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(dataGenerator, blockTagsProvider, RConstants.MODID, existingFileHelper);
     }
 

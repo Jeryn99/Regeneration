@@ -4,7 +4,7 @@ import craig.software.mc.regen.common.advancement.TriggerManager;
 import craig.software.mc.regen.common.block.JarBlock;
 import craig.software.mc.regen.common.regen.IRegen;
 import craig.software.mc.regen.common.regen.transitions.WatcherTransition;
-import craig.software.mc.regen.common.tiles.BioContainerBlockEntity;
+import craig.software.mc.regen.common.blockentity.BioContainerBlockEntity;
 import craig.software.mc.regen.common.traits.AbstractTrait;
 import craig.software.mc.regen.common.traits.RegenTraitRegistry;
 import craig.software.mc.regen.config.RegenConfig;

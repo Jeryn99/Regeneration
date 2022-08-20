@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public class RRecipeGen extends RecipeProvider {
-    public RRecipeGen(DataGenerator generatorIn) {
+public class RegenRecipes extends RecipeProvider {
+    public RegenRecipes(DataGenerator generatorIn) {
         super(generatorIn);
     }
 

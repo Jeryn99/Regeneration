@@ -18,6 +18,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.world.BiomeModifier;
+import net.minecraftforge.common.world.ForgeBiomeModifiers;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 
-public record RegenBiomeModifier(DataGenerator dataGenerator) implements DataProvider {
+public record RegenBiomeModifiers(DataGenerator dataGenerator) implements DataProvider {
 
     public static void generate(RegistryOps<JsonElement> ops, BiomeModifier modifier, Path outputFolder, String saveName, CachedOutput cache) {
         final String directory = PackType.SERVER_DATA.getDirectory();
@@ -52,13 +53,13 @@ public record RegenBiomeModifier(DataGenerator dataGenerator) implements DataPro
         final Path outputFolder = this.dataGenerator.getOutputFolder();
 
         // Biome Modifiers
-        BiomeFeatureModifier oreModifer = new BiomeFeatureModifier(new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).get(), BiomeTags.IS_OVERWORLD), GenerationStep.Decoration.UNDERGROUND_ORES, HolderSet.direct(Holder.direct(RFeatures.ORE_ZINC.get())));
-        BiomeFeatureModifier oreModiferSmall = new BiomeFeatureModifier(new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).get(), BiomeTags.IS_OVERWORLD), GenerationStep.Decoration.UNDERGROUND_ORES, HolderSet.direct(Holder.direct(RFeatures.ORE_ZINC_SMALL.get())));
+        ForgeBiomeModifiers.AddFeaturesBiomeModifier oreModifer = new ForgeBiomeModifiers.AddFeaturesBiomeModifier(new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).get(), BiomeTags.IS_OVERWORLD), HolderSet.direct(Holder.direct(RFeatures.ORE_ZINC.get())), GenerationStep.Decoration.UNDERGROUND_ORES);
+        ForgeBiomeModifiers.AddFeaturesBiomeModifier oreModiferSmall = new ForgeBiomeModifiers.AddFeaturesBiomeModifier(new HolderSet.Named<>(ops.registry(Registry.BIOME_REGISTRY).get(), BiomeTags.IS_OVERWORLD), HolderSet.direct(Holder.direct(RFeatures.ORE_ZINC_SMALL.get())), GenerationStep.Decoration.UNDERGROUND_ORES);
 
 
         // Generate BiomeModiers
-        generate(ops, oreModiferSmall, outputFolder, BiomeFeatureModifier.ORE_NAME, cachedOutput);
-        generate(ops, oreModifer, outputFolder, BiomeFeatureModifier.ORE_NAME + "_small", cachedOutput);
+        generate(ops, oreModiferSmall, outputFolder, "zinc_ore", cachedOutput);
+        generate(ops, oreModifer, outputFolder, "zinc_ore_small", cachedOutput);
     }
 
     @Override

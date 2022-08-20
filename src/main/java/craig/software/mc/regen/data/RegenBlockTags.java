@@ -12,9 +12,9 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 /* Created by Craig on 08/03/2021 */
-public class RBlockTags extends BlockTagsProvider {
+public class RegenBlockTags extends BlockTagsProvider {
 
-    public RBlockTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
+    public RegenBlockTags(DataGenerator generatorIn, ExistingFileHelper existingFileHelper) {
         super(generatorIn, RConstants.MODID, existingFileHelper);
     }
 

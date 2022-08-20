@@ -1,7 +1,0 @@
-// 1.19.2	2022-08-08T17:12:50.3898267	Regeneration Block Loot Gen
-8b72d22ac4f1de78b762ba66344292af8664db65 data/regen/loot_tables/blocks/azbantium.json
-25ca15112f1bc0b143019dfeb8d5a80ce29e2e28 data/regen/loot_tables/blocks/bio_container.json
-61b2ea4d3244a73ba115799b076f2a0386cfc490 data/regen/loot_tables/blocks/deepslate_zinc_ore.json
-dff8db975c5ef198a3f6ee0d625485b6cdc22cb7 data/regen/loot_tables/blocks/zero_roundel_full.json
-f01a480252cb9e47b291338573518969596d4212 data/regen/loot_tables/blocks/zero_roundel_half.json
-baaa26aba3cf955e8b0382903a65167034b677e0 data/regen/loot_tables/blocks/zinc_ore.json

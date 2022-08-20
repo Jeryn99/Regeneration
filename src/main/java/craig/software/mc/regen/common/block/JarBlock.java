@@ -5,9 +5,11 @@ import craig.software.mc.regen.common.objects.RItems;
 import craig.software.mc.regen.common.objects.RSounds;
 import craig.software.mc.regen.common.regen.RegenCap;
 import craig.software.mc.regen.common.regen.state.RegenStates;
-import craig.software.mc.regen.common.tiles.BioContainerBlockEntity;
+import craig.software.mc.regen.common.blockentity.BioContainerBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -65,36 +67,40 @@ public class JarBlock extends Block implements EntityBlock {
     public @NotNull InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide()) {
             BioContainerBlockEntity jarTile = (BioContainerBlockEntity) worldIn.getBlockEntity(pos);
-            if (handIn == InteractionHand.MAIN_HAND) {
-                if (!player.isShiftKeyDown()) {
-                    if (player.getMainHandItem().getItem() == RItems.HAND.get()) {
+
+            if (handIn != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+
+            if (!player.isShiftKeyDown()) {
+                if (player.getMainHandItem().getItem() == RItems.HAND.get()) {
+                    if (jarTile != null) {
                         jarTile.dropHandIfPresent(player);
                         jarTile.setHand(player.getMainHandItem().copy());
                         jarTile.setUpdateSkin(true);
                         player.getMainHandItem().shrink(1);
                         jarTile.sendUpdates();
-                    } else {
-                        jarTile.dropHandIfPresent(player);
-                        jarTile.sendUpdates();
-                    }
-                } else {
-                    if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(BioContainerBlockEntity.Action.CREATE)) {
-                        RegenCap.get(player).ifPresent(iRegen -> {
-                            if (iRegen.regenState() == RegenStates.ALIVE) {
-                                iRegen.addRegens(1);
-                                iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
-                                iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
-                                iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
-                                iRegen.syncToClients(null);
-                                iRegen.forceRegeneration();
-                                player.playSound(RSounds.HAND_GLOW.get(), 1, 1);
-                                jarTile.setHand(ItemStack.EMPTY);
-                                jarTile.sendUpdates();
-                            }
-                        });
+                        return InteractionResult.SUCCESS;
                     }
                 }
+                jarTile.dropHandIfPresent(player);
+                jarTile.sendUpdates();
             }
+
+            if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(BioContainerBlockEntity.Action.CREATE)) {
+                RegenCap.get(player).ifPresent(iRegen -> {
+                    if (iRegen.regenState() == RegenStates.ALIVE) {
+                        iRegen.addRegens(1);
+                        iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
+                        iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
+                        iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
+                        iRegen.syncToClients(null);
+                        iRegen.forceRegeneration();
+                        player.playSound(RSounds.HAND_GLOW.get(), 1, 1);
+                        jarTile.setHand(ItemStack.EMPTY);
+                        jarTile.sendUpdates();
+                    }
+                });
+            }
+
         }
 
         return super.use(state, worldIn, pos, player, handIn, hit);
@@ -134,9 +140,18 @@ public class JarBlock extends Block implements EntityBlock {
         return new BioContainerBlockEntity(blockPos, blockState);
     }
 
+    @Override
+    public void tick(BlockState p_222945_, ServerLevel p_222946_, BlockPos p_222947_, RandomSource p_222948_) {
+        super.tick(p_222945_, p_222946_, p_222947_, p_222948_);
+    }
+
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level p_153212_, @NotNull BlockState p_153213_, @NotNull BlockEntityType<T> p_153214_) {
-        return EntityBlock.super.getTicker(p_153212_, p_153213_, p_153214_);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level currentLevel, @NotNull BlockState blockState, @NotNull BlockEntityType<T> blockEntityType) {
+        return (level1, blockPos, block, t) -> {
+            if (t instanceof BioContainerBlockEntity coffinBlockEntity) {
+                coffinBlockEntity.tick(currentLevel, blockPos, blockState, coffinBlockEntity);
+            }
+        };
     }
 }

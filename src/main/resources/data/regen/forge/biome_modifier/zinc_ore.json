@@ -1,5 +1,5 @@
 {
-  "type": "regen:feature_add",
+  "type": "forge:add_features",
   "biomes": "#minecraft:is_overworld",
   "features": {
     "feature": {
@@ -10,10 +10,7 @@
         "targets": [
           {
             "state": {
-              "Name": "regen:zinc_ore",
-              "Properties": {
-                "lit": "false"
-              }
+              "Name": "regen:zinc_ore"
             },
             "target": {
               "predicate_type": "minecraft:tag_match",
@@ -22,10 +19,7 @@
           },
           {
             "state": {
-              "Name": "regen:deepslate_zinc_ore",
-              "Properties": {
-                "lit": "false"
-              }
+              "Name": "regen:deepslate_zinc_ore"
             },
             "target": {
               "predicate_type": "minecraft:tag_match",
@@ -60,5 +54,5 @@
       }
     ]
   },
-  "generation_stage": "UNDERGROUND_ORES"
+  "step": "underground_ores"
 }

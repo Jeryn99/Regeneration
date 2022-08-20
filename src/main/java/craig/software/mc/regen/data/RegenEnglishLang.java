@@ -10,9 +10,9 @@ import craig.software.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
-public class EnglishLang extends LanguageProvider {
+public class RegenEnglishLang extends LanguageProvider {
 
-    public EnglishLang(DataGenerator gen) {
+    public RegenEnglishLang(DataGenerator gen) {
         super(gen, RConstants.MODID, "en_us");
     }
 

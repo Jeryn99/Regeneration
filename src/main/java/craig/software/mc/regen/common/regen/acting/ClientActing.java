@@ -25,9 +25,6 @@ class ClientActing implements Acting {
 
     public static final Acting INSTANCE = new ClientActing();
 
-    private ClientActing() {
-    }
-
     @Override
     public void onRegenTick(IRegen cap) {
         // never forwarded as per the documentation
@@ -40,7 +37,6 @@ class ClientActing implements Acting {
             ClientUtil.playSound(cap.getLiving(), ForgeRegistries.SOUND_EVENTS.getKey(RSounds.HEART_BEAT.get()), SoundSource.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F, cap.getLiving().getRandom());
             ClientUtil.playSound(cap.getLiving(), ForgeRegistries.SOUND_EVENTS.getKey(ambientSound), SoundSource.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F, cap.getLiving().getRandom());
         }
-        //TODO - LP - STOP MUSIC PLAYING IN GRACE Minecraft.getInstance().getSoundHandler().stop(null, SoundCategory.MUSIC);
     }
 
     @Override

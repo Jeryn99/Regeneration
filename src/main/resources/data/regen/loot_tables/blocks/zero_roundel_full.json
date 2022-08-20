@@ -2,14 +2,19 @@
   "type": "minecraft:block",
   "pools": [
     {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "regen:zero_roundel_full"
         }
       ],
-      "name": "regen:zero_roundel_full",
-      "rolls": 1
+      "rolls": 1.0
     }
   ]
 }

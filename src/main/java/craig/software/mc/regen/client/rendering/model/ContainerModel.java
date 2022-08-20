@@ -1,12 +1,15 @@
-package craig.software.mc.regen.client.rendering.model;// Made with Blockbench 4.0.0-beta.0
-// Exported for Minecraft version 1.17 with Mojang mappings
-// Paste this class into your mod and generate all required imports
-
+package craig.software.mc.regen.client.rendering.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import craig.software.mc.regen.common.blockentity.BioContainerBlockEntity;
 import craig.software.mc.regen.util.RConstants;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.animation.AnimationChannel;
+import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.Keyframe;
+import net.minecraft.client.animation.KeyframeAnimations;
+import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -14,12 +17,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public class ContainerModel extends EntityModel {
+public class ContainerModel extends HierarchicalModel {
+
+
+    public static final AnimationDefinition CLOSE = AnimationDefinition.Builder.withLength(0.5416666666666666f).addAnimation("lid", new AnimationChannel(AnimationChannel.Targets.POSITION, new Keyframe(0.5416666666666666f, KeyframeAnimations.posVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR))).addAnimation("lid", new AnimationChannel(AnimationChannel.Targets.ROTATION, new Keyframe(0f, KeyframeAnimations.degreeVec(-52.5f, 0f, 0f), AnimationChannel.Interpolations.LINEAR), new Keyframe(0.5416666666666666f, KeyframeAnimations.degreeVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR))).addAnimation("lid", new AnimationChannel(AnimationChannel.Targets.SCALE, new Keyframe(0.5416666666666666f, KeyframeAnimations.scaleVec(1f, 1f, 1f), AnimationChannel.Interpolations.LINEAR))).build();
+    public static final AnimationDefinition OPEN = AnimationDefinition.Builder.withLength(0.5416666666666666f).addAnimation("lid", new AnimationChannel(AnimationChannel.Targets.POSITION, new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR))).addAnimation("lid", new AnimationChannel(AnimationChannel.Targets.ROTATION, new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR), new Keyframe(0.5416666666666666f, KeyframeAnimations.degreeVec(-52.5f, 0f, 0f), AnimationChannel.Interpolations.LINEAR))).addAnimation("lid", new AnimationChannel(AnimationChannel.Targets.SCALE, new Keyframe(0f, KeyframeAnimations.scaleVec(1f, 1f, 1f), AnimationChannel.Interpolations.LINEAR))).build();
     public static ResourceLocation CONTAINER_TEXTURE = new ResourceLocation(RConstants.MODID, "textures/tile/container.png");
     public final ModelPart lid;
     private final ModelPart jar;
+    private final ModelPart root;
 
     public ContainerModel(ModelPart root) {
+        this.root = root;
         this.lid = root.getChild("lid");
         this.jar = root.getChild("jar");
     }
@@ -50,7 +59,18 @@ public class ContainerModel extends EntityModel {
     }
 
     @Override
-    public void setupAnim(@NotNull Entity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {
+    public ModelPart root() {
+        return root;
+    }
 
+    @Override
+    public void setupAnim(@NotNull Entity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {
+        this.root().getAllParts().forEach(ModelPart::resetPose);
+    }
+
+    public void animate(BioContainerBlockEntity containerBlock){
+        this.root().getAllParts().forEach(ModelPart::resetPose);
+        animate(containerBlock.getOpenState(), CLOSE, Minecraft.getInstance().player.tickCount);
+        animate(containerBlock.getCloseState(), OPEN, Minecraft.getInstance().player.tickCount);
     }
 }

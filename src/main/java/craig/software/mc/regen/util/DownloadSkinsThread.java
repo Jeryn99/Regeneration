@@ -7,9 +7,6 @@ import java.io.File;
 
 public class DownloadSkinsThread extends Thread {
 
-    public DownloadSkinsThread() {
-    }
-
     public static void setup() {
         DownloadSkinsThread thread = new DownloadSkinsThread();
         thread.setDaemon(true);

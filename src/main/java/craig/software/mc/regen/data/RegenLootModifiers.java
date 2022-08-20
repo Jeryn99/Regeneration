@@ -10,8 +10,8 @@ import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 
 /* Created by Craig on 10/03/2021 */
-public class LootGen extends GlobalLootModifierProvider {
-    public LootGen(DataGenerator gen) {
+public class RegenLootModifiers extends GlobalLootModifierProvider {
+    public RegenLootModifiers(DataGenerator gen) {
         super(gen, RConstants.MODID);
     }
 

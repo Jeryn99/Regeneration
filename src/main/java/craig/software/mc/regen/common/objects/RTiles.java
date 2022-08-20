@@ -1,6 +1,6 @@
 package craig.software.mc.regen.common.objects;
 
-import craig.software.mc.regen.common.tiles.BioContainerBlockEntity;
+import craig.software.mc.regen.common.blockentity.BioContainerBlockEntity;
 import craig.software.mc.regen.util.RConstants;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

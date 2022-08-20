@@ -26,13 +26,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdvancementGen implements DataProvider {
+public class RegenAdvancements implements DataProvider {
 
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final List<Advancement> advancements = new ArrayList<>();
     private final DataGenerator generator;
 
-    public AdvancementGen(DataGenerator generatorIn) {
+    public RegenAdvancements(DataGenerator generatorIn) {
         this.generator = generatorIn;
     }
 

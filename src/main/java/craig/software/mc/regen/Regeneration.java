@@ -17,7 +17,7 @@ import craig.software.mc.regen.common.regen.acting.ActingForwarder;
 import craig.software.mc.regen.common.regen.transitions.TransitionTypes;
 import craig.software.mc.regen.common.traits.RegenTraitRegistry;
 import craig.software.mc.regen.common.world.RFeatures;
-import craig.software.mc.regen.common.world.structures.pieces.RPieces;
+import craig.software.mc.regen.common.world.structures.pieces.StructurePieces;
 import craig.software.mc.regen.config.RegenConfig;
 import craig.software.mc.regen.data.*;
 import craig.software.mc.regen.network.NetworkDispatcher;
@@ -26,6 +26,7 @@ import craig.software.mc.regen.util.DownloadSkinsThread;
 import craig.software.mc.regen.util.PlayerUtil;
 import craig.software.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -75,8 +76,6 @@ public class Regeneration {
 
         final DeferredRegister<Codec<? extends BiomeModifier>> serializers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, RConstants.MODID);
         serializers.register(modBus);
-        serializers.register(BiomeFeatureModifier.ADD_FEATURE.getPath(), BiomeFeatureModifier::makeCodec);
-
 
         RFeatures.CONFIGURED_FEATURES.register(modBus);
         RFeatures.PLACED_FEATURES.register(modBus);
@@ -99,12 +98,16 @@ public class Regeneration {
         attributeCreationEvent.put(REntities.CYBERLORD.get(), Timelord.createAttributes().build());
     }
 
+    public static ResourceLocation location(String location) {
+        return new ResourceLocation(RConstants.MODID, location);
+    }
+
     private void doCommonStuff(final FMLCommonSetupEvent event) {
         ActingForwarder.init();
         DownloadSkinsThread.setup();
         RSoundSchemes.init();
         TriggerManager.init();
-        RPieces.init();
+        StructurePieces.init();
         PlayerUtil.setupPotions();
     }
 
@@ -124,16 +127,16 @@ public class Regeneration {
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
-        generator.addProvider(true, new EnglishLang(generator));
-        generator.addProvider(true, new RBlockLootTableGen(generator));
-        generator.addProvider(true, new LootGen(generator));
-        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
+        generator.addProvider(true, new RegenEnglishLang(generator));
+        generator.addProvider(true, new RegenLootTables(generator));
+        generator.addProvider(true, new RegenLootModifiers(generator));
+        RegenBlockTags blockTags = new RegenBlockTags(generator, existingFileHelper);
         generator.addProvider(true, blockTags);
-        generator.addProvider(true, new RItemTags(generator, blockTags, existingFileHelper));
-        generator.addProvider(true, new RRecipeGen(generator));
-        generator.addProvider(true, new RegenBiomeModifier(generator));
-        generator.addProvider(true, new AdvancementGen(generator));
-        generator.addProvider(true, new RBiomes(generator, existingFileHelper));
+        generator.addProvider(true, new RegenItemTags(generator, blockTags, existingFileHelper));
+        generator.addProvider(true, new RegenRecipes(generator));
+        generator.addProvider(true, new RegenBiomeModifiers(generator));
+        generator.addProvider(true, new RegenAdvancements(generator));
+        generator.addProvider(true, new RegenBiomeTags(generator, existingFileHelper));
     }
 
 }

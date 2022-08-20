@@ -10,7 +10,7 @@ import craig.software.mc.regen.client.rendering.model.RModels;
 import craig.software.mc.regen.client.skin.SkinHandler;
 import craig.software.mc.regen.common.block.JarBlock;
 import craig.software.mc.regen.common.item.HandItem;
-import craig.software.mc.regen.common.tiles.BioContainerBlockEntity;
+import craig.software.mc.regen.common.blockentity.BioContainerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -48,44 +48,44 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
     }
 
     @Override
-    public void render(BioContainerBlockEntity tileEntityIn, float p_112308_, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int ov) {
+    public void render(BioContainerBlockEntity blockEntity, float p_112308_, PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int combinedLightIn, int ov) {
 
         matrixStackIn.pushPose();
-        BlockState blockstate = tileEntityIn.getBlockState();
+        BlockState blockstate = blockEntity.getBlockState();
         float rotation = 22.5F * (float) blockstate.getValue(JarBlock.ROTATION);
 
         // Render remaining lindos amount
-        if (tileEntityIn.getHand().getItem() instanceof HandItem && !tileEntityIn.isValid(BioContainerBlockEntity.Action.CREATE) && Minecraft.renderNames()) {
+        if (blockEntity.getHand().getItem() instanceof HandItem && !blockEntity.isValid(BioContainerBlockEntity.Action.CREATE) && Minecraft.renderNames()) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, 1.2, 0.5D);
             matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
             matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = matrixStackIn.last().pose();
             Font fontrenderer = Minecraft.getInstance().font;
-            float f2 = (float) (-fontrenderer.width(Component.translatable(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
-            fontrenderer.drawInBatch(Component.translatable(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
+            float f2 = (float) (-fontrenderer.width(Component.translatable(String.valueOf(round(blockEntity.getLindos(), 2)))) / 2);
+            fontrenderer.drawInBatch(Component.translatable(String.valueOf(round(blockEntity.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
             matrixStackIn.popPose();
         }
 
 
-        if (tileEntityIn.isUpdateSkin()) {
-            TEXTURES.remove(tileEntityIn);
+        if (blockEntity.pendingSkinUpdate()) {
+            TEXTURES.remove(blockEntity);
         }
 
         // Render Hand
-        if (tileEntityIn.getHand().getItem() instanceof HandItem) {
+        if (blockEntity.getHand().getItem() instanceof HandItem) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, 0, 0.5D);
-            boolean isAlex = HandItem.isAlex(tileEntityIn.getHand());
+            boolean isAlex = HandItem.isAlex(blockEntity.getHand());
             ArmModel mainModel = isAlex ? alexArm : steveArm;
             matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180));
             matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotation));
             matrixStackIn.scale(0.8F, 0.8F, 0.8F);
             matrixStackIn.translate(0, -1.5F, -0.02);
-            mainModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            mainModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(blockEntity))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
             matrixStackIn.popPose();
         } else {
-            TEXTURES.remove(tileEntityIn);
+            TEXTURES.remove(blockEntity);
         }
 
         // Render Block
@@ -95,9 +95,7 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
         matrixStackIn.translate(0.5, -1.5, 0.5);
         matrixStackIn.translate(-1, 0, -1);
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotation));
-        jarModel.lid.xRot = -(tileEntityIn.getOpenAmount() * ((float) Math.PI / 3F));
-        jarModel.lid.yRot = 0;
-        jarModel.lid.zRot = 0;
+        jarModel.animate(blockEntity);
         jarModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(ContainerModel.CONTAINER_TEXTURE)), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         matrixStackIn.popPose();
 

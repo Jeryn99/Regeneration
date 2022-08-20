@@ -8,8 +8,8 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
-public class RBiomes extends BiomeTagsProvider {
-    public RBiomes(DataGenerator p_211094_, @Nullable ExistingFileHelper existingFileHelper) {
+public class RegenBiomeTags extends BiomeTagsProvider {
+    public RegenBiomeTags(DataGenerator p_211094_, @Nullable ExistingFileHelper existingFileHelper) {
         super(p_211094_, RConstants.MODID, existingFileHelper);
     }
 

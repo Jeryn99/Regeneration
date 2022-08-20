@@ -5,7 +5,7 @@ import craig.software.mc.regen.common.entities.Timelord;
 import craig.software.mc.regen.common.objects.REntities;
 import craig.software.mc.regen.common.regen.RegenCap;
 import craig.software.mc.regen.common.world.RFeatures;
-import craig.software.mc.regen.common.world.structures.pieces.RPieces;
+import craig.software.mc.regen.common.world.structures.pieces.StructurePieces;
 import craig.software.mc.regen.util.RConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -77,15 +77,15 @@ public class TimelordSettlementHut extends Structure {
         private static final ResourceLocation[] HUTS = new ResourceLocation[]{HUT, HUT_C, HUT_D};
 
         public HutPiece(int p_163661_, StructureTemplateManager p_163662_, ResourceLocation p_163663_, String p_163664_, StructurePlaceSettings p_163665_, BlockPos p_163666_) {
-            super(RPieces.TIMELORD_HUT, p_163661_, p_163662_, p_163663_, p_163664_, p_163665_, p_163666_);
+            super(StructurePieces.TIMELORD_HUT, p_163661_, p_163662_, p_163663_, p_163664_, p_163665_, p_163666_);
         }
 
         public HutPiece(CompoundTag p_192678_, StructureTemplateManager p_192679_, Function<ResourceLocation, StructurePlaceSettings> p_192680_) {
-            super(RPieces.TIMELORD_HUT, p_192678_, p_192679_, p_192680_);
+            super(StructurePieces.TIMELORD_HUT, p_192678_, p_192679_, p_192680_);
         }
 
         public HutPiece(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag tag) {
-            super(RPieces.TIMELORD_HUT, tag, structurePieceSerializationContext.structureTemplateManager(), (p_162451_) -> makeSettings(Rotation.NONE));
+            super(StructurePieces.TIMELORD_HUT, tag, structurePieceSerializationContext.structureTemplateManager(), (p_162451_) -> makeSettings(Rotation.NONE));
         }
 
 
