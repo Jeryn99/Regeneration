@@ -16,6 +16,11 @@ loom {
 
         mixinConfig "regeneration-common.mixins.json"
         mixinConfig "regeneration.mixins.json"
+
+        dataGen {
+            mod "regeneration"
+        }
+
     }
 
        launches {
