@@ -26,10 +26,3 @@ mandatory = true
 versionRange = "[1.19.2,)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.regeneration]]
-modId = "architectury"
-mandatory = true
-versionRange = "[6.2.43,)"
-ordering = "AFTER"
-side = "BOTH"

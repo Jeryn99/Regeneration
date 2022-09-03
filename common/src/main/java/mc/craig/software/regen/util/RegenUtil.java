@@ -1,5 +1,7 @@
 package mc.craig.software.regen.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.minecraft.util.GsonHelper;
 
@@ -11,6 +13,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 public class RegenUtil {
+
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 
     private static final String USER_AGENT = "Regeneration MC Mod/1.0";
 
