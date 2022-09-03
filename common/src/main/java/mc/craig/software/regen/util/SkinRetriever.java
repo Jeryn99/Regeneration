@@ -1,14 +1,16 @@
 package mc.craig.software.regen.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import mc.craig.software.regen.Regeneration;
+import net.minecraft.util.RandomSource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -21,6 +23,11 @@ public class SkinRetriever {
     private static final File SKINS_DIRECTORY = new File("./regen_data/skins");
     private static final File SKINS_DIRECTORY_SLIM = new File(SKINS_DIRECTORY, "slim");
     private static final File SKINS_DIRECTORY_DEFAULT = new File(SKINS_DIRECTORY, "default");
+
+    private static final File SKINS_DIRECTORY_SLIM_TRENDING = new File(SKINS_DIRECTORY_SLIM, "web");
+    private static final File SKINS_DIRECTORY_DEFAULT_TRENDING = new File(SKINS_DIRECTORY_DEFAULT, "web");
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     // Setup required folders
     public static void folderSetup(boolean client) throws IOException {
@@ -68,8 +75,47 @@ public class SkinRetriever {
         }
     }
 
+    public static void threadedSetup(boolean client) {
+        Runnable runnable = () -> {
+            try {
+                writeTime();
+                folderSetup(client);
+                internalSkins();
+                remoteSkins();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+    private static void remoteSkins() throws IOException {
+        if (!shouldUpdateSkins()) return;
+        Regeneration.LOGGER.warn("Refreshing Trending skins");
+
+        int randomPage = RandomSource.create().nextInt(7800);
+
+        for (int i = 3; i > 0; i--) {
+            for (String skin : MineSkin.getSkinsFromPage(randomPage + i)) {
+                downloadSkins(new URL(skin), "mk_" + RandomStringUtils.random(5, true, false), SKINS_DIRECTORY_SLIM_TRENDING, SKINS_DIRECTORY_DEFAULT_TRENDING);
+            }
+        }
+    }
+
+    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
+        URLConnection uc = url.openConnection();
+        uc.connect();
+        uc = url.openConnection();
+        uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+        BufferedImage img = ImageIO.read(uc.getInputStream());
+        File file = isAlexSkin(img) ? alexDir : steveDir;
+        createFolder(file, steveDir, alexDir);
+        Regeneration.LOGGER.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
+        ImageIO.write(img, "png", new File(file, filename + ".png"));
+    }
 
     public static void internalSkins() throws IOException {
+        if (!shouldUpdateSkins()) return;
         String packsUrl = "https://mc-api.craig.software/skins";
         JsonObject links = getApiResponse(new URL(packsUrl));
 
@@ -87,6 +133,21 @@ public class SkinRetriever {
             downloadSkinsSpecific(new URL(downloadLink), packName, skinPackDir);
 
         }
+    }
+
+    public static void writeTime() throws IOException {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("time_since_download", new JsonPrimitive(System.currentTimeMillis()));
+
+        try (FileWriter writer = new FileWriter(new File(SKINS_DIRECTORY, "cache_tracker.json"))) {
+            GSON.toJson(jsonObject, writer);
+            writer.flush();
+        }
+    }
+
+
+    public static boolean shouldUpdateSkins() {
+        return true; //TODO
     }
 
 
