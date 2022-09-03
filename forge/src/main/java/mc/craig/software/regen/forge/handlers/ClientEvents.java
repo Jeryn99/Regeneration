@@ -1,6 +1,6 @@
 package mc.craig.software.regen.forge.handlers;
 
-import mc.craig.software.regen.client.VisualManipulator;
+import mc.craig.software.regen.client.visual.VisualManipulator;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

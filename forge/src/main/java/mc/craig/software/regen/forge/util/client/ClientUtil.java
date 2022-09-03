@@ -1,6 +1,6 @@
 package mc.craig.software.regen.forge.util.client;
 
-import mc.craig.software.regen.util.SkinRetriever;
+import mc.craig.software.regen.client.visual.SkinRetriever;
 
 public class ClientUtil {
     public static void setup() {

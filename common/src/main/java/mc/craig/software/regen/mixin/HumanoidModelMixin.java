@@ -1,6 +1,6 @@
 package mc.craig.software.regen.mixin;
 
-import mc.craig.software.regen.client.AnimationManipulator;
+import mc.craig.software.regen.client.visual.AnimationManipulator;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;

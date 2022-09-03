@@ -1,9 +1,11 @@
-package mc.craig.software.regen.util;
+package mc.craig.software.regen.client.visual;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.util.MineSkin;
+import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import org.apache.commons.codec.binary.Base64;

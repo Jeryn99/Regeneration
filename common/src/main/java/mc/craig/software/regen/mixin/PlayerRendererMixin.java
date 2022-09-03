@@ -1,6 +1,6 @@
 package mc.craig.software.regen.mixin;
 
-import mc.craig.software.regen.client.VisualManipulator;
+import mc.craig.software.regen.client.visual.VisualManipulator;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;

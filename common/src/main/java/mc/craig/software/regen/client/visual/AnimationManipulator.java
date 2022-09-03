@@ -1,4 +1,4 @@
-package mc.craig.software.regen.client;
+package mc.craig.software.regen.client.visual;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.LivingEntity;
