@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public class PlayerMixin {
 
-    @Inject(at = @At("HEAD"), method = "isDeadOrDying()Z", cancellable = true)
-    private void isDeadOrDying(CallbackInfoReturnable<Boolean> cir) {
+    @Inject(at = @At("HEAD"), method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", cancellable = true)
+    private void isHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-        if (RegenLogic.canRegenerate(livingEntity) && !livingEntity.isRemoved()) {
+        if (RegenLogic.canRegenerate(livingEntity) && livingEntity.getHealth() - amount < 0) {
             cir.setReturnValue(false);
         }
     }
