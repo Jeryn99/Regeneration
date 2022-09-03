@@ -20,6 +20,9 @@
     ],
     "client": [
       "mc.craig.software.regen.fabric.RegenerationFabricClient"
+    ],
+    "cardinal-components": [
+      "mc.craig.software.regen.common.regeneration.fabric.RegenerationComponents"
     ]
   },
   "mixins": [
