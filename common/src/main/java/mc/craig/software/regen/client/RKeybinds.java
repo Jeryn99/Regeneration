@@ -1,9 +1,7 @@
 package mc.craig.software.regen.client;
 
 import mc.craig.software.regen.client.screen.PreferencesScreen;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.ForceRegenMessage;
-import mc.craig.software.regen.network.messages.ToggleTraitMessage;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;

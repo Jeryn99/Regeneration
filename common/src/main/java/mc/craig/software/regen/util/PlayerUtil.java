@@ -3,7 +3,6 @@ package mc.craig.software.regen.util;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.config.RegenConfig;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Iterator;

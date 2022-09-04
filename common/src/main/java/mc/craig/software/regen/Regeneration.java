@@ -1,9 +1,9 @@
 package mc.craig.software.regen;
 
 import com.mojang.logging.LogUtils;
-import mc.craig.software.regen.client.visual.SkinRetriever;
-import mc.craig.software.regen.common.regeneration.acting.ActingForwarder;
+import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.network.RegenNetwork;
+import mc.craig.software.regen.util.Platform;
 import org.slf4j.Logger;
 
 public class Regeneration {
@@ -12,8 +12,7 @@ public class Regeneration {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static void init() {
-        SkinRetriever.threadedSetup(false);
         RegenNetwork.init();
-        ActingForwarder.init(false);
+        ActingForwarder.init(Platform.isClient());
     }
 }

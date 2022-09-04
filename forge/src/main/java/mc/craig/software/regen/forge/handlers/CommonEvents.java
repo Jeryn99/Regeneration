@@ -10,9 +10,24 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.world.item.SwordItem;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
@@ -41,16 +56,6 @@ public class CommonEvents {
         }));
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void noFall(LivingFallEvent event) {
-        if (event.getEntity() == null) return;
-        RegenerationData.get(event.getEntity()).ifPresent((iRegen -> {
-            if (RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.LEAP.get()).toString())) {
-                event.setCanceled(true);
-            }
-        }));
-    }
-
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntity();
@@ -60,11 +65,6 @@ public class CommonEvents {
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
 
             Entity trueSource = event.getSource().getEntity();
-            if (event.getSource().isFire() && RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.FIRE.get()).toString())) {
-                event.setCanceled(true);
-                event.setAmount(0.0F);
-                return;
-            }
 
             if (trueSource instanceof Player player && event.getEntity() != null) {
                 RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
@@ -76,14 +76,6 @@ public class CommonEvents {
 
             //Update Death Message
             iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
-
-            //Stop falling for leap trait
-            if (RegenTraitRegistry.getTraitLocation(iRegen.trait()).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.LEAP.get()).toString())) {
-                if (event.getSource() == DamageSource.FALL) {
-                    event.setCanceled(true);//cancels damage, in case the above didn't cut it
-                    return;
-                }
-            }
 
             //Handle Post
             if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
@@ -119,7 +111,6 @@ public class CommonEvents {
         if (event.getEntity() == null) return;
         RegenerationData.get(event.getEntity()).ifPresent((cap) -> {
             if ((event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)) {
-                cap.setTrait(RegenTraitRegistry.BORING.get());
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                     cap.extractRegens(cap.regens());
                 }
@@ -148,7 +139,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
         if (e.getEntity().level.isClientSide) return;
-        RegenerationData.get(e.getEntity()).ifPresent((data) -> data.stateManager().onPunchBlock(e.getPos()));
+        RegenerationData.get(e.getEntity()).ifPresent((data) -> data.stateManager().onPunchBlock(e.getPos(), e.getLevel().getBlockState(e.getPos()), e.getEntity()));
     }
 
     @SubscribeEvent

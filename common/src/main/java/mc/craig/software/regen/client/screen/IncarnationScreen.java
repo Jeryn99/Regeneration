@@ -2,10 +2,8 @@ package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mc.craig.software.regen.client.skin.CommonSkin;
 import mc.craig.software.regen.client.skin.SkinHandler;
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.NextSkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -17,7 +15,6 @@ import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
@@ -33,8 +30,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

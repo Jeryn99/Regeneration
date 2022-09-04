@@ -6,7 +6,6 @@ import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.ChangeSoundScheme;
 import mc.craig.software.regen.network.messages.TypeMessage;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -22,7 +21,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -44,10 +42,6 @@ public class PreferencesScreen extends AbstractContainerScreen {
     @Override
     public void init() {
         super.init();
-        TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
-        for (AbstractTab button : TabRegistry.tabList) {
-            addRenderableWidget(button);
-        }
 
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
@@ -111,14 +105,6 @@ public class PreferencesScreen extends AbstractContainerScreen {
         InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - x, (float) (topPos + 75 - 50) - y, Minecraft.getInstance().player);
         String str = Component.translatable("regen.gui.remaining_regens.status", data.regens()).getString();
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
-            int color = iRegen.traitActive() ? Color.GREEN.getRGB() : Color.RED.getRGB();
-            MutableComponent traitLang = data.trait().translation();
-            font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 35, color);
-            MutableComponent traitLangDesc = data.trait().description();
-            font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 45, color);
-        });
-
     }
 
     @Override

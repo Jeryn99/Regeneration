@@ -4,16 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.animation.AnimationHandler;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 public interface TransitionRenderer extends AnimationHandler.Animation {
 
-    void onPlayerRenderPre(RenderPlayerEvent.Pre pre);
+    void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight);
 
-    void onPlayerRenderPost(RenderPlayerEvent.Post post);
+    void onPlayerRenderPost(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight);
 
     void firstPersonHand(RenderHandEvent renderHandEvent);
 

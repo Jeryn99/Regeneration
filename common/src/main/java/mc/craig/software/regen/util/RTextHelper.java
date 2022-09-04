@@ -1,8 +1,6 @@
 package mc.craig.software.regen.util;
 
 import com.mojang.authlib.GameProfile;
-import mc.craig.software.regen.common.traits.AbstractTrait;
-import mc.craig.software.regen.common.traits.RegenTraitRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -10,10 +8,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-
-import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class RTextHelper {
 
@@ -24,12 +19,6 @@ public class RTextHelper {
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(tooltipText)))
                 .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, tooltipText)));
         return textComponent;
-    }
-
-    public static MutableComponent getTraitTextObject(AbstractTrait trait) {
-        if (trait != null)
-            return createTextComponentWithTip(formatTraitName(trait), RegenTraitRegistry.getTraitLocation(trait).toString());
-        return createTextComponentWithTip("Null Trait", "Null");
     }
 
     /**
@@ -47,12 +36,5 @@ public class RTextHelper {
         return createTextComponentWithTip(entityName, id.toString());
     }
 
-    public static String formatTraitName(AbstractTrait trait) {
-        String original = RegenTraitRegistry.getTraitLocation(trait).getPath().trim().replace("	", "").replace("_", " ");
-        String output = Arrays.stream(original.split("\\s+"))
-                .map(t -> t.substring(0, 1).toUpperCase() + t.substring(1))
-                .collect(Collectors.joining(" "));
-        return output;
-    }
 
 }

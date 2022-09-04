@@ -8,7 +8,6 @@ import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import mc.craig.software.regen.common.traits.AbstractTrait;
 import mc.craig.software.regen.common.traits.RegenTraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
@@ -20,7 +19,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -159,31 +157,6 @@ public class CommonActing implements Acting {
 
         player.getAttribute(Attributes.MAX_HEALTH).removeModifier(heartModifier);
         player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier);
-
-        //Trait
-        if (RegenConfig.COMMON.traitsEnabled.get() && cap.getLiving().getType() == EntityType.PLAYER) {
-
-            //Reset old Trait
-            AbstractTrait old = cap.trait();
-            old.remove(cap);
-
-            //Get the new Trait
-            AbstractTrait next = cap.getNextTrait();
-            if (RegenTraitRegistry.getTraitLocation(next).toString().equals(RegenTraitRegistry.getTraitLocation(RegenTraitRegistry.BORING.get()).toString())) {
-                next = RegenTraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof Player));
-            }
-            next.apply(cap);
-
-            //Set new Trait & reset next trait
-            cap.setTrait(next);
-            cap.setNextTrait(RegenTraitRegistry.BORING.get());
-
-            PlayerUtil.sendMessage(player, Component.translatable("regen.messages.new_trait", next.translation().getString()), true);
-        } else {
-            cap.trait().remove(cap);
-            cap.setTrait(RegenTraitRegistry.BORING.get());
-            cap.trait().apply(cap);
-        }
     }
 
     @Override

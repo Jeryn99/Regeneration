@@ -1,19 +1,14 @@
 package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mc.craig.software.regen.client.skin.CommonSkin;
+import mc.craig.software.regen.client.visual.SkinRetriever;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
-@OnlyIn(Dist.CLIENT)
 public class RErrorScreen extends Screen {
     private final Component message;
 
@@ -26,12 +21,8 @@ public class RErrorScreen extends Screen {
     protected void init() {
         super.init();
         this.addRenderableWidget(new Button(this.width / 2 - 100, 140, 200, 20, Component.translatable("button.tooltip.open_folder"), (p_213034_1_) -> {
-            Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY);
-            try {
-                CommonSkin.folderSetup();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Util.getPlatform().openFile(SkinRetriever.SKINS_DIRECTORY);
+            SkinRetriever.folderSetup();
             Minecraft.getInstance().setScreen(null);
         }));
     }

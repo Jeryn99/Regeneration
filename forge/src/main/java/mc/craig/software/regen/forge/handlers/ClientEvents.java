@@ -1,4 +1,4 @@
-package mc.craig.software.regen.handlers;
+package mc.craig.software.regen.forge.handlers;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -137,7 +137,7 @@ public class ClientEvents {
                 TimelordRenderer.TIMELORDS.clear();
                 JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
                 JarTileRender.TEXTURES.clear();
-                Regeneration.LOG.warn("Cleared Regeneration texture cache");
+                Regeneration.LOGGER.warn("Cleared Regeneration texture cache");
             }
         }
     }
@@ -217,7 +217,7 @@ public class ClientEvents {
         if (gunSight && healthCheck) {
             event.setCanceled(true);
         }
-        GuiComponent.GUI_ICONS_LOCATION = gunSight ? HEARTS : OLD;
+        //TODO GuiComponent.GUI_ICONS_LOCATION = gunSight ? HEARTS : OLD;
     }
 
     @SubscribeEvent

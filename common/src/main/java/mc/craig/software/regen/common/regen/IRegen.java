@@ -3,7 +3,6 @@ package mc.craig.software.regen.common.regen;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
-import mc.craig.software.regen.common.traits.AbstractTrait;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.Serializable;
@@ -94,17 +93,9 @@ public interface IRegen extends Serializable<CompoundTag> {
 
     boolean isNextSkinTypeAlex();
 
-    AbstractTrait trait();
-
     boolean traitActive();
 
     void toggleTrait();
-
-    void setTrait(AbstractTrait trait);
-
-    AbstractTrait getNextTrait();
-
-    void setNextTrait(AbstractTrait trait);
 
     TimelordSound getTimelordSound();
 

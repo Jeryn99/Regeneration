@@ -1,6 +1,5 @@
 package mc.craig.software.regen.forge.data;
 
-import mc.craig.software.regen.common.objects.RGlobalLoot;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;

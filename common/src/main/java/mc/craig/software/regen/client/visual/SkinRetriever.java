@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.util.MineSkin;
+import mc.craig.software.regen.util.Platform;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -20,11 +21,9 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
-import static mc.craig.software.regen.util.RegenUtil.getApiResponse;
-
 public class SkinRetriever {
 
-    private static final File SKINS_DIRECTORY = new File("./regen_data/skins");
+    public static final File SKINS_DIRECTORY = new File("./regen_data/skins");
     private static final File SKINS_DIRECTORY_SLIM = new File(SKINS_DIRECTORY, "slim");
     private static final File SKINS_DIRECTORY_DEFAULT = new File(SKINS_DIRECTORY, "default");
 
@@ -32,10 +31,10 @@ public class SkinRetriever {
     private static final File SKINS_DIRECTORY_DEFAULT_TRENDING = new File(SKINS_DIRECTORY_DEFAULT, "web");
 
     // Setup required folders
-    public static void folderSetup(boolean client) throws IOException {
+    public static void folderSetup() {
         createFolder(SKINS_DIRECTORY);
 
-        if (client) {
+        if (Platform.isClient()) {
             createFolder(SKINS_DIRECTORY_DEFAULT, SKINS_DIRECTORY_SLIM);
         }
     }
@@ -76,23 +75,7 @@ public class SkinRetriever {
         }
     }
 
-    public static void threadedSetup(boolean client) {
-        Runnable runnable = () -> {
-            try {
-                if (shouldUpdateSkins()) {
-                    folderSetup(client);
-                    internalSkins();
-                    remoteSkins();
-                    writeTime();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
-        new Thread(runnable).start();
-    }
-
-    private static void remoteSkins() throws IOException {
+    public static void remoteSkins() throws IOException {
         Regeneration.LOGGER.warn("Downloading new Trending skins");
 
         int randomPage = RandomSource.create().nextInt(7800);
@@ -119,7 +102,7 @@ public class SkinRetriever {
     public static void internalSkins() throws IOException {
         Regeneration.LOGGER.warn("Re-downloading internal skins");
         String packsUrl = "https://mc-api.craig.software/skins";
-        JsonObject links = getApiResponse(new URL(packsUrl));
+        JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
 
         for (int skins = links.getAsJsonArray("data").size() - 1; skins >= 0; skins--) {
             JsonArray data = links.getAsJsonArray("data");
@@ -191,4 +174,7 @@ public class SkinRetriever {
     }
 
 
+    public static File chooseRandomSkin(RandomSource random, boolean b, boolean b1) {
+        throw new RuntimeException("Need to implement!");
+    }
 }

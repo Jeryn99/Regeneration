@@ -1,5 +1,7 @@
 package mc.craig.software.regen.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -17,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 public class RegenUtil {
 
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static TagKey<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
     public static TagKey<Block> ARS = makeBlock("tardis", "ars");
     public static TagKey<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");

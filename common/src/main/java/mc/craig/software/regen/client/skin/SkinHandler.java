@@ -4,7 +4,6 @@ package mc.craig.software.regen.client.skin;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.SkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;

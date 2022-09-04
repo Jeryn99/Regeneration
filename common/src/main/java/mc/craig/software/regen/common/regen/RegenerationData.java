@@ -7,10 +7,7 @@ import mc.craig.software.regen.common.regen.state.IStateManager;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.common.traits.AbstractTrait;
-import mc.craig.software.regen.common.traits.RegenTraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.SyncMessage;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
@@ -58,8 +55,6 @@ public class RegenerationData implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
-    private AbstractTrait currentTrait = RegenTraitRegistry.BORING.get();
-    private AbstractTrait nextTrait = RegenTraitRegistry.BORING.get();
     private IRegen.TimelordSound timelordSound = IRegen.TimelordSound.HUM;
     private IRegen.Hand handState = IRegen.Hand.NO_GONE;
 
@@ -295,8 +290,7 @@ public class RegenerationData implements IRegen {
             setHandState(IRegen.Hand.valueOf(nbt.getString(RConstants.HAND_STATE)));
         }
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
-        setTrait(RegenTraitRegistry.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
-        setNextTrait(RegenTraitRegistry.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
+
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -414,11 +408,6 @@ public class RegenerationData implements IRegen {
     }
 
     @Override
-    public AbstractTrait trait() {
-        return currentTrait;
-    }
-
-    @Override
     public boolean traitActive() {
         return traitActive;
     }
@@ -426,21 +415,6 @@ public class RegenerationData implements IRegen {
     @Override
     public void toggleTrait() {
         this.traitActive = !traitActive;
-    }
-
-    @Override
-    public void setTrait(AbstractTrait trait) {
-        this.currentTrait = trait;
-    }
-
-    @Override
-    public AbstractTrait getNextTrait() {
-        return nextTrait;
-    }
-
-    @Override
-    public void setNextTrait(AbstractTrait trait) {
-        this.nextTrait = trait;
     }
 
     @Override
@@ -587,14 +561,14 @@ public class RegenerationData implements IRegen {
 
 
         @Override
-        public boolean onPunchBlock(BlockState blockState, BlockPos blockPos) {
+        public boolean onPunchBlock(BlockPos pos, BlockState blockState, Player entity) {
 
             if (currentState.isGraceful() && glowing()) {
 
                 if (blockState.getBlock() == Blocks.SNOW || blockState.getBlock() == Blocks.SNOW_BLOCK) {
-                    e.getLevel().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
+                    entity.level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
                 }
-                if (e.getEntity() instanceof ServerPlayer) {
+                if (entity instanceof ServerPlayer) {
                     ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                     TriggerManager.CHANGE_REFUSAL.trigger(playerEntity);
                 }

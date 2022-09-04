@@ -9,7 +9,6 @@ import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
 import mc.craig.software.regen.client.sound.SoundReverb;
-import mc.craig.software.regen.common.item.ElixirItem;
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.RBlocks;
@@ -197,15 +196,6 @@ public class ClientUtil {
                 bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
             }
         });
-    }
-
-    private static void setupTabs() {
-        MinecraftForge.EVENT_BUS.register(new TabRegistry());
-
-        if (TabRegistry.getTabList().size() < 2) {
-            TabRegistry.registerTab(new InventoryTabVanilla());
-        }
-        TabRegistry.registerTab(new RegenPrefTab());
     }
 
     private static void itemPredicates() {

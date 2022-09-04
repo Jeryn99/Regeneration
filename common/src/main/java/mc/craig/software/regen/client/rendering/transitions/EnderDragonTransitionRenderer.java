@@ -10,10 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Random;
 
@@ -40,19 +40,15 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
+    public void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
     @Override
-    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
+    public void onPlayerRenderPost(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
-    @Override
-    public void firstPersonHand(RenderHandEvent renderHandEvent) {
-
-    }
 
     @Override
     public void thirdPersonHand(HumanoidArm side, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {

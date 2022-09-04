@@ -2,14 +2,12 @@ package mc.craig.software.regen.common.regen.transitions;
 
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.POVMessage;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 public class SneezeTransition extends TransitionType {
 

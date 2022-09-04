@@ -6,9 +6,6 @@ import mc.craig.software.regen.util.RConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraftforge.registries.DeferredRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistrySupplier;
 
 /* Created by Craig on 09/03/2021 */
 public class RParticles {

@@ -19,6 +19,11 @@ public class RegenSources extends DamageSource {
 
     private String message = "";
 
+    @Override
+    public DamageSource bypassArmor() {
+        return super.bypassArmor();
+    }
+
     public RegenSources(String damageTypeIn) {
         super(damageTypeIn);
         message = damageTypeIn;

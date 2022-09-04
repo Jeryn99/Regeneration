@@ -4,12 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.ColorChangeMessage;
 import mc.craig.software.regen.util.RConstants;
-import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -37,14 +33,10 @@ public class ColorScreen extends AbstractContainerScreen {
     @Override
     public void init() {
         super.init();
-        TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
-        for (AbstractTab button : TabRegistry.tabList) {
-            addRenderableWidget(button);
-        }
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
-        RegenerationData.get(getMinecraft().player).ifPresent((data) -> {
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
             initialPrimary = data.getPrimaryColors();
             initialSecondary = data.getSecondaryColors();
         });
@@ -123,9 +115,9 @@ public class ColorScreen extends AbstractContainerScreen {
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
-        RegenerationData.get(getMinecraft().player).ifPresent((cap) -> {
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
             String str = Component.translatable("regen.gui.primary").getString();
-            int length = getMinecraft().font.width(str);
+            int length = Minecraft.getInstance().font.width(str);
             this.font.draw(matrixStack, Component.literal(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
             str = Component.translatable("regen.gui.secondary").getString();
             length = font.width(str);

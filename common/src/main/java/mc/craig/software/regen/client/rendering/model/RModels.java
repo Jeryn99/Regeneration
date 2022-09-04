@@ -32,8 +32,6 @@ public class RModels {
     public static void addModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(TIMELORD, TimelordModel::getModelData);
         event.registerLayerDefinition(MOD_PLAYER, () -> ModifiedPlayerModel.createMesh(new CubeDeformation(-0.25F)));
-        event.registerLayerDefinition(CYBERMAN, () -> CybermanModel.createBodyLayer(true));
-        event.registerLayerDefinition(CYBERMAN_GLOW, () -> CybermanModel.createBodyLayer(false));
         event.registerLayerDefinition(TIMELORD_GUARD, TimelordGuardModel::getModelData);
         event.registerLayerDefinition(GUARD_ARMOR, () -> GuardArmorModel.createBodyLayer(true));
         event.registerLayerDefinition(GUARD_ARMOR_STEVE, () -> GuardArmorModel.createBodyLayer(false));

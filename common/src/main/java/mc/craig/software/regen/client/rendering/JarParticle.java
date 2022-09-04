@@ -5,11 +5,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class JarParticle extends TextureSheetParticle {
     private JarParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z, motionX, motionY, motionZ);
@@ -52,7 +49,6 @@ public class JarParticle extends TextureSheetParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
         public record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
 
         public Particle createParticle(@NotNull SimpleParticleType typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {

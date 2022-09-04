@@ -1,11 +1,6 @@
-package mc.craig.software.regen.common.regeneration.acting;
+package mc.craig.software.regen.common.regen.acting;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.common.regen.acting.Acting;
-import mc.craig.software.regen.common.regen.acting.ClientActing;
-import mc.craig.software.regen.common.regen.acting.CommonActing;
-import mc.craig.software.regen.common.regeneration.RegenerationData;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.StateMessage;
 
 import java.util.ArrayList;

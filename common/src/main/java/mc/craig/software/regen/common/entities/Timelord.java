@@ -1,20 +1,17 @@
 package mc.craig.software.regen.common.entities;
 
 import com.google.common.collect.Sets;
-import mc.craig.software.regen.client.skin.CommonSkin;
+import mc.craig.software.regen.client.visual.SkinRetriever;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.entities.ai.TimelordAttackGoal;
-import mc.craig.software.regen.common.item.ElixirItem;
 import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.*;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.common.traits.AbstractTrait;
-import mc.craig.software.regen.common.traits.RegenTraitRegistry;
-import mc.craig.software.regen.network.NetworkDispatcher;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
+import mc.craig.software.regen.util.Platform;
 import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
@@ -50,17 +47,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITag;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -158,7 +150,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         }
 
         if (getTimelordType() == TimelordType.COUNCIL) {
-            ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false)));
+          //TODO  ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false)));
             this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         }
@@ -171,7 +163,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(Timelord.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Zombie.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Skeleton.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Cyberman.class, false));
     }
 
     public void setup() {
@@ -212,7 +203,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        if (ModList.get().isLoaded("weeping_angels") && !level.isClientSide) {
+        if (Platform.isModLoaded("weeping_angels") && !level.isClientSide) {
             EntityType<?> weepingAngel = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
             if (weepingAngel != null) {
                 if (level.random.nextInt(100) < 10) {
@@ -243,7 +234,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
         level.getServer().submit(() -> {
-            File file = CommonSkin.chooseRandomSkin(level.random, !male(), true);
+            File file = SkinRetriever.chooseRandomSkin(level.random, !male(), true);
             if (file != null) {
                 data.setSkin(RegenUtil.fileToBytes(file));
             }
@@ -494,7 +485,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public ItemStack getPickedResult(HitResult target) {
+    public ItemStack getPickResult() {
         switch (getTimelordType()) {
             case GUARD -> {
                 ItemStack guardStack = new ItemStack(RItems.SPAWN_ITEM.get());

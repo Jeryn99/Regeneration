@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,7 +16,7 @@ public interface IStateManager extends Serializable<CompoundTag> {
 
     boolean onPunchEntity(LivingEntity entity);
 
-    boolean onPunchBlock(BlockState blockState, BlockPos blockPos);
+    boolean onPunchBlock(BlockPos pos, BlockState blockState, Player entity);
 
     // Proxy methods for timing related stuff
     double stateProgress();

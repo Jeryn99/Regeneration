@@ -8,10 +8,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.DeferredRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistrySupplier;
-
 public class RTiles {
 
     public static final DeferredRegistry<BlockEntityType<?>> TILES = DeferredRegistry.create(RConstants.MODID, Registry.BLOCK_ENTITY_TYPE_REGISTRY);

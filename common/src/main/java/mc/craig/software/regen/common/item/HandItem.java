@@ -3,8 +3,6 @@ package mc.craig.software.regen.common.item;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.common.traits.AbstractTrait;
-import mc.craig.software.regen.common.traits.RegenTraitRegistry;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.UsernameCache;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -48,15 +45,6 @@ public class HandItem extends Item {
         return stack.getOrCreateTag().getBoolean("is_alex");
     }
 
-    //Trait
-    public static void setTrait(AbstractTrait traitBase, ItemStack stack) {
-        stack.getOrCreateTag().putString("trait", RegenTraitRegistry.getTraitLocation(traitBase).toString());
-    }
-
-    public static AbstractTrait getTrait(ItemStack stack) {
-        return RegenTraitRegistry.fromID(stack.getOrCreateTag().getString("trait"));
-    }
-
     public static void setEnergy(float energy, ItemStack stack) {
         stack.getOrCreateTag().putFloat("energy", energy);
     }
@@ -81,7 +69,6 @@ public class HandItem extends Item {
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
             setUUID(livingEntity.getUUID(), itemStack);
             setSkinType(iRegen.currentlyAlex() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
-            setTrait(iRegen.trait(), itemStack);
             setEnergy(0, itemStack);
             if (iRegen.isSkinValidForUse()) {
                 setSkin(iRegen.skin(), itemStack);

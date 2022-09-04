@@ -26,8 +26,6 @@ public class RItems {
     public static RegistrySupplier<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     public static RegistrySupplier<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
 
-
-    public static RegistrySupplier<Item> ELIXIR = ITEMS.register("elixir", ElixirItem::new);
     public static RegistrySupplier<Item> ZINC = ITEMS.register("zinc", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
     public static RegistrySupplier<Item> HAND = ITEMS.register("hand", () -> new HandItem(new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
     public static RegistrySupplier<Item> GUARD_HELMET = ITEMS.register("guard_helmet", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));

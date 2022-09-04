@@ -1,9 +1,11 @@
 package mc.craig.software.regen.util;
 
-import mc.craig.software.regen.client.skin.CommonSkin;
+import mc.craig.software.regen.client.visual.SkinRetriever;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+
+import static mc.craig.software.regen.client.visual.SkinRetriever.*;
 
 public class DownloadSkinsThread extends Thread {
 
@@ -17,14 +19,12 @@ public class DownloadSkinsThread extends Thread {
     @Override
     public void run() {
         try {
-            CommonSkin.folderSetup();
-            File tempZip = new File(CommonSkin.SKIN_DIRECTORY + "/temp");
-            if (tempZip.exists()) {
-                FileUtils.cleanDirectory(tempZip);
+            if (SkinRetriever.shouldUpdateSkins()) {
+                folderSetup();
+                internalSkins();
+                remoteSkins();
+                writeTime();
             }
-            CommonSkin.trending();
-            CommonSkin.timelord();
-            CommonSkin.skinpacks();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
