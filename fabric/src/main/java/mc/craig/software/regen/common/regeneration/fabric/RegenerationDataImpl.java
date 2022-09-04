@@ -1,7 +1,7 @@
 package mc.craig.software.regen.common.regeneration.fabric;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import mc.craig.software.regen.common.regeneration.RegenerationData;
+import mc.craig.software.regen.common.regen.RegenerationData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 

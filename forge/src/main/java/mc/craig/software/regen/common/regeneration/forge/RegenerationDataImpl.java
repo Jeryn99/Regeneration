@@ -1,11 +1,12 @@
 package mc.craig.software.regen.common.regeneration.forge;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.common.regeneration.RegenerationData;
+import mc.craig.software.regen.common.regen.RegenerationData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
@@ -35,7 +36,7 @@ public class RegenerationDataImpl {
         }
     }
 
-    public static Optional<RegenerationData> get(Player player) {
+    public static Optional<RegenerationData> get(LivingEntity player) {
         return player.getCapability(REGENERATION_DATA).resolve();
     }
 
@@ -56,12 +57,12 @@ public class RegenerationDataImpl {
 
         @Override
         public CompoundTag serializeNBT() {
-            return this.capability.toNBT();
+            return this.capability.serializeNBT();
         }
 
         @Override
         public void deserializeNBT(CompoundTag arg) {
-            this.capability.fromNBT(arg);
+            this.capability.deserializeNBT(arg);
         }
     }
 

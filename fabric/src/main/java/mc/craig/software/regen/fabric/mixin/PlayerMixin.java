@@ -1,6 +1,6 @@
 package mc.craig.software.regen.fabric.mixin;
 
-import mc.craig.software.regen.common.regeneration.RegenerationData;
+import mc.craig.software.regen.common.regen.RegenerationData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
