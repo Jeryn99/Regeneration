@@ -2,13 +2,15 @@ package mc.craig.software.regen.network.messages;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
+import mc.craig.software.regen.network.MessageC2S;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.RegenSources;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
-public class ForceRegenMessage {
+public class ForceRegenMessage extends MessageC2S {
 
     public ForceRegenMessage() {
     }
@@ -16,15 +18,20 @@ public class ForceRegenMessage {
     public ForceRegenMessage(FriendlyByteBuf buffer) {
     }
 
-    public static void handle(ForceRegenMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().getSender().getServer().submitAsync(() -> RegenerationData.get(ctx.get().getSender()).ifPresent((cap) -> {
+    public void handle(MessageContext context) {
+        RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
             if (cap.regenState() == RegenStates.ALIVE || cap.regenState().isGraceful()) {
                 if (cap.canRegenerate()) {
                     cap.getLiving().hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                 }
             }
-        }));
-        ctx.get().setPacketHandled(true);
+        });
+    }
+
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return RegenNetwork.FORCE_REGENERATION;
     }
 
     public void toBytes(FriendlyByteBuf buf) {

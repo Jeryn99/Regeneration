@@ -36,7 +36,7 @@ public class SoundReverb {
     private static void setupEffects() {
         available = AL.getCapabilities().ALC_EXT_EFX;
         if (!available) {
-            Regeneration.LOG.warn("Unable to setup reverb effects, AL EFX not supported!");
+            Regeneration.LOGGER.warn("Unable to setup reverb effects, AL EFX not supported!");
             return;
         }
 

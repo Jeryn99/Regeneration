@@ -1,5 +1,6 @@
 package mc.craig.software.regen.network;
 
+import mc.craig.software.regen.util.Platform;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
@@ -13,4 +14,9 @@ public abstract class MessageS2C extends Message {
         this.getType().getNetworkManager().sendToDimension(level, this);
     }
 
+    public void sendToAll() {
+        for (ServerPlayer player : Platform.getServer().getPlayerList().getPlayers()) {
+            send(player);
+        }
+    }
 }

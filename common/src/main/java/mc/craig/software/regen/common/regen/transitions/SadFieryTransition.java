@@ -14,7 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Iterator;
 
@@ -28,8 +27,8 @@ public class SadFieryTransition extends TransitionType {
         livingEntity.clearFire();
 
         if (!livingEntity.level.isClientSide) {
-            if (capability.getLiving() instanceof ServerPlayer) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) capability.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+            if (livingEntity instanceof ServerPlayer serverPlayer) {
+                new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
             }
         }
 
@@ -62,8 +61,8 @@ public class SadFieryTransition extends TransitionType {
 
     @Override
     public void onFinishRegeneration(IRegen capability) {
-        if (capability.getLiving() instanceof ServerPlayer) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) capability.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+        if (capability.getLiving() instanceof ServerPlayer serverPlayer) {
+            new POVMessage(RConstants.FIRST_PERSON).send(serverPlayer);
         }
         capability.setUpdateTicks(0);
         capability.syncToClients(null);

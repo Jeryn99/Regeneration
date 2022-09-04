@@ -10,16 +10,12 @@ import mc.craig.software.regen.network.messages.ChangeSoundScheme;
 import mc.craig.software.regen.network.messages.TypeMessage;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
-import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +57,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
                 newOne = soundScheme = soundScheme.next();
             }
             button.setMessage(Component.translatable("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ChangeSoundScheme(newOne));
+            new ChangeSoundScheme(newOne).send();
         });
 
 
@@ -73,7 +69,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
             }
             transitionType = TransitionTypes.TYPES[pos];
             button.setMessage(transitionType.getTranslation());
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType));
+            new TypeMessage(transitionType).send();
         });
 
         this.addRenderableWidget(CycleButton.builder((Function<PlayerUtil.SkinType, Component>) skinType -> Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase())).withValues(PlayerUtil.SkinType.values()).withInitialValue(skinType).create(width / 2 + 50 - 66, cy + 81, btnW, btnH,  Component.nullToEmpty(""), (skinTypeCycleButton, skinType) -> {

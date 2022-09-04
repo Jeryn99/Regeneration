@@ -120,7 +120,7 @@ public class ActingForwarder {
         if (cap.getLiving().level.isClientSide)
             throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 
-        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new StateMessage(cap.getLiving(), event));
+        new StateMessage(cap.getLiving(), event).sendToAll();
     }
 
     public enum RegenEvent {

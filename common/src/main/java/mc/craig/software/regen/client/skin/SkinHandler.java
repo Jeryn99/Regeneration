@@ -74,7 +74,7 @@ public class SkinHandler {
         if (player != null) {
             PlayerInfo info = ClientUtil.getPlayerInfo(player);
             boolean isAlex = info.getModelName().equals("slim");
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(new byte[0], isAlex));
+            new SkinMessage(new byte[0], isAlex).send();
         }
     }
 

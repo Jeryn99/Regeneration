@@ -9,34 +9,32 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraft.world.item.ItemStack;
 
 public class SparkleTransitionRenderer implements TransitionRenderer {
 
     public static SparkleTransitionRenderer INSTANCE = new SparkleTransitionRenderer();
 
-    @Override
-    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
-        Player player = pre.getEntity();
 
+    @Override
+    public void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
         RegenerationData.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
-                PoseStack maxtrix = pre.getPoseStack();
                 player.yBodyRot = player.yBodyRotO = 0;
-                maxtrix.translate(0, 0.1, 0);
-                maxtrix.mulPose(Vector3f.XN.rotationDegrees(90));
+                poseStack.translate(0, 0.1, 0);
+                poseStack.mulPose(Vector3f.XN.rotationDegrees(90));
             }
         });
     }
 
     @Override
-    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
-        Player player = post.getEntity();
+    public void onPlayerRenderPost(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
         RegenerationData.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = player.yHeadRot;
@@ -45,7 +43,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void firstPersonHand(RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(InteractionHand hand, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, float partialTick, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack) {
 
     }
 

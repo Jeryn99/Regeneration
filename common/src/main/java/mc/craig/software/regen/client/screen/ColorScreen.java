@@ -93,7 +93,7 @@ public class ColorScreen extends AbstractContainerScreen {
         nbt.putFloat(RConstants.SECONDARY_RED, (float) secondary.getRed() / 255F);
         nbt.putFloat(RConstants.SECONDARY_GREEN, (float) secondary.getGreen() / 255F);
         nbt.putFloat(RConstants.SECONDARY_BLUE, (float) secondary.getBlue() / 255F);
-        NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ColorChangeMessage(nbt));
+        new ColorChangeMessage(nbt).send();
     }
 
     @Override

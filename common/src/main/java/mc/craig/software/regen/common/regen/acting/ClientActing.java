@@ -61,7 +61,7 @@ public class ClientActing implements Acting {
 
             if (RegenConfig.CLIENT.changeMySkin.get()) {
                 if (cap.isNextSkinValid()) {
-                    NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()));
+                    new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()).send();
                     return;
                 }
                 Minecraft.getInstance().submit(() -> {
@@ -69,7 +69,7 @@ public class ClientActing implements Acting {
                         File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
                         boolean isAlex = file.getAbsolutePath().contains("\\skins\\slim");
                         Regeneration.LOGGER.info("Chosen Skin: " + file);
-                        NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
+                        new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();
                     }
                 });
             } else {

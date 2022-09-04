@@ -15,6 +15,7 @@ import mc.craig.software.regen.util.Platform;
 import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -204,7 +205,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     protected void tickDeath() {
         super.tickDeath();
         if (Platform.isModLoaded("weeping_angels") && !level.isClientSide) {
-            EntityType<?> weepingAngel = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
+            EntityType<?> weepingAngel = Registry.ENTITY_TYPE.get(new ResourceLocation("weeping_angels", "weeping_angel"));
             if (weepingAngel != null) {
                 if (level.random.nextInt(100) < 10) {
                     Entity entity = weepingAngel.create(level);
@@ -226,7 +227,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (!level.isClientSide) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
+            new RemoveTimelordSkinMessage(this).sendToAll();
         }
     }
 

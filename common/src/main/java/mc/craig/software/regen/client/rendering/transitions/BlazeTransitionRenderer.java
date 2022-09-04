@@ -5,12 +5,14 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 /* Created by Craig on 31/01/2021 */
 public class BlazeTransitionRenderer implements TransitionRenderer {
@@ -19,17 +21,17 @@ public class BlazeTransitionRenderer implements TransitionRenderer {
 
 
     @Override
-    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
+    public void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
     @Override
-    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
+    public void onPlayerRenderPost(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
     @Override
-    public void firstPersonHand(RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(InteractionHand hand, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, float partialTick, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack) {
 
     }
 

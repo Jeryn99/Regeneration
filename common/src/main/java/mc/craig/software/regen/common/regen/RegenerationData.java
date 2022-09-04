@@ -121,10 +121,6 @@ public class RegenerationData implements IRegen {
             didSetup = true;
         }
 
-        //Tick Trait
-        if (traitActive) {
-            currentTrait.tick(this);
-        }
         if (stateManager != null && currentState != RegenStates.ALIVE) {
             stateManager.tick();
         }
@@ -226,9 +222,9 @@ public class RegenerationData implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getCommandSenderWorld().dimension()), new SyncMessage(this.livingEntity.getId(), nbt));
+           new SyncMessage(this.livingEntity.getId(), nbt).sendToDimension(livingEntity.getCommandSenderWorld());
         } else {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getId(), nbt));
+            new SyncMessage(this.livingEntity.getId(), nbt).send(serverPlayerEntity);
         }
     }
 
@@ -247,8 +243,6 @@ public class RegenerationData implements IRegen {
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());
-        compoundNBT.putString(RConstants.CURRENT_TRAIT, RegenTraitRegistry.getTraitLocation(currentTrait).toString());
-        compoundNBT.putString(RConstants.NEXT_TRAIT, RegenTraitRegistry.getTraitLocation(nextTrait).toString());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
         compoundNBT.putBoolean(RConstants.IS_TRAIT_ACTIVE, traitActive);

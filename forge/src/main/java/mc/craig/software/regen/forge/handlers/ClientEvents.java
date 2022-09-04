@@ -66,12 +66,12 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderPlayerPre(RenderPlayerEvent.Pre playerEvent) {
-        Player player = playerEvent.getEntity();
-        SkinHandler.tick((AbstractClientPlayer) playerEvent.getEntity());
+    public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
+        Player player = event.getEntity();
+        SkinHandler.tick((AbstractClientPlayer) event.getEntity());
         RegenerationData.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
-            TransitionTypeRenderers.get(type).onPlayerRenderPre(playerEvent);
+            TransitionTypeRenderers.get(type).onPlayerRenderPre(event.getEntity(), event.getRenderer(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
         });
     }
 
@@ -83,17 +83,17 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
-        Player player = playerEvent.getEntity();
+    public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+        Player player = event.getEntity();
         RegenerationData.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
-            TransitionTypeRenderers.get(type).onPlayerRenderPost(playerEvent);
+            TransitionTypeRenderers.get(type).onPlayerRenderPost(event.getEntity(), event.getRenderer(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
         });
     }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> TransitionTypeRenderers.get(iRegen.transitionType()).firstPersonHand(event));
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> TransitionTypeRenderers.get(iRegen.transitionType()).firstPersonHand(event.getHand(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), event.getPartialTick(), event.getInterpolatedPitch(), event.getSwingProgress(), event.getEquipProgress(), event.getItemStack()));
     }
 
     @SubscribeEvent

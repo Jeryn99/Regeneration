@@ -31,7 +31,7 @@
   ],
   "custom": {
     "cardinal-components": [
-      "regeneration:regeneration_data"
+      "regen:regeneration_data"
     ]
   },
   "depends": {

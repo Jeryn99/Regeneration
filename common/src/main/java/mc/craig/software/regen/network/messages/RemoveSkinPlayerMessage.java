@@ -1,14 +1,16 @@
 package mc.craig.software.regen.network.messages;
 
-import mc.craig.software.regen.client.skin.SkinHandler;
-import net.minecraft.client.Minecraft;
+import mc.craig.software.regen.client.visual.VisualManipulator;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageS2C;
+import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class RemoveSkinPlayerMessage {
+public class RemoveSkinPlayerMessage extends MessageS2C {
 
     private final UUID livingEntity;
 
@@ -20,13 +22,19 @@ public class RemoveSkinPlayerMessage {
         livingEntity = buffer.readUUID();
     }
 
-    public static void handle(RemoveSkinPlayerMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Minecraft.getInstance().submitAsync(() -> SkinHandler.removePlayerSkin(message.livingEntity));
-        ctx.get().setPacketHandled(true);
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return RegenNetwork.REMOVE_LOCAL_SKIN;
     }
 
     public void toBytes(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeUUID(livingEntity);
+    }
+
+    @Override
+    public void handle(MessageContext context) {
+        VisualManipulator.clearPlayersSkin(this.livingEntity);
     }
 
 }

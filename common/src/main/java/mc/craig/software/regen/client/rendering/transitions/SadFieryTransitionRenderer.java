@@ -13,14 +13,17 @@ import mc.craig.software.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+
 
 import static mc.craig.software.regen.client.rendering.layers.RenderRegenLayer.renderColorCone;
 
@@ -46,17 +49,17 @@ public class SadFieryTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
+    public void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
     @Override
-    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
+    public void onPlayerRenderPost(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
     @Override
-    public void firstPersonHand(RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(InteractionHand hand, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, float partialTick, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack) {
 
     }
 

@@ -5,6 +5,7 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -34,8 +35,8 @@ public class PlayerUtil {
     public static void setupPotions() {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
             for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
-                for (MobEffect effect : ForgeRegistries.MOB_EFFECTS.getValues()) {
-                    if (name.contentEquals(ForgeRegistries.MOB_EFFECTS.getKey(effect).toString())) {
+                for (MobEffect effect : Registry.MOB_EFFECT.stream().toList()) {
+                    if (name.contentEquals(Registry.MOB_EFFECT.getKey(effect).toString())) {
                         POTIONS.add(effect);
                     }
                 }
@@ -129,7 +130,7 @@ public class PlayerUtil {
     }
 
     public static void updateModel(SkinType choices) {
-        NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ModelMessage(choices));
+        new ModelMessage(choices).send();
     }
 
     public static boolean isInHand(InteractionHand hand, LivingEntity holder, Item item) {

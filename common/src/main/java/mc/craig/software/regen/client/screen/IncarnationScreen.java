@@ -3,15 +3,13 @@ package mc.craig.software.regen.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.skin.SkinHandler;
+import mc.craig.software.regen.client.visual.SkinRetriever;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.network.messages.NextSkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
-import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -57,8 +55,8 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
     public static void updateModels() {
         if (!skins.isEmpty()) {
-            currentTexture = CommonSkin.fileTotexture(skins.get(position));
-            System.out.println(skins.get(position).toPath() + " || " + CommonSkin.SKIN_DIRECTORY_ALEX);
+            currentTexture = SkinRetriever.fileTotexture(skins.get(position));
+            System.out.println(skins.get(position).toPath() + " || " + SkinRetriever.SKINS_DIRECTORY_SLIM);
             isAlex = skins.get(position).toString().contains("\\skins\\alex");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
         }
@@ -73,16 +71,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
     public void init() {
         super.init();
 
-        TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
-        for (AbstractTab button : TabRegistry.tabList) {
-            addRenderableWidget(button);
-        }
         int buttonOffset = 15;
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
         final int btnW = 55, btnH = 18;
         position = 0;
-        skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
+        skins = SkinRetriever.listAllSkins(PlayerUtil.SkinType.EITHER);
         if (skins.isEmpty()) {
             Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
         }
@@ -98,7 +92,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
             position = 0;
             skins.removeIf(file -> !file.getName().toLowerCase().contains(s.toLowerCase()));
             if (skins.isEmpty() || searchField.getValue().isEmpty()) {
-                skins = CommonSkin.listAllSkins(currentSkinType);
+                skins = SkinRetriever.listAllSkins(currentSkinType);
             }
             stripTrending();
             Collections.sort(skins);
@@ -111,7 +105,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         DescButton btnPrevious = new DescButton(cx + 140, cy + 60, 20, 20, Component.translatable("regen.gui.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
-                skins = CommonSkin.listAllSkins(currentSkinType);
+                skins = SkinRetriever.listAllSkins(currentSkinType);
             }
             stripTrending();
 
@@ -128,7 +122,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         DescButton btnNext = new DescButton(cx + 215, cy + 60, 20, 20, Component.translatable("regen.gui.next"), button -> {
             // Previous
             if (searchField.getValue().isEmpty()) {
-                skins = CommonSkin.listAllSkins(currentSkinType);
+                skins = SkinRetriever.listAllSkins(currentSkinType);
             }
 
             stripTrending();
@@ -139,14 +133,14 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                currentTexture = CommonSkin.fileTotexture(skins.get(position));
+                currentTexture = SkinRetriever.fileTotexture(skins.get(position));
                 updateModels();
             }
         }).setDescription(new String[]{"button.tooltip.next_skin"});
 
         DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
-        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY)).setDescription(new String[]{"button.tooltip.open_folder"});
+        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKIN_DIRECTORY)).setDescription(new String[]{"button.tooltip.open_folder"});
 
         DescButton btnSave = new DescButton(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.save"), button -> {
             updateModels();
@@ -162,7 +156,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 if (!check.selected()) {
                     skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
                 } else {
-                    skins = CommonSkin.listAllSkins(currentSkinType);
+                    skins = SkinRetriever.listAllSkins(currentSkinType);
                 }
                 updateModels();
             }
@@ -247,7 +241,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                     position++;
                 }
                 Minecraft.getInstance().getTextureManager().release(currentTexture);
-                currentTexture = CommonSkin.fileTotexture(skins.get(position));
+                currentTexture = SkinRetriever.fileTotexture(skins.get(position));
                 updateModels();
             }
         }
@@ -259,7 +253,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                currentTexture = CommonSkin.fileTotexture(skins.get(position));
+                currentTexture = SkinRetriever.fileTotexture(skins.get(position));
                 updateModels();
             }
         }

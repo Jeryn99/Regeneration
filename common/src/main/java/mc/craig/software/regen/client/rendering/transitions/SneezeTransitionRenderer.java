@@ -1,35 +1,32 @@
 package mc.craig.software.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import mc.craig.software.regen.client.rendering.types.RenderTypes;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.regen.transitions.SneezeTransition;
-import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraft.world.item.ItemStack;
+
 
 public class SneezeTransitionRenderer implements TransitionRenderer {
 
     public static SneezeTransitionRenderer INSTANCE = new SneezeTransitionRenderer();
 
     @Override
-    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
-        Player player = pre.getEntity();
+    public void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
 
     }
 
     @Override
-    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
-        Player player = post.getEntity();
+    public void onPlayerRenderPost(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
         RegenerationData.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = player.yHeadRot;
@@ -38,7 +35,7 @@ public class SneezeTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void firstPersonHand(RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(InteractionHand hand, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, float partialTick, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack) {
 
     }
 

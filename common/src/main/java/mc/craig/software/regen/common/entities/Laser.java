@@ -94,18 +94,18 @@ public class Laser extends ThrowableProjectile {
     }
 
     @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = super.serializeNBT();
-        nbt.putFloat("r", (float) getColor().x);
-        nbt.putFloat("g", (float) getColor().y);
-        nbt.putFloat("b", (float) getColor().z);
-        return nbt;
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putFloat("r", (float) getColor().x);
+        compound.putFloat("g", (float) getColor().y);
+        compound.putFloat("b", (float) getColor().z);
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        setColors(nbt.getFloat("r"), nbt.getFloat("g"), nbt.getFloat("b"));
-        super.deserializeNBT(nbt);
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        setColors(compound.getFloat("r"), compound.getFloat("g"), compound.getFloat("b"));
+
     }
 
     @Override

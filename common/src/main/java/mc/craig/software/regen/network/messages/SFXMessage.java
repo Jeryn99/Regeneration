@@ -2,6 +2,9 @@ package mc.craig.software.regen.network.messages;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageS2C;
+import mc.craig.software.regen.network.MessageType;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,11 +13,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
-public class SFXMessage {
+public class SFXMessage extends MessageS2C {
     private final ResourceLocation sound;
     private final int playerUUID;
 
@@ -28,16 +29,21 @@ public class SFXMessage {
         playerUUID = buffer.readInt();
     }
 
-    public static void handle(SFXMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Minecraft.getInstance().submitAsync(() -> {
+    public void handle(MessageContext context) {
+        Minecraft.getInstance().submit(() -> {
             if (Minecraft.getInstance().level != null) {
-                Entity player = Minecraft.getInstance().level.getEntity(message.playerUUID);
+                Entity player = Minecraft.getInstance().level.getEntity(this.playerUUID);
                 if (player != null) {
-                    RegenerationData.get((LivingEntity) player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundSource.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F, RandomSource.create()));
+                    RegenerationData.get((LivingEntity) player).ifPresent((data) -> ClientUtil.playSound(player, this.sound, SoundSource.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F, RandomSource.create()));
                 }
             }
         });
-        ctx.get().setPacketHandled(true);
+    }
+
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return null;
     }
 
     public void toBytes(FriendlyByteBuf buffer) {

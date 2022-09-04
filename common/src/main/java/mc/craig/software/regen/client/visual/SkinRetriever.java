@@ -6,7 +6,9 @@ import com.google.gson.JsonPrimitive;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.util.MineSkin;
 import mc.craig.software.regen.util.Platform;
+import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import org.apache.commons.codec.binary.Base64;
@@ -19,16 +21,17 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SkinRetriever {
 
     public static final File SKINS_DIRECTORY = new File("./regen_data/skins");
-    private static final File SKINS_DIRECTORY_SLIM = new File(SKINS_DIRECTORY, "slim");
-    private static final File SKINS_DIRECTORY_DEFAULT = new File(SKINS_DIRECTORY, "default");
+    public static final File SKINS_DIRECTORY_SLIM = new File(SKINS_DIRECTORY, "slim");
+    public static final File SKINS_DIRECTORY_DEFAULT = new File(SKINS_DIRECTORY, "default");
 
-    private static final File SKINS_DIRECTORY_SLIM_TRENDING = new File(SKINS_DIRECTORY_SLIM, "web");
-    private static final File SKINS_DIRECTORY_DEFAULT_TRENDING = new File(SKINS_DIRECTORY_DEFAULT, "web");
+    public static final File SKINS_DIRECTORY_SLIM_TRENDING = new File(SKINS_DIRECTORY_SLIM, "web");
+    public static final File SKINS_DIRECTORY_DEFAULT_TRENDING = new File(SKINS_DIRECTORY_DEFAULT, "web");
 
     // Setup required folders
     public static void folderSetup() {
@@ -175,6 +178,14 @@ public class SkinRetriever {
 
 
     public static File chooseRandomSkin(RandomSource random, boolean b, boolean b1) {
+        throw new RuntimeException("Need to implement!");
+    }
+
+    public static ResourceLocation fileTotexture(File file) {
+        throw new RuntimeException("Need to implement!");
+    }
+
+    public static List<File> listAllSkins(PlayerUtil.SkinType currentSkinType) {
         throw new RuntimeException("Need to implement!");
     }
 }

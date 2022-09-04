@@ -2,15 +2,17 @@ package mc.craig.software.regen.network.messages;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.acting.ActingForwarder;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageS2C;
+import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
-public class StateMessage {
+public class StateMessage extends MessageS2C {
 
     private final int livingEntity;
     private final String event;
@@ -25,17 +27,21 @@ public class StateMessage {
         event = buffer.readUtf(32767);
     }
 
-    public static void handle(StateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        Minecraft.getInstance().submitAsync(() -> {
+    public void handle(MessageContext context) {
+        Minecraft.getInstance().submit(() -> {
             if (Minecraft.getInstance().level != null) {
-                Entity entity = Minecraft.getInstance().level.getEntity(message.livingEntity);
+                Entity entity = Minecraft.getInstance().level.getEntity(this.livingEntity);
                 if (entity instanceof LivingEntity livingEntity) {
-                    RegenerationData.get(livingEntity).ifPresent(iRegen -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), iRegen));
+                    RegenerationData.get(livingEntity).ifPresent(iRegen -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(this.event), iRegen));
                 }
             }
         });
+    }
 
-        ctx.get().setPacketHandled(true);
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return RegenNetwork.UPDATE_LOCAL_STATE;
     }
 
     public void toBytes(FriendlyByteBuf packetBuffer) {

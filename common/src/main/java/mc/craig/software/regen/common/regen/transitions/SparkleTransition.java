@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 public class SparkleTransition extends TransitionType {
 
@@ -35,15 +34,15 @@ public class SparkleTransition extends TransitionType {
     @Override
     public void onFinishRegeneration(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        if (living instanceof ServerPlayer) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+        if (living instanceof ServerPlayer serverPlayer) {
+            new POVMessage(RConstants.FIRST_PERSON).send(serverPlayer);
         }
     }
 
     @Override
     public void onStartRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayer) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+        if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
+            new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
         }
     }
 

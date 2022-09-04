@@ -1,5 +1,6 @@
 package mc.craig.software.regen.common.objects;
 
+import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.item.*;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
@@ -14,14 +15,11 @@ import static net.minecraft.world.item.ArmorMaterials.LEATHER;
 
 public class RItems {
 
-    public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MODID, Registry.ITEM_REGISTRY);
-    public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));    //Item group
-    public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));    public static CreativeModeTab MAIN = new CreativeModeTab("regen") {
-        @Override
-        public @NotNull ItemStack makeIcon() {
-            return new ItemStack(RItems.FOB.get());
-        }
-    };
+    public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MOD_ID, Registry.ITEM_REGISTRY);
+    public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
+    public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
+
+    public static CreativeModeTab MAIN = CreativeModeTab.TAB_BREWING;
 
     public static RegistrySupplier<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     public static RegistrySupplier<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);

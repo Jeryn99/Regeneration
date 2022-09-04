@@ -3,13 +3,6 @@ package mc.craig.software.regen.common.regen.transitions;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.registries.RegistrySupplier;
-
-import java.util.function.Supplier;
 
 import static mc.craig.software.regen.util.RConstants.MODID;
 
@@ -19,7 +12,7 @@ import static mc.craig.software.regen.util.RConstants.MODID;
  */
 public class TransitionTypes {
 
-    public static final DeferredRegistry<TransitionType> TRANSITION_TYPES = DeferredRegistry.create(new ResourceLocation(MODID, "transition_types"), MODID);
+    public static final DeferredRegistry<TransitionType> TRANSITION_TYPES = DeferredRegistry.create("transition_types", MODID);
     public static final RegistrySupplier<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
     public static final RegistrySupplier<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
     public static final RegistrySupplier<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));

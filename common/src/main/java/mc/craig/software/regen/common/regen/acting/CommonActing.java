@@ -5,8 +5,6 @@ import mc.craig.software.regen.common.block.JarBlock;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.transitions.WatcherTransition;
 import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
-import mc.craig.software.regen.common.traits.AbstractTrait;
-import mc.craig.software.regen.common.traits.RegenTraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -25,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Iterator;
 import java.util.UUID;
@@ -166,7 +163,7 @@ public class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getCommandSenderWorld().dimension()), new SFXMessage(getRandomSound(living.getRandom(), cap).getLocation(), living.getId()));
+         new SFXMessage(getRandomSound(living.getRandom(), cap).getLocation(), living.getId()).sendToDimension(living.level);
 
         living.getAttribute(Attributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);

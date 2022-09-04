@@ -1,13 +1,15 @@
 package mc.craig.software.regen.network.messages;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.network.MessageC2S;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
-public class ColorChangeMessage {
+public class ColorChangeMessage extends MessageC2S {
     private final CompoundTag style;
 
     public ColorChangeMessage(CompoundTag style) {
@@ -18,14 +20,17 @@ public class ColorChangeMessage {
         style = buffer.readNbt();
     }
 
-    public static void handle(ColorChangeMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().getSender().getServer().submitAsync(() -> {
-            RegenerationData.get(ctx.get().getSender()).ifPresent((cap) -> {
-                cap.readStyle(message.style);
-                cap.syncToClients(null);
-            });
-            ctx.get().setPacketHandled(true);
+    public void handle(MessageContext context) {
+        RegenerationData.get(context.getPlayer()).ifPresent(regenerationData -> {
+            regenerationData.readStyle(this.style);
+            regenerationData.syncToClients(null);
         });
+    }
+
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return RegenNetwork.COLOR_CHANGE;
     }
 
     public void toBytes(FriendlyByteBuf buffer) {

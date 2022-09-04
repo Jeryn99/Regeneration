@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 public final class TroughtonTransition extends TransitionType {
 
@@ -19,8 +18,8 @@ public final class TroughtonTransition extends TransitionType {
 
     @Override
     public void onStartRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayer) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+        if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
+            new POVMessage(RConstants.FIRST_PERSON).send(serverPlayer);
         }
     }
 
@@ -31,8 +30,8 @@ public final class TroughtonTransition extends TransitionType {
 
     @Override
     public void onFinishRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayer) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+        if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
+            new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
         }
         cap.setUpdateTicks(0);
         cap.syncToClients(null);

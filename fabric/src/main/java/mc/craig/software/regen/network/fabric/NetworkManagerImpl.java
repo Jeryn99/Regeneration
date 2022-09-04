@@ -33,7 +33,7 @@ public class NetworkManagerImpl extends NetworkManager {
 
             MessageType type = this.toServer.get(msgId);
             MessageC2S message = (MessageC2S) type.getDecoder().decode(buf);
-            server.execute(message::handle);
+            server.execute(() -> message.handle(() -> player));
         });
 
         if (Platform.isClient()) {
@@ -53,7 +53,7 @@ public class NetworkManagerImpl extends NetworkManager {
 
             MessageType type = this.toClient.get(msgId);
             MessageS2C message = (MessageS2C) type.getDecoder().decode(buf);
-            client.execute(message::handle);
+            client.execute(() -> message.handle(() -> null));
         });
     }
 

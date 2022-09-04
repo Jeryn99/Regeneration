@@ -89,7 +89,6 @@ public class JarBlock extends Block implements EntityBlock {
                 RegenerationData.get(player).ifPresent(iRegen -> {
                     if (iRegen.regenState() == RegenStates.ALIVE) {
                         iRegen.addRegens(1);
-                        iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
                         iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
                         iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
                         iRegen.syncToClients(null);

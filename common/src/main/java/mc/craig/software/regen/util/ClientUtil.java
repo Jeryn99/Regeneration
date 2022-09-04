@@ -1,9 +1,6 @@
 package mc.craig.software.regen.util;
 
-import mc.craig.software.regen.client.rendering.JarParticle;
 import mc.craig.software.regen.client.rendering.JarTileRender;
-import mc.craig.software.regen.client.rendering.layers.HandLayer;
-import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
@@ -13,19 +10,14 @@ import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RTiles;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.sound.MovingSound;
-import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
-import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -33,9 +25,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.MutableComponent;
@@ -46,15 +35,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -63,17 +45,10 @@ import java.util.function.Supplier;
 import static mc.craig.software.regen.common.item.FobWatchItem.getEngrave;
 import static mc.craig.software.regen.common.item.FobWatchItem.isOpen;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientUtil {
 
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
-
-
-    @SubscribeEvent
-    public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
-    }
 
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayer abstractClientPlayerEntity) {
@@ -157,18 +132,12 @@ public class ClientUtil {
 
     public static void doClientStuff() {
         itemPredicates();
-        setupTabs();
         transitionTypes();
         BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
 
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
-        Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).color(), RItems.ELIXIR.get());
     }
 
-    @SubscribeEvent
-    public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        RModels.addModels(event);
-    }
 
     private static void transitionTypes() {
         TransitionTypeRenderers.add(TransitionTypes.FIERY.get(), FieryTransitionRenderer.INSTANCE);
@@ -182,7 +151,8 @@ public class ClientUtil {
     }
 
 
-    @SubscribeEvent
+    //TODO Layers
+ /*   @SubscribeEvent
     public static void renderLayers(EntityRenderersEvent.AddLayers addLayers) {
         addLayers.getSkins().forEach(skin -> {
             LivingEntityRenderer<? extends Player, ? extends EntityModel<? extends Player>> renderer = addLayers.getSkin(skin);
@@ -196,7 +166,8 @@ public class ClientUtil {
                 bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
             }
         });
-    }
+    }*/
+
 
     private static void itemPredicates() {
         ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_, something) -> {

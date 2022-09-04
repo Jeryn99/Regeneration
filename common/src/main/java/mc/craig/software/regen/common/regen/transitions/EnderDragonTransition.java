@@ -9,7 +9,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 public class EnderDragonTransition extends TransitionType {
     @Override
@@ -21,8 +20,8 @@ public class EnderDragonTransition extends TransitionType {
     public void onUpdateMidRegen(IRegen cap) {
 
         if (!cap.getLiving().level.isClientSide) {
-            if (cap.getLiving() instanceof ServerPlayer) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+            if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
+                new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
             }
         }
 
@@ -38,8 +37,8 @@ public class EnderDragonTransition extends TransitionType {
             serverPlayerEntity.getAbilities().mayfly = serverPlayerEntity.isCreative();
             serverPlayerEntity.getAbilities().flying = false;
 
-            if (cap.getLiving() instanceof ServerPlayer) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+            if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
+                new POVMessage(RConstants.FIRST_PERSON).send(serverPlayer);
             }
         }
 

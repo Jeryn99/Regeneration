@@ -1,17 +1,19 @@
 package mc.craig.software.regen.network.messages;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageS2C;
+import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
-public class SyncMessage {
+public class SyncMessage extends MessageS2C {
     public int entityID;
     public CompoundTag nbt;
 
@@ -25,20 +27,23 @@ public class SyncMessage {
         this.nbt = buf.readNbt();
     }
 
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return RegenNetwork.SYNC_CAP;
+    }
+
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(this.entityID);
         buf.writeNbt(this.nbt);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
+    @Override
+    public void handle(MessageContext context) {
         ClientLevel level = Minecraft.getInstance().level;
-        if(level == null) return;
+        if (level == null) return;
         Entity entity = level.getEntity(this.entityID);
-
-        ctx.get().enqueueWork(() -> {
-            if (entity != null)
-                RegenerationData.get((LivingEntity) entity).ifPresent((c) -> c.deserializeNBT(this.nbt));
-        });
-        ctx.get().setPacketHandled(true);
+        if (entity != null)
+            RegenerationData.get((LivingEntity) entity).ifPresent((c) -> c.deserializeNBT(this.nbt));
     }
 }

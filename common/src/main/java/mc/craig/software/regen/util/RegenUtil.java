@@ -49,7 +49,7 @@ public class RegenUtil {
     public static void setupNames() {
         if (USERNAMES.length == 0) {
             ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
-            Platform.getServer().getCurrentServer().getServerResources().resourceManager().getResource(resourceLocation).ifPresent(resource -> {
+            Platform.getServer().getResourceManager().getResource(resourceLocation).ifPresent(resource -> {
                 try {
                     InputStream stream = resource.open();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(stream));

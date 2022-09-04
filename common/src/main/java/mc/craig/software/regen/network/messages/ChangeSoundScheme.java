@@ -2,13 +2,15 @@ package mc.craig.software.regen.network.messages;
 
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.network.MessageC2S;
+import mc.craig.software.regen.network.MessageContext;
+import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import org.jetbrains.annotations.NotNull;
 
 /* Created by Craig on 29/01/2021 */
-public class ChangeSoundScheme {
+public class ChangeSoundScheme extends MessageC2S {
 
     private final String type;
 
@@ -20,15 +22,22 @@ public class ChangeSoundScheme {
         type = buffer.readUtf(32767);
     }
 
-    public static void handle(ChangeSoundScheme message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().getSender().getServer().submitAsync(() -> RegenerationData.get(ctx.get().getSender()).ifPresent((cap) -> {
-            cap.setTimelordSound(IRegen.TimelordSound.valueOf(message.type));
+    @Override
+    public void handle(MessageContext context) {
+        context.getPlayer().getServer().submit(() -> RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
+            cap.setTimelordSound(IRegen.TimelordSound.valueOf(this.type));
             cap.syncToClients(null);
         }));
-        ctx.get().setPacketHandled(true);
+    }
+
+    @NotNull
+    @Override
+    public MessageType getType() {
+        return RegenNetwork.CHANGE_SOUNDSCHEME;
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(this.type);
     }
+
 }

@@ -28,8 +28,6 @@ import javax.annotation.Nullable;
 
 public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
-    private final ItemStackHandler itemHandler = createHandler();
-    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
     private boolean updateSkin = true;
     private boolean isOpen = false;
 
@@ -81,13 +79,6 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
         isOpen = open;
     }
 
-
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getTag());
-    }
 
     @Override
     public void tick(@NotNull Level currentLevel, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull BioContainerBlockEntity bioContainerBlockEntity) {
@@ -167,9 +158,6 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     @Override
     public void load(CompoundTag nbt) {
         setLindos(nbt.getFloat("energy"));
-        if (nbt.contains("inv")) {
-            itemHandler.deserializeNBT(nbt.getCompound("inv"));
-        }
         setUpdateSkin(nbt.getBoolean("update_skin"));
         setOpen(nbt.getBoolean("is_open"));
         super.load(nbt);
@@ -179,7 +167,6 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     @Override
     public void saveAdditional(CompoundTag compound) {
         compound.putFloat("energy", getLindos());
-        compound.put("inv", itemHandler.serializeNBT());
         compound.putBoolean("update_skin", updateSkin);
         compound.putBoolean("is_open", isOpen);
         super.saveAdditional(compound);
@@ -194,53 +181,19 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     public ItemStack getHand() {
-        return itemHandler.getStackInSlot(0);
+        return ItemStack.EMPTY; //TODO
+      //  return itemHandler.getStackInSlot(0);
     }
 
     // ==== Inventory ====
 
     public void setHand(ItemStack stack) {
-        itemHandler.setStackInSlot(0, stack);
         setChanged();
     }
 
     @Override
     public void setRemoved() {
         super.setRemoved();
-        handler.invalidate();
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return handler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    private ItemStackHandler createHandler() {
-        return new ItemStackHandler(1) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-            }
-
-            @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return stack.getItem() == RItems.HAND.get();
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if (stack.getItem() != RItems.HAND.get()) {
-                    return stack;
-                }
-                return super.insertItem(slot, stack, simulate);
-            }
-        };
     }
 
     public enum Action {

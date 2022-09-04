@@ -179,10 +179,6 @@ public class FobWatchItem extends Item {
         return false;
     }
 
-    @Override
-    public boolean isRepairable(@NotNull ItemStack stack) {
-        return false;
-    }
 
     @Override
     public boolean canBeDepleted() {
