@@ -29,6 +29,11 @@
     "regeneration.mixins.json",
     "regeneration-common.mixins.json"
   ],
+  "custom": {
+    "cardinal-components": [
+      "regeneration:regeneration_data"
+    ]
+  },
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.19.2"

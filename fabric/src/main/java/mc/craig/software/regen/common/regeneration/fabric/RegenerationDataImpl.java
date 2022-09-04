@@ -16,12 +16,12 @@ public class RegenerationDataImpl extends RegenerationData implements ComponentV
 
     @Override
     public void readFromNbt(CompoundTag tag) {
-        this.fromNBT(tag);
+        this.deserializeNBT(tag);
     }
 
     @Override
     public void writeToNbt(CompoundTag tag) {
-        CompoundTag nbt = this.toNBT();
+        CompoundTag nbt = this.serializeNBT();
         for (String key : nbt.getAllKeys()) {
             tag.put(key, Objects.requireNonNull(nbt.get(key)));
         }
