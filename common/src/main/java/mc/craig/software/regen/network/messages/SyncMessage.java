@@ -1,0 +1,44 @@
+package mc.craig.software.regen.network.messages;
+
+import mc.craig.software.regen.common.regen.RegenerationData;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
+
+public class SyncMessage {
+    public int entityID;
+    public CompoundTag nbt;
+
+    public SyncMessage(int entityID, CompoundTag nbt) {
+        this.entityID = entityID;
+        this.nbt = nbt;
+    }
+
+    public SyncMessage(FriendlyByteBuf buf) {
+        this.entityID = buf.readInt();
+        this.nbt = buf.readNbt();
+    }
+
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeInt(this.entityID);
+        buf.writeNbt(this.nbt);
+    }
+
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if(level == null) return;
+        Entity entity = level.getEntity(this.entityID);
+
+        ctx.get().enqueueWork(() -> {
+            if (entity != null)
+                RegenerationData.get((LivingEntity) entity).ifPresent((c) -> c.deserializeNBT(this.nbt));
+        });
+        ctx.get().setPacketHandled(true);
+    }
+}
