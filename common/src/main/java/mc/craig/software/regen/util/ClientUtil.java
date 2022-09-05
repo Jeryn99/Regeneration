@@ -1,5 +1,6 @@
 package mc.craig.software.regen.util;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.client.rendering.JarTileRender;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
@@ -20,11 +21,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.MutableComponent;
@@ -37,6 +40,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -133,21 +137,28 @@ public class ClientUtil {
     public static void doClientStuff() {
         itemPredicates();
         transitionTypes();
-        BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
-
-        ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
+        renderers();
     }
 
+    @ExpectPlatform
+    public static void renderers(){
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void itemPredicates(){
+        throw new AssertionError();
+    }
 
     private static void transitionTypes() {
-        TransitionTypeRenderers.add(TransitionTypes.FIERY.get(), FieryTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.TRISTIS_IGNIS.get(), SadFieryTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.TROUGHTON.get(), TroughtonTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.WATCHER.get(), WatcherTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.SPARKLE.get(), SparkleTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.BLAZE.get(), BlazeTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.ENDER_DRAGON.get(), EnderDragonTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.SNEEZE.get(), SneezeTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.FIERY, FieryTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.TRISTIS_IGNIS, SadFieryTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.TROUGHTON, TroughtonTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.WATCHER, WatcherTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.SPARKLE, SparkleTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.BLAZE, BlazeTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.ENDER_DRAGON, EnderDragonTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.SNEEZE, SneezeTransitionRenderer.INSTANCE);
     }
 
 
@@ -167,55 +178,6 @@ public class ClientUtil {
             }
         });
     }*/
-
-
-    private static void itemPredicates() {
-        ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_, something) -> {
-            boolean isGold = getEngrave(stack);
-            boolean isOpen = isOpen(stack);
-            if (isOpen && isGold) {
-                return 0.2F;
-            }
-
-            if (!isOpen && !isGold) {
-                return 0.3F;
-            }
-
-            if (isOpen) {
-                return 0.4F;
-            }
-
-
-            return 0.1F;
-        });
-
-        ItemProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity, something) -> {
-            if (livingEntity == null) {
-                return 0;
-            }
-            return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
-        });
-
-        ItemProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity, something) -> {
-            if (livingEntity == null) {
-                return 0;
-            }
-            return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
-        });
-
-        ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity, something) -> HandItem.isAlex(stack) ? 1 : 0);
-
-
-        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> {
-            if (itemStack == null || itemStack.isEmpty()) {
-                return 0;
-            }
-            SpawnItem.Timelord type = SpawnItem.getType(itemStack);
-            return type.ordinal();
-        });
-
-        SoundReverb.addReloader();
-    }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, pitch, volume));

@@ -67,7 +67,7 @@ public class CommonEvents {
             Entity trueSource = event.getSource().getEntity();
 
             if (trueSource instanceof Player player && event.getEntity() != null) {
-                RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
+                RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event.getEntity()));
             }
 
             // Stop certain damages

@@ -116,6 +116,8 @@ public class JarBlock extends Block implements EntityBlock {
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
+    //TODO
+/*
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (!world.isClientSide()) {
@@ -126,6 +128,7 @@ public class JarBlock extends Block implements EntityBlock {
         }
         return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
+*/
 
 
     @Override

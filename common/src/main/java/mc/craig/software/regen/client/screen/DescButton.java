@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class DescButton extends Button {
 
-    private ArrayList<FormattedCharSequence> description = null;
+    private ArrayList<Component> description = null;
 
     public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction) {
         super(x, y, width, height, title, pressedAction);
@@ -18,14 +18,14 @@ public class DescButton extends Button {
         super(x, y, width, height, title, pressedAction, onTooltip);
     }
 
-    public ArrayList<FormattedCharSequence> getDescription() {
+    public ArrayList<Component> getDescription() {
         return description;
     }
 
     public DescButton setDescription(String[] description) {
-        ArrayList<FormattedCharSequence> reorderingProcessors = new ArrayList<>();
+        ArrayList<Component> reorderingProcessors = new ArrayList<>();
         for (String textComponent : description) {
-            reorderingProcessors.add(Component.translatable(textComponent).getVisualOrderText());
+            reorderingProcessors.add(Component.translatable(textComponent));
         }
         this.description = reorderingProcessors;
         return this;

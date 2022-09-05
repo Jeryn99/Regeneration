@@ -3,6 +3,13 @@ package mc.craig.software.regen.forge.data;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 /* Created by Craig on 08/03/2021 */
 public class RegenBlockTags extends BlockTagsProvider {

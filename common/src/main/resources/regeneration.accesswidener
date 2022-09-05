@@ -6,3 +6,4 @@ accessible field net/minecraft/client/multiplayer/PlayerInfo skinModel Ljava/lan
 accessible method net/minecraft/world/damagesource/DamageSource bypassArmor ()Lnet/minecraft/world/damagesource/DamageSource;
 accessible method net/minecraft/advancements/CriteriaTriggers register (Lnet/minecraft/advancements/CriterionTrigger;)Lnet/minecraft/advancements/CriterionTrigger;
 accessible method net/minecraft/client/multiplayer/PlayerInfo registerTextures ()V
+accessible method net/minecraft/client/gui/screens/Screen render (Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V

@@ -79,7 +79,6 @@ public class ClientEvents {
     public static void keyMapping(RegisterKeyMappingsEvent event){
         event.register(RKeybinds.FORCE_REGEN);
         event.register(RKeybinds.REGEN_GUI);
-        event.register(RKeybinds.TOGGLE_TRAIT);
     }
 
     @SubscribeEvent
@@ -157,7 +156,7 @@ public class ClientEvents {
                 e.setGreen(0.5F);
             }
 
-            if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.regenState() == RegenStates.REGENERATING) {
+            if (data.transitionType() == TransitionTypes.TROUGHTON && data.regenState() == RegenStates.REGENERATING) {
                 e.setRed(0);
                 e.setGreen(0);
                 e.setBlue(0);
@@ -201,7 +200,7 @@ public class ClientEvents {
             }
 
             if (cap.glowing()) {
-                RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
+                RenderHelp.renderVig(TransitionTypes.FIERY.getDefaultPrimaryColor(), 0.5F);
             }
 
             MultiBufferSource.BufferSource renderImpl = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
@@ -234,7 +233,7 @@ public class ClientEvents {
                     event.setFogShape(FogShape.SPHERE);
                     return;
                 }
-                if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.updateTicks() > 0) {
+                if (data.transitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
                     event.setCanceled(true);
                     event.setNearPlaneDistance(-8);
                     event.setFarPlaneDistance(17 * 0.5F);
@@ -270,7 +269,7 @@ public class ClientEvents {
     }
 
     private static void upwardsMovement(LocalPlayer player, IRegen data) {
-        if (data.transitionType() == TransitionTypes.ENDER_DRAGON.get() && RegenConfig.COMMON.allowUpwardsMotion.get()) {
+        if (data.transitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
             if (player.blockPosition().getY() <= 100) {
                 BlockPos upwards = player.blockPosition().above(2);
                 BlockPos pos = upwards.subtract(player.blockPosition());

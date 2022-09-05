@@ -289,7 +289,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                         setMale(random.nextBoolean());
                         setPersonality(RSoundSchemes.getRandom(male()).identify());
                         initSkin(data);
-                        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
+                         new RemoveTimelordSkinMessage(this).sendToAll();
                     }
                     setDeltaMovement(0,0,0);
                     setNoAi(true);
@@ -311,7 +311,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     @Override
     public void kill() {
         if (!level.isClientSide) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
+           new RemoveTimelordSkinMessage(this).sendToAll();
         }
         remove(RemovalReason.KILLED);
     }
@@ -369,17 +369,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     protected void updateTrades() {
         if (getTimelordType() == TimelordType.COUNCIL) {
             MerchantOffers merchantoffers = this.getOffers();
-
-            for (int i = random.nextInt(7); i > 0; i--) {
-                AbstractTrait trait = RegenTraitRegistry.getRandomTrait(random, false);
-                ItemStack item = new ItemStack(RItems.ELIXIR.get());
-
-                ITag<Item> currency = ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY);
-
-                ElixirItem.setTrait(item, trait);
-                TimelordTrade[] trades = new TimelordTrade[]{new Timelord.TimelordTrade(new ItemStack(currency.getRandomElement(RegenUtil.RAND).get(), Mth.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
-                this.addOffersFromItemListings(merchantoffers, trades, 5);
-            }
 
             TimelordTrade[] tradetrades = new TimelordTrade[]{
                     new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),

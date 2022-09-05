@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "BipedBodyMixin",
-    "HumanoidModelMixin",
     "PlayerRendererMixin",
-    "RenderPlayerMixin",
     "SoundSourceMixin"
   ],
   "mixins": [

@@ -5,7 +5,7 @@ import mc.craig.software.regen.registry.RegistrySupplier;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegistry;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,11 +21,11 @@ public class DeferredRegistryImpl {
     @SuppressWarnings("unchecked")
     public static class Impl<T> extends DeferredRegistry<T> {
 
-        private final DeferredRegistry<T> register;
+        private final DeferredRegister<T> register;
         private final List<RegistrySupplier<T>> entries;
 
         public Impl(String modid, ResourceKey<? extends Registry<T>> resourceKey) {
-            this.register = DeferredRegistry.create(resourceKey, modid);
+            this.register = DeferredRegister.create(resourceKey, modid);
             this.entries = new ArrayList<>();
         }
 

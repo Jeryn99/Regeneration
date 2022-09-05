@@ -140,11 +140,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
-        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKIN_DIRECTORY)).setDescription(new String[]{"button.tooltip.open_folder"});
+        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIRECTORY)).setDescription(new String[]{"button.tooltip.open_folder"});
 
         DescButton btnSave = new DescButton(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.save"), button -> {
             updateModels();
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
+           new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
         }).setDescription(new String[]{"button.tooltip.save_skin"});
 
         DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> SkinHandler.sendResetMessage()).setDescription(new String[]{"button.tooltip.reset_mojang"});
@@ -170,11 +170,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
         addRenderableWidget(btnSave);
         addRenderableWidget(btnResetSkin);
 
-        for (Widget widget : renderables) {
+        //TODO
+     /*   for (Widget widget : renderables) {
             if (widget instanceof DescButton) {
                 descButtons.add((DescButton) widget);
             }
-        }
+        }*/
 
         RegenerationData.get(minecraft.player).ifPresent((data) -> currentSkinType = data.preferredModel());
 
@@ -276,13 +277,14 @@ public class IncarnationScreen extends AbstractContainerScreen {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        descButtons.forEach(descButton -> {
+        //TODO
+     /*   descButtons.forEach(descButton -> {
             if (descButton.isHoveredOrFocused()) {
                 if (descButton.getDescription() != null) {
                     this.renderTooltip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
                 }
             }
-        });
+        });*/
     }
 
     //Spectre0987

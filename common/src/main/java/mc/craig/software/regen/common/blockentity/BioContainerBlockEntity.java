@@ -2,13 +2,12 @@ package mc.craig.software.regen.common.blockentity;
 
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.objects.RTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -22,9 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
@@ -48,7 +44,8 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
                 double x = currentDirection == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
                 double y = currentDirection == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
                 double z = currentDirection == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
-                world.addParticle(RParticles.CONTAINER.get(), (double) blockPos.getX() + x, (double) blockPos.getY() + y, (double) blockPos.getZ() + z, 0.0D, 0.0D, 0.0D);
+                //TODO Custom Particle
+                world.addParticle(ParticleTypes.ANGRY_VILLAGER, (double) blockPos.getX() + x, (double) blockPos.getY() + y, (double) blockPos.getZ() + z, 0.0D, 0.0D, 0.0D);
             }
         }
     }

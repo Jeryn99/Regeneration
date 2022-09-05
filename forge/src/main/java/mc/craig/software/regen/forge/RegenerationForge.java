@@ -1,7 +1,7 @@
 package mc.craig.software.regen.forge;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.forge.util.client.ClientUtil;
+import mc.craig.software.regen.util.ClientUtil;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -16,6 +16,6 @@ public class RegenerationForge {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-        ClientUtil.setup();
+        ClientUtil.doClientStuff();
     }
 }

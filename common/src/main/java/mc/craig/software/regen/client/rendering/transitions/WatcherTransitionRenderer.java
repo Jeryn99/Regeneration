@@ -81,7 +81,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenerationData.get(livingEntity).ifPresent((data) -> {
-            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.WATCHER.get()) {
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.WATCHER) {
                 bipedModel.head.xRot = (float) Math.toRadians(0);
                 bipedModel.head.yRot = (float) Math.toRadians(0);
                 bipedModel.head.zRot = (float) Math.toRadians(0);

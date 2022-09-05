@@ -2,7 +2,6 @@ package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
@@ -12,6 +11,7 @@ import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -23,7 +23,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class FobWatchItem extends Item {
 
     public FobWatchItem() {
-        super(new Item.Properties().setNoRepair().tab(RItems.MAIN).stacksTo(1));
+        super(new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(12));
     }
 
     public static CompoundTag getStackTag(ItemStack stack) {
@@ -65,7 +64,7 @@ public class FobWatchItem extends Item {
     @Override
     public void onCraftedBy(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull Player playerIn) {
         super.onCraftedBy(stack, worldIn, playerIn);
-        setDamage(stack, 0);
+        stack.setDamageValue(0);
         setOpen(stack, false);
     }
 
@@ -88,12 +87,12 @@ public class FobWatchItem extends Item {
         IRegen cap = RegenerationData.get(player).orElseGet(null);
 
         if (!player.isShiftKeyDown()) { // transferring watch->player
-            if (getDamage(stack) == RegenConfig.COMMON.RegenerationDataacity.get())
+            if (stack.getDamageValue() == getMaxDamage())
                 return msgUsageFailed(player, "regen.messages.transfer.empty_watch", stack);
-            else if (cap.regens() == RegenConfig.COMMON.RegenerationDataacity.get())
+            else if (cap.regens() == getMaxDamage())
                 return msgUsageFailed(player, "regen.messages.transfer.max_regens", stack);
 
-            int supply = RegenConfig.COMMON.RegenerationDataacity.get() - getDamage(stack), needed = RegenConfig.COMMON.RegenerationDataacity.get() - cap.regens(), used = Math.min(supply, needed);
+            int supply = getMaxDamage() - stack.getDamageValue(), needed = getMaxDamage() - cap.regens(), used = Math.min(supply, needed);
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
@@ -108,13 +107,14 @@ public class FobWatchItem extends Item {
             if (!world.isClientSide()) {
                 ServerLevel serverWorld = (ServerLevel) world;
                 BlockPos blockPos = player.blockPosition();
-                serverWorld.sendParticles(RParticles.CONTAINER.get(), blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
+                //TODO Custom Particle
+                serverWorld.sendParticles(ParticleTypes.ANGRY_VILLAGER, blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
             }
 
             if (used < 0)
-                Regeneration.LOG.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.RegenerationDataacity.get() + ", damage:" + getDamage(stack) + ", regens:" + cap.regens());
+                Regeneration.LOGGER.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + getMaxDamage() + ", damage:" + stack.getDamageValue()+ ", regens:" + cap.regens());
 
-            setDamage(stack, stack.getDamageValue() + used);
+            stack.setDamageValue(stack.getDamageValue() + used);
 
             if (world.isClientSide) {
                 ClientUtil.playPositionedSoundRecord(RSounds.FOB_WATCH.get(), 1.0F, 2.0F);
@@ -130,10 +130,10 @@ public class FobWatchItem extends Item {
                 return msgUsageFailed(player, "regen.messages.not_alive", stack);
             }
 
-            if (getDamage(stack) == 0)
+            if (stack.getDamageValue() == 0)
                 return msgUsageFailed(player, "regen.messages.transfer.full_watch", stack);
 
-            setDamage(stack, getDamage(stack) - 1);
+            stack.setDamageValue(stack.getDamageValue() - 1);
             PlayerUtil.sendMessage(player, "regen.messages.transfer.success", true);
 
             if (world.isClientSide) {
@@ -163,17 +163,6 @@ public class FobWatchItem extends Item {
         return 0;
     }
 
-
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return false;
-    }
-
     @Override
     public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
         return false;
@@ -190,13 +179,4 @@ public class FobWatchItem extends Item {
         return true;
     }
 
-    @Override
-    public boolean isDamageable(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getMaxDamage(ItemStack stack) {
-        return RegenConfig.COMMON.RegenerationDataacity.get();
-    }
 }

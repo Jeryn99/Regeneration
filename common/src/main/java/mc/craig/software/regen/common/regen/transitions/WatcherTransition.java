@@ -21,7 +21,7 @@ public final class WatcherTransition extends TransitionType {
 
     public static void createWatcher(LivingEntity player) {
         RegenerationData.get(player).ifPresent(iRegen -> {
-            if (iRegen.transitionType() == TransitionTypes.WATCHER.get()) {
+            if (iRegen.transitionType() == TransitionTypes.WATCHER) {
                 Direction facing = player.getMotionDirection();
                 BlockPos playerPos = player.blockPosition();
                 BlockPos spawnPos = playerPos.relative(facing, 4);

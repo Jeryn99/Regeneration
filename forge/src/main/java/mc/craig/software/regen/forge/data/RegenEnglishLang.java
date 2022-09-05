@@ -4,7 +4,6 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.common.traits.RegenTraitRegistry;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
@@ -246,61 +245,17 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.gui.sound_scheme.saxon_england", "Saxons England");
 
         // === Regen ===
-        add(TransitionTypes.ENDER_DRAGON.get().getTranslationKey(), "Ender-Dragon");
-        add(TransitionTypes.SPARKLE.get().getTranslationKey(), "Sparkle");
-        add(TransitionTypes.WATCHER.get().getTranslationKey(), "Watcher");
-        add(TransitionTypes.FIERY.get().getTranslationKey(), "Fiery");
-        add(TransitionTypes.TROUGHTON.get().getTranslationKey(), "Troughton");
-        add(TransitionTypes.BLAZE.get().getTranslationKey(), "Blaze");
-        add(TransitionTypes.TRISTIS_IGNIS.get().getTranslationKey(), "Tristis Ignis");
+        add(TransitionTypes.ENDER_DRAGON.getTranslationKey(), "Ender-Dragon");
+        add(TransitionTypes.SPARKLE.getTranslationKey(), "Sparkle");
+        add(TransitionTypes.WATCHER.getTranslationKey(), "Watcher");
+        add(TransitionTypes.FIERY.getTranslationKey(), "Fiery");
+        add(TransitionTypes.TROUGHTON.getTranslationKey(), "Troughton");
+        add(TransitionTypes.BLAZE.getTranslationKey(), "Blaze");
+        add(TransitionTypes.TRISTIS_IGNIS.getTranslationKey(), "Tristis Ignis");
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");
         add(REntities.WATCHER.get(), "Watcher");
-        add(REntities.CYBERLORD.get(), "Cyberman");
-
-        //Traits
-        add(RegenTraitRegistry.BORING.get().translationKey(), "Boring");
-        add(RegenTraitRegistry.BORING.get().descriptionKey(), "Plain Human!");
-
-        add(RegenTraitRegistry.QUICK.get().translationKey(), "Quick");
-        add(RegenTraitRegistry.QUICK.get().descriptionKey(), "Sprint Faster!");
-
-        add(RegenTraitRegistry.SWIM_SPEED.get().translationKey(), "Mermaid");
-        add(RegenTraitRegistry.SWIM_SPEED.get().descriptionKey(), "Swim Faster!");
-
-        add(RegenTraitRegistry.FAST_MINE.get().translationKey(), "Fast Mine");
-        add(RegenTraitRegistry.FAST_MINE.get().descriptionKey(), "Mine Faster!");
-
-        add(RegenTraitRegistry.SMART.get().translationKey(), "Smart");
-        add(RegenTraitRegistry.SMART.get().descriptionKey(), "More XP Pickup!");
-
-        add(RegenTraitRegistry.LONG_ARMS.get().translationKey(), "Long Arms");
-        add(RegenTraitRegistry.LONG_ARMS.get().descriptionKey(), "Reach further!");
-
-        add(RegenTraitRegistry.STRONG.get().translationKey(), "Strong");
-        add(RegenTraitRegistry.STRONG.get().descriptionKey(), "Punch Harder!");
-
-        add(RegenTraitRegistry.KNOCKBACK.get().translationKey(), "KnockBack");
-        add(RegenTraitRegistry.KNOCKBACK.get().descriptionKey(), "Don't get flung back!");
-
-        add(RegenTraitRegistry.FISH.get().translationKey(), "Fish");
-        add(RegenTraitRegistry.FISH.get().descriptionKey(), "Infinite Oxygen under water");
-
-        add(RegenTraitRegistry.LEAP.get().translationKey(), "Leap");
-        add(RegenTraitRegistry.LEAP.get().descriptionKey(), "Jump a little higher");
-
-        add(RegenTraitRegistry.FIRE.get().translationKey(), "Fire Immune");
-        add(RegenTraitRegistry.FIRE.get().descriptionKey(), "Immune to fire");
-
-        add(RegenTraitRegistry.ENDER_HURT.get().translationKey(), "Ender Emergency");
-        add(RegenTraitRegistry.ENDER_HURT.get().descriptionKey(), "Teleport away when hurt");
-
-        add(RegenTraitRegistry.WATER_STRIDE.get().translationKey(), "Water Stride");
-        add(RegenTraitRegistry.WATER_STRIDE.get().descriptionKey(), "Walk on water!");
-
-        add(RegenTraitRegistry.PHOTOSYNTHETIC.get().translationKey(), "Photosynthetic");
-        add(RegenTraitRegistry.PHOTOSYNTHETIC.get().descriptionKey(), "The sun energizes you!");
     }
 
     public String grammerNazi(String text) {

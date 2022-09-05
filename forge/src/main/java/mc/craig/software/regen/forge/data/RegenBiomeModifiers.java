@@ -34,14 +34,14 @@ public record RegenBiomeModifiers(DataGenerator dataGenerator) implements DataPr
 
         final String biomeModifierPathString = String.join("/", directory, RConstants.MODID, biomeModifiersRegistryID.getNamespace(), biomeModifiersRegistryID.getPath(), saveName + ".json");
 
-        BiomeModifier.DIRECT_CODEC.encodeStart(ops, modifier).resultOrPartial(msg -> Regeneration.LOG.error("Failed to encode {}: {}", biomeModifierPathString, msg)).ifPresent(json ->
+        BiomeModifier.DIRECT_CODEC.encodeStart(ops, modifier).resultOrPartial(msg -> Regeneration.LOGGER.error("Failed to encode {}: {}", biomeModifierPathString, msg)).ifPresent(json ->
         {
             try {
                 final Path biomeModifierPath = outputFolder.resolve(biomeModifierPathString);
                 DataProvider.saveStable(cache, json, biomeModifierPath);
             } catch (
                     IOException e) {
-                Regeneration.LOG.error("Failed to save " + biomeModifierPathString, e);
+                Regeneration.LOGGER.error("Failed to save " + biomeModifierPathString, e);
             }
         });
     }

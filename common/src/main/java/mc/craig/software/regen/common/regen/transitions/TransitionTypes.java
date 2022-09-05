@@ -1,8 +1,13 @@
 package mc.craig.software.regen.common.regen.transitions;
 
+import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import static mc.craig.software.regen.util.RConstants.MODID;
 
@@ -12,19 +17,26 @@ import static mc.craig.software.regen.util.RConstants.MODID;
  */
 public class TransitionTypes {
 
-    public static final DeferredRegistry<TransitionType> TRANSITION_TYPES = DeferredRegistry.create("transition_types", MODID);
-    public static final RegistrySupplier<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
-    public static final RegistrySupplier<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
-    public static final RegistrySupplier<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
-    public static final RegistrySupplier<TransitionType> SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
-    public static final RegistrySupplier<TransitionType> ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
-    public static final RegistrySupplier<TransitionType> BLAZE = TRANSITION_TYPES.register("blaze", (BlazeTranstion::new));
-    public static final RegistrySupplier<TransitionType> TRISTIS_IGNIS = TRANSITION_TYPES.register("tristis_ignis", (SadFieryTransition::new));
-    public static final RegistrySupplier<TransitionType> SNEEZE = TRANSITION_TYPES.register("sneeze", (SneezeTransition::new));
+    
+    public static final HashMap<ResourceLocation, TransitionType> TRANSITION_TYPES = new HashMap<>();
+    public static final TransitionType FIERY = register("fiery", (FieryTransition::new));
+    public static final TransitionType TROUGHTON = register("troughton", (TroughtonTransition::new));
+
+    private static TransitionType register(String id, Supplier<TransitionType> transitionType) {
+        TRANSITION_TYPES.put(new ResourceLocation(Regeneration.MOD_ID, id), transitionType.get());
+        return transitionType.get();
+    }
+
+    public static final TransitionType WATCHER = register("watcher", (WatcherTransition::new));
+    public static final TransitionType SPARKLE = register("sparkle", (SparkleTransition::new));
+    public static final TransitionType ENDER_DRAGON = register("ender_dragon", (EnderDragonTransition::new));
+    public static final TransitionType BLAZE = register("blaze", (BlazeTranstion::new));
+    public static final TransitionType TRISTIS_IGNIS = register("tristis_ignis", (SadFieryTransition::new));
+    public static final TransitionType SNEEZE = register("sneeze", (SneezeTransition::new));
     public static TransitionType[] TYPES = new TransitionType[]{};
     public static int getPosition(TransitionType rrRegenType) {
         if (TYPES.length <= 0) {
-            TYPES = TRANSITION_TYPES_REGISTRY.get().getValues().toArray(new TransitionType[0]);
+            TYPES = TRANSITION_TYPES.values().toArray(new TransitionType[0]);
         }
         for (int i = 0; i < TYPES.length; i++) {
             if (TYPES[i] == rrRegenType) {
@@ -36,18 +48,23 @@ public class TransitionTypes {
 
     public static TransitionType getRandomType() {
         if (TYPES.length <= 0) {
-            TYPES = TRANSITION_TYPES_REGISTRY.get().getValues().toArray(new TransitionType[0]);
+            TYPES = TRANSITION_TYPES.values().toArray(new TransitionType[0]);
         }
         return TYPES[(int) (System.currentTimeMillis() % TYPES.length)];
     }
 
     public static TransitionType getRandomTimelordType() {
-        TransitionType[] timelordTypes = new TransitionType[]{FIERY.get(), TRISTIS_IGNIS.get(), SNEEZE.get()};
+        TransitionType[] timelordTypes = new TransitionType[]{FIERY, TRISTIS_IGNIS, SNEEZE};
         return timelordTypes[(int) (System.currentTimeMillis() % timelordTypes.length)];
     }
 
     public static ResourceLocation getTransitionId(TransitionType transitionType){
-        return TRANSITION_TYPES_REGISTRY.get().getKey(transitionType);
+        for (Map.Entry<ResourceLocation, TransitionType> typeEntry : TRANSITION_TYPES.entrySet()) {
+            if(transitionType == typeEntry.getValue()){
+                return typeEntry.getKey();
+            }
+        }
+        return null;
     }
 
 

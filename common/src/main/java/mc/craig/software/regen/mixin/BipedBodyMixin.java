@@ -38,7 +38,7 @@ public class BipedBodyMixin {
         RegenerationData.get(livingEntity).ifPresent(iCap -> {
 
             // Regeneration Animation
-            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS.get()) {
+            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS) {
                 AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), RegenAnimations.REGEN, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
@@ -47,7 +47,7 @@ public class BipedBodyMixin {
             //TODO Animations have bugged?
 
             // "Sneeze" animation
-            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE.get()) {
+            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE) {
                 AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), RegenAnimations.REGEN_11_12, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();

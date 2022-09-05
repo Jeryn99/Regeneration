@@ -27,7 +27,7 @@ public class GunItem extends Item {
     private final float damage;
 
     public GunItem(int shotsPerRound, int cooldown, float damage) {
-        super(new Item.Properties().tab(RItems.MAIN).durability(shotsPerRound).setNoRepair());
+        super(new Item.Properties().tab(RItems.MAIN).durability(shotsPerRound));
         this.cooldown = cooldown;
         this.damage = damage;
     }
@@ -35,11 +35,6 @@ public class GunItem extends Item {
     @Override
     public int getUseDuration(@NotNull ItemStack itemStack) {
         return 72000;
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
     }
 
     @Override
@@ -51,7 +46,7 @@ public class GunItem extends Item {
                 worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
                 playerIn.getCooldowns().addCooldown(this, cooldown);
                 if (worldIn.random.nextInt(40) < 10 && !playerIn.isCreative()) {
-                    setDamage(stack, getDamage(stack) + 1);
+                    stack.setDamageValue(stack.getDamageValue() + 1);
                 }
                 if (!worldIn.isClientSide) {
                     Laser laserProjectile = new Laser(REntities.LASER.get(), playerIn, worldIn);

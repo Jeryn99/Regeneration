@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class JarParticle extends TextureSheetParticle {
     private JarParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z, motionX, motionY, motionZ);
-        Vec3 color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultPrimaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
+        Vec3 color = random.nextBoolean() ? TransitionTypes.FIERY.getDefaultPrimaryColor() : TransitionTypes.FIERY.getDefaultSecondaryColor();
         this.rCol = (float) color.x;
         this.gCol = (float) color.y;
         this.bCol = (float) color.z;

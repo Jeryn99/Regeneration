@@ -47,8 +47,6 @@ public class RegenConfig {
     }
 
     public static class Common {
-
-        public final ForgeConfigSpec.IntValue RegenerationDataacity;
         public final ForgeConfigSpec.BooleanValue loseRegensOnDeath;
         public final ForgeConfigSpec.BooleanValue fieryRegen;
         public final ForgeConfigSpec.BooleanValue genFobLoot;
@@ -78,7 +76,6 @@ public class RegenConfig {
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("General Regeneration Settings").push("common");
-            RegenerationDataacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regen.max_regens").defineInRange("RegenerationDataacity", 12, 0, Integer.MAX_VALUE);
             loseRegensOnDeath = builder.comment("If this is false you won't lose your regenerations if you get killed during regeneration").translation("config.regen.lose_regens_on_death").define("loseRegensOnDeath", false);
             fieryRegen = builder.comment("Spawn fire during fiery regeneration").translation("config.regen.fiery_regen").define("fieryRegen", true);
             regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regen.regeneration_fire_immunity").define("fireImmunity", true);

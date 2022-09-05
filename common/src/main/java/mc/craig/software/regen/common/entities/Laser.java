@@ -108,10 +108,11 @@ public class Laser extends ThrowableProjectile {
 
     }
 
-    @Override
+    //TODO
+ /*   @Override
     public @NotNull Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    }*/
 
     @Override
     protected float getGravity() {

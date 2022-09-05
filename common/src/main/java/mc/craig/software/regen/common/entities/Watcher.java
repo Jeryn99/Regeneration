@@ -51,7 +51,7 @@ public class Watcher extends Mob {
         if (getTarget() == null) {
             for (Player worldPlayer : level.players()) {
                 RegenerationData.get(worldPlayer).ifPresent(iRegen -> {
-                    if (iRegen.regenState().isGraceful() && iRegen.transitionType() == TransitionTypes.WATCHER.get()) {
+                    if (iRegen.regenState().isGraceful() && iRegen.transitionType() == TransitionTypes.WATCHER) {
                         setTarget(worldPlayer);
                     }
                 });
@@ -62,7 +62,7 @@ public class Watcher extends Mob {
             }
         } else {
             RegenerationData.get(getTarget()).ifPresent(iRegen -> {
-                if (iRegen.transitionType() != TransitionTypes.WATCHER.get() || iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
+                if (iRegen.transitionType() != TransitionTypes.WATCHER || iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
                     remove(RemovalReason.DISCARDED);
                 } else {
 

@@ -50,7 +50,7 @@ public class RegenerationData implements IRegen {
     private int regensLeft = 0, animationTicks = 0;
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
-    private TransitionType transitionType = TransitionTypes.TRISTIS_IGNIS.get();
+    private TransitionType transitionType = TransitionTypes.TRISTIS_IGNIS;
     private boolean areHandsGlowing = false, traitActive = true;
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
@@ -236,7 +236,7 @@ public class RegenerationData implements IRegen {
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
 
         if (transitionType == null) {
-            transitionType = TransitionTypes.FIERY.get();
+            transitionType = TransitionTypes.FIERY;
         }
 
         compoundNBT.putString(RConstants.TRANSITION_TYPE, TransitionTypes.getTransitionId(transitionType).toString());
@@ -290,7 +290,7 @@ public class RegenerationData implements IRegen {
         }
         //RegenType
         if (nbt.contains(RConstants.TRANSITION_TYPE)) {
-            transitionType = TransitionTypes.TRANSITION_TYPES_REGISTRY.get().getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
+            transitionType = TransitionTypes.TRANSITION_TYPES.get(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
         }
 
 
@@ -539,7 +539,7 @@ public class RegenerationData implements IRegen {
             return false;
         }
 
-        @Override
+        @Override //TO REIMP
         public boolean onPunchEntity(LivingEntity entity) {
             // We're healing mobs...
             if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && glowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
@@ -548,9 +548,10 @@ public class RegenerationData implements IRegen {
                 if (livingEntity instanceof Player) {
                     PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.healed", entity.getName()), true);
                 }
-                event.setAmount(0.0F);
+               //TODO event.setAmount(0.0F);
                 livingEntity.hurt(RegenSources.REGEN_DMG_HEALING, healthNeeded);
             }
+            return false;
         }
 
 
@@ -569,13 +570,14 @@ public class RegenerationData implements IRegen {
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
-                if (!e.getEntity().level.isClientSide) {
-                    if (e.getEntity() != null) {
-                        PlayerUtil.sendMessage(e.getEntity(), Component.translatable("regen.messages.regen_delayed"), true);
+                if (!entity.level.isClientSide) {
+                    if (entity != null) {
+                        PlayerUtil.sendMessage(entity, Component.translatable("regen.messages.regen_delayed"), true);
                     }
                 }
-                e.setCanceled(true); // It got annoying in creative to break something
+               return true;
             }
+            return false;
         }
 
         private void tick() {

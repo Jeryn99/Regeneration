@@ -3,6 +3,7 @@ package mc.craig.software.regen.forge.data;
 import com.mojang.datafixers.util.Pair;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
+import mc.craig.software.regen.registry.RegistrySupplier;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.loot.EntityLoot;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.registries.RegistrySupplier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class RegenLootTables extends LootTableProvider {
         @Override
         protected Iterable<EntityType<?>> getKnownEntities() {
             ArrayList<EntityType<?>> entityTypes = new ArrayList<>();
-            for (RegistrySupplier<EntityType<?>> entry : REntities.ENTITIES.getEntries()) {
+            for (RegistrySupplier<EntityType<?>> entry : REntities.ENTITY_TYPES.getEntries()) {
                 entityTypes.add(entry.get());
             }
             return entityTypes;
