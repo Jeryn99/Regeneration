@@ -4,8 +4,6 @@ import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
@@ -18,8 +16,8 @@ public class SoundReverb {
 
     private static int auxEffectSlot;
 
-    public static void addReloader() {
-        ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener((ResourceManagerReloadListener) p_10758_ -> setup = false);
+    public static void toggleSetup(boolean setup) {
+        SoundReverb.setup = setup;
     }
 
     public static void setSelfPosition(int soundId) {

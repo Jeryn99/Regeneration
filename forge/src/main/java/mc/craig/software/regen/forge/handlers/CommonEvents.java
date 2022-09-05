@@ -5,8 +5,8 @@ import mc.craig.software.regen.common.commands.RegenCommand;
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.IRegen;
-import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
@@ -108,7 +108,7 @@ public class CommonEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void adMortemInimicus(LivingDeathEvent event) {
-        if (event.getEntity() == null) return; //TODO CONFIG!
+        if (event.getEntity() == null) return;
         RegenerationData.get(event.getEntity()).ifPresent((cap) -> {
             if ((event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)) {
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {

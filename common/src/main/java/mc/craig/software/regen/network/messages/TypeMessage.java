@@ -24,10 +24,10 @@ public class TypeMessage extends MessageC2S {
     }
 
     public void handle(MessageContext context) {
-       /* context.getPlayer().getServer().submit(() -> RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
-            cap.setTransitionType(TransitionTypes.TRANSITION_TYPES_REGISTRY.get().getValue(new ResourceLocation(this.type)));
+        context.getPlayer().getServer().submit(() -> RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
+            cap.setTransitionType(TransitionTypes.TRANSITION_TYPES.get(new ResourceLocation(this.type)));
             cap.syncToClients(null);
-        }));*/ //TODO
+        }));
     }
 
     @NotNull

@@ -4,6 +4,7 @@ import mc.craig.software.regen.client.rendering.layers.HandLayer;
 import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.forge.RModelsImpl;
+import mc.craig.software.regen.client.sound.SoundReverbListener;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -35,6 +37,10 @@ public class ClientModBus {
         });
     }
 
+    @SubscribeEvent
+    public static void reloadRegisterClient(RegisterClientReloadListenersEvent e) {
+        e.registerReloadListener(new SoundReverbListener());
+    }
 
     @SubscribeEvent
     public static void event(EntityRenderersEvent.RegisterLayerDefinitions event) {

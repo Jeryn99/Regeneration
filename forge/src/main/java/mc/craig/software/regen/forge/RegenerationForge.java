@@ -23,7 +23,7 @@ public class RegenerationForge {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         modBus.addListener(this::clientSetup);
-        modBus.addListener(this::commoNSetup);
+        modBus.addListener(this::commonSetup);
         modBus.addListener(this::onAttributeAssign);
     }
 
@@ -31,10 +31,9 @@ public class RegenerationForge {
         ClientUtil.doClientStuff();
     }
 
-    private void commoNSetup(final FMLCommonSetupEvent event) {
+    private void commonSetup(final FMLCommonSetupEvent event) {
         RSoundSchemes.init();
     }
-
 
     public void onAttributeAssign(EntityAttributeCreationEvent event) {
         event.put(REntities.TIMELORD.get(), Timelord.createAttributes().build());

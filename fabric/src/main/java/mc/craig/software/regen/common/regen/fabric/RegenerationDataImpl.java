@@ -1,10 +1,10 @@
-package mc.craig.software.regen.common.regeneration.fabric;
+package mc.craig.software.regen.common.regen.fabric;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regeneration.fabric.RegenerationComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.Objects;
 import java.util.Optional;

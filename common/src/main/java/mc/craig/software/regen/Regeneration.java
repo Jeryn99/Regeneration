@@ -29,5 +29,6 @@ public class Regeneration {
         RFeatures.DEFERRED_REGISTRY_STRUCTURE.register();
         TransitionTypes.init();
         DownloadSkinsThread.setup();
+        RSoundSchemes.init();
     }
 }

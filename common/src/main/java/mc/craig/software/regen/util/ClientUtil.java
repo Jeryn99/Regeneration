@@ -1,17 +1,11 @@
 package mc.craig.software.regen.util;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import mc.craig.software.regen.client.rendering.JarTileRender;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
-import mc.craig.software.regen.client.sound.SoundReverb;
-import mc.craig.software.regen.common.item.HandItem;
-import mc.craig.software.regen.common.item.SpawnItem;
-import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.common.objects.RTiles;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.config.RegenConfig;
@@ -21,14 +15,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -40,14 +28,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Supplier;
-
-import static mc.craig.software.regen.common.item.FobWatchItem.getEngrave;
-import static mc.craig.software.regen.common.item.FobWatchItem.isOpen;
 
 public class ClientUtil {
 
@@ -56,6 +40,10 @@ public class ClientUtil {
 
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayer abstractClientPlayerEntity) {
+
+            if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null || ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel == null)
+                return false;
+
             if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel.isEmpty()) {
                 return false;
             }
