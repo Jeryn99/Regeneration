@@ -1,15 +1,11 @@
 package mc.craig.software.regen.common.regen.transitions;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.registry.DeferredRegistry;
-import mc.craig.software.regen.registry.RegistrySupplier;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import static mc.craig.software.regen.util.RConstants.MODID;
 
 /**
  * Created by Craig
@@ -17,23 +13,30 @@ import static mc.craig.software.regen.util.RConstants.MODID;
  */
 public class TransitionTypes {
 
-    
+
     public static final HashMap<ResourceLocation, TransitionType> TRANSITION_TYPES = new HashMap<>();
-    public static final TransitionType FIERY = register("fiery", (FieryTransition::new));
-    public static final TransitionType TROUGHTON = register("troughton", (TroughtonTransition::new));
+    public static TransitionType TROUGHTON, FIERY, SNEEZE, TRISTIS_IGNIS, WATCHER, ENDER_DRAGON, BLAZE, SPARKLE;
+
 
     private static TransitionType register(String id, Supplier<TransitionType> transitionType) {
-        TRANSITION_TYPES.put(new ResourceLocation(Regeneration.MOD_ID, id), transitionType.get());
-        return transitionType.get();
+        TransitionType regTransition = transitionType.get().setLocation(new ResourceLocation(Regeneration.MOD_ID, id));
+        TRANSITION_TYPES.put(new ResourceLocation(Regeneration.MOD_ID, id), regTransition);
+        return regTransition;
     }
 
-    public static final TransitionType WATCHER = register("watcher", (WatcherTransition::new));
-    public static final TransitionType SPARKLE = register("sparkle", (SparkleTransition::new));
-    public static final TransitionType ENDER_DRAGON = register("ender_dragon", (EnderDragonTransition::new));
-    public static final TransitionType BLAZE = register("blaze", (BlazeTranstion::new));
-    public static final TransitionType TRISTIS_IGNIS = register("tristis_ignis", (SadFieryTransition::new));
-    public static final TransitionType SNEEZE = register("sneeze", (SneezeTransition::new));
+    public static void init() {
+        WATCHER = register("watcher", (WatcherTransition::new));
+        SPARKLE = register("sparkle", (SparkleTransition::new));
+        ENDER_DRAGON = register("ender_dragon", (EnderDragonTransition::new));
+        BLAZE = register("blaze", (BlazeTranstion::new));
+        TRISTIS_IGNIS = register("tristis_ignis", (SadFieryTransition::new));
+        SNEEZE = register("sneeze", (SneezeTransition::new));
+        FIERY = register("fiery", (FieryTransition::new));
+        TROUGHTON = register("troughton", (TroughtonTransition::new));
+    }
+
     public static TransitionType[] TYPES = new TransitionType[]{};
+
     public static int getPosition(TransitionType rrRegenType) {
         if (TYPES.length <= 0) {
             TYPES = TRANSITION_TYPES.values().toArray(new TransitionType[0]);
@@ -59,12 +62,7 @@ public class TransitionTypes {
     }
 
     public static ResourceLocation getTransitionId(TransitionType transitionType){
-        for (Map.Entry<ResourceLocation, TransitionType> typeEntry : TRANSITION_TYPES.entrySet()) {
-            if(transitionType == typeEntry.getValue()){
-                return typeEntry.getKey();
-            }
-        }
-        return null;
+        return transitionType.getLocation();
     }
 
 

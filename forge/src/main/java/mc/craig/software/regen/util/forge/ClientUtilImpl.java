@@ -1,16 +1,21 @@
 package mc.craig.software.regen.util.forge;
 
 import mc.craig.software.regen.client.rendering.JarTileRender;
+import mc.craig.software.regen.client.rendering.entity.RenderLaser;
+import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
+import mc.craig.software.regen.client.rendering.entity.WatcherRenderer;
 import mc.craig.software.regen.client.sound.SoundReverb;
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.RBlocks;
+import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RTiles;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -71,5 +76,9 @@ public class ClientUtilImpl {
     public static void renderers() {
         BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
+
+        EntityRenderers.register(REntities.TIMELORD.get(), TimelordRenderer::new);
+        EntityRenderers.register(REntities.LASER.get(), RenderLaser::new);
+        EntityRenderers.register(REntities.WATCHER.get(), WatcherRenderer::new);
     }
 }

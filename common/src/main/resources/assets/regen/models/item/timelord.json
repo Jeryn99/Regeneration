@@ -1,0 +1,22 @@
+{
+  "overrides": [
+    {
+      "predicate": {
+        "regen:timelord": 0
+      },
+      "model": "regen:item/timelord/timelord_female"
+    },
+    {
+      "predicate": {
+        "regen:timelord": 1
+      },
+      "model": "regen:item/timelord/timelord_male"
+    },
+    {
+      "predicate": {
+        "regen:timelord": 2
+      },
+      "model": "regen:item/timelord/timelord_guard"
+    }
+  ]
+}

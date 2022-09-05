@@ -161,24 +161,6 @@ public class ClientUtil {
         TransitionTypeRenderers.add(TransitionTypes.SNEEZE, SneezeTransitionRenderer.INSTANCE);
     }
 
-
-    //TODO Layers
- /*   @SubscribeEvent
-    public static void renderLayers(EntityRenderersEvent.AddLayers addLayers) {
-        addLayers.getSkins().forEach(skin -> {
-            LivingEntityRenderer<? extends Player, ? extends EntityModel<? extends Player>> renderer = addLayers.getSkin(skin);
-            renderer.addLayer(new HandLayer(renderer));
-            renderer.addLayer(new RenderRegenLayer(renderer));
-        });
-
-        Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
-            if (entityRenderer instanceof HumanoidMobRenderer<?, ?> bipedRenderer) {
-                bipedRenderer.addLayer(new RenderRegenLayer(bipedRenderer));
-                bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
-            }
-        });
-    }*/
-
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, pitch, volume));
     }

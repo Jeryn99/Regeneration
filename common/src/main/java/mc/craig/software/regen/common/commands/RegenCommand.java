@@ -1,6 +1,7 @@
 package mc.craig.software.regen.common.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import mc.craig.software.regen.common.commands.subcommands.FastForwardCommand;
 import mc.craig.software.regen.common.commands.subcommands.GlowCommand;
 import mc.craig.software.regen.common.commands.subcommands.SetRegensCommand;
 import mc.craig.software.regen.util.Platform;
@@ -15,7 +16,7 @@ public class RegenCommand {
                 Commands.literal(RConstants.MODID)
                         .requires(commandSource -> commandSource.hasPermission(Platform.getServer().getOperatorUserPermissionLevel()))
                         .then(SetRegensCommand.register(dispatcher))
-                        .then(GlowCommand.register(dispatcher))
+                        .then(GlowCommand.register(dispatcher)).then(FastForwardCommand.register(dispatcher))
         );
 
     }

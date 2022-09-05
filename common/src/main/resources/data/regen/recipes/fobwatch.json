@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "regen",
+  "key": {
+    "E": {
+      "item": "regen:zinc"
+    },
+    "G": {
+      "item": "minecraft:ghast_tear"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Q": {
+      "item": "minecraft:blaze_rod"
+    },
+    "S": {
+      "item": "minecraft:spider_eye"
+    }
+  },
+  "pattern": [
+    "QIG",
+    "SES",
+    "IGI"
+  ],
+  "result": {
+    "item": "regen:fobwatch"
+  }
+}

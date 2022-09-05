@@ -5,6 +5,7 @@ import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.network.MessageContext;
 import mc.craig.software.regen.network.MessageS2C;
 import mc.craig.software.regen.network.MessageType;
+import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -43,7 +44,7 @@ public class SFXMessage extends MessageS2C {
     @NotNull
     @Override
     public MessageType getType() {
-        return null;
+        return RegenNetwork.PLAY_SFX;
     }
 
     public void toBytes(FriendlyByteBuf buffer) {

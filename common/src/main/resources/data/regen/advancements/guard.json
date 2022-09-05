@@ -1,0 +1,54 @@
+{
+  "parent": "regen:timelord_trade",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "regen:guard_helmet"
+            ]
+          },
+          {
+            "items": [
+              "regen:guard_chest"
+            ]
+          },
+          {
+            "items": [
+              "regen:guard_feet"
+            ]
+          },
+          {
+            "items": [
+              "regen:guard_legs"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
+    "description": {
+      "translate": "advancements.regen.desc.guard"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:guard_helmet",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.regen.title.guard"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

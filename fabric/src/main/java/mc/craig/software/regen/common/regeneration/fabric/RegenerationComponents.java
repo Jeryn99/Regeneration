@@ -16,6 +16,6 @@ public class RegenerationComponents implements EntityComponentInitializer  {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(REGENERATION_DATA, RegenerationDataImpl::new, RespawnCopyStrategy.CHARACTER);
+        registry.registerFor(LivingEntity.class, REGENERATION_DATA, RegenerationDataImpl::new);
     }
 }

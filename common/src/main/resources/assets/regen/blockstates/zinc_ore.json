@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "regen:block/zinc_ore"
+    }
+  }
+}

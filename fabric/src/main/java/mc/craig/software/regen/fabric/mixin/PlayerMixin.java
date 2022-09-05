@@ -29,10 +29,7 @@ public class PlayerMixin {
     @Inject(at = @At("HEAD"), method = "tick()V", cancellable = true)
     private void tick(CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-
-        if (livingEntity instanceof Player player) {
-            RegenerationData.get(player).ifPresent(regenerationData -> regenerationData.tick(player));
-        }
+        RegenerationData.get(livingEntity).ifPresent(RegenerationData::tick);
     }
 
 }

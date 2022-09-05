@@ -1,0 +1,29 @@
+{
+  "parent": "regen:change_refusal",
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:hand_cut"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
+    "description": {
+      "translate": "advancements.regen.desc.hand_cut"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:hand"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.regen.title.hand_cut"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

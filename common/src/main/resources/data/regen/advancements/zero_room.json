@@ -1,0 +1,29 @@
+{
+  "parent": "regen:hand_cut",
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:zero_room"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
+    "description": {
+      "translate": "advancements.regen.desc.zero_room"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:zero_roundel_half"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.regen.title.zero_room"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -237,9 +237,10 @@ public class RegenerationData implements IRegen {
 
         if (transitionType == null) {
             transitionType = TransitionTypes.FIERY;
+        } else {
+            compoundNBT.putString(RConstants.TRANSITION_TYPE, TransitionTypes.getTransitionId(transitionType).toString());
         }
 
-        compoundNBT.putString(RConstants.TRANSITION_TYPE, TransitionTypes.getTransitionId(transitionType).toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());

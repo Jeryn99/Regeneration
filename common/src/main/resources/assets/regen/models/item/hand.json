@@ -1,0 +1,20 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "model": "regen:item/hand_steve"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "regen:skin_type": 0
+      },
+      "model": "regen:item/hand_steve"
+    },
+    {
+      "predicate": {
+        "regen:skin_type": 1
+      },
+      "model": "regen:item/hand_alex"
+    }
+  ]
+}

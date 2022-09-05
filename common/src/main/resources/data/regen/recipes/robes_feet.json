@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "regen",
+  "key": {
+    "I": {
+      "item": "regen:zinc"
+    },
+    "Z": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "   ",
+    "Z Z",
+    "I I"
+  ],
+  "result": {
+    "item": "regen:robes_feet"
+  }
+}

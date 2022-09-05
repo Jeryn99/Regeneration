@@ -1,0 +1,29 @@
+{
+  "parent": "regen:watch_is_me",
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:first_regen"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
+    "description": {
+      "translate": "advancements.regen.desc.first_regen"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:player_head"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.regen.title.first_regen"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

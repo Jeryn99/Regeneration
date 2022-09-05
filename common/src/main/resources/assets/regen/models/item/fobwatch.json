@@ -1,0 +1,28 @@
+{
+  "overrides": [
+    {
+      "predicate": {
+        "regen:model": 0.1
+      },
+      "model": "regen:item/fobwatch/fob_closed_gold"
+    },
+    {
+      "predicate": {
+        "regen:model": 0.2
+      },
+      "model": "regen:item/fobwatch/fob_open_gold"
+    },
+    {
+      "predicate": {
+        "regen:model": 0.3
+      },
+      "model": "regen:item/fobwatch/fob_closed_silver"
+    },
+    {
+      "predicate": {
+        "regen:model": 0.4
+      },
+      "model": "regen:item/fobwatch/fob_open_silver"
+    }
+  ]
+}

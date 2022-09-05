@@ -108,7 +108,7 @@ public class CommonEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void adMortemInimicus(LivingDeathEvent event) {
-        if (event.getEntity() == null) return;
+        if (event.getEntity() == null) return; //TODO CONFIG!
         RegenerationData.get(event.getEntity()).ifPresent((cap) -> {
             if ((event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)) {
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {

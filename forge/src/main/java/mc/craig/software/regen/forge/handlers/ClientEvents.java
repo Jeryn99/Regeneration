@@ -65,6 +65,7 @@ public class ClientEvents {
         });
     }
 
+
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
         Player player = event.getEntity();
