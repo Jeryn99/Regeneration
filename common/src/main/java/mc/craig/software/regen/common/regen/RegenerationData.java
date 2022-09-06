@@ -489,6 +489,7 @@ public class RegenerationData implements IRegen {
             }
 
             if (source == RegenSources.REGEN_DMG_CRITICAL || source == RegenSources.REGEN_DMG_KILLED) {
+                // We died from something that doesn't allow us to regenerate :(
                 if (nextTransition != null) {
                     nextTransition.cancel();
                 }
@@ -501,11 +502,7 @@ public class RegenerationData implements IRegen {
                         return false;
 
                     // We're entering grace period...
-                    scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
-                    scheduleHandGlowTrigger();
-                    currentState = RegenStates.GRACE;
-                    syncToClients(null);
-                    ActingForwarder.onEnterGrace(RegenerationData.this);
+                    enterGrace();
                     return true;
                 }
                 case REGENERATING -> {
@@ -517,9 +514,11 @@ public class RegenerationData implements IRegen {
                 case GRACE_CRIT -> {
                     nextTransition.cancel();
                     if (source == RegenSources.REGEN_DMG_FORCED) {
+                        // Player (finally) triggered regeneration
                         triggerRegeneration();
                         return true;
                     } else {
+                        // Killed in critical phase, can't regenerate anymore :(
                         midSequenceKill();
                         return false;
                     }
@@ -541,9 +540,9 @@ public class RegenerationData implements IRegen {
                     return true;
                 }
                 default -> {
+                    return false;
                 }
             }
-            return false;
         }
 
         @Override //TO REIMP
@@ -604,6 +603,14 @@ public class RegenerationData implements IRegen {
             if (currentState == RegenStates.POST) {
                 ActingForwarder.onPerformingPost(RegenerationData.this);
             }
+        }
+
+        private void enterGrace() {
+            scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
+            scheduleHandGlowTrigger();
+            currentState = RegenStates.GRACE;
+            syncToClients(null);
+            ActingForwarder.onEnterGrace(RegenerationData.this);
         }
 
         private void triggerRegeneration() {

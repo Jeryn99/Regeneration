@@ -34,7 +34,8 @@ public class CommonEvents {
     public static void noFire(LivingAttackEvent event) {
         if (event.getEntity() == null) return;
         RegenerationData.get(event.getEntity()).ifPresent((iRegen -> {
-            if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+            // Entity is immune to explosion and fire (if configured) damage while regenerating
+            if (iRegen.regenState() == RegenStates.REGENERATING && (RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || event.getSource().isExplosion())) {
                 event.setCanceled(true);
             }
         }));
@@ -43,14 +44,13 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntity();
-
         if (livingEntity == null) return;
 
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
-
             Entity trueSource = event.getSource().getEntity();
 
             if (trueSource instanceof Player player && event.getEntity() != null) {
+                // Player punched something
                 RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event.getEntity()));
             }
 
