@@ -9,6 +9,7 @@ import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,6 +28,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
 
@@ -43,36 +46,8 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntity();
-
         if (livingEntity == null) return;
-
-        RegenerationData.get(livingEntity).ifPresent(iRegen -> {
-
-            Entity trueSource = event.getSource().getEntity();
-
-            if (trueSource instanceof Player player && event.getEntity() != null) {
-                RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event.getEntity()));
-            }
-
-            // Stop certain damages
-            if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
-                return;
-
-            //Update Death Message
-            iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
-
-            //Handle Post
-            if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
-                event.setAmount(1.5F);
-                PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
-            }
-
-            //Handle Death
-            if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
-                event.setCanceled(true);//cancels damage, in case the above didn't cut it
-                return;
-            }
-        });
+        event.setCanceled(RegenUtil.isHurt(event.getSource(), livingEntity, event.getAmount()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -2,10 +2,18 @@ package mc.craig.software.regen.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.state.RegenStates;
+import mc.craig.software.regen.config.RegenConfig;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +24,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RegenUtil {
 
@@ -44,6 +53,42 @@ public class RegenUtil {
 
     public static double round(float value, int scale) {
         return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
+    }
+
+    public static boolean isHurt(DamageSource damageSource, LivingEntity livingEntity, float amount) {
+        AtomicBoolean result = new AtomicBoolean(true);
+        RegenerationData.get(livingEntity).ifPresent(iRegen -> {
+
+            Entity trueSource = damageSource.getEntity();
+
+            if (trueSource instanceof Player player && livingEntity != null) {
+                RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(livingEntity));
+                return;
+            }
+
+            // Stop certain damages
+            if (damageSource == RegenSources.REGEN_DMG_KILLED) {
+                result.set(true);
+                return;
+            }
+
+            //Update Death Message
+            iRegen.setDeathMessage(damageSource.getLocalizedDeathMessage(livingEntity).getString());
+
+            //Handle Post
+            if (iRegen.regenState() == RegenStates.POST && damageSource != DamageSource.OUT_OF_WORLD && damageSource != RegenSources.REGEN_DMG_HAND) {
+                livingEntity.heal(amount - 1.5F);
+                PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
+                return;
+            }
+
+            //Handle Death
+            if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && damageSource.isFire() || iRegen.regenState() == RegenStates.REGENERATING && damageSource.isExplosion()) {
+                result.set(false);
+                return;
+            }
+        });
+        return result.get();
     }
 
     public static void setupNames() {

@@ -1,7 +1,7 @@
 package mc.craig.software.regen.fabric.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import mc.craig.software.regen.client.FogTracker;
+import mc.craig.software.regen.client.visual.FogTracker;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;

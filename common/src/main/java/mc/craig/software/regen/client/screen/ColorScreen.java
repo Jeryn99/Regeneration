@@ -2,11 +2,13 @@ package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.network.messages.ColorChangeMessage;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -115,6 +117,9 @@ public class ColorScreen extends AbstractContainerScreen {
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
+        colorChooserPrimary.render(matrixStack, x, y, partialTicks);
+        colorChooserSecondary.render(matrixStack, x, y, partialTicks);
+
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
             String str = Component.translatable("regen.gui.primary").getString();
             int length = Minecraft.getInstance().font.width(str);
@@ -124,7 +129,9 @@ public class ColorScreen extends AbstractContainerScreen {
             this.font.draw(matrixStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
 
-        colorChooserPrimary.render(matrixStack, x, y, partialTicks);
-        colorChooserSecondary.render(matrixStack, x, y, partialTicks);
+
+
+
+
     }
 }

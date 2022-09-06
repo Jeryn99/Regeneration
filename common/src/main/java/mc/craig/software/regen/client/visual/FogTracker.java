@@ -1,4 +1,4 @@
-package mc.craig.software.regen.client;
+package mc.craig.software.regen.client.visual;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;

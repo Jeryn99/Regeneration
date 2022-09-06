@@ -5,6 +5,7 @@
   "client": [
     "BipedBodyMixin",
     "GuiMixin",
+    "InventoryScreenMixin",
     "PlayerRendererMixin",
     "SoundSourceMixin"
   ],

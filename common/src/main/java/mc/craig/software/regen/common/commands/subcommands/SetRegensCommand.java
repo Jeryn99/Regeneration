@@ -40,7 +40,10 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
         if (entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND && entity != null) {
             if (RegenConfig.COMMON.mobsHaveRegens.get() || entity instanceof ServerPlayer) {//If the config option allows mobs to have regens, continue
                 LivingEntity ent = (LivingEntity) entity;
-                RegenerationData.get(ent).ifPresent((cap) -> cap.setRegens(amount));
+                RegenerationData.get(ent).ifPresent((cap) -> {
+                    cap.setRegens(amount);
+                    cap.syncToClients(null);
+                });
                 context.getSource().sendSuccess(Component.translatable("command.regen.set_regen.success", entityText, amount), false);
                 return Command.SINGLE_SUCCESS;
             } else {//Send error message if the config option doesn't allow for it
