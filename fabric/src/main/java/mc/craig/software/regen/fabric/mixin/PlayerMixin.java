@@ -1,9 +1,9 @@
 package mc.craig.software.regen.fabric.mixin;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,15 +17,13 @@ public class PlayerMixin {
     private void isHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
 
-        RegenerationData.get(livingEntity).ifPresent(regenerationData -> {
-            if (!livingEntity.level.isClientSide) {
+        if (livingEntity instanceof Player player) {
+            RegenerationData.get(player).ifPresent(regenerationData -> {
                 if (regenerationData.stateManager().onKilled(source)) {
                     cir.setReturnValue(false);
-                } else {
-                    cir.setReturnValue(RegenUtil.isHurt(source, livingEntity, amount));
                 }
-            }
-        });
+            });
+        }
     }
 
     @Inject(at = @At("HEAD"), method = "tick()V", cancellable = true)
