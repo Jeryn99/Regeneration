@@ -63,7 +63,7 @@ public class RegenLootTables extends LootTableProvider {
     public static class ModEntityLoot extends EntityLoot {
         @Override
         protected void addTables() {
-            // add(knownEntity, LootTable.lootTable());
+             add(REntities.TIMELORD.get(), LootTable.lootTable());
         }
 
         @Override

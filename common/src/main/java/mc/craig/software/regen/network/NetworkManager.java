@@ -51,6 +51,12 @@ public abstract class NetworkManager {
         }
     }
 
+
+    @ExpectPlatform
+    public static Packet<?> spawnPacket(Entity livingEntity) {
+        throw new RuntimeException("This isn't where you get the packet! tut tut!");
+    }
+
     @FunctionalInterface
     public interface MessageDecoder<T extends Message> {
 

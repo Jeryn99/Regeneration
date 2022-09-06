@@ -1,17 +1,14 @@
 package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.client.screen.PreferencesScreen;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -87,8 +84,6 @@ public class FobWatchItem extends Item {
 
         ItemStack stack = player.getItemInHand(hand);
         IRegen cap = RegenerationData.get(player).orElseGet(null);
-
-        Minecraft.getInstance().setScreen(new PreferencesScreen());
 
         if (!player.isShiftKeyDown()) { // transferring watch->player
             if (stack.getDamageValue() == getMaxDamage())

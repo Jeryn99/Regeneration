@@ -1,6 +1,6 @@
 package mc.craig.software.regen.network.messages;
 
-import mc.craig.software.regen.client.visual.VisualManipulator;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.network.MessageContext;
 import mc.craig.software.regen.network.MessageS2C;
 import mc.craig.software.regen.network.MessageType;
@@ -34,7 +34,7 @@ public class RemoveSkinPlayerMessage extends MessageS2C {
 
     @Override
     public void handle(MessageContext context) {
-        VisualManipulator.clearPlayersSkin(this.livingEntity);
+        VisualManipulator.removePlayerSkin(this.livingEntity);
     }
 
 }

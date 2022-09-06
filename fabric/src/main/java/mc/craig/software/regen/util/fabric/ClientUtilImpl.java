@@ -77,8 +77,6 @@ public class ClientUtilImpl {
             SpawnItem.Timelord type = SpawnItem.getType(itemStack);
             return type.ordinal();
         });
-
-        //TODO  SoundReverb.addReloader();
     }
 
 }

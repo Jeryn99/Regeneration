@@ -1,7 +1,7 @@
 package mc.craig.software.regen.common.regen.acting;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.client.skin.SkinHandler;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.client.visual.SkinRetriever;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
@@ -73,7 +73,7 @@ public class ClientActing implements Acting {
                     }
                 });
             } else {
-                SkinHandler.sendResetMessage();
+                VisualManipulator.sendResetMessage();
             }
         }
     }

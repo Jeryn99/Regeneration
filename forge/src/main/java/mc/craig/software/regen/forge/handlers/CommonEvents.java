@@ -3,7 +3,6 @@ package mc.craig.software.regen.forge.handlers;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.commands.RegenCommand;
 import mc.craig.software.regen.common.item.HandItem;
-import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -14,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -31,20 +29,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
-
-    public static boolean canBeGiven(Entity entity) {
-        boolean isLiving = entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND;
-        boolean ignoresConfig = entity.getType() == REntities.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
-
-        if (isLiving && ignoresConfig) {
-            return true;
-        }
-
-        if (isLiving) { //Always make sure the entity is living, because we are explicility casting to LivingEntity later on
-            return RegenConfig.COMMON.mobsHaveRegens.get();    //Base on the config value
-        }
-        return false;
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void noFire(LivingAttackEvent event) {
@@ -88,8 +72,6 @@ public class CommonEvents {
                 event.setCanceled(true);//cancels damage, in case the above didn't cut it
                 return;
             }
-
-            //regen and death checks moved to LivingDamageEvent and LivingDeathEvent
         });
     }
 

@@ -44,7 +44,6 @@ public class RegenAdvancements implements DataProvider {
     @Override
     public void run(@NotNull CachedOutput hashCache) throws IOException {
         Path path = this.generator.getOutputFolder();
-        TriggerManager.init();
         Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.TriggerInstance.hasItems(RItems.FOB.get()), null, FrameType.GOAL);
         Advancement firstRegeneration = this.createAdvancement("first_regen", new ItemStack(Blocks.PLAYER_HEAD), new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId()), watchIsMe, FrameType.CHALLENGE);
 

@@ -1,5 +1,6 @@
 package mc.craig.software.regen.common.objects;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.item.*;
 import mc.craig.software.regen.registry.DeferredRegistry;
@@ -8,18 +9,14 @@ import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.item.ArmorMaterials.LEATHER;
 
 public class RItems {
 
-    public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MOD_ID, Registry.ITEM_REGISTRY);
-    public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
-    public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
 
-    public static CreativeModeTab MAIN = CreativeModeTab.TAB_BREWING;
+    public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MOD_ID, Registry.ITEM_REGISTRY);
+    public static CreativeModeTab MAIN = getCreativeTab();
 
     public static RegistrySupplier<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     public static RegistrySupplier<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
@@ -39,5 +36,12 @@ public class RItems {
     public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
     public static RegistrySupplier<Item> PLASMA_CARTRIDGE = ITEMS.register("plasma_cartridge", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
 
+    public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
+    public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
+
+    @ExpectPlatform
+    public static CreativeModeTab getCreativeTab() {
+        throw new AssertionError();
+    }
 
 }

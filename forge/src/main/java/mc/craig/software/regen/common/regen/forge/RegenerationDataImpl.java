@@ -1,13 +1,15 @@
 package mc.craig.software.regen.common.regen.forge;
 
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.config.RegenConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -31,9 +33,23 @@ public class RegenerationDataImpl {
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> e) {
-        if (e.getObject() instanceof LivingEntity livingEntity) {
+        if (e.getObject() instanceof LivingEntity livingEntity && canBeGiven(livingEntity)) {
             e.addCapability(new ResourceLocation(Regeneration.MOD_ID, "regeneration_data"), new RegenerationDataProvider(new RegenerationData(livingEntity)));
         }
+    }
+
+    public static boolean canBeGiven(Entity entity) {
+        boolean isLiving = entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND;
+        boolean ignoresConfig = entity.getType() == REntities.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
+
+        if (isLiving && ignoresConfig) {
+            return true;
+        }
+
+        if (isLiving) {
+            return RegenConfig.COMMON.mobsHaveRegens.get();
+        }
+        return false;
     }
 
     public static Optional<RegenerationData> get(LivingEntity player) {

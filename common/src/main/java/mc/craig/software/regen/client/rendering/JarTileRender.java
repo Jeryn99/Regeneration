@@ -7,7 +7,7 @@ import com.mojang.math.Vector3f;
 import mc.craig.software.regen.client.rendering.model.ArmModel;
 import mc.craig.software.regen.client.rendering.model.ContainerModel;
 import mc.craig.software.regen.client.rendering.model.RModels;
-import mc.craig.software.regen.client.skin.SkinHandler;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.block.JarBlock;
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
@@ -112,7 +112,7 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
         }
 
         if (!TEXTURES.containsKey(tileEntityHandInJar)) {
-            NativeImage image = SkinHandler.genSkinNative(HandItem.getSkin(tileEntityHandInJar.getHand()));
+            NativeImage image = VisualManipulator.genSkinNative(HandItem.getSkin(tileEntityHandInJar.getHand()));
             ResourceLocation res = Minecraft.getInstance().getTextureManager().register("hand_", new DynamicTexture(image));
             TEXTURES.put(tileEntityHandInJar, res);
             return res;

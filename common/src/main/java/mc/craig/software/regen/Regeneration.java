@@ -1,6 +1,7 @@
 package mc.craig.software.regen;
 
 import com.mojang.logging.LogUtils;
+import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.objects.*;
 import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
@@ -29,6 +30,6 @@ public class Regeneration {
         RFeatures.DEFERRED_REGISTRY_STRUCTURE.register();
         TransitionTypes.init();
         DownloadSkinsThread.setup();
-        RSoundSchemes.init();
+        TriggerManager.init();
     }
 }

@@ -1,12 +1,13 @@
 package mc.craig.software.regen.common.block;
 
+import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -62,6 +62,13 @@ public class JarBlock extends Block implements EntityBlock {
         builder.add(BlockStateProperties.WATERLOGGED);
     }
 
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        double d = (double) pos.getX() + 0.4 + (double) random.nextFloat() * 0.2;
+        double e = (double) pos.getY() + 0.7 + (double) random.nextFloat() * 0.3;
+        double f = (double) pos.getZ() + 0.4 + (double) random.nextFloat() * 0.2;
+        level.addParticle(ParticleTypes.BUBBLE, d, e, f, 0.0, 0.0, 0.0);
+    }
 
     @Override
     public @NotNull InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
@@ -115,20 +122,6 @@ public class JarBlock extends Block implements EntityBlock {
         }
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
-
-    //TODO
-/*
-    @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        if (!world.isClientSide()) {
-            BioContainerBlockEntity jarTile = (BioContainerBlockEntity) world.getBlockEntity(pos);
-            if (jarTile != null) {
-                jarTile.dropHandIfPresent(player);
-            }
-        }
-        return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
-    }
-*/
 
 
     @Override

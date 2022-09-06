@@ -4,8 +4,10 @@ import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
+import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.util.ViewUtil;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -124,5 +126,10 @@ public class Watcher extends Mob {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Packet<?> getAddEntityPacket() {
+        return NetworkManager.spawnPacket(this);
     }
 }

@@ -2,8 +2,7 @@ package mc.craig.software.regen.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import mc.craig.software.regen.client.skin.SkinHandler;
-import mc.craig.software.regen.client.visual.VisualManipulator;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -22,9 +21,8 @@ public class PlayerRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", cancellable = true)
     private void getTextureLocation(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
-        //TODO VisualManipulator.getSkin(entity.getUUID()).ifPresent(callbackInfoReturnable::setReturnValue);
-        if(SkinHandler.PLAYER_SKINS.containsKey(entity.getUUID())){
-            callbackInfoReturnable.setReturnValue(SkinHandler.PLAYER_SKINS.get(entity.getUUID()));
+        if(VisualManipulator.PLAYER_SKINS.containsKey(entity.getUUID())){
+            callbackInfoReturnable.setReturnValue(VisualManipulator.PLAYER_SKINS.get(entity.getUUID()));
         }
     }
 

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.client.skin.SkinHandler;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.util.MineSkin;
 import mc.craig.software.regen.util.Platform;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -226,7 +226,7 @@ public class SkinRetriever {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return SkinHandler.loadImage(nativeImage);
+        return VisualManipulator.loadImage(nativeImage);
     }
 
     public static List<File> listAllSkins(PlayerUtil.SkinType currentSkinType) {

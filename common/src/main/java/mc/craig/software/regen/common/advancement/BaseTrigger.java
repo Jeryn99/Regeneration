@@ -31,6 +31,11 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
         RL = new ResourceLocation(parString);
     }
 
+    public BaseTrigger(String modid, String parString) {
+        super();
+        RL = new ResourceLocation(modid, parString);
+    }
+
     /**
      * Instantiates a new custom trigger.
      *

@@ -1,11 +1,19 @@
 package mc.craig.software.regen.util;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.client.RKeybinds;
+import mc.craig.software.regen.client.rendering.JarTileRender;
+import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.objects.RItems;
+import mc.craig.software.regen.common.objects.RSounds;
+import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.config.RegenConfig;
@@ -17,7 +25,9 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -37,6 +47,7 @@ public class ClientUtil {
 
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
+    private static SimpleSoundInstance iSound;
 
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayer abstractClientPlayerEntity) {
@@ -51,6 +62,47 @@ public class ClientUtil {
             return Objects.equals(ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel, "slim");
         }
         return false;
+    }
+
+    public static void tickClient() {
+        if (Minecraft.getInstance().player != null) {
+            LocalPlayer ep = Minecraft.getInstance().player;
+            SoundManager sound = Minecraft.getInstance().getSoundManager();
+            RegenerationData.get(ep).ifPresent(iRegen -> {
+                if (iRegen.regenState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
+
+                    if (iSound == null) {
+                        iSound = SimpleSoundInstance.forLocalAmbience(RSounds.GRACE_HUM.get(), 1, 1);
+                    }
+
+                    if (!sound.isActive(iSound)) {
+                        sound.play(iSound);
+                    }
+                } else {
+                    if (sound.isActive(iSound)) {
+                        sound.stop(iSound);
+                    }
+                }
+            });
+        }
+
+        RKeybinds.tickKeybinds();
+        destroyTextures();
+    }
+
+    public static void destroyTextures() {
+        //Clean up our mess we might have made!
+        if (Minecraft.getInstance().level == null) {
+            if (VisualManipulator.PLAYER_SKINS.size() > 0) {
+                VisualManipulator.PLAYER_SKINS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
+                VisualManipulator.PLAYER_SKINS.clear();
+                TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
+                TimelordRenderer.TIMELORDS.clear();
+                JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
+                JarTileRender.TEXTURES.clear();
+                Regeneration.LOGGER.warn("Cleared Regeneration texture cache");
+            }
+        }
     }
 
     public static void clothingModels() {

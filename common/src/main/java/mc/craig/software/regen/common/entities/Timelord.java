@@ -10,14 +10,17 @@ import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
+import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
 import mc.craig.software.regen.util.Platform;
 import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -48,6 +51,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -151,7 +155,10 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         }
 
         if (getTimelordType() == TimelordType.COUNCIL) {
-          //TODO  ForgeRegistries.ITEMS.tags().getTag(RegenUtil.TIMELORD_CURRENCY).stream().forEach(item -> this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false)));
+            for (Holder<Item> holder : Registry.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).get()) {
+                this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(holder.value()), false));
+            }
+
             this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         }
@@ -532,6 +539,11 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
             SoundScheme personality = getPersonality();
             this.playSound(!itemStack.isEmpty() ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound());
         }
+    }
+
+    @Override
+    public Packet<?> getAddEntityPacket() {
+        return NetworkManager.spawnPacket(this);
     }
 
     @Override

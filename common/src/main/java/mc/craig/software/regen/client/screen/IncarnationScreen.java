@@ -2,7 +2,7 @@ package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mc.craig.software.regen.client.skin.SkinHandler;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.client.visual.SkinRetriever;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.network.messages.NextSkinMessage;
@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -147,7 +146,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
            new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
         }).setDescription(new String[]{"button.tooltip.save_skin"});
 
-        DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> SkinHandler.sendResetMessage()).setDescription(new String[]{"button.tooltip.reset_mojang"});
+        DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> VisualManipulator.sendResetMessage()).setDescription(new String[]{"button.tooltip.reset_mojang"});
 
         this.excludeTrending = new RCheckbox( cx + 10, cy + 145, 150, 20, Component.translatable("Trending?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {
@@ -214,11 +213,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
         LocalPlayer player = Minecraft.getInstance().player;
         ResourceLocation backup = ClientUtil.getPlayerInfo(player).getSkinLocation();
         boolean backupSkinType = ClientUtil.isAlex(player);
-        SkinHandler.PLAYER_SKINS.put(player.getUUID(), currentTexture);
-        SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
+        VisualManipulator.PLAYER_SKINS.put(player.getUUID(), currentTexture);
+        VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-        SkinHandler.PLAYER_SKINS.put(player.getUUID(), backup);
-        SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
+        VisualManipulator.PLAYER_SKINS.put(player.getUUID(), backup);
+        VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }
 

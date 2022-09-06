@@ -1,6 +1,7 @@
 package mc.craig.software.regen.common.entities;
 
 import com.mojang.math.Vector3d;
+import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.util.RegenSources;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -108,11 +109,10 @@ public class Laser extends ThrowableProjectile {
 
     }
 
-    //TODO
- /*   @Override
-    public @NotNull Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }*/
+    @Override
+    public Packet<?> getAddEntityPacket() {
+        return NetworkManager.spawnPacket(this);
+    }
 
     @Override
     protected float getGravity() {

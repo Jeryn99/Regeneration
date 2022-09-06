@@ -1,6 +1,7 @@
 package mc.craig.software.regen.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
@@ -16,20 +17,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class RenderPlayerMixin {
 
     @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", cancellable = true)
-    private void renderHead(AbstractClientPlayer entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
-        RegenerationData.get(entity).ifPresent(iRegen -> {
+    private void renderHead(AbstractClientPlayer abstractClientPlayer, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+        VisualManipulator.tick(abstractClientPlayer);
+
+        RegenerationData.get(abstractClientPlayer).ifPresent(iRegen -> {
             PlayerRenderer renderer = (PlayerRenderer) (Object) this;
             TransitionType type = iRegen.transitionType();
-            TransitionTypeRenderers.get(type).onPlayerRenderPre(entity, renderer, partialTicks, matrixStack, buffer, packedLight);
+            TransitionTypeRenderers.get(type).onPlayerRenderPre(abstractClientPlayer, renderer, partialTicks, matrixStack, buffer, packedLight);
         });
     }
 
     @Inject(at = @At("TAIL"), method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", cancellable = true)
-    private void renderTail(AbstractClientPlayer entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
-        RegenerationData.get(entity).ifPresent(iRegen -> {
+    private void renderTail(AbstractClientPlayer abstractClientPlayer, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+        RegenerationData.get(abstractClientPlayer).ifPresent(iRegen -> {
             PlayerRenderer renderer = (PlayerRenderer) (Object) this;
             TransitionType type = iRegen.transitionType();
-            TransitionTypeRenderers.get(type).onPlayerRenderPost(entity, renderer, partialTicks, matrixStack, buffer, packedLight);
+            TransitionTypeRenderers.get(type).onPlayerRenderPost(abstractClientPlayer, renderer, partialTicks, matrixStack, buffer, packedLight);
         });
     }
 

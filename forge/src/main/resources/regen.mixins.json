@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "mc.craig.software.regen.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "HumanoidArmorLayerMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

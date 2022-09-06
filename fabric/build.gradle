@@ -55,7 +55,7 @@ processResources {
 }
 
 shadowJar {
-    exclude "weeping_angels.common.json"
+    exclude "regen.common.json"
 
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
