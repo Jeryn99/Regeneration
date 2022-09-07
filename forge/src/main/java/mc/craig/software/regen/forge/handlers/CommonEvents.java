@@ -96,8 +96,8 @@ public class CommonEvents {
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                     cap.extractRegens(cap.regens());
                 }
-                if (event.getEntity() instanceof ServerPlayer)
-                    cap.syncToClients((ServerPlayer) event.getEntity());
+                if (event.getEntity() instanceof ServerPlayer serverPlayer)
+                    cap.syncToClients(serverPlayer);
                 return;
             }
             if (cap.stateManager() == null) return;

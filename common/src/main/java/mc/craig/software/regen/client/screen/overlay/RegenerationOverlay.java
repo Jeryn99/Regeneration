@@ -7,6 +7,7 @@ import com.mojang.math.Transformation;
 import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.common.item.GunItem;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RenderHelp;
@@ -39,21 +40,21 @@ public class RegenerationOverlay {
             String warning = null;
 
             RenderHelp.renderVig(poseStack, cap.getPrimaryColors(), 0.3F);
+
+            if(cap.regenState() != RegenStates.ALIVE){
+                warning = cap.regenState().name();
+            }
+
             switch (cap.regenState()) {
                 case GRACE:
                     RenderHelp.renderVig(poseStack, cap.getPrimaryColors(), 0.3F);
-                    //TODO Translate
-                    warning = Component.translatable("Grace Period", forceKeybind.getString()).getString();
                     break;
                 case GRACE_CRIT:
                     RenderHelp.renderVig(poseStack, new Vec3(1, 0, 0), 0.5F);
-                    warning = Component.translatable("(Critical) Grace Period", forceKeybind.getString()).getString();
                     break;
-
                 case REGENERATING:
                     RenderHelp.renderVig(poseStack, cap.getSecondaryColors(), 0.5F);
                     break;
-
                 case POST:
                     if (player.hurtTime > 0 || player.getEffect(MobEffects.CONFUSION) != null) {
                         RenderHelp.renderVig(poseStack, cap.getSecondaryColors(), 0.5F);
