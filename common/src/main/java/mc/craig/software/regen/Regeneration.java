@@ -6,6 +6,7 @@ import mc.craig.software.regen.common.objects.*;
 import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.world.RFeatures;
+import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.DownloadSkinsThread;
 import mc.craig.software.regen.util.Platform;

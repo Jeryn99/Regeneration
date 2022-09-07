@@ -127,25 +127,6 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLive(LivingEvent.LivingTickEvent livingUpdateEvent) {
         RegenerationData.get(livingUpdateEvent.getEntity()).ifPresent(IRegen::tick);
-
-        if (livingUpdateEvent.getEntity() instanceof ServerPlayer) {
-            if (shouldGiveCouncilAdvancement((ServerPlayer) livingUpdateEvent.getEntity())) {
-                TriggerManager.COUNCIL.trigger((ServerPlayer) livingUpdateEvent.getEntity());
-            }
-        }
-    }
-
-    public static boolean shouldGiveCouncilAdvancement(ServerPlayer serverPlayerEntity) {
-        EquipmentSlot[] equipmentSlotTypes = new EquipmentSlot[]{EquipmentSlot.HEAD,
-                EquipmentSlot.CHEST,
-                EquipmentSlot.LEGS,
-                EquipmentSlot.FEET};
-        for (EquipmentSlot equipmentSlotType : equipmentSlotTypes) {
-            if (!ForgeRegistries.ITEMS.getKey(serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem()).getPath().contains("robes")) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @SubscribeEvent

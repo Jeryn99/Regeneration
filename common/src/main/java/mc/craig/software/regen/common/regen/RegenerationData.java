@@ -34,6 +34,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static mc.craig.software.regen.util.RegenUtil.shouldGiveCouncilAdvancement;
+
 public class RegenerationData implements IRegen {
 
     //State
@@ -98,6 +100,12 @@ public class RegenerationData implements IRegen {
         AnimationState regenAnimState = getAnimationState(IRegen.RegenAnimation.REGEN);
         AnimationState graceAnimState = getAnimationState(IRegen.RegenAnimation.GRACE);
 
+        if (livingEntity instanceof ServerPlayer serverPlayer) {
+            if (shouldGiveCouncilAdvancement(serverPlayer)) {
+                TriggerManager.COUNCIL.trigger(serverPlayer);
+            }
+        }
+
         if (regenState() == RegenStates.REGENERATING) {
             if (!regenAnimState.isStarted()) {
                 regenAnimState.start(livingEntity.tickCount);
@@ -105,6 +113,8 @@ public class RegenerationData implements IRegen {
         } else {
             regenAnimState.stop();
         }
+
+        System.out.println(regenState());
 
         if (regenState() == RegenStates.GRACE_CRIT) {
             if (!graceAnimState.isStarted()) {
@@ -545,7 +555,7 @@ public class RegenerationData implements IRegen {
             }
         }
 
-        @Override //TO REIMP
+        @Override
         public boolean onPunchEntity(LivingEntity entity) {
             // We're healing mobs...
             if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && glowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health

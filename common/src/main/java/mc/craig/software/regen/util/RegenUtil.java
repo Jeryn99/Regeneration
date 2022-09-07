@@ -4,8 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -44,6 +46,19 @@ public class RegenUtil {
 
     public static double round(float value, int scale) {
         return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
+    }
+
+    public static boolean shouldGiveCouncilAdvancement(ServerPlayer serverPlayerEntity) {
+        EquipmentSlot[] equipmentSlotTypes = new EquipmentSlot[]{EquipmentSlot.HEAD,
+                EquipmentSlot.CHEST,
+                EquipmentSlot.LEGS,
+                EquipmentSlot.FEET};
+        for (EquipmentSlot equipmentSlotType : equipmentSlotTypes) {
+            if (!Registry.ITEM.getKey(serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem()).getPath().contains("robes")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void setupNames() {

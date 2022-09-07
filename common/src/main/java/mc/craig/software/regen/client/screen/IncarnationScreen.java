@@ -16,6 +16,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,15 +24,14 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 
 public class IncarnationScreen extends AbstractContainerScreen {
@@ -46,6 +46,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static int position = 0;
     private RCheckbox excludeTrending;
     private EditBox searchField;
+    private ArrayList<DescButton> descButtons = new ArrayList<>();
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), Component.literal("Next Incarnation"));
@@ -91,7 +92,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
             Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
         }
 
-        int lower = 30;
 
         this.searchField = new EditBox(this.font, cx + 10, cy + 30 + buttonOffset, cx - 15, 20, this.searchField, Component.translatable("skins.search"));
 
@@ -173,19 +173,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
         });
         this.addRenderableWidget(this.excludeTrending);
 
-        addRenderableWidget(btnNext);
-        addRenderableWidget(btnPrevious);
-        addRenderableWidget(btnOpenFolder);
-        addRenderableWidget(btnBack);
-        addRenderableWidget(btnSave);
-        addRenderableWidget(btnResetSkin);
-
-        //TODO
-     /*   for (Widget widget : renderables) {
-            if (widget instanceof DescButton) {
-                descButtons.add((DescButton) widget);
-            }
-        }*/
+        addRenderableDescButton(btnNext);
+        addRenderableDescButton(btnPrevious);
+        addRenderableDescButton(btnOpenFolder);
+        addRenderableDescButton(btnBack);
+        addRenderableDescButton(btnSave);
+        addRenderableDescButton(btnResetSkin);
 
         RegenerationData.get(minecraft.player).ifPresent((data) -> currentSkinType = data.preferredModel());
 
@@ -195,6 +188,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
         excludeTrending.active = true;
 
 
+    }
+
+    public void addRenderableDescButton(DescButton descButton){
+        addRenderableWidget(descButton);
+        descButtons.add(descButton);
     }
 
     private void stripTrending() {
@@ -287,22 +285,21 @@ public class IncarnationScreen extends AbstractContainerScreen {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        if (!searchField.getValue().isEmpty()) {
-            for (int i = 0; i < skinTextures.size(); i++) {
-                RenderSystem.setShaderTexture(0, skinTextures.get(i));
-                GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 8, 8, 8, 8, 64, 64);
-                GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 40, 8, 8, 8, 64, 64);
-            }
+        for (int i = 0; i < 12; i++) {
+            RenderSystem.setShaderTexture(0, skinTextures.get(i));
+            GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 8, 8, 8, 8, 64, 64);
+            GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 40, 8, 8, 8, 64, 64);
         }
 
         //TODO
-     /*   descButtons.forEach(descButton -> {
+        descButtons.forEach(descButton -> {
             if (descButton.isHoveredOrFocused()) {
                 if (descButton.getDescription() != null) {
-                    this.renderTooltip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
+                    //    public void renderTooltip(PoseStack poseStack, List<Component> tooltips, Optional<TooltipComponent> visualTooltipComponent, int mouseX, int mouseY) {
+                    this.renderTooltip(matrixStack, descButton.getDescription(), Optional.empty(), mouseX, mouseY);
                 }
             }
-        });*/
+        });
     }
 
     //Spectre0987

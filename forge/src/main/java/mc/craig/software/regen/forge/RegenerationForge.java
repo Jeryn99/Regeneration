@@ -4,6 +4,7 @@ import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RSoundSchemes;
+import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
@@ -43,6 +44,8 @@ public class RegenerationForge {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         RSoundSchemes.init();
+
+        event.enqueueWork(StructurePieces::init);
     }
 
     public void onAttributeAssign(EntityAttributeCreationEvent event) {

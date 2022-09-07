@@ -1,6 +1,7 @@
 package mc.craig.software.regen.fabric;
 
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.fabric.handlers.CommonEvents;
 import mc.craig.software.regen.util.fabric.PlatformImpl;
@@ -16,5 +17,6 @@ public class RegenerationFabric implements ModInitializer {
         ModLoadingContext.registerConfig(Regeneration.MOD_ID, ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         PlatformImpl.init();
         CommonEvents.init();
+        StructurePieces.init();
     }
 }

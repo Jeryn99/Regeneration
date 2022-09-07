@@ -4,13 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "EntityRenderDispatcherMixin",
-    "FogRendererMixin",
     "HumanoidArmorLayerMixin",
     "ItemInHandRendererMixin",
     "RenderPlayerMixin"
   ],
   "mixins": [
-    "PlayerMixin"
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,7 +7,8 @@
     "GuiMixin",
     "InventoryScreenMixin",
     "PlayerRendererMixin",
-    "SoundSourceMixin"
+    "SoundSourceMixin",
+    "FogRendererMixin"
   ],
   "mixins": [
   ],
