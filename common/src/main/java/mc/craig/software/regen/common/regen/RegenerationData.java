@@ -440,7 +440,7 @@ public class RegenerationData implements IRegen {
         private StateManager() {
             this.transitionCallbacks = new HashMap<>();
             transitionCallbacks.put(RegenStates.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, () -> midSequenceKill(true));
+            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, this::midSequenceKill);
             transitionCallbacks.put(RegenStates.Transition.FINISH_REGENERATION, this::finishRegeneration);
             transitionCallbacks.put(RegenStates.Transition.END_POST, this::endPost);
 
@@ -488,7 +488,7 @@ public class RegenerationData implements IRegen {
                 return false;
             }
 
-            if (source == RegenSources.REGEN_DMG_CRITICAL) {
+            if (source == RegenSources.REGEN_DMG_CRITICAL || source == RegenSources.REGEN_DMG_KILLED) {
                 if (nextTransition != null) {
                     nextTransition.cancel();
                 }
@@ -511,7 +511,7 @@ public class RegenerationData implements IRegen {
                 case REGENERATING -> {
                     // We've been killed mid regeneration!
                     nextTransition.cancel(); // ... cancel the finishing of the regeneration
-                    midSequenceKill(false);
+                    midSequenceKill();
                     return false;
                 }
                 case GRACE_CRIT -> {
@@ -520,7 +520,7 @@ public class RegenerationData implements IRegen {
                         triggerRegeneration();
                         return true;
                     } else {
-                        midSequenceKill(true);
+                        midSequenceKill();
                         return false;
                     }
                 }
@@ -632,12 +632,12 @@ public class RegenerationData implements IRegen {
             syncToClients(null);
         }
 
-        private void midSequenceKill(boolean isGrace) {
+        private void midSequenceKill() {
             currentState = RegenStates.ALIVE;
             nextTransition = null;
             handGlowTimer = null;
             transitionType.onFinishRegeneration(RegenerationData.this);
-            livingEntity.hurt(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+            livingEntity.hurt(RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }
