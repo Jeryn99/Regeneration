@@ -120,6 +120,7 @@ public class FobWatchItem extends Item {
             } else {
                 setOpen(stack, true);
                 cap.addRegens(used);
+                cap.syncToClients(null);
             }
 
         } else { // transferring player->watch
@@ -140,6 +141,7 @@ public class FobWatchItem extends Item {
             } else {
                 setOpen(stack, true);
                 cap.extractRegens(1);
+                cap.syncToClients(null);
             }
 
         }

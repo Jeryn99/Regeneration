@@ -62,7 +62,7 @@ public class RegenUtil {
             Entity trueSource = damageSource.getEntity();
 
             if (trueSource instanceof Player player && livingEntity != null) {
-                RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(livingEntity));
+              //  RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(livingEntity));
                 return;
             }
 
