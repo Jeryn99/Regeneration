@@ -115,6 +115,9 @@ public class ColorScreen extends AbstractContainerScreen {
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
+        colorChooserPrimary.render(matrixStack, x, y, partialTicks);
+        colorChooserSecondary.render(matrixStack, x, y, partialTicks);
+
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
             String str = Component.translatable("regen.gui.primary").getString();
             int length = Minecraft.getInstance().font.width(str);
@@ -124,7 +127,6 @@ public class ColorScreen extends AbstractContainerScreen {
             this.font.draw(matrixStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
 
-        colorChooserPrimary.render(matrixStack, x, y, partialTicks);
-        colorChooserSecondary.render(matrixStack, x, y, partialTicks);
+
     }
 }

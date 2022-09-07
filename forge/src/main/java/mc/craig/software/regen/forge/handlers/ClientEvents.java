@@ -1,6 +1,6 @@
 package mc.craig.software.regen.forge.handlers;
 
-import mc.craig.software.regen.client.FogTracker;
+import mc.craig.software.regen.client.visual.FogTracker;
 import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.client.skin.VisualManipulator;

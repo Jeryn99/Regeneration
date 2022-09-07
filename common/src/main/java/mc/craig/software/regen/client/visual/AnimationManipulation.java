@@ -1,11 +1,11 @@
-package mc.craig.software.regen.client;
+package mc.craig.software.regen.client.visual;
 
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
-public class RegenAnimations {
+public class AnimationManipulation {
 
 
 

@@ -1,6 +1,6 @@
 package mc.craig.software.regen.mixin;
 
-import mc.craig.software.regen.client.RegenAnimations;
+import mc.craig.software.regen.client.visual.AnimationManipulation;
 import mc.craig.software.regen.client.animation.AnimationHandler;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.IRegen;
@@ -39,7 +39,7 @@ public class BipedBodyMixin {
 
             // Regeneration Animation
             if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS) {
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), RegenAnimations.REGEN, ageInTicks, 1);
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
@@ -48,7 +48,7 @@ public class BipedBodyMixin {
 
             // "Sneeze" animation
             if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE) {
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), RegenAnimations.REGEN_11_12, ageInTicks, 1);
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN_11_12, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
@@ -65,7 +65,7 @@ public class BipedBodyMixin {
             if (iCap.regenState() == RegenStates.GRACE_CRIT) {
                 bipedModel.leftArm.getAllParts().forEach(ModelPart::resetPose);
                 bipedModel.rightArm.getAllParts().forEach(ModelPart::resetPose);
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.GRACE), RegenAnimations.GRACE, ageInTicks, 1);
+                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.GRACE), AnimationManipulation.GRACE, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
