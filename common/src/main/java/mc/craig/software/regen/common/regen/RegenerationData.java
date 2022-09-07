@@ -530,8 +530,14 @@ public class RegenerationData implements IRegen {
                     return false;
                 }
                 case GRACE -> {
-                    // We're being forced to regenerate...
-                    triggerRegeneration();
+                    if (source == RegenSources.REGEN_DMG_FORCED) {
+                        // Player triggered regeneration
+                        triggerRegeneration();
+                    } else {
+                        // Cancel scheduled transition, we're going critical right now!
+                        nextTransition.cancel();
+                        enterCriticalPhase();
+                    }
                     return true;
                 }
                 default -> {
