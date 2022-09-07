@@ -52,7 +52,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void firstPersonHand(InteractionHand hand, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, float partialTick, float interpolatedPitch, float swingProgress, float equipProgress, ItemStack stack) {
+    public void firstPersonHand(InteractionHand hand, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight, float partialTick, float swingProgress, float equipProgress, ItemStack stack) {
 
     }
 

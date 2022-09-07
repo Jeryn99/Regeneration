@@ -2,7 +2,7 @@ package mc.craig.software.regen.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mc.craig.software.regen.client.rendering.model.armor.ArmorModelManager;
+import mc.craig.software.regen.client.ArmorModelManager;
 import mc.craig.software.regen.client.rendering.model.armor.LivingArmor;
 import mc.craig.software.regen.common.item.ICustomArmorTexture;
 import net.minecraft.client.model.HumanoidModel;

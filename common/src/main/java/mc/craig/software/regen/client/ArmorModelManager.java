@@ -1,4 +1,4 @@
-package mc.craig.software.regen.client.rendering.model.armor;
+package mc.craig.software.regen.client;
 
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.client.model.HumanoidModel;

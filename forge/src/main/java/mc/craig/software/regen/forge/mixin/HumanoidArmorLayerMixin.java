@@ -1,6 +1,6 @@
 package mc.craig.software.regen.forge.mixin;
 
-import mc.craig.software.regen.client.rendering.model.armor.ArmorModelManager;
+import mc.craig.software.regen.client.ArmorModelManager;
 import mc.craig.software.regen.client.rendering.model.armor.LivingArmor;
 import mc.craig.software.regen.common.item.ICustomArmorTexture;
 import net.minecraft.client.model.HumanoidModel;

@@ -80,7 +80,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> TransitionTypeRenderers.get(iRegen.transitionType()).firstPersonHand(event.getHand(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), event.getPartialTick(), event.getInterpolatedPitch(), event.getSwingProgress(), event.getEquipProgress(), event.getItemStack()));
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> TransitionTypeRenderers.get(iRegen.transitionType()).firstPersonHand(event.getHand(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), event.getPartialTick(), event.getSwingProgress(), event.getEquipProgress(), event.getItemStack()));
     }
 
     @SubscribeEvent

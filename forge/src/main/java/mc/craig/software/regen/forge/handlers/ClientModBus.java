@@ -3,7 +3,7 @@ package mc.craig.software.regen.forge.handlers;
 import mc.craig.software.regen.client.rendering.layers.HandLayer;
 import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.model.RModels;
-import mc.craig.software.regen.client.rendering.model.armor.ArmorModelManager;
+import mc.craig.software.regen.client.ArmorModelManager;
 import mc.craig.software.regen.client.rendering.model.forge.RModelsImpl;
 import mc.craig.software.regen.client.sound.SoundReverbListener;
 import mc.craig.software.regen.util.RConstants;

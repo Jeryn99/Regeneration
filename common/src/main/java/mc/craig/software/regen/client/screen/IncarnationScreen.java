@@ -13,6 +13,7 @@ import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -41,8 +42,8 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType currentSkinType = RegenerationData.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
+    private static List<ResourceLocation> skinTextures = new ArrayList<>();
     private static int position = 0;
-    private final ArrayList<DescButton> descButtons = new ArrayList<>();
     private RCheckbox excludeTrending;
     private EditBox searchField;
 
@@ -54,10 +55,20 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
     public static void updateModels() {
         if (!skins.isEmpty()) {
-            currentTexture = SkinRetriever.fileTotexture(skins.get(position));
-            System.out.println(skins.get(position).toPath() + " || " + SkinRetriever.SKINS_DIRECTORY_SLIM);
+
+            for (ResourceLocation resourceLocation : skinTextures) {
+              //TODO why he sceram  Minecraft.getInstance().getTextureManager().release(resourceLocation);
+            }
+
+            for (File file : skins) {
+                ResourceLocation resource = SkinRetriever.fileTotexture(file);
+                skinTextures.add(resource);
+            }
+
+            currentTexture = skinTextures.get(position);
             isAlex = skins.get(position).toString().contains("\\skins\\alex");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
+
         }
     }
 
@@ -153,7 +164,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 position = 0;
                 searchField.setValue("");
                 if (!check.selected()) {
-                    skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
+                    skins.removeIf(file -> file.getAbsolutePath().contains("web"));
                 } else {
                     skins = SkinRetriever.listAllSkins(currentSkinType);
                 }
@@ -275,6 +286,14 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        if (!searchField.getValue().isEmpty()) {
+            for (int i = 0; i < skinTextures.size(); i++) {
+                RenderSystem.setShaderTexture(0, skinTextures.get(i));
+                GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 8, 8, 8, 8, 64, 64);
+                GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 40, 8, 8, 8, 64, 64);
+            }
+        }
 
         //TODO
      /*   descButtons.forEach(descButton -> {
