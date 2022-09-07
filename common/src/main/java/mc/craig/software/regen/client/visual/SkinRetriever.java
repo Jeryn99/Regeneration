@@ -178,6 +178,23 @@ public class SkinRetriever {
     }
 
 
+    // Turns a File into a Base64 String
+    public static String skinToBinary(File file) throws IOException {
+        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
+        return new String(encoded, StandardCharsets.US_ASCII);
+    }
+
+    // Turns a File into a byte representation of itself
+    public static byte[] fileToBytes(File file) {
+        try {
+            return FileUtils.readFileToByteArray(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
+
+
     // Helper for creating folders if they do not currently exist
     private static void createFolder(File... folder) {
         for (File file : folder) {

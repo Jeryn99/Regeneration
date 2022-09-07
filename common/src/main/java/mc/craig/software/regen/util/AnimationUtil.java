@@ -1,6 +1,7 @@
 package mc.craig.software.regen.util;
 
 import com.mojang.math.Vector3f;
+import mc.craig.software.regen.client.RegenAnimations;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.AnimationState;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AnimationUtil {
 
