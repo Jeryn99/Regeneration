@@ -40,7 +40,7 @@ public class RenderLaser extends EntityRenderer<Laser> {
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(pitch));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
         VertexConsumer vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
-        RenderHelp.drawGlowingLine(matrixStack.last().pose(), vertexBuilder, 1F, 0.05F, (float) entity.getColor().x, (float) entity.getColor().y, (float) entity.getColor().z, 1F, 15728640);
+        RenderHelp.drawGlowingLine(matrixStack, vertexBuilder, 1F, 0.05F, (float) entity.getColor().x, (float) entity.getColor().y, (float) entity.getColor().z, 1F, 15728640);
         matrixStack.popPose();
     }
 
