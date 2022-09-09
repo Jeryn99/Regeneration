@@ -32,10 +32,6 @@ public class RSounds {
     public static final RegistrySupplier<SoundEvent> DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
     public static final RegistrySupplier<SoundEvent> GUN_EMPTY = SOUNDS.register("gun_empty", () -> setUpSound("gun_empty"));
 
-    //Cyber
-    public static final RegistrySupplier<SoundEvent> CYBER_WALK = SOUNDS.register("cyber_walk", () -> setUpSound("cyber_walk"));
-    public static final RegistrySupplier<SoundEvent> CYBER_FIRE = SOUNDS.register("cyber_fire", () -> setUpSound("cyber_fire"));
-
     //Asher Timelord
     public static final RegistrySupplier<SoundEvent> F_ASHER_TIMELORD_HURT = SOUNDS.register("f_asher_timelord_hurt", () -> setUpSound("f_asher_timelord_hurt"));
     public static final RegistrySupplier<SoundEvent> F_ASHER_TIMELORD_DIE = SOUNDS.register("f_asher_timelord_die", () -> setUpSound("f_asher_timelord_die"));

@@ -1,8 +1,7 @@
-package mc.craig.software.regen.client.screen;
+package mc.craig.software.regen.client.screen.widgets;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 

@@ -25,13 +25,13 @@ import org.jetbrains.annotations.NotNull;
 public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
     private boolean updateSkin = true;
-    private boolean isOpen = false;
-
-    private AnimationState openState = new AnimationState();
-    private AnimationState closeState = new AnimationState();
+    private final AnimationState openState = new AnimationState();
+    private final AnimationState closeState = new AnimationState();
+    private ItemStack hand;
 
     public BioContainerBlockEntity(BlockPos pos, BlockState state) {
         super(RTiles.HAND_JAR.get(), pos, state);
+        this.hand = ItemStack.EMPTY;
     }
 
     public static void spawnParticles(Level world, BlockPos blockPos) {
@@ -45,7 +45,7 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
                 double y = currentDirection == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
                 double z = currentDirection == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
                 //TODO Custom Particle
-                world.addParticle(ParticleTypes.ANGRY_VILLAGER, (double) blockPos.getX() + x, (double) blockPos.getY() + y, (double) blockPos.getZ() + z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(ParticleTypes.SMALL_FLAME, (double) blockPos.getX() + x, (double) blockPos.getY() + y, (double) blockPos.getZ() + z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -68,28 +68,17 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
         HandItem.setEnergy(lindos, getHand());
     }
 
-    public boolean isOpen() {
-        return isOpen;
-    }
-
-    public void setOpen(boolean open) {
-        isOpen = open;
-    }
-
-
     @Override
     public void tick(@NotNull Level currentLevel, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull BioContainerBlockEntity bioContainerBlockEntity) {
 
-        isOpen = getHand().isEmpty();
-
-        if(isOpen){
+        if (getHand().isEmpty()) {
             closeState.stop();
-            if(!openState.isStarted()){
+            if (!openState.isStarted()) {
                 openState.start(Math.toIntExact(currentLevel.getDayTime()));
             }
         } else {
             openState.stop();
-            if(!closeState.isStarted()){
+            if (!closeState.isStarted()) {
                 closeState.start(Math.toIntExact(currentLevel.getDayTime()));
             }
         }
@@ -99,7 +88,7 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
         }
         if (currentLevel != null && currentLevel.isClientSide) return;
 
-        if (currentLevel.getGameTime() % 77 == 0 && !isOpen) {
+        if (currentLevel.getGameTime() % 77 == 0 && !getHand().isEmpty()) {
             currentLevel.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundSource.PLAYERS, 0.2F, 0.2F);
         }
 
@@ -125,12 +114,14 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
             if (player != null) {
                 if (!player.addItem(getHand())) {
                     Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
+                    clearContent();
                 }
             } else {
                 Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
+                clearContent();
             }
-            setHand(ItemStack.EMPTY);
         }
+        sendUpdates();
     }
 
     @Override
@@ -156,8 +147,10 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     public void load(CompoundTag nbt) {
         setLindos(nbt.getFloat("energy"));
         setUpdateSkin(nbt.getBoolean("update_skin"));
-        setOpen(nbt.getBoolean("is_open"));
         super.load(nbt);
+        if (nbt.contains("HandItem", 10)) {
+            this.setHand(ItemStack.of(nbt.getCompound("HandItem")));
+        }
     }
 
 
@@ -165,9 +158,10 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     public void saveAdditional(CompoundTag compound) {
         compound.putFloat("energy", getLindos());
         compound.putBoolean("update_skin", updateSkin);
-        compound.putBoolean("is_open", isOpen);
+        compound.put("HandItem", this.getHand().save(new CompoundTag()));
         super.saveAdditional(compound);
     }
+
 
     public boolean pendingSkinUpdate() {
         return updateSkin;
@@ -178,14 +172,18 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     public ItemStack getHand() {
-        return ItemStack.EMPTY; //TODO
-      //  return itemHandler.getStackInSlot(0);
+        return hand;
     }
 
     // ==== Inventory ====
 
     public void setHand(ItemStack stack) {
+        this.hand = stack;
         setChanged();
+    }
+
+    public void clearContent() {
+        this.setHand(ItemStack.EMPTY);
     }
 
     @Override

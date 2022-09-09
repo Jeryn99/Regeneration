@@ -88,4 +88,5 @@ public class SadFieryTransition extends TransitionType {
         return new Vec3(0.7137255f, 0.75686276f, 0.25490198f);
     }
 
+
 }

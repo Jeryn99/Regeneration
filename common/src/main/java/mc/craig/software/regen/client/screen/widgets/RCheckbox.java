@@ -1,4 +1,4 @@
-package mc.craig.software.regen.client.screen;
+package mc.craig.software.regen.client.screen.widgets;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Checkbox;

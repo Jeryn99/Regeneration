@@ -28,7 +28,6 @@ public class PlayerRendererMixin {
 
     @Inject(at = @At("TAIL"), method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V")
     protected void setupRotations(AbstractClientPlayer entityLiving, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
-
         RegenerationData.get(entityLiving).ifPresent(iRegen -> {
             if (PlayerUtil.isPlayerAboveZeroGrid(entityLiving) && iRegen.regenState() == RegenStates.POST) {
                 poseStack.mulPose(Vector3f.YP.rotationDegrees(entityLiving.yBodyRot));

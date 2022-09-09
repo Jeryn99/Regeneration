@@ -1,4 +1,4 @@
-package mc.craig.software.regen.client.screen;
+package mc.craig.software.regen.client.screen.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;

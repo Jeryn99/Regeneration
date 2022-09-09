@@ -101,13 +101,4 @@ public class VisualManipulator {
         PLAYER_SKINS.remove(uuid);
     }
 
-    public static ResourceLocation getSkinToUse(AbstractClientPlayer playerEntity) {
-        UUID uuid = playerEntity.getGameProfile().getId();
-        if (PLAYER_SKINS.containsKey(uuid)) {
-            return PLAYER_SKINS.get(uuid);
-        }
-
-        return playerEntity.getSkinTextureLocation();
-    }
-
 }
