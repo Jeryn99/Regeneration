@@ -3,16 +3,17 @@ package mc.craig.software.regen.fabric.mixin;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.config.RegenConfig;
+import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
@@ -32,16 +33,15 @@ public class LivingEntityMixin {
         }
     }
 
-    @ModifyArgs(method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInvulnerableTo(Lnet/minecraft/world/damagesource/DamageSource;)Z", shift = At.Shift.BY, by = 2))
-    private void modifyDamageAmount(Args args) {
-        //TODO Modify damage amount if in post
-       /* LivingEntity livingEntity = (LivingEntity) (Object) this;
+    @ModifyVariable(method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", at = @At(value = "HEAD"))
+    private float modifyDamageAmount(float value) {
+        LivingEntity livingEntity = (LivingEntity) (Object) this;
         RegenerationData data = RegenerationData.get(livingEntity).get();
-        DamageSource damageSource = args.get(0);
-        if (data.regenState() == RegenStates.POST && damageSource != DamageSource.OUT_OF_WORLD && damageSource != RegenSources.REGEN_DMG_HAND) {
-            args.set(1, 1.5F); //Set amount to 1.5
+        if (data.regenState() == RegenStates.POST && value != Integer.MAX_VALUE) { //TODO Do this damage source dependent
             PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
-        };*/
+            return 1.5F;
+        }
+        return value;
     }
 
     @Inject(at = @At("HEAD"), method = "tick()V", cancellable = true)

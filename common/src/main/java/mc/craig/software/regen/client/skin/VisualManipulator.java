@@ -26,8 +26,6 @@ public class VisualManipulator {
     public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
     public static void tick(AbstractClientPlayer playerEntity) {
-
-
         RegenerationData.get(playerEntity).ifPresent(iRegen -> {
 
             byte[] skin = iRegen.skin();

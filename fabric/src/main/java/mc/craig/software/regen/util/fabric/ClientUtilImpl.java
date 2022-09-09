@@ -15,7 +15,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 
@@ -34,7 +33,7 @@ public class ClientUtilImpl {
     }
 
     public static void itemPredicates() {
-        ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, i) -> {
+        ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (itemStack, clientLevel, livingEntity, i) -> {
             boolean isGold = getEngrave(itemStack);
             boolean isOpen = isOpen(itemStack);
             if (isOpen && isGold) {
@@ -70,12 +69,10 @@ public class ClientUtilImpl {
         ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (itemStack, clientLevel, livingEntity, i) -> HandItem.isAlex(itemStack) ? 1 : 0);
 
 
-        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> {
-            if (itemStack == null || itemStack.isEmpty()) {
-                return 0;
-            }
-            SpawnItem.Timelord type = SpawnItem.getType(itemStack);
-            return type.ordinal();
+        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> switch (SpawnItem.getType(itemStack)) {
+            case FEMALE_COUNCIL -> 0.1F;
+            case MALE_COUNCIL -> 0.2F;
+            case GUARD -> 0.3F;
         });
     }
 

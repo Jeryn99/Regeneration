@@ -16,7 +16,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,14 +23,13 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 public class IncarnationScreen extends AbstractContainerScreen {
@@ -42,11 +40,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType currentSkinType = RegenerationData.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
-    private static List<ResourceLocation> skinTextures = new ArrayList<>();
+    private static final List<ResourceLocation> skinTextures = new ArrayList<>();
     private static int position = 0;
     private RCheckbox excludeTrending;
     private EditBox searchField;
-    private ArrayList<DescButton> descButtons = new ArrayList<>();
+    private final ArrayList<DescButton> descButtons = new ArrayList<>();
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), Component.literal("Next Incarnation"));
@@ -295,7 +293,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         descButtons.forEach(descButton -> {
             if (descButton.isHoveredOrFocused()) {
                 if (descButton.getDescription() != null) {
-                    //    public void renderTooltip(PoseStack poseStack, List<Component> tooltips, Optional<TooltipComponent> visualTooltipComponent, int mouseX, int mouseY) {
                     this.renderTooltip(matrixStack, descButton.getDescription(), Optional.empty(), mouseX, mouseY);
                 }
             }

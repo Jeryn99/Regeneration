@@ -61,12 +61,10 @@ public class ClientUtilImpl {
         ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (itemStack, clientLevel, livingEntity, i) -> HandItem.isAlex(itemStack) ? 1 : 0);
 
 
-        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> {
-            if (itemStack == null || itemStack.isEmpty()) {
-                return 0;
-            }
-            SpawnItem.Timelord type = SpawnItem.getType(itemStack);
-            return type.ordinal();
+        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> switch (SpawnItem.getType(itemStack)) {
+            case FEMALE_COUNCIL -> 0.1F;
+            case MALE_COUNCIL -> 0.2F;
+            case GUARD -> 0.3F;
         });
     }
 
