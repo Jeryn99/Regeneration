@@ -2,18 +2,16 @@ package mc.craig.software.regen.forge;
 
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.entities.Timelord;
+import mc.craig.software.regen.common.entities.Watcher;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RSoundSchemes;
 import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
+import mc.craig.software.regen.util.PlayerUtil;
+import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.tags.BiomeTagsProvider;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -44,12 +42,14 @@ public class RegenerationForge {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         RSoundSchemes.init();
-
+        RegenUtil.setupNames();
+        PlayerUtil.setupPotions();
         event.enqueueWork(StructurePieces::init);
     }
 
     public void onAttributeAssign(EntityAttributeCreationEvent event) {
         event.put(REntities.TIMELORD.get(), Timelord.createAttributes().build());
+        event.put(REntities.WATCHER.get(), Watcher.createAttributes().build());
     }
 
 

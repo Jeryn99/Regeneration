@@ -50,7 +50,6 @@ public class RegenerationData implements IRegen {
     private boolean isAlex = false;
     private byte[] skinArray = new byte[0];
     private int regensLeft = 0, animationTicks = 0;
-    private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionType transitionType = TransitionTypes.TRISTIS_IGNIS;
     private boolean areHandsGlowing = false, traitActive = true;
@@ -113,8 +112,6 @@ public class RegenerationData implements IRegen {
         } else {
             regenAnimState.stop();
         }
-
-        System.out.println(regenState());
 
         if (regenState() == RegenStates.GRACE_CRIT) {
             if (!graceAnimState.isStarted()) {
@@ -326,16 +323,6 @@ public class RegenerationData implements IRegen {
     }
 
     @Override
-    public String deathMessage() {
-        return this.deathMessage;
-    }
-
-    @Override
-    public void setDeathMessage(String deathMessage) {
-        this.deathMessage = deathMessage;
-    }
-
-    @Override
     public void forceRegeneration() {
         if (livingEntity != null) {
             livingEntity.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
@@ -410,16 +397,6 @@ public class RegenerationData implements IRegen {
     @Override
     public boolean isNextSkinTypeAlex() {
         return nextSkinTypeAlex;
-    }
-
-    @Override
-    public boolean traitActive() {
-        return traitActive;
-    }
-
-    @Override
-    public void toggleTrait() {
-        this.traitActive = !traitActive;
     }
 
     @Override
@@ -556,22 +533,6 @@ public class RegenerationData implements IRegen {
         }
 
         @Override
-        public boolean onPunchEntity(LivingEntity entity) {
-            // We're healing mobs...
-            if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && glowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
-                float healthNeeded = entity.getMaxHealth() - entity.getHealth();
-                entity.heal(healthNeeded);
-                if (livingEntity instanceof Player) {
-                    PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.healed", entity.getName()), true);
-                }
-               //TODO event.setAmount(0.0F);
-                livingEntity.hurt(RegenSources.REGEN_DMG_HEALING, healthNeeded);
-            }
-            return false;
-        }
-
-
-        @Override
         public boolean onPunchBlock(BlockPos pos, BlockState blockState, Player entity) {
 
             if (currentState.isGraceful() && glowing()) {
@@ -579,18 +540,14 @@ public class RegenerationData implements IRegen {
                 if (blockState.getBlock() == Blocks.SNOW || blockState.getBlock() == Blocks.SNOW_BLOCK) {
                     entity.level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
                 }
-                if (entity instanceof ServerPlayer) {
+                if (entity instanceof ServerPlayer serverPlayer) {
                     ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                     TriggerManager.CHANGE_REFUSAL.trigger(playerEntity);
+                    PlayerUtil.sendMessage(serverPlayer, Component.translatable("regen.messages.regen_delayed"), true);
                 }
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
-                if (!entity.level.isClientSide) {
-                    if (entity != null) {
-                        PlayerUtil.sendMessage(entity, Component.translatable("regen.messages.regen_delayed"), true);
-                    }
-                }
                return true;
             }
             return false;
@@ -630,8 +587,10 @@ public class RegenerationData implements IRegen {
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof Player) {
                     MutableComponent text = Component.translatable("regen.messages.regen_death_msg", livingEntity.getName());
-                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(deathMessage()))));
-                    PlayerUtil.globalChat(text, Objects.requireNonNull(livingEntity.getServer()));
+                    if (livingEntity.getLastDamageSource() != null) {
+                        text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, livingEntity.getLastDamageSource().getLocalizedDeathMessage(livingEntity))));
+                    }
+                    PlayerUtil.globalMessage(text, Objects.requireNonNull(livingEntity.getServer()));
                 }
             }
 

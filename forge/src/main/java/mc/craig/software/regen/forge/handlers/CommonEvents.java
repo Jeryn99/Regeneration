@@ -1,23 +1,17 @@
 package mc.craig.software.regen.forge.handlers;
 
-import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.commands.RegenCommand;
-import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DiggerItem;
-import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -25,21 +19,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void noFire(LivingAttackEvent event) {
-        if (event.getEntity() == null) return;
-        RegenerationData.get(event.getEntity()).ifPresent((iRegen -> {
-            // Entity is immune to explosion and fire (if configured) damage while regenerating
-            if (iRegen.regenState() == RegenStates.REGENERATING && (RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || event.getSource().isExplosion())) {
-                event.setCanceled(true);
-            }
-        }));
-    }
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
@@ -47,19 +29,10 @@ public class CommonEvents {
         if (livingEntity == null) return;
 
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
-            Entity trueSource = event.getSource().getEntity();
-
-            if (trueSource instanceof Player player && event.getEntity() != null) {
-                // Player punched something
-                RegenerationData.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event.getEntity()));
-            }
 
             // Stop certain damages
             if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
                 return;
-
-            //Update Death Message
-            iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
             //Handle Post
             if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
@@ -70,7 +43,6 @@ public class CommonEvents {
             //Handle Death
             if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
                 event.setCanceled(true);//cancels damage, in case the above didn't cut it
-                return;
             }
         });
     }
@@ -136,14 +108,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onCut(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().getItem() instanceof DiggerItem || event.getItemStack().getItem() instanceof SwordItem) {
-            Player player = event.getEntity();
-            RegenerationData.get(player).ifPresent((data) -> {
-                if (data.regenState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
-                    HandItem.createHand(player);
-                }
-            });
-        }
+        RegenUtil.spawnHandIfPossible(event.getEntity(), event.getItemStack());
     }
 
 

@@ -68,7 +68,7 @@ public class PlayerUtil {
         }
     }
 
-    public static void globalChat(Component body, MinecraftServer server) {
+    public static void globalMessage(Component body, MinecraftServer server) {
         if (server == null) return;
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.sendSystemMessage(body);

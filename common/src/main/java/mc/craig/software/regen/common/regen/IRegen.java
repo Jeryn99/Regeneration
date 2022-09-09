@@ -14,12 +14,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface IRegen extends Serializable<CompoundTag> {
 
-    public enum RegenAnimation {
+    enum RegenAnimation {
         REGEN, GRACE
     }
 
@@ -59,10 +58,6 @@ public interface IRegen extends Serializable<CompoundTag> {
 
     void setTransitionType(TransitionType transitionType);
 
-    String deathMessage();
-
-    void setDeathMessage(String deathMessage);
-
     void forceRegeneration();
 
     byte[] skin();
@@ -94,10 +89,6 @@ public interface IRegen extends Serializable<CompoundTag> {
 
     boolean isNextSkinTypeAlex();
 
-    boolean traitActive();
-
-    void toggleTrait();
-
     TimelordSound getTimelordSound();
 
     void setTimelordSound(TimelordSound timelordSound);
@@ -113,7 +104,7 @@ public interface IRegen extends Serializable<CompoundTag> {
     }
 
     enum TimelordSound implements RegenUtil.IEnum<TimelordSound> {
-        DRUM(RSounds.DRUM_BEAT::get), HUM(RSounds.GRACE_HUM::get), SAXON_ENGLAND(RSounds.SAXONS_ENGLAND::get);
+        DRUM(RSounds.DRUM_BEAT), HUM(RSounds.GRACE_HUM), SAXON_ENGLAND(RSounds.SAXONS_ENGLAND);
 
         private final Supplier<SoundEvent> sound;
 

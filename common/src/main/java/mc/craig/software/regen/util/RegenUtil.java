@@ -2,22 +2,28 @@ package mc.craig.software.regen.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import mc.craig.software.regen.common.item.HandItem;
+import mc.craig.software.regen.common.regen.IRegen;
+import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.state.RegenStates;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class RegenUtil {
 
@@ -109,17 +115,22 @@ public class RegenUtil {
         }
     }
 
-    public static String encodeFileToBase64Binary(File file) throws IOException {
-        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
-        return new String(encoded, StandardCharsets.US_ASCII);
-    }
-
     public static String colorToHex(Color color) {
         StringBuilder hex = new StringBuilder(Integer.toHexString(color.getRGB() & 0xffffff));
         while (hex.length() < 6) {
             hex.insert(0, "0");
         }
         return "#" + hex;
+    }
+
+    public static void spawnHandIfPossible(LivingEntity livingEntity, ItemStack itemStack) {
+        if (itemStack.getItem() instanceof DiggerItem || itemStack.getItem() instanceof SwordItem) {
+            RegenerationData.get(livingEntity).ifPresent((data) -> {
+                if (data.regenState() == RegenStates.POST && livingEntity.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
+                    HandItem.createHand(livingEntity);
+                }
+            });
+        }
     }
 
     public interface IEnum<E extends Enum<E>> {
