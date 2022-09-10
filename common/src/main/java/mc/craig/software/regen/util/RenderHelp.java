@@ -1,19 +1,15 @@
 package mc.craig.software.regen.util;
 
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class RenderHelp {
-    private static final ResourceLocation VIGNETTE_LOCATION = new ResourceLocation(RConstants.MODID, "textures/gui/vignette.png");
+    public static final ResourceLocation VIGNETTE_LOCATION = new ResourceLocation(RConstants.MODID, "textures/gui/vignette.png");
 
     public static void renderFilledBox(PoseStack stack, VertexConsumer vertexConsumer, AABB box, float red, float green, float blue, float alpha, int combinedLightIn) {
         Matrix4f matrix = stack.last().pose();
@@ -96,24 +92,35 @@ public class RenderHelp {
     }
 
     public static void renderVig(PoseStack poseStack, Vec3 vector3d, float alpha) {
-//TODO
-     /*   RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
+     /*   poseStack.pushPose();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor((float) vector3d.x, (float) vector3d.y, (float) vector3d.z, alpha);
         RenderSystem.setShaderTexture(0, VIGNETTE_LOCATION);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-        int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        int screenHeight = Minecraft.getInstance().getWindow().getScreenHeight();
+        int screenWidth = Minecraft.getInstance().getWindow().getScreenWidth();
         bufferBuilder.vertex(0.0, screenHeight, -90.0).uv(0.0F, 1.0F).endVertex();
         bufferBuilder.vertex(screenWidth, screenHeight, -90.0).uv(1.0F, 1.0F).endVertex();
         bufferBuilder.vertex(screenWidth, 0.0, -90.0).uv(1.0F, 0.0F).endVertex();
         bufferBuilder.vertex(0.0, 0.0, -90.0).uv(0.0F, 0.0F).endVertex();
         tesselator.end();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);*/
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
+        poseStack.popPose();*/
     }
 
 }

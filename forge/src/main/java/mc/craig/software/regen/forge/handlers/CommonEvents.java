@@ -16,12 +16,18 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
+
+    @SubscribeEvent
+    public static void onServerStart(ServerStartingEvent serverStartingEvent) {
+        RegenUtil.setupNames();
+    }
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {

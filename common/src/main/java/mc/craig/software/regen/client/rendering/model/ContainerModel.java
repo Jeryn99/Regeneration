@@ -26,11 +26,13 @@ public class ContainerModel extends HierarchicalModel {
     public final ModelPart lid;
     private final ModelPart jar;
     private final ModelPart root;
+    private final ModelPart fluid;
 
     public ContainerModel(ModelPart root) {
         this.root = root;
         this.lid = root.getChild("lid");
         this.jar = root.getChild("jar");
+        this.fluid = root.getChild("jar").getChild("fluid");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -42,12 +44,14 @@ public class ContainerModel extends HierarchicalModel {
 
         PartDefinition jar = partdefinition.addOrReplaceChild("jar", CubeListBuilder.create().texOffs(0, 22).addBox(-1.0F, -13.0F, 4.0F, 2.0F, 5.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(17, 43).addBox(-3.0F, -12.0F, 3.0F, 6.0F, 10.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(35, 47).addBox(-2.5F, -11.75F, -3.5F, 5.0F, 10.0F, 7.0F, new CubeDeformation(-0.2F))
+                .texOffs(0, 32).addBox(-1.5F, -12.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(26, 26).addBox(-2.5F, -13.0F, -3.0F, 5.0F, 11.0F, 6.0F, new CubeDeformation(0.0F))
                 .texOffs(32, 0).addBox(-3.0F, -12.0F, -4.0F, 6.0F, 10.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 0).addBox(-1.0F, -10.0F, -5.0F, 2.0F, 7.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(24, 14).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 12).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.2F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+        PartDefinition fluid = jar.addOrReplaceChild("fluid", CubeListBuilder.create().texOffs(35, 47).addBox(-2.5F, -12.75F, -3.5F, 5.0F, 11.0F, 7.0F, new CubeDeformation(-0.2F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
@@ -64,7 +68,7 @@ public class ContainerModel extends HierarchicalModel {
     }
 
     @Override
-    public void setupAnim(@NotNull Entity p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {
+    public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
     }
 
@@ -72,5 +76,6 @@ public class ContainerModel extends HierarchicalModel {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         animate(containerBlock.getOpenState(), CLOSE, Minecraft.getInstance().player.tickCount);
         animate(containerBlock.getCloseState(), OPEN, Minecraft.getInstance().player.tickCount);
+        this.fluid.visible = containerBlock.hasWater();
     }
 }

@@ -2,6 +2,7 @@ package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.objects.RItems;
+import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
@@ -10,7 +11,6 @@ import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -106,8 +106,7 @@ public class FobWatchItem extends Item {
             if (!world.isClientSide()) {
                 ServerLevel serverWorld = (ServerLevel) world;
                 BlockPos blockPos = player.blockPosition();
-                //TODO Custom Particle
-                serverWorld.sendParticles(ParticleTypes.ANGRY_VILLAGER, blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
+                serverWorld.sendParticles(RParticles.CONTAINER.get(), blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
             }
 
             if (used < 0)

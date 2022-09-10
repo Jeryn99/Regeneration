@@ -1,7 +1,7 @@
 package mc.craig.software.regen.mixin;
 
-import mc.craig.software.regen.client.visual.AnimationManipulation;
 import mc.craig.software.regen.client.animation.AnimationHandler;
+import mc.craig.software.regen.client.visual.AnimationManipulation;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
@@ -43,8 +43,6 @@ public class BipedBodyMixin {
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
-
-            //TODO Animations have bugged?
 
             // "Sneeze" animation
             if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE) {

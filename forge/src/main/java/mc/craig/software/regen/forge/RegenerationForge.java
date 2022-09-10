@@ -10,7 +10,6 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -42,7 +41,6 @@ public class RegenerationForge {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         RSoundSchemes.init();
-        RegenUtil.setupNames();
         PlayerUtil.setupPotions();
         event.enqueueWork(StructurePieces::init);
     }

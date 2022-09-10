@@ -1,11 +1,13 @@
 package mc.craig.software.regen.forge.handlers;
 
+import mc.craig.software.regen.client.ArmorModelManager;
+import mc.craig.software.regen.client.rendering.JarParticle;
 import mc.craig.software.regen.client.rendering.layers.HandLayer;
 import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.model.RModels;
-import mc.craig.software.regen.client.ArmorModelManager;
 import mc.craig.software.regen.client.rendering.model.forge.RModelsImpl;
 import mc.craig.software.regen.client.sound.SoundReverbListener;
+import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -36,6 +39,11 @@ public class ClientModBus {
                 bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
     }
 
     @SubscribeEvent

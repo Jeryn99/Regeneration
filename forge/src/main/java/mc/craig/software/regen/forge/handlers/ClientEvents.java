@@ -1,9 +1,9 @@
 package mc.craig.software.regen.forge.handlers;
 
-import mc.craig.software.regen.client.visual.FogTracker;
 import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.client.skin.VisualManipulator;
+import mc.craig.software.regen.client.visual.FogTracker;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -12,17 +12,13 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.ClientUtil;
-import mc.craig.software.regen.util.RConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -37,10 +33,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
-
-    public static ResourceLocation OLD = GuiComponent.GUI_ICONS_LOCATION;
-    public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/crosshair.png");
-    private static SoundInstance iSound = null;
 
     @SubscribeEvent
     public static void onName(RenderNameTagEvent event) {

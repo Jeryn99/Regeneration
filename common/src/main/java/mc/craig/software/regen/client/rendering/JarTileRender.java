@@ -13,17 +13,14 @@ import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import mc.craig.software.regen.common.item.HandItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -117,15 +114,5 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
             return res;
         }
         return TEXTURES.get(tileEntityHandInJar);
-    }
-
-    private int getCombinedAverageLight(BlockAndTintGetter lightReaderIn, BlockPos posIn) {
-        int i = LevelRenderer.getLightColor(lightReaderIn, posIn);
-        int j = LevelRenderer.getLightColor(lightReaderIn, posIn.above());
-        int k = i & 255;
-        int l = j & 255;
-        int i1 = i >> 16 & 255;
-        int j1 = j >> 16 & 255;
-        return (Math.max(k, l)) | (Math.max(i1, j1)) << 16;
     }
 }

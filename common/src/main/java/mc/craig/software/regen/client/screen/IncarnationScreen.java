@@ -30,10 +30,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class IncarnationScreen extends AbstractContainerScreen {
@@ -285,13 +283,13 @@ public class IncarnationScreen extends AbstractContainerScreen {
         }*/
 
         //TODO
-      /*  descButtons.forEach(descButton -> {
+        descButtons.forEach(descButton -> {
             if (descButton.isHoveredOrFocused()) {
                 if (descButton.getDescription() != null) {
-                    this.renderTooltip(matrixStack, descButton.getDescription(), Optional.empty(), mouseX, mouseY);
+                    this.renderTooltip(matrixStack, descButton.getDescription(), Optional.empty(), descButton.x, descButton.y);
                 }
             }
-        });*/
+        });
     }
 
     //Spectre0987

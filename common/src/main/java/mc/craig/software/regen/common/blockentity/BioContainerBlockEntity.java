@@ -2,11 +2,11 @@ package mc.craig.software.regen.common.blockentity;
 
 import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.objects.RItems;
+import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.objects.RTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
@@ -28,10 +28,12 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     private final AnimationState openState = new AnimationState();
     private final AnimationState closeState = new AnimationState();
     private ItemStack hand;
+    private boolean hasWater;
 
     public BioContainerBlockEntity(BlockPos pos, BlockState state) {
         super(RTiles.HAND_JAR.get(), pos, state);
         this.hand = ItemStack.EMPTY;
+        this.hasWater = false;
     }
 
     public static void spawnParticles(Level world, BlockPos blockPos) {
@@ -44,8 +46,7 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
                 double x = currentDirection == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
                 double y = currentDirection == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
                 double z = currentDirection == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
-                //TODO Custom Particle
-                world.addParticle(ParticleTypes.SMALL_FLAME, (double) blockPos.getX() + x, (double) blockPos.getY() + y, (double) blockPos.getZ() + z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(RParticles.CONTAINER.get(), (double) blockPos.getX() + x, (double) blockPos.getY() + y, (double) blockPos.getZ() + z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -101,10 +102,10 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
 
     public boolean isValid(Action action) {
         if (action == Action.ADD) {
-            return getHand().getItem() == RItems.HAND.get() && getLindos() < 100;
+            return getHand().getItem() == RItems.HAND.get() && getLindos() < 100 && hasWater;
         }
         if (action == Action.CREATE) {
-            return getHand().getItem() == RItems.HAND.get() && getLindos() >= 100;
+            return getHand().getItem() == RItems.HAND.get() && getLindos() >= 100 && hasWater;
         }
         return false;
     }
@@ -147,17 +148,23 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     public void load(CompoundTag nbt) {
         setLindos(nbt.getFloat("energy"));
         setUpdateSkin(nbt.getBoolean("update_skin"));
+        setHasWater(nbt.getBoolean("hasWater"));
         super.load(nbt);
         if (nbt.contains("HandItem", 10)) {
             this.setHand(ItemStack.of(nbt.getCompound("HandItem")));
         }
     }
 
+    public void setHasWater(boolean hasWater) {
+        this.hasWater = hasWater;
+    }
+
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         compound.putFloat("energy", getLindos());
-        compound.putBoolean("update_skin", updateSkin);
+        compound.putBoolean("updateSkin", updateSkin);
+        compound.putBoolean("hasWater", hasWater);
         compound.put("HandItem", this.getHand().save(new CompoundTag()));
         super.saveAdditional(compound);
     }
@@ -189,6 +196,10 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     @Override
     public void setRemoved() {
         super.setRemoved();
+    }
+
+    public boolean hasWater() {
+        return hasWater;
     }
 
     public enum Action {

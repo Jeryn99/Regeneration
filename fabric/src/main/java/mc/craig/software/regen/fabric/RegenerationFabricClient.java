@@ -1,13 +1,16 @@
 package mc.craig.software.regen.fabric;
 
 import com.google.common.primitives.Longs;
-import mc.craig.software.regen.client.RKeybinds;
-import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.ArmorModelManager;
+import mc.craig.software.regen.client.RKeybinds;
+import mc.craig.software.regen.client.rendering.JarParticle;
+import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.sound.SoundReverbListener;
+import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.fabric.handlers.ClientEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -54,5 +57,6 @@ public class RegenerationFabricClient implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(RKeybinds.REGEN_GUI);
         register(PackType.CLIENT_RESOURCES, new SoundReverbListener());
         register(PackType.CLIENT_RESOURCES, new ArmorModelManager());
+        ParticleFactoryRegistry.getInstance().register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
     }
 }

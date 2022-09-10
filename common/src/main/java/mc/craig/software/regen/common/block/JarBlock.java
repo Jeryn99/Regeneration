@@ -7,7 +7,6 @@ import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -15,6 +14,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -63,22 +65,22 @@ public class JarBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        double d = (double) pos.getX() + 0.4 + (double) random.nextFloat() * 0.2;
-        double e = (double) pos.getY() + 0.7 + (double) random.nextFloat() * 0.3;
-        double f = (double) pos.getZ() + 0.4 + (double) random.nextFloat() * 0.2;
-        level.addParticle(ParticleTypes.BUBBLE, d, e, f, 0.0, 0.0, 0.0);
-    }
-
-    @Override
     public @NotNull InteractionResult use(@NotNull BlockState state, Level worldIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (!worldIn.isClientSide()) {
             BioContainerBlockEntity jarTile = (BioContainerBlockEntity) worldIn.getBlockEntity(pos);
 
             if (handIn != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
 
+            if (player.getMainHandItem().getItem() == Items.WATER_BUCKET || PotionUtils.getPotion(player.getMainHandItem()) == Potions.WATER) {
+                jarTile.setHasWater(true);
+                if (player.isCreative()) {
+                    player.getMainHandItem().shrink(1);
+                }
+            }
+
+
             if (!player.isShiftKeyDown()) {
-                if (player.getMainHandItem().getItem() == RItems.HAND.get()) {
+                if (player.getMainHandItem().getItem() == RItems.HAND.get() && jarTile.hasWater()) {
                     if (jarTile != null) {
                         jarTile.dropHandIfPresent(player);
                         jarTile.setHand(player.getMainHandItem().copy());
@@ -92,7 +94,7 @@ public class JarBlock extends Block implements EntityBlock {
                 jarTile.sendUpdates();
             }
 
-            if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(BioContainerBlockEntity.Action.CREATE)) {
+            if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(BioContainerBlockEntity.Action.CREATE) && jarTile.hasWater()) {
                 RegenerationData.get(player).ifPresent(iRegen -> {
                     if (iRegen.regenState() == RegenStates.ALIVE) {
                         iRegen.addRegens(1);

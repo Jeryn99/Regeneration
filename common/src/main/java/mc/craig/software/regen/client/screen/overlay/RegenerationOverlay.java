@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Transformation;
 import mc.craig.software.regen.client.RKeybinds;
-import mc.craig.software.regen.common.item.GunItem;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
@@ -38,8 +37,6 @@ public class RegenerationOverlay {
 
         RegenerationData.get(player).ifPresent((cap) -> {
             String warning = null;
-
-            RenderHelp.renderVig(poseStack, cap.getPrimaryColors(), 0.3F);
 
             if(cap.regenState() != RegenStates.ALIVE){
                 warning = cap.regenState().name();
