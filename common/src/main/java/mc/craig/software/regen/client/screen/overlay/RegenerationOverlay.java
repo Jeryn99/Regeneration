@@ -2,31 +2,23 @@ package mc.craig.software.regen.client.screen.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Transformation;
 import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.util.RConstants;
-import mc.craig.software.regen.util.RenderHelp;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.phys.Vec3;
 
 public class RegenerationOverlay {
 
-    public static ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/text_item.png");
+    public static ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/regen_state/icons.png");
 
     public static ResourceLocation CUSTOM_ICONS = new ResourceLocation(RConstants.MODID, "textures/gui/hearts.png");
 
-    public static void renderAll(PoseStack poseStack){
+    public static void renderAll(PoseStack poseStack) {
         renderUi(poseStack);
     }
 
@@ -36,9 +28,23 @@ public class RegenerationOverlay {
         Component forceKeybind = RKeybinds.FORCE_REGEN.getTranslatedKeyMessage();
 
         RegenerationData.get(player).ifPresent((cap) -> {
-            String warning = null;
 
-            if(cap.regenState() != RegenStates.ALIVE){
+            if (cap.regenState() != RegenStates.ALIVE) {
+
+                if (cap.regenState() == RegenStates.POST) {
+                    RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
+                    GuiComponent.blit(poseStack, 8, 10, 8, 8, 8, 8, 64, 64);
+                    GuiComponent.blit(poseStack, 8, 10, 40, 8, 8, 8, 64, 64);
+                }
+
+                // Render Status
+                RenderSystem.setShaderTexture(0, BACKGROUND);
+                GuiComponent.blit(poseStack, 4, 4, cap.regenState().getUOffset(), cap.regenState().getYOffset(), 16, 16, 64, 16);
+            }
+            // OILD
+        /*    String warning = null;
+
+            if (cap.regenState() != RegenStates.ALIVE) {
                 warning = cap.regenState().name();
             }
 
@@ -63,14 +69,32 @@ public class RegenerationOverlay {
                 RenderHelp.renderVig(poseStack, TransitionTypes.FIERY.getDefaultPrimaryColor(), 0.5F);
             }
 
+            int remaining = 12 - (cap.regens());
+            String time = "" + remaining;
+            switch (remaining) {
+                case 1:
+                    time = time + "st";
+                    break;
+                case 2:
+                    time = time + "nd";
+                    break;
+                case 3:
+                    time = time + "rd";
+                    break;
+                default:
+                    time = time + "th";
+                    break;
+            }
+            warning = time;
+
             MultiBufferSource.BufferSource renderImpl = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
             if (warning != null) {
                 RenderSystem.setShaderTexture(0, BACKGROUND);
-                GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() - 140, 4, 0, 0, 134, 22, 134, 22);
+                GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() - 140, 4, 0, 0, 15, 14, 15, 14);
 
                 Minecraft.getInstance().font.drawInBatch(warning, Minecraft.getInstance().getWindow().getGuiScaledWidth() - Minecraft.getInstance().font.width(warning) - 50, 11, ChatFormatting.WHITE.getColor(), false, Transformation.identity().getMatrix(), renderImpl, false, 0, 15728880);
                 renderImpl.endBatch();
-            }
+            }*/
         });
     }
 

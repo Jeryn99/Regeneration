@@ -4,20 +4,15 @@ import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.client.visual.FogTracker;
-import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
-import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -119,34 +114,8 @@ public class ClientEvents {
     public static void keyInput(MovementInputUpdateEvent e) {
         if (Minecraft.getInstance().player == null) return;
         LocalPlayer player = Minecraft.getInstance().player;
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent((data -> {
-            if (data.regenState() == RegenStates.REGENERATING) { // locking user
-                Input moveType = e.getInput();
-                blockMovement(moveType);
-                upwardsMovement(player, data);
-            }
-        }));
+        ClientUtil.handleInput(player, e.getInput());
     }
 
-    private static void upwardsMovement(LocalPlayer player, IRegen data) {
-        if (data.transitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
-            if (player.blockPosition().getY() <= 100) {
-                BlockPos upwards = player.blockPosition().above(2);
-                BlockPos pos = upwards.subtract(player.blockPosition());
-                Vec3 vec = new Vec3(pos.getX(), pos.getY(), pos.getZ()).normalize();
-                player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
-            }
-        }
-    }
-
-    private static void blockMovement(Input moveType) {
-        moveType.right = false;
-        moveType.left = false;
-        moveType.down = false;
-        moveType.jumping = false;
-        moveType.forwardImpulse = 0.0F;
-        moveType.shiftKeyDown = false;
-        moveType.leftImpulse = 0.0F;
-    }
 
 }

@@ -6,6 +6,7 @@
     "EntityRenderDispatcherMixin",
     "HumanoidArmorLayerMixin",
     "ItemInHandRendererMixin",
+    "LocalPlayerMixin",
     "RenderPlayerMixin"
   ],
   "mixins": [

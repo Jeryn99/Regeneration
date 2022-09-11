@@ -12,6 +12,7 @@ import mc.craig.software.regen.client.rendering.transitions.*;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
+import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
@@ -25,9 +26,11 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -38,6 +41,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -48,6 +52,36 @@ public class ClientUtil {
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
     private static SimpleSoundInstance iSound;
+
+    public static void handleInput(LocalPlayer localPlayer, Input input) {
+        RegenerationData.get(localPlayer).ifPresent((data -> {
+            if (data.regenState() == RegenStates.REGENERATING) { // locking user
+                blockMovement(input);
+                upwardsMovement(localPlayer, data);
+            }
+        }));
+    }
+
+    private static void upwardsMovement(LocalPlayer player, IRegen data) {
+        if (data.transitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
+            if (player.blockPosition().getY() <= 100) {
+                BlockPos upwards = player.blockPosition().above(2);
+                BlockPos pos = upwards.subtract(player.blockPosition());
+                Vec3 vec = new Vec3(pos.getX(), pos.getY(), pos.getZ()).normalize();
+                player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
+            }
+        }
+    }
+
+    private static void blockMovement(Input moveType) {
+        moveType.right = false;
+        moveType.left = false;
+        moveType.down = false;
+        moveType.jumping = false;
+        moveType.forwardImpulse = 0.0F;
+        moveType.shiftKeyDown = false;
+        moveType.leftImpulse = 0.0F;
+    }
 
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayer abstractClientPlayerEntity) {

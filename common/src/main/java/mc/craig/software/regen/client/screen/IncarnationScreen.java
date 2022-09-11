@@ -58,6 +58,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         if (!skins.isEmpty()) {
             isAlex = skins.get(position).toString().contains("\\skins\\alex");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
+            currentTexture = SkinRetriever.fileTotexture(skins.get(position));
         }
     }
 
