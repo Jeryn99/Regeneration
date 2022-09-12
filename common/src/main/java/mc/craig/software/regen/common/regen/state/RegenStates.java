@@ -2,7 +2,7 @@ package mc.craig.software.regen.common.regen.state;
 
 public enum RegenStates {
 
-    ALIVE(0, 0), GRACE(32, 0), GRACE_CRIT(64, 0), POST(16, 0), REGENERATING(0, 0);
+    ALIVE(0, 0), GRACE(32, 0), GRACE_CRIT(48, 0), POST(16, 0), REGENERATING(0, 0);
 
     private final int offsetY, offsetX;
 

@@ -64,7 +64,7 @@ public class VisualManipulator {
     public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
         PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
         if (playerInfo == null) return;
-        playerInfo.skinModel = isAlex ? "slim" : "default";
+        playerInfo.skinModel = isAlex ? "slim" : null;
     }
 
     public static void sendResetMessage() {

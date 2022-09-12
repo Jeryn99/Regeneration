@@ -66,7 +66,7 @@ public class ClientActing implements Acting {
                 }
                 Minecraft.getInstance().submit(() -> {
                     if (!cap.isNextSkinValid()) {
-                        File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
+                        File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), false, cap.preferredModel().isAlex());
                         boolean isAlex = file.getAbsolutePath().contains("\\skins\\slim");
                         Regeneration.LOGGER.info("Chosen Skin: " + file);
                         new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();

@@ -29,18 +29,24 @@ public class RegenerationOverlay {
 
         RegenerationData.get(player).ifPresent((cap) -> {
 
-            if (cap.regenState() != RegenStates.ALIVE) {
+            RegenStates currentState = cap.regenState();
 
-                if (cap.regenState() == RegenStates.POST) {
-                    RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
-                    GuiComponent.blit(poseStack, 8, 10, 8, 8, 8, 8, 64, 64);
-                    GuiComponent.blit(poseStack, 8, 10, 40, 8, 8, 8, 64, 64);
-                }
+            if (currentState == RegenStates.ALIVE) return;
 
-                // Render Status
-                RenderSystem.setShaderTexture(0, BACKGROUND);
-                GuiComponent.blit(poseStack, 4, 4, cap.regenState().getUOffset(), cap.regenState().getYOffset(), 16, 16, 64, 16);
+            if (currentState == RegenStates.POST) {
+                RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
+                GuiComponent.blit(poseStack, 8, 10, 8, 8, 8, 8, 64, 64);
+                GuiComponent.blit(poseStack, 8, 10, 40, 8, 8, 8, 64, 64);
             }
+
+            // Render Status
+            RenderSystem.setShaderTexture(0, BACKGROUND);
+            GuiComponent.blit(poseStack, 4, 4, cap.regenState().getUOffset(), cap.regenState().getYOffset(), 16, 16, 256, 256);
+
+            if (cap.glowing()) {
+                GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, 64, 0, 16, 16, 256, 256);
+            }
+
             // OILD
         /*    String warning = null;
 

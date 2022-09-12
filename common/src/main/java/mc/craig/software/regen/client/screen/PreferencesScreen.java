@@ -113,6 +113,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
 
         for (int i = 0; i < data.regens(); i++) {
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 34, 0, 9, 9, 256, 256);
+            GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
         }
     }
 

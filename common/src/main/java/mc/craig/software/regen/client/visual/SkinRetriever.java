@@ -13,7 +13,6 @@ import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -23,7 +22,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -102,13 +100,8 @@ public class SkinRetriever {
 
     public static void remoteSkins() throws IOException {
         Regeneration.LOGGER.warn("Downloading new Trending skins");
-
-        int randomPage = RandomSource.create().nextInt(7800);
-
-        for (int i = 3; i > 0; i--) {
-            for (String skin : MineSkin.getSkinsFromPage(randomPage + i)) {
-                downloadSkins(new URL(skin), "mk_" + RandomStringUtils.random(5, true, false), SKINS_DIRECTORY_SLIM_TRENDING, SKINS_DIRECTORY_DEFAULT_TRENDING);
-            }
+        for (String skin : MineSkin.interalApiSkins()) {
+            downloadSkins(new URL(skin), "mk_" + RandomStringUtils.random(5, true, false), SKINS_DIRECTORY_SLIM_TRENDING, SKINS_DIRECTORY_DEFAULT_TRENDING);
         }
     }
 
@@ -155,9 +148,9 @@ public class SkinRetriever {
     public static void doDownloads() throws IOException {
         folderSetup();
         writeTime();
+        remoteSkins();
         timelord();
         internalSkins();
-        remoteSkins();
     }
 
     public static boolean shouldUpdateSkins() throws FileNotFoundException {
