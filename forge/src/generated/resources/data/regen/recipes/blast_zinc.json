@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 150,
+  "experience": 0.8,
+  "ingredient": {
+    "item": "regen:zinc_ore"
+  },
+  "result": "regen:zinc"
+}

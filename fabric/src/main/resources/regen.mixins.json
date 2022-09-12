@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "mc.craig.software.regen.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "EntityRenderDispatcherMixin",
+    "HumanoidArmorLayerMixin",
+    "ItemInHandRendererMixin",
+    "LocalPlayerMixin",
+    "RenderPlayerMixin"
+  ],
+  "mixins": [
+    "LivingDeathInvoker",
+    "LivingEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

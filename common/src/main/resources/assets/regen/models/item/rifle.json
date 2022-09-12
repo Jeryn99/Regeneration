@@ -1,0 +1,16 @@
+{
+  "overrides": [
+    {
+      "predicate": {
+        "regen:aim": 0
+      },
+      "model": "regen:item/gun/rifle_unaimed"
+    },
+    {
+      "predicate": {
+        "regen:aim": 1
+      },
+      "model": "regen:item/gun/rifle_aimed"
+    }
+  ]
+}

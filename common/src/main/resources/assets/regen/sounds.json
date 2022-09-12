@@ -1,0 +1,499 @@
+{
+  "alarm": {
+    "subtitle": "regen.sound.alarm",
+    "sounds": [
+      "regen:alarm"
+    ]
+  },
+  "critical_stage": {
+    "subtitle": "regen.sound.critical_stage",
+    "sounds": [
+      "regen:critical_stage"
+    ]
+  },
+  "drum_beat": {
+    "subtitle": "regen.sound.drum_beat",
+    "sounds": [
+      "regen:drum_beat"
+    ]
+  },
+  "saxons_england": {
+    "subtitle": "regen.sound.saxons_england",
+    "sounds": [
+      "regen:saxons_england"
+    ]
+  },
+  "gun_empty": {
+    "subtitle": "regen.sound.gun_empty",
+    "sounds": [
+      "regen:empty_gun_1",
+      "regen:empty_gun_2",
+      "regen:empty_gun_3"
+    ]
+  },
+  "m_wodaman_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/wodaman/m_timelord_hurt_5",
+      "regen:timelord/male/wodaman/m_timelord_hurt_4",
+      "regen:timelord/male/wodaman/m_timelord_hurt_3",
+      "regen:timelord/male/wodaman/m_timelord_hurt_2",
+      "regen:timelord/male/wodaman/m_timelord_hurt_1"
+    ]
+  },
+  "m_wodaman_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/wodaman/m_timelord_trade_fail_1",
+      "regen:timelord/male/wodaman/m_timelord_trade_fail_2",
+      "regen:timelord/male/wodaman/m_timelord_trade_fail_3",
+      "regen:timelord/male/wodaman/m_timelord_trade_fail_4",
+      "regen:timelord/male/wodaman/m_timelord_trade_fail_5",
+      "regen:timelord/male/wodaman/m_timelord_trade_fail_6"
+    ]
+  },
+  "m_wodaman_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/wodaman/m_timelord_trade_success_1",
+      "regen:timelord/male/wodaman/m_timelord_trade_success_2",
+      "regen:timelord/male/wodaman/m_timelord_trade_success_3",
+      "regen:timelord/male/wodaman/m_timelord_trade_success_4"
+    ]
+  },
+  "m_disaster_timelord_hurt": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/disaster/m_timelord_hurt_3",
+      "regen:timelord/male/disaster/m_timelord_hurt_2",
+      "regen:timelord/male/disaster/m_timelord_hurt_1"
+    ]
+  },
+  "m_disaster_timelord_trade_fail": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/disaster/m_timelord_trade_fail_1",
+      "regen:timelord/male/disaster/m_timelord_trade_fail_2",
+      "regen:timelord/male/disaster/m_timelord_trade_fail_3"
+    ]
+  },
+  "m_disaster_timelord_trade_success": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/disaster/m_timelord_trade_success_1",
+      "regen:timelord/male/disaster/m_timelord_trade_success_2",
+      "regen:timelord/male/disaster/m_timelord_trade_success_3"
+    ]
+  },
+  "m_disaster_timelord_scream": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/disaster/m_timelord_scream_1",
+      "regen:timelord/male/disaster/m_timelord_scream_2"
+    ]
+  },
+  "f_aaliceh_timelord_hurt": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/aaliceh/f_timelord_hurt_5",
+      "regen:timelord/female/aaliceh/f_timelord_hurt_4",
+      "regen:timelord/female/aaliceh/f_timelord_hurt_3",
+      "regen:timelord/female/aaliceh/f_timelord_hurt_2",
+      "regen:timelord/female/aaliceh/f_timelord_hurt_1"
+    ]
+  },
+  "f_aaliceh_timelord_trade_fail": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_1",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_2",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_3",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_4",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_5",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_6",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_7",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_8",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_9",
+      "regen:timelord/female/aaliceh/f_timelord_trade_fail_10"
+    ]
+  },
+  "f_aaliceh_timelord_trade_success": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_1",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_2",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_3",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_4",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_5",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_6",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_7",
+      "regen:timelord/female/aaliceh/f_timelord_trade_success_8"
+    ]
+  },
+  "f_aaliceh_timelord_scream": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/aaliceh/f_timelord_scream_1",
+      "regen:timelord/female/aaliceh/f_timelord_scream_2",
+      "regen:timelord/female/aaliceh/f_timelord_scream_3",
+      "regen:timelord/female/aaliceh/f_timelord_scream_4",
+      "regen:timelord/female/aaliceh/f_timelord_scream_5",
+      "regen:timelord/female/aaliceh/f_timelord_scream_6",
+      "regen:timelord/female/aaliceh/f_timelord_scream_7"
+    ]
+  },
+  "f_asher_timelord_trade_fail": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_trade_fail_1",
+      "regen:timelord/female/asher/f_timelord_trade_fail_2",
+      "regen:timelord/female/asher/f_timelord_trade_fail_3",
+      "regen:timelord/female/asher/f_timelord_trade_fail_4",
+      "regen:timelord/female/asher/f_timelord_trade_fail_5"
+    ]
+  },
+  "f_asher_timelord_die": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_hurt_1"
+    ]
+  },
+  "f_asher_timelord_hurt": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_hurt_1"
+    ]
+  },
+  "f_asher_timelord_scream": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_scream_1",
+      "regen:timelord/female/asher/f_timelord_scream_2"
+    ]
+  },
+  "f_asher_timelord_trade_success": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_trade_success_1",
+      "regen:timelord/female/asher/f_timelord_trade_success_2",
+      "regen:timelord/female/asher/f_timelord_trade_success_3",
+      "regen:timelord/female/asher/f_timelord_trade_success_4"
+    ]
+  },
+  "fob_watch": {
+    "subtitle": "regen.sound.fob_watch",
+    "sounds": [
+      "regen:fob_watch"
+    ]
+  },
+  "grace_hum": {
+    "subtitle": "regen.sound.grace_hum",
+    "sounds": [
+      "regen:hum/grace_hum_1",
+      "regen:hum/grace_hum_2",
+      "regen:hum/grace_hum_3",
+      "regen:hum/grace_hum_4"
+    ]
+  },
+  "hand_glow": {
+    "subtitle": "regen.sound.hand_glow",
+    "sounds": [
+      "regen:hand_glow"
+    ]
+  },
+  "heart_beat": {
+    "subtitle": "regen.sound.heart_beat",
+    "sounds": [
+      "regen:heart_beat"
+    ]
+  },
+  "jar_bubbles": {
+    "subtitle": "regen.sound.jar_bubbles",
+    "sounds": [
+      "regen:jar_bubbles"
+    ]
+  },
+  "m_gas_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/gas/m_timelord_hurt_3",
+      "regen:timelord/male/gas/m_timelord_hurt_2",
+      "regen:timelord/male/gas/m_timelord_hurt_1"
+    ]
+  },
+  "m_gas_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/gas/m_timelord_trade_fail_1",
+      "regen:timelord/male/gas/m_timelord_trade_fail_2",
+      "regen:timelord/male/gas/m_timelord_trade_fail_3"
+    ]
+  },
+  "m_gas_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/gas/m_timelord_trade_success_1",
+      "regen:timelord/male/gas/m_timelord_trade_success_2",
+      "regen:timelord/male/gas/m_timelord_trade_success_3"
+    ]
+  },
+  "m_gas_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/gas/m_timelord_scream_1",
+      "regen:timelord/male/gas/m_timelord_scream_2",
+      "regen:timelord/male/gas/m_timelord_scream_3"
+    ]
+  },
+  "m_gas_timelord_die": {
+    "subtitle": "regen.sound.m_timelord.die",
+    "sounds": [
+      "regen:timelord/male/gas/m_timelord_die_1",
+      "regen:timelord/male/gas/m_timelord_die_2",
+      "regen:timelord/male/gas/m_timelord_die_3"
+    ]
+  },
+  "m_ramen_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord.hurt",
+    "sounds": [
+      "regen:timelord/male/ramen/m_timelord_hurt_2",
+      "regen:timelord/male/ramen/m_timelord_hurt_1"
+    ]
+  },
+  "m_ramen_timelord_die": {
+    "subtitle": "regen.sound.m_timelord.die",
+    "sounds": [
+      "regen:timelord/male/ramen/m_timelord_die_1"
+    ]
+  },
+  "m_ramen_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord.trade_fail",
+    "sounds": [
+      "regen:timelord/male/ramen/m_timelord_trade_fail_1",
+      "regen:timelord/male/ramen/m_timelord_trade_fail_2",
+      "regen:timelord/male/ramen/m_timelord_trade_fail_3"
+    ]
+  },
+  "m_ramen_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord.trade_success",
+    "sounds": [
+      "regen:timelord/male/ramen/m_timelord_trade_success_1",
+      "regen:timelord/male/ramen/m_timelord_trade_success_2",
+      "regen:timelord/male/ramen/m_timelord_trade_success_3",
+      "regen:timelord/male/ramen/m_timelord_trade_success_4"
+    ]
+  },
+  "m_ramen_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord.scream",
+    "sounds": [
+      "regen:timelord/male/ramen/m_timelord_scream_1",
+      "regen:timelord/male/ramen/m_timelord_scream_2"
+    ]
+  },
+  "m_didgeridoomen_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord.hurt",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_4",
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_3",
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_1"
+    ]
+  },
+  "m_didgeridoomen_timelord_die": {
+    "subtitle": "regen.sound.m_timelord.die",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_die_1"
+    ]
+  },
+  "m_didgeridoomen_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord.trade_fail",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_1",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_3",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_4"
+    ]
+  },
+  "m_didgeridoomen_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord.trade_success",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_1",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_3",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_4"
+    ]
+  },
+  "m_didgeridoomen_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord.scream",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_scream_1",
+      "regen:timelord/male/didgeridoomen/m_timelord_scream_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_scream_3"
+    ]
+  },
+  "m_tommy_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord.hurt",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_hurt_4",
+      "regen:timelord/male/tommy/m_timelord_hurt_3",
+      "regen:timelord/male/tommy/m_timelord_hurt_2",
+      "regen:timelord/male/tommy/m_timelord_hurt_1"
+    ]
+  },
+  "m_tommy_timelord_die": {
+    "subtitle": "regen.sound.m_timelord.die",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_hurt_4"
+    ]
+  },
+  "m_tommy_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord.trade_fail",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_trade_fail_1",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_2",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_3",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_4",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_5",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_6"
+    ]
+  },
+  "m_connor_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord.hurt",
+    "sounds": [
+      "regen:timelord/male/connor/m_timelord_hurt_2",
+      "regen:timelord/male/connor/m_timelord_hurt_1"
+    ]
+  },
+  "m_connor_timelord_die": {
+    "subtitle": "regen.sound.m_timelord.die",
+    "sounds": [
+      "regen:timelord/male/connor/m_timelord_hurt_1",
+      "regen:timelord/male/connor/m_timelord_hurt_2"
+    ]
+  },
+  "m_connor_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord.trade_fail",
+    "sounds": [
+      "regen:timelord/male/connor/m_timelord_trade_fail_1",
+      "regen:timelord/male/connor/m_timelord_trade_fail_2",
+      "regen:timelord/male/connor/m_timelord_trade_fail_3"
+    ]
+  },
+  "m_connor_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord.trade_success",
+    "sounds": [
+      "regen:timelord/male/connor/m_timelord_trade_success_1",
+      "regen:timelord/male/connor/m_timelord_trade_success_2",
+      "regen:timelord/male/connor/m_timelord_trade_success_3",
+      "regen:timelord/male/connor/m_timelord_trade_success_4"
+    ]
+  },
+  "m_connor_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord.scream",
+    "sounds": [
+      "regen:timelord/male/connor/m_timelord_scream_1",
+      "regen:timelord/male/connor/m_timelord_scream_2",
+      "regen:timelord/male/connor/m_timelord_scream_3",
+      "regen:timelord/male/connor/m_timelord_scream_4",
+      "regen:timelord/male/connor/m_timelord_scream_5"
+    ]
+  },
+  "m_tommy_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord.trade_success",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_trade_success_1",
+      "regen:timelord/male/tommy/m_timelord_trade_success_2",
+      "regen:timelord/male/tommy/m_timelord_trade_success_3",
+      "regen:timelord/male/tommy/m_timelord_trade_success_4",
+      "regen:timelord/male/tommy/m_timelord_trade_success_5"
+    ]
+  },
+  "m_tommy_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord.scream",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_scream_1",
+      "regen:timelord/male/tommy/m_timelord_scream_2",
+      "regen:timelord/male/tommy/m_timelord_scream_3",
+      "regen:timelord/male/tommy/m_timelord_scream_4",
+      "regen:timelord/male/tommy/m_timelord_scream_5"
+    ]
+  },
+  "regeneration_0": {
+    "subtitle": "regen.sound.regeneration_0",
+    "sounds": [
+      "regen:regen/regen_0"
+    ]
+  },
+  "regeneration_1": {
+    "subtitle": "regen.sound.regeneration_1",
+    "sounds": [
+      "regen:regen/regen_1"
+    ]
+  },
+  "regeneration_2": {
+    "subtitle": "regen.sound.regeneration_2",
+    "sounds": [
+      "regen:regen/regen_2"
+    ]
+  },
+  "regeneration_3": {
+    "subtitle": "regen.sound.regeneration_3",
+    "sounds": [
+      "regen:regen/regen_3"
+    ]
+  },
+  "regeneration_4": {
+    "subtitle": "regen.sound.regeneration_4",
+    "sounds": [
+      "regen:regen/regen_4"
+    ]
+  },
+  "regeneration_5": {
+    "subtitle": "regen.sound.regeneration_5",
+    "sounds": [
+      "regen:regen/regen_5"
+    ]
+  },
+  "regeneration_6": {
+    "subtitle": "regen.sound.regeneration_6",
+    "sounds": [
+      "regen:regen/regen_6"
+    ]
+  },
+  "regeneration_7": {
+    "subtitle": "regen.sound.regeneration_7",
+    "sounds": [
+      "regen:regen/regen_7"
+    ]
+  },
+  "regeneration_troughton": {
+    "subtitle": "regen.sound.regeneration_troughton",
+    "sounds": [
+      "regen:regen/regen_troughton"
+    ]
+  },
+  "regeneration_watcher": {
+    "subtitle": "regen.sound.regeneration_watcher",
+    "sounds": [
+      "regen:regen/regen_watcher"
+    ]
+  },
+  "regen_long": {
+    "subtitle": "regen.sound.regen_long",
+    "sounds": [
+      "regen:regen/regen_long"
+    ]
+  },
+  "rifle": {
+    "subtitle": "regen.sound.rifle",
+    "sounds": [
+      "regen:rifle"
+    ]
+  },
+  "staser": {
+    "subtitle": "regen.sound.staser",
+    "sounds": [
+      "regen:staser"
+    ]
+  }
+}

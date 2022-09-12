@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "regen:item/elixir_overlay",
+    "layer1": "regen:item/elixir"
+  }
+}

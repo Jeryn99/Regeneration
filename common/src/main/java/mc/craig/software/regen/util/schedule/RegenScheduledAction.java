@@ -1,7 +1,7 @@
 package mc.craig.software.regen.util.schedule;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.common.regeneration.state.RegenStates;
+import mc.craig.software.regen.common.regen.state.RegenStates;
 import net.minecraft.world.entity.LivingEntity;
 
 public class RegenScheduledAction extends ScheduledAction {

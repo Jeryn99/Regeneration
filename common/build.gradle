@@ -3,7 +3,7 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/regeneration.accesswidener")
+    accessWidenerPath = file("src/main/resources/regen.accesswidener")
 }
 
 dependencies {

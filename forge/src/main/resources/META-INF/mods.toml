@@ -4,7 +4,7 @@ loaderVersion = "[43,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "regeneration"
+modId = "regen"
 version = "${version}"
 displayName = "Example Mod"
 authors = "Me!"
@@ -13,14 +13,14 @@ This is an example description! Tell everyone what your mod is about!
 '''
 #logoFile = ""
 
-[[dependencies.regeneration]]
+[[dependencies.regen]]
 modId = "forge"
 mandatory = true
 versionRange = "[43,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.regeneration]]
+[[dependencies.regen]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,)"

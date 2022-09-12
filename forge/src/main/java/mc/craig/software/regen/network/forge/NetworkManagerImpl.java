@@ -6,12 +6,11 @@ import mc.craig.software.regen.network.MessageS2C;
 import mc.craig.software.regen.network.MessageType;
 import mc.craig.software.regen.network.NetworkManager;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.*;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.Optional;
@@ -80,7 +79,7 @@ public class NetworkManagerImpl extends NetworkManager {
 
         public static void handle(ToServer msg, Supplier<NetworkEvent.Context> ctx) {
             if(msg.message != null) {
-                ctx.get().enqueueWork(msg.message::handle);
+                ctx.get().enqueueWork(() -> msg.message.handle(() -> ctx.get().getSender()));
             }
             ctx.get().setPacketHandled(true);
         }
@@ -115,11 +114,15 @@ public class NetworkManagerImpl extends NetworkManager {
 
         public static void handle(ToClient msg, Supplier<NetworkEvent.Context> ctx) {
             if(msg.message != null) {
-                ctx.get().enqueueWork(msg.message::handle);
+                ctx.get().enqueueWork(() -> msg.message.handle(() -> null));
             }
             ctx.get().setPacketHandled(true);
         }
 
+    }
+
+    public static Packet<?> spawnPacket(Entity livingEntity) {
+        return NetworkHooks.getEntitySpawningPacket(livingEntity);
     }
 
 }

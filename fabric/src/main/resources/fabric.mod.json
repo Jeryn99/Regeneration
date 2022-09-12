@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "regeneration",
+  "id": "regen",
   "version": "${version}",
   "name": "Example Mod",
   "description": "This is an example description! Tell everyone what your mod is about!",
@@ -22,16 +22,16 @@
       "mc.craig.software.regen.fabric.RegenerationFabricClient"
     ],
     "cardinal-components": [
-      "mc.craig.software.regen.common.regeneration.fabric.RegenerationComponents"
+      "mc.craig.software.regen.common.regen.fabric.RegenerationComponents"
     ]
   },
   "mixins": [
-    "regeneration.mixins.json",
-    "regeneration-common.mixins.json"
+    "regen.mixins.json",
+    "regen-common.mixins.json"
   ],
   "custom": {
     "cardinal-components": [
-      "regeneration:regeneration_data"
+      "regen:regeneration_data"
     ]
   },
   "depends": {
