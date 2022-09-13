@@ -36,7 +36,7 @@ public class ViewUtil {
     }
 
     /**
-     * Method that detects whether a tile is the the view sight of viewer
+     * Method that detects whether a tile is the view sight of viewer
      *
      * @param livingBase The viewer entity
      * @param angel      The entity being watched by viewer

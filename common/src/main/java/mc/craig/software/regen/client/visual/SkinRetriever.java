@@ -100,8 +100,10 @@ public class SkinRetriever {
 
     public static void remoteSkins() throws IOException {
         Regeneration.LOGGER.warn("Downloading new Trending skins");
-        for (String skin : MineSkin.interalApiSkins()) {
-            downloadSkins(new URL(skin), "mk_" + RandomStringUtils.random(5, true, false), SKINS_DIRECTORY_SLIM_TRENDING, SKINS_DIRECTORY_DEFAULT_TRENDING);
+        for (int i = 0; i < 3; i++) {
+            for (String skin : MineSkin.interalApiSkins()) {
+                downloadSkins(new URL(skin), "web_" + RandomStringUtils.random(5, false, true), SKINS_DIRECTORY_SLIM_TRENDING, SKINS_DIRECTORY_DEFAULT_TRENDING);
+            }
         }
     }
 

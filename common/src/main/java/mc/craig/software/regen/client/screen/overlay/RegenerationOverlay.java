@@ -44,7 +44,9 @@ public class RegenerationOverlay {
             GuiComponent.blit(poseStack, 4, 4, cap.regenState().getUOffset(), cap.regenState().getYOffset(), 16, 16, 256, 256);
 
             if (cap.glowing()) {
+                RenderSystem.enableBlend();
                 GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, 64, 0, 16, 16, 256, 256);
+                RenderSystem.disableBlend();
             }
 
             // OILD

@@ -2,7 +2,6 @@ package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mc.craig.software.regen.client.screen.widgets.DescButton;
 import mc.craig.software.regen.client.screen.widgets.RCheckbox;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.client.visual.SkinRetriever;
@@ -15,6 +14,7 @@ import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
@@ -42,11 +42,10 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType currentSkinType = RegenerationData.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
-    private static final List<ResourceLocation> skinTextures = new ArrayList<>();
     private static int position = 0;
     private RCheckbox excludeTrending;
     private EditBox searchField;
-    private final ArrayList<DescButton> descButtons = new ArrayList<>();
+    private final ArrayList<Button> Buttons = new ArrayList<>();
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), Component.literal("Next Incarnation"));
@@ -104,8 +103,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         this.addWidget(this.searchField);
 
 
-
-        DescButton btnPrevious = new DescButton(cx + 140, cy + 60, 20, 20, Component.translatable("regen.gui.previous"), button -> {
+        Button btnPrevious = new Button(cx + 140, cy + 60, 20, 20, Component.translatable("regen.gui.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
             }
@@ -119,9 +117,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 }
                 updateModels();
             }
-        }).setDescription(new String[]{"button.tooltip.previous_skin"});
+        }, (button, poseStack, i, j) -> {
+            this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.previous_skin")), Optional.empty(), i, j);
+        });
 
-        DescButton btnNext = new DescButton(cx + 215, cy + 60, 20, 20, Component.translatable("regen.gui.next"), button -> {
+        Button btnNext = new Button(cx + 215, cy + 60, 20, 20, Component.translatable("regen.gui.next"), button -> {
             // Previous
             if (searchField.getValue().isEmpty()) {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
@@ -138,20 +138,24 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 currentTexture = SkinRetriever.fileTotexture(skins.get(position));
                 updateModels();
             }
-        }).setDescription(new String[]{"button.tooltip.next_skin"});
+        }, (button, poseStack, i, j) -> {
+            this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.next_skin")), Optional.empty(), i, j);
+        });
 
-        DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
+        Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
-        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIRECTORY)).setDescription(new String[]{"button.tooltip.open_folder"});
+        Button btnOpenFolder = new Button(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIRECTORY), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.open_folder")), Optional.empty(), i, j));
 
-        DescButton btnSave = new DescButton(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.save"), button -> {
+        Button btnSave = new Button(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.save"), button -> {
             updateModels();
-           new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
-        }).setDescription(new String[]{"button.tooltip.save_skin"});
+            new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
+        }, (button, poseStack, i, j) -> {
+            this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.save_skin")), Optional.empty(), i, j);
+        });
 
-        DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> VisualManipulator.sendResetMessage()).setDescription(new String[]{"button.tooltip.reset_mojang"});
+        Button btnResetSkin = new Button(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> VisualManipulator.sendResetMessage(), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.reset_mojang")), Optional.empty(), i, j));
 
-        this.excludeTrending = new RCheckbox( cx + 10, cy + 145, 150, 20, Component.translatable("Trending?"), true, checkboxButton -> {
+        this.excludeTrending = new RCheckbox(cx + 10, cy + 145, 150, 20, Component.translatable("Trending?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {
                 position = 0;
                 searchField.setValue("");
@@ -165,12 +169,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
         });
         this.addRenderableWidget(this.excludeTrending);
 
-        addRenderableDescButton(btnNext);
-        addRenderableDescButton(btnPrevious);
-        addRenderableDescButton(btnOpenFolder);
-        addRenderableDescButton(btnBack);
-        addRenderableDescButton(btnSave);
-        addRenderableDescButton(btnResetSkin);
+        addRenderableButton(btnNext);
+        addRenderableButton(btnPrevious);
+        addRenderableButton(btnOpenFolder);
+        addRenderableButton(btnBack);
+        addRenderableButton(btnSave);
+        addRenderableButton(btnResetSkin);
 
         RegenerationData.get(minecraft.player).ifPresent((data) -> currentSkinType = data.preferredModel());
 
@@ -182,14 +186,14 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
     }
 
-    public void addRenderableDescButton(DescButton descButton){
-        addRenderableWidget(descButton);
-        descButtons.add(descButton);
+    public void addRenderableButton(Button Button) {
+        addRenderableWidget(Button);
+        Buttons.add(Button);
     }
 
     private void stripTrending() {
         if (!excludeTrending.selected()) {
-            skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
+            skins.removeIf(file -> file.getPath().contains("web"));
         }
     }
 
@@ -282,15 +286,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 8, 8, 8, 8, 64, 64);
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 80, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 40, 8, 8, 8, 64, 64);
         }*/
-
-        //TODO
-        descButtons.forEach(descButton -> {
-            if (descButton.isHoveredOrFocused()) {
-                if (descButton.getDescription() != null) {
-                    this.renderTooltip(matrixStack, descButton.getDescription(), Optional.empty(), descButton.x, descButton.y);
-                }
-            }
-        });
     }
 
     //Spectre0987
