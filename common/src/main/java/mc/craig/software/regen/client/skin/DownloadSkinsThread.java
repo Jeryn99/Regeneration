@@ -1,8 +1,6 @@
-package mc.craig.software.regen.util;
+package mc.craig.software.regen.client.skin;
 
-import mc.craig.software.regen.client.visual.SkinRetriever;
-
-import static mc.craig.software.regen.client.visual.SkinRetriever.*;
+import static mc.craig.software.regen.client.skin.SkinRetriever.doDownloads;
 
 public class DownloadSkinsThread extends Thread {
 

@@ -1,7 +1,7 @@
 package mc.craig.software.regen.common.entities;
 
 import com.google.common.collect.Sets;
-import mc.craig.software.regen.client.visual.SkinRetriever;
+import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.entities.ai.TimelordAttackGoal;
 import mc.craig.software.regen.common.item.SpawnItem;
@@ -57,7 +57,6 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;

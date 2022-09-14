@@ -3,8 +3,8 @@ package mc.craig.software.regen.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.screen.widgets.RCheckbox;
+import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
-import mc.craig.software.regen.client.visual.SkinRetriever;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.network.messages.NextSkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
@@ -144,7 +144,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
-        Button btnOpenFolder = new Button(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIRECTORY), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.open_folder")), Optional.empty(), i, j));
+        Button btnOpenFolder = new Button(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIR), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.open_folder")), Optional.empty(), i, j));
 
         Button btnSave = new Button(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.save"), button -> {
             updateModels();

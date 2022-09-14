@@ -1,13 +1,13 @@
 package mc.craig.software.regen;
 
 import com.mojang.logging.LogUtils;
+import mc.craig.software.regen.client.skin.DownloadSkinsThread;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.objects.*;
 import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.world.RFeatures;
 import mc.craig.software.regen.network.RegenNetwork;
-import mc.craig.software.regen.util.DownloadSkinsThread;
 import mc.craig.software.regen.util.Platform;
 import org.slf4j.Logger;
 

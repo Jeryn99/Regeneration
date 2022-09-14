@@ -38,13 +38,12 @@ public class MineSkin {
         return foundSkins;
     }
 
-    public static ArrayList<String> interalApiSkins() throws IOException {
-        ArrayList<String> foundSkins = new ArrayList<>();
+    public static ArrayList<JsonElement> interalApiSkins() throws IOException {
+        ArrayList<JsonElement> foundSkins = new ArrayList<>();
         JsonArray json = getApiResponseArray(new URL(API_ENDPOINT)).getAsJsonArray();
         for (JsonElement jsonElement : json) {
             JsonObject jsonData = jsonElement.getAsJsonObject();
-            String link = jsonData.get("link").getAsString();
-            foundSkins.add(link);
+            foundSkins.add(jsonData);
         }
 
         System.out.println(json);

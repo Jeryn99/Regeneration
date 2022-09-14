@@ -8,6 +8,7 @@ import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,8 +59,9 @@ public class HandItem extends Item {
     }
 
     public static UUID getUUID(ItemStack stack) {
-        if (stack.getOrCreateTag().contains("user")) {
-            return stack.getOrCreateTag().getUUID("user");
+        CompoundTag stackTag = stack.getOrCreateTag();
+        if (stackTag.contains("user")) {
+            return stackTag.getUUID("user");
         }
         return null;
     }
