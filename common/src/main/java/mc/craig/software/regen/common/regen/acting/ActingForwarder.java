@@ -11,10 +11,6 @@ public class ActingForwarder {
     private static final List<Acting> SERVER_HANDLERS = new ArrayList<>();
     private static final List<Acting> CLIENT_HANDLERS = new ArrayList<>();
 
-    public enum Side {
-        COMMON, CLIENT
-    }
-
     public static void init(boolean isClient) {
         register(CommonActing.INSTANCE, Side.COMMON);
 
@@ -121,6 +117,10 @@ public class ActingForwarder {
             throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 
         new StateMessage(cap.getLiving(), event).sendToAll();
+    }
+
+    public enum Side {
+        COMMON, CLIENT
     }
 
     public enum RegenEvent {

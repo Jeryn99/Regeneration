@@ -25,13 +25,13 @@ public abstract class TransitionType {
     public void onFinishRegeneration(IRegen cap) {
     }
 
-    public TransitionType setLocation(ResourceLocation resourceLocation){
-        this.location = resourceLocation;
-        return this;
-    }
-
     public ResourceLocation getLocation() {
         return location;
+    }
+
+    public TransitionType setLocation(ResourceLocation resourceLocation) {
+        this.location = resourceLocation;
+        return this;
     }
 
     public double getAnimationProgress(IRegen cap) {

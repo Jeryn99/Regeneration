@@ -43,6 +43,7 @@ public class RegenerationForge {
         RSoundSchemes.init();
         PlayerUtil.setupPotions();
         event.enqueueWork(StructurePieces::init);
+        //BrewingRecipeRegistry.addRecipe(Ingredient.of(new ItemStack(RItems.FOB.get())), Ingredient.of(new ItemStack(Items.COOKIE)), new ItemStack(RItems.GUARD_FEET.get()));
     }
 
     public void onAttributeAssign(EntityAttributeCreationEvent event) {

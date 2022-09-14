@@ -72,7 +72,7 @@ public class ContainerModel extends HierarchicalModel {
         this.root().getAllParts().forEach(ModelPart::resetPose);
     }
 
-    public void animate(BioContainerBlockEntity containerBlock){
+    public void animate(BioContainerBlockEntity containerBlock) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         animate(containerBlock.getOpenState(), CLOSE, Minecraft.getInstance().player.tickCount);
         animate(containerBlock.getCloseState(), OPEN, Minecraft.getInstance().player.tickCount);

@@ -9,15 +9,15 @@ import java.util.function.Supplier;
 
 public abstract class DeferredRegistry<T> {
 
+    @ExpectPlatform
+    public static <T> DeferredRegistry<T> create(String modid, ResourceKey<? extends Registry<T>> resourceKey) {
+        throw new AssertionError();
+    }
+
     public abstract void register();
 
     public abstract <R extends T> RegistrySupplier<R> register(String id, Supplier<R> supplier);
 
     public abstract Collection<RegistrySupplier<T>> getEntries();
-
-    @ExpectPlatform
-    public static <T> DeferredRegistry<T> create(String modid, ResourceKey<? extends Registry<T>> resourceKey) {
-        throw new AssertionError();
-    }
 
 }

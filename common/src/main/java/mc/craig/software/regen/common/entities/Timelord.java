@@ -77,11 +77,10 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     private static final EntityDataAccessor<Float> AIMING_TICKS = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.FLOAT);
     protected final WaterBoundPathNavigation waterNavigator;
     protected final GroundPathNavigation groundNavigator;
-
-    @Nullable
-    private Player tradingPlayer;
     @Nullable
     protected MerchantOffers offers;
+    @Nullable
+    private Player tradingPlayer;
 
     public Timelord(Level world) {
         this(REntities.TIMELORD.get(), world);
@@ -295,9 +294,9 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                         setMale(random.nextBoolean());
                         setPersonality(RSoundSchemes.getRandom(male()).identify());
                         initSkin(data);
-                         new RemoveTimelordSkinMessage(this).sendToAll();
+                        new RemoveTimelordSkinMessage(this).sendToAll();
                     }
-                    setDeltaMovement(0,0,0);
+                    setDeltaMovement(0, 0, 0);
                     setNoAi(true);
                     setInvulnerable(true);
                     return;
@@ -317,7 +316,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     @Override
     public void kill() {
         if (!level.isClientSide) {
-           new RemoveTimelordSkinMessage(this).sendToAll();
+            new RemoveTimelordSkinMessage(this).sendToAll();
         }
         remove(RemovalReason.KILLED);
     }
@@ -498,13 +497,13 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public void setTradingPlayer(@Nullable Player player) {
-        this.tradingPlayer = player;
+    public Player getTradingPlayer() {
+        return this.tradingPlayer;
     }
 
     @Override
-    public Player getTradingPlayer() {
-        return this.tradingPlayer;
+    public void setTradingPlayer(@Nullable Player player) {
+        this.tradingPlayer = player;
     }
 
     @Override

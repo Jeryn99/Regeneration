@@ -28,9 +28,9 @@ import java.util.function.Function;
 public class PreferencesScreen extends AbstractContainerScreen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/preferences.png");
+    private static final PlayerUtil.SkinType skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
     private static TransitionType transitionType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound soundScheme = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
-    private static final PlayerUtil.SkinType skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
 
     public PreferencesScreen() {
         super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), Component.literal("Regeneration"));

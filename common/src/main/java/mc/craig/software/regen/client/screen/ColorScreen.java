@@ -20,8 +20,8 @@ import java.awt.*;
 
 public class ColorScreen extends Screen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     public static final ResourceLocation PREFERENCES_BUTTON_LOCATION = new ResourceLocation(RConstants.MODID, "textures/gui/preferences_button.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     private final int imageWidth;
     private final int imageHeight;
 

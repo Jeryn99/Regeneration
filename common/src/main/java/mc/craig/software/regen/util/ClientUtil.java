@@ -220,12 +220,12 @@ public class ClientUtil {
     }
 
     @ExpectPlatform
-    public static void renderers(){
+    public static void renderers() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void itemPredicates(){
+    public static void itemPredicates() {
         throw new AssertionError();
     }
 

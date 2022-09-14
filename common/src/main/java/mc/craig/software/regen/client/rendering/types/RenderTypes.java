@@ -14,11 +14,6 @@ public class RenderTypes extends RenderType {
 
 
     public static final RenderType REGEN_FLAMES = RenderTypes.lightning();
-    private static final Function<ResourceLocation, RenderType> GLOWING = Util.memoize((resourceLocation) -> {
-        RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new TextureStateShard(resourceLocation, false, false)).setTransparencyState(NO_TRANSPARENCY).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setOverlayState(OVERLAY).setLayeringState(VIEW_OFFSET_Z_LAYERING).createCompositeState(true);
-        return create(RConstants.MODID + ":glowing", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, compositeState);
-    });
-
     public static final RenderType LASER = create(RConstants.MODID + ":laser", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
             .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
             .setTextureState(NO_TEXTURE)
@@ -28,6 +23,10 @@ public class RenderTypes extends RenderType {
             .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
             .setLayeringState(VIEW_OFFSET_Z_LAYERING)
             .createCompositeState(true));
+    private static final Function<ResourceLocation, RenderType> GLOWING = Util.memoize((resourceLocation) -> {
+        RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new TextureStateShard(resourceLocation, false, false)).setTransparencyState(NO_TRANSPARENCY).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setOverlayState(OVERLAY).setLayeringState(VIEW_OFFSET_Z_LAYERING).createCompositeState(true);
+        return create(RConstants.MODID + ":glowing", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, compositeState);
+    });
 
     public RenderTypes(String string, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean bl, boolean bl2, Runnable runnable, Runnable runnable2) {
         super(string, vertexFormat, mode, i, bl, bl2, runnable, runnable2);

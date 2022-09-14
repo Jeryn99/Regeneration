@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
-    private boolean updateSkin = true;
     private final AnimationState openState = new AnimationState();
     private final AnimationState closeState = new AnimationState();
+    private boolean updateSkin = true;
     private ItemStack hand;
     private boolean hasWater;
 

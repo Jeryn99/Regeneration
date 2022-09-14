@@ -31,5 +31,6 @@ public class Regeneration {
         TransitionTypes.init();
         DownloadSkinsThread.setup();
         TriggerManager.init();
+
     }
 }

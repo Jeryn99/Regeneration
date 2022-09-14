@@ -110,7 +110,7 @@ public class FobWatchItem extends Item {
             }
 
             if (used < 0)
-                Regeneration.LOGGER.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + getMaxDamage() + ", damage:" + stack.getDamageValue()+ ", regens:" + cap.regens());
+                Regeneration.LOGGER.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + getMaxDamage() + ", damage:" + stack.getDamageValue() + ", regens:" + cap.regens());
 
             stack.setDamageValue(stack.getDamageValue() + used);
 

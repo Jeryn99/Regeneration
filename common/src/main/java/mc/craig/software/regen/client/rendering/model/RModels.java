@@ -16,10 +16,10 @@ public class RModels {
     public static ModelLayerLocation TIMELORD, TIMELORD_GUARD, MOD_PLAYER, ARM_ALEX, ARM_STEVE, COUNCIL_ROBES, COUNCIL_ROBES_STEVE, GUARD_ARMOR, GUARD_ARMOR_STEVE, CONTAINER;
 
 
-    public static void  init(){
+    public static void init() {
         TIMELORD = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "council"), TimelordModel::getModelData);
         TIMELORD_GUARD = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "guard"), TimelordGuardModel::getModelData);
-        MOD_PLAYER = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "mod_player"), "mod_player"), () ->  ModifiedPlayerModel.createMesh(new CubeDeformation(-0.25F)));
+        MOD_PLAYER = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "mod_player"), "mod_player"), () -> ModifiedPlayerModel.createMesh(new CubeDeformation(-0.25F)));
 
         //Arms
         ARM_ALEX = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "arm_alex"), "arm_alex"), () -> ArmModel.createMesh(true));

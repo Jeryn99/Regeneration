@@ -49,12 +49,12 @@ public class JarParticle extends TextureSheetParticle {
         }
     }
 
-        public record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
+    public record Factory(SpriteSet spriteSet) implements ParticleProvider<SimpleParticleType> {
 
         public Particle createParticle(@NotNull SimpleParticleType typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-                JarParticle jarParticle = new JarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
-                jarParticle.pickSprite(this.spriteSet);
-                return jarParticle;
-            }
+            JarParticle jarParticle = new JarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
+            jarParticle.pickSprite(this.spriteSet);
+            return jarParticle;
         }
+    }
 }

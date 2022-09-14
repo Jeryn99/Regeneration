@@ -21,7 +21,7 @@ public class BlazeTranstion extends TransitionType {
         LivingEntity entity = cap.getLiving();
         if (!cap.getLiving().level.isClientSide) {
             if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
-               new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
+                new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
             }
         }
     }

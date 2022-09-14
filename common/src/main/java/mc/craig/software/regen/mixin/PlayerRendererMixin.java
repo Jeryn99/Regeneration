@@ -21,7 +21,7 @@ public class PlayerRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", cancellable = true)
     private void getTextureLocation(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
-        if(VisualManipulator.PLAYER_SKINS.containsKey(entity.getUUID())){
+        if (VisualManipulator.PLAYER_SKINS.containsKey(entity.getUUID())) {
             callbackInfoReturnable.setReturnValue(VisualManipulator.PLAYER_SKINS.get(entity.getUUID()));
         }
     }

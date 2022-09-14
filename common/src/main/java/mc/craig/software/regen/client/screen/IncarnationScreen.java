@@ -43,9 +43,9 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
     private static int position = 0;
+    private final ArrayList<Button> Buttons = new ArrayList<>();
     private RCheckbox excludeTrending;
     private EditBox searchField;
-    private final ArrayList<Button> Buttons = new ArrayList<>();
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), Component.literal("Next Incarnation"));
