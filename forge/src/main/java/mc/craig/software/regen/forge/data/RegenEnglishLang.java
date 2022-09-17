@@ -4,6 +4,8 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
+import mc.craig.software.regen.common.traits.TraitRegistry;
+import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
@@ -17,6 +19,9 @@ public class RegenEnglishLang extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+
+        // Traits
+        addTrait(TraitRegistry.FIRE_RESISTANCE.get(), "Ignis Resistentia", "Grants immunity to damage from fire, blaze fireballs, fire charges, magma blocks, and lava!");
 
         // === Advancements ===
         add("advancements.regen.title.change_refusal", "I. WILL. NOT. CHANGE!");
@@ -263,4 +268,9 @@ public class RegenEnglishLang extends LanguageProvider {
         return firstLetter + text.substring(1);
     }
 
+
+    public void addTrait(TraitBase traitBase, String title, String description){
+        add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".title", title);
+        add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".description", description);
+    }
 }

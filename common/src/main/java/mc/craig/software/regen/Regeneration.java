@@ -5,6 +5,7 @@ import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.objects.*;
 import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
+import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.world.RFeatures;
 import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.DownloadSkinsThread;
@@ -28,6 +29,7 @@ public class Regeneration {
         RFeatures.PLACED_FEATURES.register();
         RFeatures.DEFERRED_REGISTRY_STRUCTURE.register();
         RParticles.TYPES.register();
+        TraitRegistry.TRAITS.register();
         TransitionTypes.init();
         DownloadSkinsThread.setup();
         TriggerManager.init();

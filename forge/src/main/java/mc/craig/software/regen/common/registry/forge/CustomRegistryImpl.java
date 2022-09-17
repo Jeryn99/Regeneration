@@ -1,6 +1,8 @@
 package mc.craig.software.regen.common.registry.forge;
 
 import mc.craig.software.regen.common.registry.CustomRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,6 +19,11 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
         DeferredRegister<T> deferredRegister = DeferredRegister.create(id, id.getNamespace());
         deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus());
         return new CustomRegistryImpl<>(deferredRegister.makeRegistry(RegistryBuilder::new));
+    }
+
+    @Override
+    public ResourceKey<? extends Registry<T>> getRegistryKey() {
+        return this.parent.get().getRegistryKey();
     }
 
     private final Supplier<IForgeRegistry<T>> parent;

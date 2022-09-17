@@ -35,6 +35,7 @@ public class RItems {
     public static RegistrySupplier<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
     public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
     public static RegistrySupplier<Item> PLASMA_CARTRIDGE = ITEMS.register("plasma_cartridge", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
+    public static RegistrySupplier<Item> GAUNTLET = ITEMS.register("chalice", ChaliceItem::new);
 
     public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
     public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));

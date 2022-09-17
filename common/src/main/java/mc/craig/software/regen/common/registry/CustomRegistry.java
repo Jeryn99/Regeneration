@@ -1,6 +1,8 @@
 package mc.craig.software.regen.common.registry;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
@@ -12,6 +14,8 @@ public abstract class CustomRegistry<T> {
     public static <T> CustomRegistry<T> create(Class<T> clazz, ResourceLocation id) {
         throw new AssertionError();
     }
+
+    public abstract ResourceKey<? extends Registry<T>> getRegistryKey();
 
     public abstract T get(ResourceLocation key);
 

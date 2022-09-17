@@ -1,5 +1,6 @@
 package mc.craig.software.regen.util;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.client.RKeybinds;
@@ -10,6 +11,7 @@ import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
 import mc.craig.software.regen.client.skin.VisualManipulator;
+import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
@@ -51,7 +53,7 @@ public class ClientUtil {
 
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
-    private static SimpleSoundInstance iSound;
+    private static SimpleSoundInstance humAmbienceSound;
 
     public static void handleInput(LocalPlayer localPlayer, Input input) {
         RegenerationData.get(localPlayer).ifPresent((data -> {
@@ -105,16 +107,16 @@ public class ClientUtil {
             RegenerationData.get(ep).ifPresent(iRegen -> {
                 if (iRegen.regenState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
 
-                    if (iSound == null) {
-                        iSound = SimpleSoundInstance.forLocalAmbience(RSounds.GRACE_HUM.get(), 1, 1);
+                    if (humAmbienceSound == null) {
+                        humAmbienceSound = SimpleSoundInstance.forLocalAmbience(RSounds.GRACE_HUM.get(), 1, 1);
                     }
 
-                    if (!sound.isActive(iSound)) {
-                        sound.play(iSound);
+                    if (!sound.isActive(humAmbienceSound)) {
+                        sound.play(humAmbienceSound);
                     }
                 } else {
-                    if (sound.isActive(iSound)) {
-                        sound.stop(iSound);
+                    if (sound.isActive(humAmbienceSound)) {
+                        sound.stop(humAmbienceSound);
                     }
                 }
             });

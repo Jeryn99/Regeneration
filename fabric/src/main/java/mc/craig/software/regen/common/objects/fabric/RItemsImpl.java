@@ -11,7 +11,7 @@ public class RItemsImpl {
 
     public static final CreativeModeTab TAB = FabricItemGroupBuilder.build(
             new ResourceLocation(RConstants.MODID, RConstants.MODID),
-            () -> new ItemStack(RItems.FOB.get()));
+            () -> new ItemStack(RItems.FOB.get())).setRecipeFolderName("regen");
 
     public static CreativeModeTab getCreativeTab() {
         return TAB;

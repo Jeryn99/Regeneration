@@ -3,6 +3,8 @@ package mc.craig.software.regen.common.registry.fabric;
 import mc.craig.software.regen.common.registry.CustomRegistry;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
@@ -14,6 +16,11 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
 
     public static <T> CustomRegistry<T> create(Class<T> clazz, ResourceLocation id) {
         return new CustomRegistryImpl<>(FabricRegistryBuilder.createSimple(clazz, id).buildAndRegister());
+    }
+
+    @Override
+    public ResourceKey<? extends Registry<T>> getRegistryKey() {
+        return this.parent.key();
     }
 
     private final MappedRegistry<T> parent;

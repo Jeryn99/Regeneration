@@ -11,6 +11,7 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -116,6 +117,8 @@ public class ClientEvents {
         LocalPlayer player = Minecraft.getInstance().player;
         ClientUtil.handleInput(player, e.getInput());
     }
+
+
 
 
 }
