@@ -49,7 +49,7 @@ public class ChaliceItem extends Item {
                     ItemStack stack = new ItemStack(this);
                     setTrait(stack, trait);
                     items.add(stack);
-                }//Do not call removeIf outside the for loop as this will loop back around to the start of the item group and "delete" other items like the fobwatch
+                }
             }
         }
     }
@@ -93,6 +93,6 @@ public class ChaliceItem extends Item {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-       //TODO tooltip.add(getTrait(stack).description());
+       tooltip.add(getTrait(stack).getDescription());
     }
 }

@@ -11,6 +11,7 @@ import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +21,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -58,6 +60,18 @@ public class FobWatchItem extends Item {
 
     public static void setOpen(ItemStack stack, boolean isOpen) {
         getStackTag(stack).putBoolean("is_open", isOpen);
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
+        if (this.allowedIn(category)) {
+            ItemStack fobGold = new ItemStack(RItems.FOB.get());
+            ItemStack fobSilver = new ItemStack(RItems.FOB.get());
+            FobWatchItem.setEngrave(fobGold, true);
+            FobWatchItem.setEngrave(fobSilver, false);
+            items.add(fobGold);
+            items.add(fobSilver);
+        }
     }
 
     @Override
@@ -110,7 +124,7 @@ public class FobWatchItem extends Item {
             }
 
             if (used < 0)
-                Regeneration.LOGGER.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + getMaxDamage() + ", damage:" + stack.getDamageValue()+ ", regens:" + cap.regens());
+                Regeneration.LOGGER.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + getMaxDamage() + ", damage:" + stack.getDamageValue() + ", regens:" + cap.regens());
 
             stack.setDamageValue(stack.getDamageValue() + used);
 
