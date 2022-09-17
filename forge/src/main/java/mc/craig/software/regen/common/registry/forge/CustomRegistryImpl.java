@@ -18,18 +18,20 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
     public static <T> CustomRegistry<T> create(Class<T> clazz, ResourceLocation id) {
         DeferredRegister<T> deferredRegister = DeferredRegister.create(id, id.getNamespace());
         deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus());
-        return new CustomRegistryImpl<>(deferredRegister.makeRegistry(RegistryBuilder::new));
+        return new CustomRegistryImpl<>(id, deferredRegister.makeRegistry(RegistryBuilder::new));
+    }
+
+    private final Supplier<IForgeRegistry<T>> parent;
+    private final ResourceKey<? extends Registry<T>> resourceKey;
+
+    public CustomRegistryImpl(ResourceLocation id, Supplier<IForgeRegistry<T>> parent) {
+        this.parent = parent;
+        this.resourceKey = ResourceKey.createRegistryKey(id);
     }
 
     @Override
     public ResourceKey<? extends Registry<T>> getRegistryKey() {
-        return this.parent.get().getRegistryKey();
-    }
-
-    private final Supplier<IForgeRegistry<T>> parent;
-
-    public CustomRegistryImpl(Supplier<IForgeRegistry<T>> parent) {
-        this.parent = parent;
+        return this.resourceKey;
     }
 
     @Override
@@ -40,6 +42,11 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
     @Override
     public ResourceLocation getKey(T object) {
         return this.parent.get().getKey(object);
+    }
+
+    @Override
+    public boolean containsKey(ResourceLocation key) {
+        return this.parent.get().containsKey(key);
     }
 
     @Override

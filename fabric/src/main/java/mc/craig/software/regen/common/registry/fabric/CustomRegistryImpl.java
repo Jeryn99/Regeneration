@@ -45,6 +45,12 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
     }
 
     @Override
+    public boolean containsKey(ResourceLocation key) {
+        return this.parent.containsKey(key);
+    }
+
+
+    @Override
     public Collection<T> getValues() {
         return this.parent.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
     }

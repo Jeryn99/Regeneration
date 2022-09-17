@@ -1,11 +1,7 @@
 package mc.craig.software.regen.common.entities;
 
 import com.google.common.collect.Sets;
-<<<<<<< HEAD
-import mc.craig.software.regen.client.visual.SkinRetriever;
-=======
 import mc.craig.software.regen.client.skin.SkinRetriever;
->>>>>>> arch-take-two
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.entities.ai.TimelordAttackGoal;
 import mc.craig.software.regen.common.item.SpawnItem;

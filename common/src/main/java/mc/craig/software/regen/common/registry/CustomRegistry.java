@@ -23,6 +23,8 @@ public abstract class CustomRegistry<T> {
 
     public abstract Set<ResourceLocation> getKeys();
 
+    public abstract boolean containsKey(ResourceLocation key);
+
     public abstract Collection<T> getValues();
 
 }

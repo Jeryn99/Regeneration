@@ -11,10 +11,7 @@ import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
-<<<<<<< HEAD
 import net.minecraft.core.NonNullList;
-=======
->>>>>>> arch-take-two
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -24,10 +21,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-<<<<<<< HEAD
 import net.minecraft.world.item.CreativeModeTab;
-=======
->>>>>>> arch-take-two
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
