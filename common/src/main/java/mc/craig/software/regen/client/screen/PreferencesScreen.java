@@ -115,6 +115,14 @@ public class PreferencesScreen extends AbstractContainerScreen {
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 34, 0, 9, 9, 256, 256);
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
         }
+
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
+            int color = iRegen.traitActive ? Color.GREEN.getRGB() : Color.RED.getRGB();
+            Component traitLang = data.getCurrentTrait().getTitle();
+            font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 35, color);
+            Component traitLangDesc = data.getCurrentTrait().getDescription();
+            font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 45, color);
+        });
     }
 
     @Override

@@ -3,6 +3,7 @@ package mc.craig.software.regen.client.screen.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.RKeybinds;
+import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.RConstants;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.HumanoidArm;
 
 public class RegenerationOverlay {
 
@@ -25,14 +27,13 @@ public class RegenerationOverlay {
     public static void renderUi(PoseStack poseStack) {
         LocalPlayer player = Minecraft.getInstance().player;
 
-        Component forceKeybind = RKeybinds.FORCE_REGEN.getTranslatedKeyMessage();
-
         RegenerationData.get(player).ifPresent((cap) -> {
 
             RegenStates currentState = cap.regenState();
 
-            if (currentState == RegenStates.ALIVE) return;
+            if (currentState == RegenStates.ALIVE) return; // We don't have anything to render when the user is not within a regeneration cycle
 
+            // Render head & hat piece for use in post regeneration state
             if (currentState == RegenStates.POST) {
                 RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
                 GuiComponent.blit(poseStack, 8, 10, 8, 8, 8, 8, 64, 64);
@@ -41,15 +42,21 @@ public class RegenerationOverlay {
 
             // Render Status
             RenderSystem.setShaderTexture(0, BACKGROUND);
-            GuiComponent.blit(poseStack, 4, 4, cap.regenState().getUOffset(), cap.regenState().getYOffset(), 16, 16, 256, 256);
+            GuiComponent.blit(poseStack, 4, 4, cap.regenState().getSpriteSheet().getUOffset(), cap.regenState().getSpriteSheet().getYOffset(), 16, 16, 256, 256);
 
+            // Alert User that their hand is glowing
             if (cap.glowing()) {
-                RenderSystem.enableBlend();
-                GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, 64, 0, 16, 16, 256, 256);
-                RenderSystem.disableBlend();
+                RConstants.SpriteSheet handGlow = RConstants.SpriteSheet.HAND_GLOW;
+                GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
             }
 
-            // OILD
+            if(cap.handState() != IRegen.Hand.NO_GONE){
+                RConstants.SpriteSheet handGlow = RConstants.SpriteSheet.MISSING_ARM;
+                int positionOffset = player.getMainArm() == HumanoidArm.RIGHT ? Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 91 - 29 : Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 91 + 29;
+                GuiComponent.blit(poseStack, positionOffset, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 19, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
+            }
+
+            // OLD
         /*    String warning = null;
 
             if (cap.regenState() != RegenStates.ALIVE) {

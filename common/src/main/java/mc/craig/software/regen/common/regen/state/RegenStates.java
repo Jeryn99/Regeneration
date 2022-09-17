@@ -1,26 +1,23 @@
 package mc.craig.software.regen.common.regen.state;
 
+import mc.craig.software.regen.util.RConstants;
+
 public enum RegenStates {
 
-    ALIVE(0, 0), GRACE(32, 0), GRACE_CRIT(48, 0), POST(16, 0), REGENERATING(0, 0);
+    ALIVE(RConstants.SpriteSheet.ALIVE), GRACE(RConstants.SpriteSheet.GRACE), GRACE_CRIT(RConstants.SpriteSheet.GRACE_CRIT), POST(RConstants.SpriteSheet.POST), REGENERATING(RConstants.SpriteSheet.REGENERATING);
 
-    private final int offsetY, offsetX;
+    private final RConstants.SpriteSheet spriteSheet;
 
-    RegenStates(int texOffsetX, int texOffsetY) {
-        this.offsetX = texOffsetX;
-        this.offsetY = texOffsetY;
+    RegenStates(RConstants.SpriteSheet spriteSheet) {
+        this.spriteSheet = spriteSheet;
+    }
+
+    public RConstants.SpriteSheet getSpriteSheet() {
+        return spriteSheet;
     }
 
     public boolean isGraceful() {
         return this == GRACE || this == GRACE_CRIT;
-    }
-
-    public float getYOffset() {
-        return this.offsetY;
-    }
-
-    public float getUOffset() {
-        return this.offsetX;
     }
 
     public enum Transition {

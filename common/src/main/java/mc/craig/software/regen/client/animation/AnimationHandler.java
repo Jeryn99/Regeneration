@@ -12,6 +12,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.Item;
@@ -54,13 +55,18 @@ public class AnimationHandler {
             playerModel.leftSleeve.visible = playerModel.rightSleeve.visible = livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() != RItems.GUARD_CHEST.get();
             playerModel.leftPants.visible = hideModelPartIf(livingEntity, LEG_ITEMS, PlayerModelPart.LEFT_PANTS_LEG, EquipmentSlot.LEGS);
             playerModel.rightPants.visible = hideModelPartIf(livingEntity, LEG_ITEMS, PlayerModelPart.RIGHT_PANTS_LEG, EquipmentSlot.LEGS);
-            playerModel.leftSleeve.visible = playerModel.leftArm.visible = showArms(livingEntity); // Cut off Arm
+
+            if(livingEntity.getMainArm().getOpposite() == HumanoidArm.LEFT){
+                playerModel.leftSleeve.visible = playerModel.leftArm.visible = showArms(livingEntity); // Cut off Arm
+            } else {
+                playerModel.rightSleeve.visible = playerModel.rightArm.visible = showArms(livingEntity); // Cut off Arm
+            }
         }
     }
 
     public static boolean showArms(LivingEntity livingEntity) {
         AtomicBoolean show = new AtomicBoolean(true);
-        RegenerationData.get(livingEntity).ifPresent(iRegen -> show.set(iRegen.handState() == IRegen.Hand.LEFT_GONE));
+        RegenerationData.get(livingEntity).ifPresent(iRegen -> show.set(iRegen.handState() != IRegen.Hand.NO_GONE));
         return !show.get();
     }
 

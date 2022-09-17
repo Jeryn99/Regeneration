@@ -79,7 +79,7 @@ public class ChaliceItem extends Item {
         if (worldIn.isClientSide) return super.finishUsingItem(stack, worldIn, entityLiving);
         RegenerationData.get(entityLiving).ifPresent(iRegen -> {
             if (iRegen.canRegenerate()) {
-               //TODO iRegen.setNextTrait(getTrait(stack));
+                iRegen.setNextTrait(getTrait(stack));
                 iRegen.syncToClients(null);
                 entityLiving.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                 stack.shrink(1);
@@ -93,6 +93,6 @@ public class ChaliceItem extends Item {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-       tooltip.add(getTrait(stack).getDescription());
+        tooltip.add(getTrait(stack).getDescription());
     }
 }

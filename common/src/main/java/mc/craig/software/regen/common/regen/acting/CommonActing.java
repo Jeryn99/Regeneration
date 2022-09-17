@@ -5,6 +5,7 @@ import mc.craig.software.regen.common.block.JarBlock;
 import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.transitions.WatcherTransition;
+import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -130,6 +131,7 @@ public class CommonActing implements Acting {
         }
         player.setHealth(player.getMaxHealth());
         WatcherTransition.createWatcher(player);
+
     }
 
     @Override
@@ -182,6 +184,19 @@ public class CommonActing implements Acting {
         if (RegenConfig.COMMON.resetOxygen.get()) living.setAirSupply(300);
 
         cap.extractRegens(1);
+
+        cap.getCurrentTrait().onRemoved(living, cap);
+
+        if(cap.getNextTrait() != TraitRegistry.HUMAN.get()){
+            cap.setCurrentTrait(cap.getNextTrait());
+            cap.setNextTrait(TraitRegistry.HUMAN.get());
+        } else {
+            TraitRegistry.getRandomTrait().ifPresent(cap::setCurrentTrait);
+        }
+
+        cap.getCurrentTrait().onAdded(living, cap);
+        cap.syncToClients(null);
+
     }
 
 }
