@@ -42,6 +42,11 @@ public class TimelordSettlementHut extends Structure {
         super(structureSettings);
     }
 
+    private static void addPiece(StructureTemplateManager structureManager, BlockPos blockPos, Rotation rotation, StructurePiecesBuilder structurePieceAccessor, WorldgenRandom random) {
+        ResourceLocation piece = HutPiece.HUTS[random.nextInt(HutPiece.HUTS.length)];
+        structurePieceAccessor.addPiece(new HutPiece(0, structureManager, piece, piece.toString(), HutPiece.makeSettings(rotation), blockPos));
+    }
+
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext p_230235_) {
         Rotation rotation = Rotation.getRandom(p_230235_.random());
         BlockPos blockpos = this.getLowestYIn5by5BoxOffset7Blocks(p_230235_, rotation);
@@ -53,12 +58,6 @@ public class TimelordSettlementHut extends Structure {
     private void generatePieces(StructurePiecesBuilder structurePiecesBuilder, Structure.GenerationContext generationContext, BlockPos blockPos, Rotation rotation) {
         TimelordSettlementHut.addPiece(generationContext.structureTemplateManager(), blockPos, rotation, structurePiecesBuilder, generationContext.random());
     }
-
-    private static void addPiece(StructureTemplateManager structureManager, BlockPos blockPos, Rotation rotation, StructurePiecesBuilder structurePieceAccessor, WorldgenRandom random) {
-        ResourceLocation piece = HutPiece.HUTS[random.nextInt(HutPiece.HUTS.length)];
-        structurePieceAccessor.addPiece(new HutPiece(0, structureManager, piece, piece.toString(), HutPiece.makeSettings(rotation), blockPos));
-    }
-
 
     @Override
     public GenerationStep.@NotNull Decoration step() {

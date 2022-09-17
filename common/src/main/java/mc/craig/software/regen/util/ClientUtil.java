@@ -1,6 +1,9 @@
 package mc.craig.software.regen.util;
 
+<<<<<<< HEAD
 import com.mojang.authlib.minecraft.client.MinecraftClient;
+=======
+>>>>>>> arch-take-two
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.client.RKeybinds;
@@ -11,7 +14,10 @@ import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
 import mc.craig.software.regen.client.skin.VisualManipulator;
+<<<<<<< HEAD
 import mc.craig.software.regen.common.item.ChaliceItem;
+=======
+>>>>>>> arch-take-two
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
@@ -25,6 +31,10 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.HumanoidModel;
+<<<<<<< HEAD
+=======
+import net.minecraft.client.model.PlayerModel;
+>>>>>>> arch-take-two
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -73,6 +83,10 @@ public class ClientUtil {
                 player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
             }
         }
+    }
+
+    public static void getHandToHide(PlayerModel<?> playerModel, AbstractClientPlayer abstractClientPlayer) {
+
     }
 
     private static void blockMovement(Input moveType) {

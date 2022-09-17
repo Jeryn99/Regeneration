@@ -4,7 +4,6 @@ import mc.craig.software.regen.Regeneration;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -16,7 +15,7 @@ public class TransitionTypes {
 
     public static final HashMap<ResourceLocation, TransitionType> TRANSITION_TYPES = new HashMap<>();
     public static TransitionType TROUGHTON, FIERY, SNEEZE, TRISTIS_IGNIS, WATCHER, ENDER_DRAGON, BLAZE, SPARKLE;
-
+    public static TransitionType[] TYPES = new TransitionType[]{};
 
     private static TransitionType register(String id, Supplier<TransitionType> transitionType) {
         TransitionType regTransition = transitionType.get().setLocation(new ResourceLocation(Regeneration.MOD_ID, id));
@@ -34,8 +33,6 @@ public class TransitionTypes {
         FIERY = register("fiery", (FieryTransition::new));
         TROUGHTON = register("troughton", (TroughtonTransition::new));
     }
-
-    public static TransitionType[] TYPES = new TransitionType[]{};
 
     public static int getPosition(TransitionType rrRegenType) {
         if (TYPES.length <= 0) {
@@ -61,7 +58,7 @@ public class TransitionTypes {
         return timelordTypes[(int) (System.currentTimeMillis() % timelordTypes.length)];
     }
 
-    public static ResourceLocation getTransitionId(TransitionType transitionType){
+    public static ResourceLocation getTransitionId(TransitionType transitionType) {
         return transitionType.getLocation();
     }
 

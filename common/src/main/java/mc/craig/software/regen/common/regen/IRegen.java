@@ -18,10 +18,6 @@ import java.util.function.Supplier;
 
 public interface IRegen extends Serializable<CompoundTag> {
 
-    enum RegenAnimation {
-        REGEN, GRACE
-    }
-
     AnimationState getAnimationState(RegenAnimation regenAnimation);
 
     int regens();
@@ -96,6 +92,10 @@ public interface IRegen extends Serializable<CompoundTag> {
     Hand handState();
 
     void setHandState(Hand handState);
+
+    enum RegenAnimation {
+        REGEN, GRACE
+    }
 
     enum Hand {
         LEFT_GONE,

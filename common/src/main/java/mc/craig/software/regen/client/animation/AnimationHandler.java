@@ -24,8 +24,6 @@ public class AnimationHandler {
     public static Item[] LEG_ITEMS = new Item[]{RItems.F_ROBES_LEGS.get(), RItems.M_ROBES_LEGS.get(), RItems.GUARD_LEGS.get(), RItems.ROBES_FEET.get()};
     public static Item[] BODY_ITEMS = new Item[]{RItems.F_ROBES_CHEST.get(), RItems.GUARD_CHEST.get(), RItems.M_ROBES_CHEST.get()};
 
-
-
     public static void setRotationAnglesCallback(HumanoidModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();

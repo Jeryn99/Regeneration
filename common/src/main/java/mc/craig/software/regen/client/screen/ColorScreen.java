@@ -10,25 +10,28 @@ import mc.craig.software.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public class ColorScreen extends AbstractContainerScreen {
+public class ColorScreen extends Screen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     public static final ResourceLocation PREFERENCES_BUTTON_LOCATION = new ResourceLocation(RConstants.MODID, "textures/gui/preferences_button.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
+    private final int imageWidth;
+    private final int imageHeight;
 
     private Vec3 initialPrimary, initialSecondary;
     private ColorWidget colorChooserPrimary, colorChooserSecondary;
+    private int cy;
+    private int cx;
 
     public ColorScreen() {
-        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), Component.translatable("regen.gui.color_gui"));
+        super(Component.translatable("regen.gui.color_gui"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -36,8 +39,8 @@ public class ColorScreen extends AbstractContainerScreen {
     @Override
     public void init() {
         super.init();
-        int cx = (width - imageWidth) / 2;
-        int cy = (height - imageHeight) / 2;
+        cx = (width - imageWidth) / 2;
+        cy = (height - imageHeight) / 2;
 
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
             initialPrimary = data.getPrimaryColors();
@@ -83,10 +86,6 @@ public class ColorScreen extends AbstractContainerScreen {
         addRenderableWidget(colorChooserSecondary);
     }
 
-    @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
-        this.font.draw(poseStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
-    }
 
     public void updateScreenAndServer() {
         CompoundTag nbt = new CompoundTag();
@@ -103,36 +102,36 @@ public class ColorScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
-
-        super.tick();
-        colorChooserPrimary.tick();
-        colorChooserSecondary.tick();
-
-        this.renderBackground(matrixStack);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(poseStack);
+        super.render(poseStack, mouseX, mouseY, partialTick);
 
         if (this.minecraft != null) {
             RenderSystem.setShaderTexture(0, BACKGROUND);
-            int i = (this.width - this.imageWidth) / 2;
-            int j = (this.height - this.imageHeight) / 2;
-            this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
+            this.blit(poseStack, cx, cy, 0, 0, this.imageWidth, this.imageHeight);
         }
 
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
-        colorChooserPrimary.render(matrixStack, x, y, partialTicks);
-        colorChooserSecondary.render(matrixStack, x, y, partialTicks);
+        colorChooserPrimary.render(poseStack, mouseX, mouseY, partialTick);
+        colorChooserSecondary.render(poseStack, mouseX, mouseY, partialTick);
 
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
             String str = Component.translatable("regen.gui.primary").getString();
             int length = Minecraft.getInstance().font.width(str);
-            this.font.draw(matrixStack, Component.literal(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
+            this.font.draw(poseStack, Component.literal(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
             str = Component.translatable("regen.gui.secondary").getString();
             length = font.width(str);
-            this.font.draw(matrixStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
+            this.font.draw(poseStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
-
-
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        colorChooserPrimary.tick();
+        colorChooserSecondary.tick();
+    }
+
 }

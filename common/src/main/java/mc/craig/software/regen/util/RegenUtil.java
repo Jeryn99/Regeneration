@@ -115,6 +115,7 @@ public class RegenUtil {
         }
     }
 
+
     public static String colorToHex(Color color) {
         StringBuilder hex = new StringBuilder(Integer.toHexString(color.getRGB() & 0xffffff));
         while (hex.length() < 6) {

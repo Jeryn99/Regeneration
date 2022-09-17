@@ -1,5 +1,6 @@
 package mc.craig.software.regen.util;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.GsonHelper;
@@ -13,10 +14,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static mc.craig.software.regen.util.RegenUtil.GSON;
+
 public class MineSkin {
 
     private static final String USER_AGENT = "Regeneration MC Mod/1.0";
     private static final String URL = "https://api.mineskin.org";
+    private static final String API_ENDPOINT = "https://mc.craig.software/api/skin/random-skins";
 
     /**
      * @param page Specify what page you want a list of skins from
@@ -31,6 +35,18 @@ public class MineSkin {
             JsonElement t = json.getAsJsonArray("skins").get(skins).getAsJsonObject().get("url");
             foundSkins.add(t.getAsString());
         }
+        return foundSkins;
+    }
+
+    public static ArrayList<JsonElement> interalApiSkins() throws IOException {
+        ArrayList<JsonElement> foundSkins = new ArrayList<>();
+        JsonArray json = getApiResponseArray(new URL(API_ENDPOINT)).getAsJsonArray();
+        for (JsonElement jsonElement : json) {
+            JsonObject jsonData = jsonElement.getAsJsonObject();
+            foundSkins.add(jsonData);
+        }
+
+        System.out.println(json);
         return foundSkins;
     }
 
@@ -86,6 +102,16 @@ public class MineSkin {
         InputStream inputStream = uc.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         return GsonHelper.parse(br);
+    }
+
+    public static JsonArray getApiResponseArray(URL url) throws IOException {
+        HttpsURLConnection uc = (HttpsURLConnection) url.openConnection();
+        uc.connect();
+        uc = (HttpsURLConnection) url.openConnection();
+        uc.addRequestProperty("User-Agent", USER_AGENT);
+        InputStream inputStream = uc.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        return GsonHelper.fromJson(GSON, br, JsonArray.class, false);
     }
 
 

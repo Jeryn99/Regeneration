@@ -1,8 +1,8 @@
 package mc.craig.software.regen.common.regen.acting;
 
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
-import mc.craig.software.regen.client.visual.SkinRetriever;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -66,7 +66,7 @@ public class ClientActing implements Acting {
                 }
                 Minecraft.getInstance().submit(() -> {
                     if (!cap.isNextSkinValid()) {
-                        File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
+                        File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), false, cap.preferredModel().isAlex());
                         boolean isAlex = file.getAbsolutePath().contains("\\skins\\slim");
                         Regeneration.LOGGER.info("Chosen Skin: " + file);
                         new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();

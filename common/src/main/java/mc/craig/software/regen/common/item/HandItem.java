@@ -8,6 +8,7 @@ import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,8 +59,9 @@ public class HandItem extends Item {
     }
 
     public static UUID getUUID(ItemStack stack) {
-        if (stack.getOrCreateTag().contains("user")) {
-            return stack.getOrCreateTag().getUUID("user");
+        CompoundTag stackTag = stack.getOrCreateTag();
+        if (stackTag.contains("user")) {
+            return stackTag.getUUID("user");
         }
         return null;
     }
@@ -103,7 +105,7 @@ public class HandItem extends Item {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-       //TODO  tooltip.add(Component.translatable(ChatFormatting.WHITE + "Trait: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).translation().getString()));
+        //TODO  tooltip.add(Component.translatable(ChatFormatting.WHITE + "Trait: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).translation().getString()));
         tooltip.add(Component.translatable(ChatFormatting.WHITE + "Energy: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
     }
 }

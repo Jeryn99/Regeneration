@@ -18,13 +18,18 @@ public abstract class NetworkManager {
     protected final Map<String, MessageType> toServer = new HashMap<>();
     protected final Map<String, MessageType> toClient = new HashMap<>();
 
+    public NetworkManager(ResourceLocation channelName) {
+        this.channelName = channelName;
+    }
+
     @ExpectPlatform
     public static NetworkManager create(ResourceLocation channelName) {
         throw new AssertionError();
     }
 
-    public NetworkManager(ResourceLocation channelName) {
-        this.channelName = channelName;
+    @ExpectPlatform
+    public static Packet<?> spawnPacket(Entity livingEntity) {
+        throw new RuntimeException("This isn't where you get the packet! tut tut!");
     }
 
     public MessageType registerS2C(String id, MessageDecoder<MessageS2C> decoder) {
@@ -44,7 +49,7 @@ public abstract class NetworkManager {
     public abstract void sendToPlayer(ServerPlayer player, MessageS2C message);
 
     public void sendToDimension(Level level, MessageS2C message) {
-        if(!level.isClientSide) {
+        if (!level.isClientSide) {
             for (Player player : level.players()) {
                 this.sendToPlayer((ServerPlayer) player, message);
             }

@@ -1,6 +1,7 @@
 package mc.craig.software.regen.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
@@ -20,6 +21,7 @@ public class ItemInHandRendererMixin {
     private void renderArmWithItem(AbstractClientPlayer player, float partialTicks, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equippedProgress, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, CallbackInfo ci) {
         RegenerationData.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
+            VisualManipulator.tick(player);
             TransitionTypeRenderers.get(type).firstPersonHand(hand, matrixStack, buffer, combinedLight, partialTicks, swingProgress, equippedProgress, stack);
         });
     }

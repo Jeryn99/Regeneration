@@ -1,7 +1,11 @@
 package mc.craig.software.regen.common.entities;
 
 import com.google.common.collect.Sets;
+<<<<<<< HEAD
 import mc.craig.software.regen.client.visual.SkinRetriever;
+=======
+import mc.craig.software.regen.client.skin.SkinRetriever;
+>>>>>>> arch-take-two
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.entities.ai.TimelordAttackGoal;
 import mc.craig.software.regen.common.item.SpawnItem;
@@ -57,7 +61,6 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -78,11 +81,10 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     private static final EntityDataAccessor<Float> AIMING_TICKS = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.FLOAT);
     protected final WaterBoundPathNavigation waterNavigator;
     protected final GroundPathNavigation groundNavigator;
-
-    @Nullable
-    private Player tradingPlayer;
     @Nullable
     protected MerchantOffers offers;
+    @Nullable
+    private Player tradingPlayer;
 
     public Timelord(Level world) {
         this(REntities.TIMELORD.get(), world);
@@ -296,9 +298,9 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                         setMale(random.nextBoolean());
                         setPersonality(RSoundSchemes.getRandom(male()).identify());
                         initSkin(data);
-                         new RemoveTimelordSkinMessage(this).sendToAll();
+                        new RemoveTimelordSkinMessage(this).sendToAll();
                     }
-                    setDeltaMovement(0,0,0);
+                    setDeltaMovement(0, 0, 0);
                     setNoAi(true);
                     setInvulnerable(true);
                     return;
@@ -318,7 +320,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     @Override
     public void kill() {
         if (!level.isClientSide) {
-           new RemoveTimelordSkinMessage(this).sendToAll();
+            new RemoveTimelordSkinMessage(this).sendToAll();
         }
         remove(RemovalReason.KILLED);
     }
@@ -499,13 +501,13 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public void setTradingPlayer(@Nullable Player player) {
-        this.tradingPlayer = player;
+    public Player getTradingPlayer() {
+        return this.tradingPlayer;
     }
 
     @Override
-    public Player getTradingPlayer() {
-        return this.tradingPlayer;
+    public void setTradingPlayer(@Nullable Player player) {
+        this.tradingPlayer = player;
     }
 
     @Override

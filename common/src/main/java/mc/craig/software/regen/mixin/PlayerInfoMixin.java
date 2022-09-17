@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.UUID;
 
 @Mixin(PlayerInfo.class)
-public class PlayerInfoMixin {
+public abstract class PlayerInfoMixin {
 
     @Shadow
     @Final

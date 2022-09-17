@@ -42,6 +42,8 @@ public class RegenerationData implements IRegen {
     private final RegenerationData.StateManager stateManager;
     //Data
     private final LivingEntity livingEntity;
+    public AnimationState regen = new AnimationState();
+    public AnimationState grace = new AnimationState();
     //Don't save to disk
     private boolean didSetup = false;
     // Color Data
@@ -72,8 +74,10 @@ public class RegenerationData implements IRegen {
             this.stateManager = null;
     }
 
-    public AnimationState regen = new AnimationState();
-    public AnimationState grace = new AnimationState();
+    @ExpectPlatform
+    public static Optional<RegenerationData> get(LivingEntity player) {
+        throw new AssertionError();
+    }
 
     @Override
     public AnimationState getAnimationState(IRegen.RegenAnimation regenAnimation) {
@@ -145,11 +149,6 @@ public class RegenerationData implements IRegen {
     @Override
     public int updateTicks() {
         return animationTicks;
-    }
-
-    @ExpectPlatform
-    public static Optional<RegenerationData> get(LivingEntity player) {
-        throw new AssertionError();
     }
 
     @Override
@@ -229,7 +228,7 @@ public class RegenerationData implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-           new SyncMessage(this.livingEntity.getId(), nbt).sendToDimension(livingEntity.getCommandSenderWorld());
+            new SyncMessage(this.livingEntity.getId(), nbt).sendToDimension(livingEntity.getCommandSenderWorld());
         } else {
             new SyncMessage(this.livingEntity.getId(), nbt).send(serverPlayerEntity);
         }
@@ -548,7 +547,7 @@ public class RegenerationData implements IRegen {
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
-               return true;
+                return true;
             }
             return false;
         }
