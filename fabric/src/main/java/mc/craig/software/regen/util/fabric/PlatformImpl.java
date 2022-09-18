@@ -14,6 +14,8 @@ import java.util.Collection;
 
 public class PlatformImpl {
 
+    public static MinecraftServer MINECRAFT_SERVER;
+
     public static boolean isProduction() {
         return !FabricLoader.getInstance().isDevelopmentEnvironment();
     }
@@ -33,8 +35,6 @@ public class PlatformImpl {
     public static boolean isServer() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
     }
-
-    public static MinecraftServer MINECRAFT_SERVER;
 
     public static MinecraftServer getServer() {
         MinecraftServer server;

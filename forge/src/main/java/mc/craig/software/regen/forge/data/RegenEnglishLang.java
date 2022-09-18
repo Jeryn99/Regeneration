@@ -21,7 +21,11 @@ public class RegenEnglishLang extends LanguageProvider {
     protected void addTranslations() {
 
         // Traits
-        addTrait(TraitRegistry.FIRE_RESISTANCE.get(), "Ignis Resistentia", "Grants immunity to damage from fire, blaze fireballs, fire charges, magma blocks, and lava!");
+        addTrait(TraitRegistry.FIRE_RESISTANCE.get(), "Ignis Resistentia", "Grants immunity to damage from fire");
+        addTrait(TraitRegistry.SPEED.get(), "Celeritas", "Move swifter throughout the world");
+        addTrait(TraitRegistry.HUMAN.get(), "Mane homo", "Nothing - just plain human");
+        addTrait(TraitRegistry.WATER_BREATHING.get(), "Humanum Piscium", "Breathe forever underwater");
+        addTrait(TraitRegistry.STRENGTH.get(), "Fortis Human", "Grants super human strength");
 
         // === Advancements ===
         add("advancements.regen.title.change_refusal", "I. WILL. NOT. CHANGE!");
@@ -73,6 +77,8 @@ public class RegenEnglishLang extends LanguageProvider {
 
         //Item Group
         add("itemGroup.regen", "Regeneration");
+        add("itemGroup.regen.regen", "Regeneration");
+
 
         //Tooltip
         add("button.tooltip.reset_mojang", "Resets your Skin to Mojang Skin");
@@ -269,7 +275,7 @@ public class RegenEnglishLang extends LanguageProvider {
     }
 
 
-    public void addTrait(TraitBase traitBase, String title, String description){
+    public void addTrait(TraitBase traitBase, String title, String description) {
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".title", title);
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".description", description);
     }

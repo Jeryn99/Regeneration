@@ -14,6 +14,12 @@ import java.util.stream.Collectors;
 
 public class CustomRegistryImpl<T> extends CustomRegistry<T> {
 
+    private final MappedRegistry<T> parent;
+
+    public CustomRegistryImpl(MappedRegistry<T> parent) {
+        this.parent = parent;
+    }
+
     public static <T> CustomRegistry<T> create(Class<T> clazz, ResourceLocation id) {
         return new CustomRegistryImpl<>(FabricRegistryBuilder.createSimple(clazz, id).buildAndRegister());
     }
@@ -21,12 +27,6 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
     @Override
     public ResourceKey<? extends Registry<T>> getRegistryKey() {
         return this.parent.key();
-    }
-
-    private final MappedRegistry<T> parent;
-
-    public CustomRegistryImpl(MappedRegistry<T> parent) {
-        this.parent = parent;
     }
 
     @Override

@@ -14,6 +14,14 @@ public class RegenerationDataImpl extends RegenerationData implements ComponentV
         super(livingEntity);
     }
 
+    public static Optional<RegenerationData> get(LivingEntity livingEntity) {
+        try {
+            return Optional.of(RegenerationComponents.REGENERATION_DATA.get(livingEntity));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     @Override
     public void readFromNbt(CompoundTag tag) {
         this.deserializeNBT(tag);
@@ -24,14 +32,6 @@ public class RegenerationDataImpl extends RegenerationData implements ComponentV
         CompoundTag nbt = this.serializeNBT();
         for (String key : nbt.getAllKeys()) {
             tag.put(key, Objects.requireNonNull(nbt.get(key)));
-        }
-    }
-
-    public static Optional<RegenerationData> get(LivingEntity livingEntity) {
-        try {
-            return Optional.of(RegenerationComponents.REGENERATION_DATA.get(livingEntity));
-        } catch (Exception e) {
-            return Optional.empty();
         }
     }
 

@@ -1,6 +1,7 @@
 package mc.craig.software.regen.common.registry.forge;
 
 import mc.craig.software.regen.common.registry.CustomRegistry;
+import mc.craig.software.regen.common.traits.trait.TraitBase;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -15,18 +16,18 @@ import java.util.function.Supplier;
 
 public class CustomRegistryImpl<T> extends CustomRegistry<T> {
 
-    public static <T> CustomRegistry<T> create(Class<T> clazz, ResourceLocation id) {
-        DeferredRegister<T> deferredRegister = DeferredRegister.create(id, id.getNamespace());
-        deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus());
-        return new CustomRegistryImpl<>(id, deferredRegister.makeRegistry(RegistryBuilder::new));
-    }
-
     private final Supplier<IForgeRegistry<T>> parent;
     private final ResourceKey<? extends Registry<T>> resourceKey;
-
     public CustomRegistryImpl(ResourceLocation id, Supplier<IForgeRegistry<T>> parent) {
         this.parent = parent;
         this.resourceKey = ResourceKey.createRegistryKey(id);
+    }
+
+    public static <T> CustomRegistry<T> create(Class<T> clazz, ResourceLocation id) {
+        DeferredRegister<T> deferredRegister = DeferredRegister.create(id, id.getNamespace());
+        var supplier = deferredRegister.makeRegistry(RegistryBuilder::new);
+        deferredRegister.register(FMLJavaModLoadingContext.get().getModEventBus());
+        return new CustomRegistryImpl<>(id, supplier);
     }
 
     @Override

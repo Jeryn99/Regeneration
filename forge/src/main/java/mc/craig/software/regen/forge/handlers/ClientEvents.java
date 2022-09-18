@@ -11,27 +11,6 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.item.ItemColors;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import mc.craig.software.regen.client.RKeybinds;
-import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
-import mc.craig.software.regen.client.skin.VisualManipulator;
-import mc.craig.software.regen.client.visual.FogTracker;
-import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.regen.transitions.TransitionType;
-import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
-import mc.craig.software.regen.util.ClientUtil;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -81,7 +60,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void keyMapping(RegisterKeyMappingsEvent event){
+    public static void keyMapping(RegisterKeyMappingsEvent event) {
         event.register(RKeybinds.FORCE_REGEN);
         event.register(RKeybinds.REGEN_GUI);
     }
@@ -140,10 +119,6 @@ public class ClientEvents {
         LocalPlayer player = Minecraft.getInstance().player;
         ClientUtil.handleInput(player, e.getInput());
     }
-
-
-
-
 
 
 }

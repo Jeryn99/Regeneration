@@ -19,7 +19,7 @@ public class WaterBreathingTrait extends TraitBase{
 
     }
 
-    @Override //TODO Add Tick to Regeneration Data
+    @Override
     public void tick(LivingEntity livingEntity, IRegen data) {
         LivingEntity living = data.getLiving();
         if (living.isInWater()) {

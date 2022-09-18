@@ -57,7 +57,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         if (!skins.isEmpty()) {
             isAlex = skins.get(position).toString().contains("\\skins\\alex");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
-            currentTexture = SkinRetriever.fileTotexture(skins.get(position));
+            currentTexture = SkinRetriever.fileToTexture(skins.get(position));
         }
     }
 
@@ -135,7 +135,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                currentTexture = SkinRetriever.fileTotexture(skins.get(position));
+                currentTexture = SkinRetriever.fileToTexture(skins.get(position));
                 updateModels();
             }
         }, (button, poseStack, i, j) -> {
@@ -246,7 +246,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                     position++;
                 }
                 Minecraft.getInstance().getTextureManager().release(currentTexture);
-                currentTexture = SkinRetriever.fileTotexture(skins.get(position));
+                currentTexture = SkinRetriever.fileToTexture(skins.get(position));
                 updateModels();
             }
         }
@@ -258,7 +258,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                currentTexture = SkinRetriever.fileTotexture(skins.get(position));
+                currentTexture = SkinRetriever.fileToTexture(skins.get(position));
                 updateModels();
             }
         }

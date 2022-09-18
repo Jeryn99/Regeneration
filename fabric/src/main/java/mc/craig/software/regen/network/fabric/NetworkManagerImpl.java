@@ -20,10 +20,6 @@ import net.minecraft.world.entity.Entity;
 
 public class NetworkManagerImpl extends NetworkManager {
 
-    public static NetworkManager create(ResourceLocation channelName) {
-        return new NetworkManagerImpl(channelName);
-    }
-
     public NetworkManagerImpl(ResourceLocation channelName) {
         super(channelName);
         ServerPlayNetworking.registerGlobalReceiver(channelName, (server, player, handler, buf, responseSender) -> {
@@ -42,6 +38,14 @@ public class NetworkManagerImpl extends NetworkManager {
         if (Platform.isClient()) {
             this.registerClient();
         }
+    }
+
+    public static NetworkManager create(ResourceLocation channelName) {
+        return new NetworkManagerImpl(channelName);
+    }
+
+    public static Packet<?> spawnPacket(Entity livingEntity) {
+        return new ClientboundAddEntityPacket(livingEntity);
     }
 
     @Environment(EnvType.CLIENT)
@@ -84,10 +88,5 @@ public class NetworkManagerImpl extends NetworkManager {
         buf.writeUtf(message.getType().getId());
         message.toBytes(buf);
         ServerPlayNetworking.send(player, this.channelName, buf);
-    }
-
-
-    public static Packet<?> spawnPacket(Entity livingEntity) {
-        return new ClientboundAddEntityPacket(livingEntity);
     }
 }

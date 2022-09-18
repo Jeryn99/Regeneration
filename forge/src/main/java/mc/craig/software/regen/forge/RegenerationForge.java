@@ -10,7 +10,9 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -43,6 +45,11 @@ public class RegenerationForge {
         RSoundSchemes.init();
         PlayerUtil.setupPotions();
         event.enqueueWork(StructurePieces::init);
+
+        for (ResourceLocation objects : Registry.REGISTRY.keySet()) {
+            System.out.println(" - " + objects.toString());
+        }
+
         //BrewingRecipeRegistry.addRecipe(Ingredient.of(new ItemStack(RItems.FOB.get())), Ingredient.of(new ItemStack(Items.COOKIE)), new ItemStack(RItems.GUARD_FEET.get()));
     }
 

@@ -1,28 +1,29 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
-
+loaderVersion = "[39,)"
+license = "https://raw.githubusercontent.com/Suff99/Regeneration/1.19/LICENSE"
+issueTrackerURL = "https://github.com/Suff99/Regeneration"
 [[mods]]
+itemIcon = "regen:fobwatch"
 modId = "regen"
-version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+version = "41.0.2"
+displayName = "Regeneration"
+updateJSONURL = "https://mc-api.craig.software/update?mod=regen"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration"
+logoFile = "regen.png"
+credits = "Connor Dawn, DisasterGae, Magic Man, End Phoenix, Asher, TommyPie, HoldYourWaffle, GasMaskVA, Dhi, Violet, Wodaman, aaliceh"
+authors = "Nictogen, Suff99, HoldYourWaffle, 50ap5ud5"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Minecraft Mod that allows for players to given themselves the power of Regeneration to Regenerate and change bodies like a Time Lord!
 '''
-#logoFile = ""
-
 [[dependencies.regen]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,)"
+versionRange = "[41.1.0,)"
 ordering = "NONE"
 side = "BOTH"
-
 [[dependencies.regen]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,)"
+versionRange = "[1.19.2,]"
 ordering = "NONE"
 side = "BOTH"

@@ -198,7 +198,7 @@ public class SkinRetriever {
         return (File) folderFiles.toArray()[random.nextInt(folderFiles.size())];
     }
 
-    public static ResourceLocation fileTotexture(File file) {
+    public static ResourceLocation fileToTexture(File file) {
         NativeImage nativeImage = null;
         try {
             nativeImage = TextureFixer.processLegacySkin(NativeImage.read(new FileInputStream(file)), file.toString());

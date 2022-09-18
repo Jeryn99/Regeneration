@@ -1,17 +1,12 @@
 package mc.craig.software.regen.fabric.handlers;
 
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
-import mc.craig.software.regen.util.ClientUtil;
-import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.util.ClientUtil;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.world.item.ItemStack;
 
 
 public class ClientEvents {

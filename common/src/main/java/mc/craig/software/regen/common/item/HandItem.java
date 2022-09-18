@@ -3,13 +3,15 @@ package mc.craig.software.regen.common.item;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.traits.TraitRegistry;
+import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -46,6 +48,15 @@ public class HandItem extends Item {
         return stack.getOrCreateTag().getBoolean("is_alex");
     }
 
+    //Trait
+    public static void setTrait(TraitBase traitBase, ItemStack stack) {
+        stack.getOrCreateTag().putString("trait", TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).toString());
+    }
+
+    public static TraitBase getTrait(ItemStack stack) {
+        return TraitRegistry.TRAITS_REGISTRY.get(new ResourceLocation(stack.getOrCreateTag().getString("trait")));
+    }
+
     public static void setEnergy(float energy, ItemStack stack) {
         stack.getOrCreateTag().putFloat("energy", energy);
     }
@@ -59,9 +70,8 @@ public class HandItem extends Item {
     }
 
     public static UUID getUUID(ItemStack stack) {
-        CompoundTag stackTag = stack.getOrCreateTag();
-        if (stackTag.contains("user")) {
-            return stackTag.getUUID("user");
+        if (stack.getOrCreateTag().contains("user")) {
+            return stack.getOrCreateTag().getUUID("user");
         }
         return null;
     }
@@ -71,6 +81,7 @@ public class HandItem extends Item {
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
             setUUID(livingEntity.getUUID(), itemStack);
             setSkinType(iRegen.currentlyAlex() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
+            setTrait(iRegen.getCurrentTrait(), itemStack);
             setEnergy(0, itemStack);
             if (iRegen.isSkinValidForUse()) {
                 setSkin(iRegen.skin(), itemStack);
@@ -83,9 +94,9 @@ public class HandItem extends Item {
 
     @Override
     public @NotNull Component getName(ItemStack stack) {
-       /* if (stack.getOrCreateTag().contains("user")) {
+     /*   if (stack.getOrCreateTag().contains("user")) {
             return Component.translatable("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack)) + "'s");
-        }*///TODO
+        }*/
         return super.getName(stack);
     }
 
@@ -96,6 +107,7 @@ public class HandItem extends Item {
                 if (skinType != PlayerUtil.SkinType.EITHER) {
                     ItemStack itemstack = new ItemStack(this);
                     setSkinType(skinType, itemstack);
+                    setTrait(TraitRegistry.HUMAN.get(), itemstack);
                     items.add(itemstack);
                 }
             }
@@ -105,7 +117,7 @@ public class HandItem extends Item {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        //TODO  tooltip.add(Component.translatable(ChatFormatting.WHITE + "Trait: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).translation().getString()));
+        tooltip.add(Component.translatable(ChatFormatting.WHITE + "Trait: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).getTitle().getString()));
         tooltip.add(Component.translatable(ChatFormatting.WHITE + "Energy: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
     }
 }

@@ -7,26 +7,6 @@ import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.forge.RModelsImpl;
 import mc.craig.software.regen.client.sound.SoundReverbListener;
-import mc.craig.software.regen.common.objects.RParticles;
-import mc.craig.software.regen.util.RConstants;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import mc.craig.software.regen.client.ArmorModelManager;
-import mc.craig.software.regen.client.rendering.JarParticle;
-import mc.craig.software.regen.client.rendering.layers.HandLayer;
-import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
-import mc.craig.software.regen.client.rendering.model.RModels;
-import mc.craig.software.regen.client.rendering.model.forge.RModelsImpl;
-import mc.craig.software.regen.client.sound.SoundReverbListener;
 import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RParticles;
@@ -52,7 +32,12 @@ public class ClientModBus {
 
     @SubscribeEvent
     public static void clientSetup(final FMLClientSetupEvent event) {
-        Minecraft.getInstance().getItemColors().register((itemStack, i) -> ChaliceItem.getTrait(itemStack).getPotionColor(), RItems.GAUNTLET.get());
+        Minecraft.getInstance().getItemColors().register((arg, i) -> {
+            if (i == 0) {
+                return ChaliceItem.getTrait(arg).getPotionColor();
+            }
+            return -1;
+        }, RItems.GAUNTLET.get());
     }
 
 
@@ -88,8 +73,6 @@ public class ClientModBus {
         RModels.init();
         RModelsImpl.register(event);
     }
-
-
 
 
 }
