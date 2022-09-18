@@ -23,7 +23,7 @@ public class PhotosyntheticTrait extends TraitBase {
     @Override
     public void tick(LivingEntity livingEntity, IRegen data) {
         if (livingEntity.level.isDay() && !livingEntity.level.isRaining()) {
-            //if day, check if its time to do photosynthetic ability
+            //if day, check if it's time to do photosynthetic ability
             if (livingEntity.tickCount % 200 == 0) {
                 //if the player can see the sky
                 if (livingEntity.level.canSeeSky(livingEntity.blockPosition())) {

@@ -10,12 +10,16 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,17 +54,14 @@ public class CommonActing implements Acting {
 
         switch (cap.regenState()) {
             case POST:
-                if (!PlayerUtil.POTIONS.isEmpty()) {
-                    if (livingEntity.tickCount % 210 == 0 && !PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
-                        PlayerUtil.applyPotionIfAbsent(livingEntity, PlayerUtil.POTIONS.get(livingEntity.level.random.nextInt(PlayerUtil.POTIONS.size())), livingEntity.level.random.nextInt(400), 1, false, false);
-                    }
+                HolderSet.Named<MobEffect> mobEffects = Registry.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
+                if (livingEntity.tickCount % 210 == 0 && !PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
+                    mobEffects.getRandomElement(RandomSource.create()).ifPresent(mobEffectHolder -> PlayerUtil.applyPotionIfAbsent(livingEntity, mobEffectHolder.value(), livingEntity.level.random.nextInt(400), 1, false, false));
                 }
 
                 if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
                     PlayerUtil.handleZeroGrid(livingEntity);
                 }
-
-
                 break;
             case REGENERATING:
 

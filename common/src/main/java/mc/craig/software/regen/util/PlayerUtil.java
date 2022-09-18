@@ -5,6 +5,8 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,25 +26,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PlayerUtil {
-
-
-    public static ArrayList<MobEffect> POTIONS = new ArrayList<>();
-
-    public static void setupPotions() {
-        if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
-            for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
-                for (MobEffect effect : Registry.MOB_EFFECT.stream().toList()) {
-                    if (name.contentEquals(Registry.MOB_EFFECT.getKey(effect).toString())) {
-                        POTIONS.add(effect);
-                    }
-                }
-            }
-        }
-    }
 
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
         BlockPos livingPos = playerEntity.blockPosition().below();
@@ -61,7 +47,9 @@ public class PlayerUtil {
     }
 
     public static void handleZeroGrid(LivingEntity playerEntity) {
-        for (MobEffect effect : PlayerUtil.POTIONS) {
+        HolderSet.Named<MobEffect> mobEffects = Registry.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
+        for (Holder<MobEffect> mobEffect : mobEffects) {
+            MobEffect effect = mobEffect.value();
             if (playerEntity.hasEffect(effect)) {
                 playerEntity.removeEffect(effect);
             }

@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DiggerItem;
@@ -34,6 +35,7 @@ public class RegenUtil {
     public static TagKey<Block> ZINC = makeBlock("forge", "ores/zinc");
     public static TagKey<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
     public static TagKey<Biome> TIMELORD_SETTLEMENT = makeBiome("has_structure/timelord_settlement");
+    public static TagKey<MobEffect> POST_REGEN_POTIONS = makeMobEffects("post_regen");
 
     public static RandomSource RAND = RandomSource.create();
     public static String[] USERNAMES = new String[]{};
@@ -44,6 +46,10 @@ public class RegenUtil {
 
     private static TagKey<Biome> makeBiome(String name) {
         return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(RConstants.MODID, name));
+    }
+
+    private static TagKey<MobEffect> makeMobEffects(String name) {
+        return TagKey.create(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(RConstants.MODID, name));
     }
 
     public static TagKey<Item> makeItem(String domain, String path) {

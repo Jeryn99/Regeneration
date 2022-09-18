@@ -63,7 +63,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue resetHunger;
         public final ForgeConfigSpec.BooleanValue resetOxygen;
         public final ForgeConfigSpec.IntValue absorbtionLevel;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
+
         public final ForgeConfigSpec.BooleanValue allowUpwardsMotion;
         public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
 
@@ -82,7 +82,6 @@ public class RegenConfig {
             resetHunger = builder.comment("Regenerate hunger bars").translation("config.regen.reset_hunger").define("resetHunger", true);
             resetOxygen = builder.comment("Regenerate Oxygen").translation("config.regen.reset_oxygen").define("resetOxygen", true);
             absorbtionLevel = builder.comment("The amount of absorption hearts you get when regenerating").translation("config.regen.absorption_level").defineInRange("absorbtionLevel", 10, 0, Integer.MAX_VALUE);
-            postRegenEffects = builder.translation("config.regen.post_effects").comment("List of potion effects the player can endure during post regeneration").defineList("postRegenPotions", Lists.newArrayList("minecraft:weakness", "minecraft:mining_fatigue", "minecraft:resistance", "minecraft:health_boost", "minecraft:hunger", "minecraft:water_breathing", "minecraft:haste", "minecraft:nausea"), String.class::isInstance);
             builder.pop();
 
             builder.comment("Grace Settings").push("Grace Stage");

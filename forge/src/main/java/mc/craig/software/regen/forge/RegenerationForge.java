@@ -43,7 +43,6 @@ public class RegenerationForge {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         RSoundSchemes.init();
-        PlayerUtil.setupPotions();
         event.enqueueWork(StructurePieces::init);
         //BrewingRecipeRegistry.addRecipe(Ingredient.of(new ItemStack(RItems.FOB.get())), Ingredient.of(new ItemStack(Items.COOKIE)), new ItemStack(RItems.GUARD_FEET.get()));
     }
@@ -62,6 +61,7 @@ public class RegenerationForge {
         RegenBlockTags blockTags = new RegenBlockTags(generator, existingFileHelper);
         generator.addProvider(true, blockTags);
         generator.addProvider(true, new RegenItemTags(generator, blockTags, existingFileHelper));
+        generator.addProvider(true, new RegenMobEffectsTags(generator, Registry.MOB_EFFECT, existingFileHelper));
         generator.addProvider(true, new RegenRecipes(generator));
         generator.addProvider(true, new RegenBiomeModifiers(generator));
         generator.addProvider(true, new RegenAdvancementsProvider(generator, existingFileHelper));

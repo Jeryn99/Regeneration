@@ -25,7 +25,6 @@ public class CommonEvents {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             RSoundSchemes.init();
             RegenUtil.setupNames();
-            PlayerUtil.setupPotions();
         });
 
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
