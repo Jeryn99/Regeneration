@@ -103,7 +103,7 @@ public class Watcher extends Mob {
     }
 
     @Override
-    public void knockback(double p_147241_, double p_147242_, double p_147243_) {
+    public void knockback(double strength, double x, double z) {
 
     }
 

@@ -24,7 +24,7 @@ import java.util.List;
 public class ChaliceItem extends Item {
 
     public ChaliceItem() {
-        super(new Item.Properties().tab(RItems.MAIN).stacksTo(1));
+        super(new Item.Properties().tab(RItems.MAIN).stacksTo(1).rarity(Rarity.EPIC));
     }
 
     public static TraitBase getTrait(ItemStack stack) {
@@ -45,11 +45,9 @@ public class ChaliceItem extends Item {
     public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
         if (allowedIn(group)) {
             for (TraitBase trait : TraitRegistry.TRAITS_REGISTRY.getValues()) {
-                if (TraitRegistry.TRAITS_REGISTRY.getKey(trait) != TraitRegistry.TRAITS_REGISTRY.getKey(TraitRegistry.HUMAN.get())) {
                     ItemStack stack = new ItemStack(this);
                     setTrait(stack, trait);
                     items.add(stack);
-                }
             }
         }
     }

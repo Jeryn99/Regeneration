@@ -27,6 +27,9 @@ public class RegenEnglishLang extends LanguageProvider {
         addTrait(TraitRegistry.WATER_BREATHING.get(), "Humanum Piscium", "Breathe forever underwater");
         addTrait(TraitRegistry.STRENGTH.get(), "Fortis Human", "Grants super human strength");
         addTrait(TraitRegistry.ARROW_DODGE.get(), "Fracti sagitta", "Arrow Damage will be negated");
+        addTrait(TraitRegistry.PHOTOSYNTHETIC.get(), "Sol comedentis", "Being out in the world feeds you");
+        addTrait(TraitRegistry.SLOW_FALL.get(), "Non volans", "Gracely fall to the ground");
+        addTrait(TraitRegistry.KNOCKBACK.get(), "Simia nulla musca", "Negate knockback effects");
 
         // === Advancements ===
         addAdvancement("fob_watch", "This watch, is me!", "Obtain a Fob Watch");
@@ -156,6 +159,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
         add("regen.messages.new_trait", "New Trait: %s");
         add("regen.messages.cant_glow", "You cannot activate a glowing hand without being in a grace period");
+
         // === Command Output ===
         add("command.regen.set_trait.success", "Set trait for player %s to %s");
         add("command.regen.set_trait.error", "Could not set trait for player %s to %s");

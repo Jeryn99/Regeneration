@@ -20,6 +20,9 @@ public class RItems {
 
     public static RegistrySupplier<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     public static RegistrySupplier<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
+    public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
+    public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
+    public static RegistrySupplier<Item> PLASMA_CARTRIDGE = ITEMS.register("plasma_cartridge", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
 
     public static RegistrySupplier<Item> ZINC = ITEMS.register("zinc", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
     public static RegistrySupplier<Item> HAND = ITEMS.register("hand", () -> new HandItem(new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
@@ -34,11 +37,8 @@ public class RItems {
     public static RegistrySupplier<Item> M_ROBES_CHEST = ITEMS.register("m_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(400)));
     public static RegistrySupplier<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
     public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
-    public static RegistrySupplier<Item> PLASMA_CARTRIDGE = ITEMS.register("plasma_cartridge", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
     public static RegistrySupplier<Item> GAUNTLET = ITEMS.register("chalice", ChaliceItem::new);
 
-    public static RegistrySupplier<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
-    public static RegistrySupplier<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
 
     @ExpectPlatform
     public static CreativeModeTab getCreativeTab() {

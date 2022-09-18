@@ -23,7 +23,7 @@ public class GuiMixin {
     @Inject(at = @At("HEAD"), method = "renderHearts(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V", cancellable = true)
     private void renderHearts(PoseStack poseStack, Player player, int x, int y, int height, int i, float f, int j, int k, int l, boolean bl, CallbackInfo ci) {
         RegenerationData.get(player).ifPresent(regenerationData -> {
-            if(regenerationData.canRegenerate()){
+            if(regenerationData.regens() > 0){
                 RenderSystem.setShaderTexture(0, CUSTOM_ICONS);
             }
         });
@@ -32,7 +32,7 @@ public class GuiMixin {
     @Inject(at = @At("TAIL"), method = "renderHearts(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V", cancellable = true)
     private void renderHeartsTail(PoseStack poseStack, Player player, int x, int y, int height, int i, float f, int j, int k, int l, boolean bl, CallbackInfo ci) {
         RegenerationData.get(player).ifPresent(regenerationData -> {
-            if(regenerationData.canRegenerate()){
+            if(regenerationData.regens() > 0){
                 RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
             }
         });

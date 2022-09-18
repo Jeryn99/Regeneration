@@ -12,7 +12,6 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
 import mc.craig.software.regen.util.Platform;
@@ -20,7 +19,6 @@ import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -65,7 +63,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -227,7 +224,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     public void genName() {
-        if (RegenUtil.USERNAMES.length <= 0) {
+        if (RegenUtil.USERNAMES.length == 0) {
             RegenUtil.setupNames();
         }
         setCustomName(Component.literal(RegenUtil.USERNAMES[random.nextInt(RegenUtil.USERNAMES.length - 1)]));
@@ -377,7 +374,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     protected void updateTrades() {
-        if (getTimelordType() == TimelordType.COUNCIL) {
+        if (getTimelordType() != TimelordType.COUNCIL) return;
             MerchantOffers merchantoffers = this.getOffers();
 
             for (int i = random.nextInt(7); i > 0; i--) {
@@ -391,38 +388,38 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                 });
             }
 
-            TimelordTrade[] tradetrades = new TimelordTrade[]{
-                    new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
-                    new Timelord.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
-            };
-            this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
-        }
+        TimelordTrade[] tradetrades = new TimelordTrade[]{
+                new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
+                new Timelord.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
+        };
+        this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
+
     }
 
-    protected void addOffersFromItemListings(MerchantOffers p_35278_, VillagerTrades.ItemListing[] p_35279_, int p_35280_) {
+
+    protected void addOffersFromItemListings(MerchantOffers merchantOffers, VillagerTrades.ItemListing[] itemListings, int p_35280_) {
         Set<Integer> set = Sets.newHashSet();
-        if (p_35279_.length > p_35280_) {
+        if (itemListings.length > p_35280_) {
             while (set.size() < p_35280_) {
-                set.add(this.random.nextInt(p_35279_.length));
+                set.add(this.random.nextInt(itemListings.length));
             }
         } else {
-            for (int i = 0; i < p_35279_.length; ++i) {
+            for (int i = 0; i < itemListings.length; ++i) {
                 set.add(i);
             }
         }
 
         for (Integer integer : set) {
-            VillagerTrades.ItemListing villagertrades$itemlisting = p_35279_[integer];
-            MerchantOffer merchantoffer = villagertrades$itemlisting.getOffer(this, this.random);
+            VillagerTrades.ItemListing villagerTrades = itemListings[integer];
+            MerchantOffer merchantoffer = villagerTrades.getOffer(this, this.random);
             if (merchantoffer != null) {
-                p_35278_.add(merchantoffer);
+                merchantOffers.add(merchantoffer);
             }
         }
-
     }
 
     @Override
-    protected void populateDefaultEquipmentSlots(@NotNull RandomSource p_217055_, @NotNull DifficultyInstance d) {
+    protected void populateDefaultEquipmentSlots(@NotNull RandomSource random, @NotNull DifficultyInstance difficulty) {
         if (getTimelordType() == TimelordType.GUARD) {
             Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
             this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(stack));
@@ -475,23 +472,21 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player p_230254_1_, @NotNull InteractionHand p_230254_2_) {
-        ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand interactionHand) {
+        ItemStack itemstack = player.getItemInHand(interactionHand);
         if (itemstack.getItem() != RItems.SPAWN_ITEM.get() && this.isAlive() && !this.isTrading() && !this.isBaby()) {
-            if (this.getOffers().isEmpty()) {
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
-            } else {
+            if (!this.getOffers().isEmpty()) {
                 if (!this.level.isClientSide) {
-                    this.setTradingPlayer(p_230254_1_);
-                    if (p_230254_1_ instanceof ServerPlayer playerEntity) {
+                    this.setTradingPlayer(player);
+                    if (player instanceof ServerPlayer playerEntity) {
                         TriggerManager.TIMELORD_TRADE.trigger(playerEntity);
                     }
-                    this.openTradingScreen(p_230254_1_, this.getDisplayName(), 1);
+                    this.openTradingScreen(player, this.getDisplayName(), 1);
                 }
-                return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
         } else {
-            return super.mobInteract(p_230254_1_, p_230254_2_);
+            return super.mobInteract(player, interactionHand);
         }
     }
 
@@ -533,7 +528,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public void overrideOffers(MerchantOffers p_45306_) {
+    public void overrideOffers(MerchantOffers merchantOffers) {
 
     }
 
@@ -566,7 +561,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public void overrideXp(int p_45309_) {
+    public void overrideXp(int xp) {
 
     }
 

@@ -45,11 +45,6 @@ public class RegenerationForge {
         RSoundSchemes.init();
         PlayerUtil.setupPotions();
         event.enqueueWork(StructurePieces::init);
-
-        for (ResourceLocation objects : Registry.REGISTRY.keySet()) {
-            System.out.println(" - " + objects.toString());
-        }
-
         //BrewingRecipeRegistry.addRecipe(Ingredient.of(new ItemStack(RItems.FOB.get())), Ingredient.of(new ItemStack(Items.COOKIE)), new ItemStack(RItems.GUARD_FEET.get()));
     }
 

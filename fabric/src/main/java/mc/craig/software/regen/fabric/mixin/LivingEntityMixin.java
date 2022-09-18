@@ -19,6 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
+    @Inject(at = @At("HEAD"), method = "knockback(DDD)V", cancellable = true)
+    public void knockback(double strength, double x, double z, CallbackInfo ci) {
+        LivingEntity livingEntity = (LivingEntity) (Object) this;
+         RegenerationData.get(livingEntity).ifPresent(regenerationData -> {
+             if(regenerationData.getCurrentTrait() == TraitRegistry.KNOCKBACK.get()){
+                 ci.cancel();
+             }
+         });
+    }
+
     @Inject(at = @At("HEAD"), method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", cancellable = true)
     private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
