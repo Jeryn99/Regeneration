@@ -3,6 +3,7 @@ package mc.craig.software.regen.common.regen.acting;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
+import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -59,22 +60,28 @@ public class ClientActing implements Acting {
     public void onRegenTrigger(IRegen cap) {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
 
-            if (RegenConfig.CLIENT.changeMySkin.get()) {
-                if (cap.isNextSkinValid()) {
-                    new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()).send();
-                    return;
-                }
-                Minecraft.getInstance().submit(() -> {
-                    if (!cap.isNextSkinValid()) {
-                        File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), false, cap.preferredModel().isAlex());
-                        boolean isAlex = file.getAbsolutePath().contains("\\skins\\slim");
-                        Regeneration.LOGGER.info("Chosen Skin: " + file);
-                        new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();
-                    }
-                });
-            } else {
+            // Don't change skin if player has it disabled locally
+            if (!RegenConfig.CLIENT.changeMySkin.get()) {
                 VisualManipulator.sendResetMessage();
+                return;
             }
+
+            // Set players stored "next skin" if one is stored
+            if (cap.isNextSkinValid()) {
+                new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()).send();
+                Regeneration.LOGGER.info("Skin chosen from saved data");
+                return;
+            }
+
+            // Find and send random skin
+            Minecraft.getInstance().submit(() -> {
+                if (!cap.isNextSkinValid()) {
+                    File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.getLiving().getType() == REntities.TIMELORD.get(), cap.preferredModel().isAlex());
+                    boolean isAlex = file.getAbsolutePath().contains("\\skins\\slim");
+                    Regeneration.LOGGER.info("Chosen Skin: " + file);
+                    new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();
+                }
+            });
         }
     }
 

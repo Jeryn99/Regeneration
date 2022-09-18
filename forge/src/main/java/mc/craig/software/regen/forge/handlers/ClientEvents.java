@@ -72,12 +72,6 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void keyMapping(RegisterKeyMappingsEvent event){
-        event.register(RKeybinds.FORCE_REGEN);
-        event.register(RKeybinds.REGEN_GUI);
-    }
-
-    @SubscribeEvent
     public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
         Player player = event.getEntity();
         RegenerationData.get(player).ifPresent(iRegen -> {
@@ -87,42 +81,11 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent event) {
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent(iRegen -> TransitionTypeRenderers.get(iRegen.transitionType()).firstPersonHand(event.getHand(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight(), event.getPartialTick(), event.getSwingProgress(), event.getEquipProgress(), event.getItemStack()));
-    public static void onName(RenderNameTagEvent event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        RegenerationData.get(player).ifPresent(iRegen -> {
-            if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
-                event.setContent(Component.literal(ChatFormatting.OBFUSCATED + event.getContent().getString()));
-            }
-        });
-    }
-
-
-    @SubscribeEvent
-    public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
-        Player player = event.getEntity();
-        VisualManipulator.tick((AbstractClientPlayer) event.getEntity());
-        RegenerationData.get(player).ifPresent(iRegen -> {
-            TransitionType type = iRegen.transitionType();
-            TransitionTypeRenderers.get(type).onPlayerRenderPre(event.getEntity(), event.getRenderer(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
-        });
-    }
-
-    @SubscribeEvent
     public static void keyMapping(RegisterKeyMappingsEvent event){
         event.register(RKeybinds.FORCE_REGEN);
         event.register(RKeybinds.REGEN_GUI);
     }
 
-    @SubscribeEvent
-    public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-        Player player = event.getEntity();
-        RegenerationData.get(player).ifPresent(iRegen -> {
-            TransitionType type = iRegen.transitionType();
-            TransitionTypeRenderers.get(type).onPlayerRenderPost(event.getEntity(), event.getRenderer(), event.getPartialTick(), event.getPoseStack(), event.getMultiBufferSource(), event.getPackedLight());
-        });
-    }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
@@ -181,52 +144,6 @@ public class ClientEvents {
 
 
 
-    @SubscribeEvent
-    public static void onTickEvent(TickEvent.ClientTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.START)) return;
-        ClientUtil.tickClient();
-    }
-
-    @SubscribeEvent
-    public static void onColorFog(ViewportEvent.ComputeFogColor e) {
-        Vec3 color = FogTracker.getSitutionalFogColor();
-        if (color != null) {
-            e.setRed((float) color.x);
-            e.setBlue((float) color.y);
-            e.setGreen((float) color.z);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onRenderOverlay(RenderGuiOverlayEvent.Pre event) {
-        RegenerationOverlay.renderUi(event.getPoseStack());
-    }
-
-    @SubscribeEvent
-    public static void onSetupFogDensity(ViewportEvent.RenderFog event) {
-        Entity viewer = Minecraft.getInstance().getCameraEntity();
-        if (viewer instanceof LivingEntity livingEntity) {
-            event.setCanceled(FogTracker.setUpFog(livingEntity));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onDeath(LivingDeathEvent e) {
-        if (e.getEntity() instanceof Player player) {
-            VisualManipulator.PLAYER_SKINS.remove(player.getUUID());
-
-            if (player.getUUID().equals(Minecraft.getInstance().player.getUUID())) {
-                VisualManipulator.sendResetMessage();
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void keyInput(MovementInputUpdateEvent e) {
-        if (Minecraft.getInstance().player == null) return;
-        LocalPlayer player = Minecraft.getInstance().player;
-        ClientUtil.handleInput(player, e.getInput());
-    }
 
 
 }

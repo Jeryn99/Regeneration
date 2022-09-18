@@ -89,41 +89,7 @@ public class ClientModBus {
         RModelsImpl.register(event);
     }
 
-    @SubscribeEvent
-    public static void clientSetup(final FMLClientSetupEvent event) {
-        Minecraft.getInstance().getItemColors().register((itemStack, i) -> ChaliceItem.getTrait(itemStack).getPotionColor(), RItems.GAUNTLET.get());
-    }
 
-    @SubscribeEvent
-    public static void renderLayers(EntityRenderersEvent.AddLayers addLayers) {
-        addLayers.getSkins().forEach(skin -> {
-            LivingEntityRenderer<? extends Player, ? extends EntityModel<? extends Player>> renderer = addLayers.getSkin(skin);
-            renderer.addLayer(new RenderRegenLayer(renderer));
-            renderer.addLayer(new HandLayer(renderer));
-        });
 
-        Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
-            if (entityRenderer instanceof HumanoidMobRenderer<?, ?> bipedRenderer) {
-                bipedRenderer.addLayer(new RenderRegenLayer(bipedRenderer));
-                bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
-            }
-        });
-    }
 
-    @SubscribeEvent
-    public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
-    }
-
-    @SubscribeEvent
-    public static void reloadRegisterClient(RegisterClientReloadListenersEvent e) {
-        e.registerReloadListener(new SoundReverbListener());
-        e.registerReloadListener(new ArmorModelManager());
-    }
-
-    @SubscribeEvent
-    public static void event(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        RModels.init();
-        RModelsImpl.register(event);
-    }
 }

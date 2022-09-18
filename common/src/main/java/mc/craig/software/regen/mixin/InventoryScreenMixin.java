@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +25,7 @@ public abstract class InventoryScreenMixin {
     @Inject(at = @At("HEAD"), method = "init()V", cancellable = true)
     public void init(CallbackInfo ci) {
         Screen screen = (Screen) (Object) this;
-        if (screen instanceof InventoryScreen) {
+        if (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
             this.addRenderableWidget(new ImageButton(4, 4, 19, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
                 Minecraft.getInstance().setScreen(new PreferencesScreen());
             }));
