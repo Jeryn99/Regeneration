@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:regen/root",
+  "criteria": {
+    "regenerated": {
+      "trigger": "regen:first_regen"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.first_regeneration.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:player_head"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.first_regeneration.title"
+    }
+  },
+  "requirements": [
+    [
+      "regenerated"
+    ]
+  ]
+}

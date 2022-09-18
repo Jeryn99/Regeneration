@@ -4,6 +4,7 @@ import mc.craig.software.regen.common.commands.RegenCommand;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
+import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
@@ -34,21 +35,30 @@ public class CommonEvents {
         LivingEntity livingEntity = event.getEntity();
         if (livingEntity == null) return;
 
-        RegenerationData.get(livingEntity).ifPresent(iRegen -> {
+        RegenerationData.get(livingEntity).ifPresent(data -> {
 
             // Stop certain damages
             if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
                 return;
 
             //Handle Post
-            if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
+            if (data.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
             }
 
+            if(data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().isFire()){
+                event.setCanceled(true);
+            }
+
+            if(data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && event.getSource().isProjectile()){
+                event.setCanceled(true);
+            }
+
+
             //Handle Death
-            if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
-                event.setCanceled(true);//cancels damage, in case the above didn't cut it
+            if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || data.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+                event.setCanceled(true);
             }
         });
     }

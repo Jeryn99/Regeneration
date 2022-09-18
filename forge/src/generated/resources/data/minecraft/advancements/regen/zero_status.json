@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:regen/severed_hand",
+  "criteria": {
+    "zero_status": {
+      "trigger": "regen:zero_room"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.zero_status.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:zero_roundel_full"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.zero_status.title"
+    }
+  },
+  "requirements": [
+    [
+      "zero_status"
+    ]
+  ]
+}

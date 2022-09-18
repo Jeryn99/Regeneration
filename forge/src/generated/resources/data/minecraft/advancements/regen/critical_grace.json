@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:regen/change_refusal",
+  "criteria": {
+    "critical_grace": {
+      "trigger": "regen:critical_period"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.critical_grace.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:zero_roundel_full"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.critical_grace.title"
+    }
+  },
+  "requirements": [
+    [
+      "critical_grace"
+    ]
+  ]
+}

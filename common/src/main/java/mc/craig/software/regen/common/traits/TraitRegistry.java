@@ -18,6 +18,7 @@ public class TraitRegistry {
 
     public static RegistrySupplier<TraitBase> HUMAN = TRAITS.register("human", HumanTrait::new);
     public static RegistrySupplier<TraitBase> FIRE_RESISTANCE = TRAITS.register("fire_resistance", FireTrait::new);
+    public static RegistrySupplier<TraitBase> ARROW_DODGE = TRAITS.register("arrow_dodge", HumanTrait::new);
     public static RegistrySupplier<TraitBase> STRENGTH = TRAITS.register("strength", StrengthTrait::new);
     public static RegistrySupplier<TraitBase> WATER_BREATHING = TRAITS.register("water_breathing", WaterBreathingTrait::new);
     public static RegistrySupplier<TraitBase> SPEED = TRAITS.register("speed", SpeedTrait::new);

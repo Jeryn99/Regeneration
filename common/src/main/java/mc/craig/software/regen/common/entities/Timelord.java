@@ -4,12 +4,15 @@ import com.google.common.collect.Sets;
 import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.entities.ai.TimelordAttackGoal;
+import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.*;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
+import mc.craig.software.regen.common.traits.TraitRegistry;
+import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
 import mc.craig.software.regen.util.Platform;
@@ -17,6 +20,7 @@ import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -61,6 +65,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -374,6 +379,17 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     protected void updateTrades() {
         if (getTimelordType() == TimelordType.COUNCIL) {
             MerchantOffers merchantoffers = this.getOffers();
+
+            for (int i = random.nextInt(7); i > 0; i--) {
+                TraitRegistry.getRandomTrait().ifPresent(traitBase -> {
+                    ItemStack chalice = new ItemStack(RItems.GAUNTLET.get());
+                    ChaliceItem.setTrait(chalice, traitBase);
+                    Registry.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).ifPresent(potentialCurrency -> {
+                        TimelordTrade[] trades = new TimelordTrade[]{new Timelord.TimelordTrade(new ItemStack(potentialCurrency.getRandomElement(RegenUtil.RAND).get(), Mth.clamp(random.nextInt(10), 6, 20)), chalice, random.nextInt(7), 5)};
+                        this.addOffersFromItemListings(merchantoffers, trades, 5);
+                    });
+                });
+            }
 
             TimelordTrade[] tradetrades = new TimelordTrade[]{
                     new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),

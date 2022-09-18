@@ -1,29 +1,28 @@
 {
-  "parent": "regen:change_refusal",
+  "parent": "minecraft:regen/change_refusal",
   "criteria": {
-    "0": {
+    "severed_hand": {
       "trigger": "regen:hand_cut"
     }
   },
   "display": {
     "announce_to_chat": true,
-    "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
-      "translate": "advancements.regen.desc.hand_cut"
+      "translate": "advancements.severed_hand.description"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
       "item": "regen:hand"
     },
-    "show_toast": true,
+    "show_toast": false,
     "title": {
-      "translate": "advancements.regen.title.hand_cut"
+      "translate": "advancements.severed_hand.title"
     }
   },
   "requirements": [
     [
-      "0"
+      "severed_hand"
     ]
   ]
 }

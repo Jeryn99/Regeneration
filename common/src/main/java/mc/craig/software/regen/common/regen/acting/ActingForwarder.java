@@ -117,8 +117,9 @@ public class ActingForwarder {
      * Knows what to forward by reflection magic
      */
     private static void checkAndForward(RegenerationData cap, RegenEvent event) {
-        if (cap.getLiving().level.isClientSide)
+        if (cap.getLiving().level.isClientSide) {
             throw new IllegalStateException("'Posting' \"acting\" `event` from client");
+        }
          new StateMessage(cap.getLiving(), event).sendToAll();
     }
 

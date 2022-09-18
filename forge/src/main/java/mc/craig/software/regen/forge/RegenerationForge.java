@@ -69,7 +69,7 @@ public class RegenerationForge {
         generator.addProvider(true, new RegenItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(true, new RegenRecipes(generator));
         generator.addProvider(true, new RegenBiomeModifiers(generator));
-        generator.addProvider(true, new RegenAdvancements(generator));
+        generator.addProvider(true, new RegenAdvancementsProvider(generator, existingFileHelper));
         generator.addProvider(true, new RegenBiomeTags(generator, existingFileHelper));
     }
 

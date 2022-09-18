@@ -1,11 +1,17 @@
 {
+  "parent": "minecraft:regen/timelord_trade",
   "criteria": {
-    "0": {
+    "ready_for_war": {
       "conditions": {
         "items": [
           {
             "items": [
-              "regen:fobwatch"
+              "regen:staser"
+            ]
+          },
+          {
+            "items": [
+              "regen:rifle"
             ]
           }
         ]
@@ -15,24 +21,23 @@
   },
   "display": {
     "announce_to_chat": true,
-    "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
-      "translate": "advancements.regen.desc.watch_is_me"
+      "translate": "advancements.ready_for_war.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "regen:fobwatch",
+      "item": "regen:rifle",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
+    "show_toast": false,
     "title": {
-      "translate": "advancements.regen.title.watch_is_me"
+      "translate": "advancements.ready_for_war.title"
     }
   },
   "requirements": [
     [
-      "0"
+      "ready_for_war"
     ]
   ]
 }

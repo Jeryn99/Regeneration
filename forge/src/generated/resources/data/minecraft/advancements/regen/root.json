@@ -1,17 +1,11 @@
 {
-  "parent": "regen:guard",
   "criteria": {
-    "0": {
+    "obtained_fob_watch": {
       "conditions": {
         "items": [
           {
             "items": [
-              "regen:staser"
-            ]
-          },
-          {
-            "items": [
-              "regen:rifle"
+              "regen:fobwatch"
             ]
           }
         ]
@@ -23,22 +17,22 @@
     "announce_to_chat": true,
     "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
-      "translate": "advancements.regen.desc.gallifreyan_weapon"
+      "translate": "advancements.fob_watch.description"
     },
-    "frame": "task",
+    "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "regen:staser",
+      "item": "regen:fobwatch",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
+    "show_toast": false,
     "title": {
-      "translate": "advancements.regen.title.gallifreyan_weapon"
+      "translate": "advancements.fob_watch.title"
     }
   },
   "requirements": [
     [
-      "0"
+      "obtained_fob_watch"
     ]
   ]
 }

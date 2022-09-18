@@ -2,6 +2,7 @@ package mc.craig.software.regen.fabric.mixin;
 
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
+import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
@@ -26,6 +27,10 @@ public class LivingEntityMixin {
         // Stop certain damages
         if (source == RegenSources.REGEN_DMG_KILLED)
             return;
+
+        if (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.isFire() || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.isProjectile()) {
+            cir.setReturnValue(false);
+        }
 
         //Handle Death
         if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && source.isFire() || data.regenState() == RegenStates.REGENERATING && source.isExplosion()) {

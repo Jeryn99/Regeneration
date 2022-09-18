@@ -1,7 +1,7 @@
 {
-  "parent": "regen:timelord_trade",
+  "parent": "minecraft:regen/timelord_trade",
   "criteria": {
-    "0": {
+    "gallifreyan_soldier": {
       "conditions": {
         "items": [
           {
@@ -31,24 +31,23 @@
   },
   "display": {
     "announce_to_chat": true,
-    "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
-      "translate": "advancements.regen.desc.guard"
+      "translate": "advancements.gallifreyan_soldier.description"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "regen:guard_helmet",
+      "item": "regen:guard_chest",
       "nbt": "{Damage:0}"
     },
-    "show_toast": true,
+    "show_toast": false,
     "title": {
-      "translate": "advancements.regen.title.guard"
+      "translate": "advancements.gallifreyan_soldier.title"
     }
   },
   "requirements": [
     [
-      "0"
+      "gallifreyan_soldier"
     ]
   ]
 }

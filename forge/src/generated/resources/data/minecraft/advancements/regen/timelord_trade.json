@@ -1,29 +1,28 @@
 {
-  "parent": "regen:watch_is_me",
+  "parent": "minecraft:regen/root",
   "criteria": {
-    "0": {
+    "timelord_trade": {
       "trigger": "regen:timelord_trade"
     }
   },
   "display": {
     "announce_to_chat": true,
-    "background": "regen:textures/block/zero_roundel_half.png",
     "description": {
-      "translate": "advancements.regen.desc.timelord_trade"
+      "translate": "advancements.timelord_trade.description"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
       "item": "regen:timelord"
     },
-    "show_toast": true,
+    "show_toast": false,
     "title": {
-      "translate": "advancements.regen.title.timelord_trade"
+      "translate": "advancements.timelord_trade.title"
     }
   },
   "requirements": [
     [
-      "0"
+      "timelord_trade"
     ]
   ]
 }

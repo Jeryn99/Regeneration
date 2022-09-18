@@ -20,37 +20,52 @@ public class RegenEnglishLang extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        // Traits
+        // === Traits ===
         addTrait(TraitRegistry.FIRE_RESISTANCE.get(), "Ignis Resistentia", "Grants immunity to damage from fire");
         addTrait(TraitRegistry.SPEED.get(), "Celeritas", "Move swifter throughout the world");
         addTrait(TraitRegistry.HUMAN.get(), "Mane homo", "Nothing - just plain human");
         addTrait(TraitRegistry.WATER_BREATHING.get(), "Humanum Piscium", "Breathe forever underwater");
         addTrait(TraitRegistry.STRENGTH.get(), "Fortis Human", "Grants super human strength");
+        addTrait(TraitRegistry.ARROW_DODGE.get(), "Fracti sagitta", "Arrow Damage will be negated");
 
         // === Advancements ===
-        add("advancements.regen.title.change_refusal", "I. WILL. NOT. CHANGE!");
-        add("advancements.regen.desc.change_refusal", "Punch a block to delay your Regeneration!");
-        add("advancements.regen.title.critical_period", "Your song is ending...");
-        add("advancements.regen.desc.critical_period", "Refuse to Regenerate up till the point of near death...");
-        add("advancements.regen.title.first_regen", "Change my dear...");
-        add("advancements.regen.desc.first_regen", "Regenerate for the First time!");
-        add("advancements.regen.title.council", "Member of the High Council");
-        add("advancements.regen.desc.council", "Wear Gallifreyan Robes");
-        add("advancements.regen.title.gallifrey", "Constellation of Kasterborous");
-        add("advancements.regen.desc.gallifrey", "Step foot on Gallifrey");
-        add("advancements.regen.title.gallifreyan_weapon", "There's no Stun Setting...");
-        add("advancements.regen.desc.gallifreyan_weapon", "Hold both Gallifreyan weapons");
-        add("advancements.regen.title.timelord_trade", "Galactic Fortune");
-        add("advancements.regen.desc.timelord_trade", "Trade with a Timelord");
-        add("advancements.regen.title.hand_cut", "For Science!");
-        add("advancements.regen.desc.hand_cut", "Cut off your hand");
-        add("advancements.regen.title.zero_room", "Smells like roses");
-        add("advancements.regen.desc.zero_room", "Use Zero Room Roundels to negate negative Regeneration Effects");
-        add("advancements.regen.title.watch_is_me", "This watch, is me!");
-        add("advancements.regen.desc.watch_is_me", "Obtain a Chameleon Arch");
-        add("advancements.regen.title.guard", "Chancellery Guard");
-        add("advancements.regen.desc.guard", "Wear all Timelord Guard Armor");
+        addAdvancement("fob_watch", "This watch, is me!", "Obtain a Fob Watch");
+        addAdvancement("critical_grace", "Your song is ending...", "Refuse to Regenerate up till the point of near death...");
+        addAdvancement("first_regeneration", "Change my dear...", "Regenerate for the First time!");
+        addAdvancement("zero_status", "Smells like roses", "Use Zero Room Roundels to negate negative Regeneration Effects");
+        addAdvancement("severed_hand", "For Science!", "Cut off your arm");
+        addAdvancement("timelord_trade", "Galactic Fortune", "Trade with a Timelord");
+        addAdvancement("change_refusal", "I. WILL. NOT. CHANGE!", "Punch a block to delay your Regeneration!");
+        addAdvancement("council_clothing", "Member of the High Council", "Wear a full set of Gallifreyan Robes");
+        addAdvancement("ready_for_war", "There's no Stun Setting...", "Hold both Gallifreyan weapons");
+        addAdvancement("gallifreyan_soldier", "Chancellery Guard", "Wear all Timelord Guard Armor");
 
+        // === Block ===
+        add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");
+        add(RBlocks.ZERO_ROUNDEL.get(), "Zero Roundel (Half)");
+        add(RBlocks.ZERO_ROOM_FULL.get(), "Zero Roundel (Full)");
+        add(RBlocks.AZBANTIUM.get(), "Azbantium");
+        add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
+        add(RBlocks.ZINC_ORE_DEEPSLATE.get(), "Deepslate Zinc Ore");
+
+        // === Items ===
+        add(RItems.FOB.get(), "Fob Watch");
+        add(RItems.PISTOL.get(), "Staser");
+        add(RItems.RIFLE.get(), "Staser Rifle");
+        add(RItems.HAND.get(), "Hand");
+        add(RItems.PLASMA_CARTRIDGE.get(), "Plasma Cartridge");
+        add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
+        add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
+        add(RItems.M_ROBES_LEGS.get(), "Timelord Lower Robes (Male)");
+        add(RItems.ROBES_FEET.get(), "Boots");
+        add(RItems.F_ROBES_HEAD.get(), "Timelord Collar Piece (Female)");
+        add(RItems.F_ROBES_CHEST.get(), "Timelord Suit (Female)");
+        add(RItems.F_ROBES_LEGS.get(), "Timelord Lower Robes (Female)");
+        add(RItems.GUARD_HELMET.get(), "Timelord Soldier Helmet");
+        add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
+        add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
+        add(RItems.GUARD_FEET.get(), "Timelord Boots");
+        add(RItems.ZINC.get(), "Zinc Ingot");
 
         // === Damages Sources ===
         add("regen.source.regen_energy", "%s was blasted by Regeneration Energy!");
@@ -67,13 +82,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.timelord_type.guard", "Timelord Guard");
         add("regen.timelord_type.male_council", "Timelord Council (Male)");
 
-        //Block
-        add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");
-        add(RBlocks.ZERO_ROUNDEL.get(), "Zero Roundel (Half)");
-        add(RBlocks.ZERO_ROOM_FULL.get(), "Zero Roundel (Full)");
-        add(RBlocks.AZBANTIUM.get(), "Azbantium");
-        add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
-        add(RBlocks.ZINC_ORE_DEEPSLATE.get(), "Deepslate Zinc Ore");
+
 
         //Item Group
         add("itemGroup.regen", "Regeneration");
@@ -90,7 +99,7 @@ public class RegenEnglishLang extends LanguageProvider {
 
         //Sounds
         for (int i = 0; i < 7; i++) {
-            add("regen.sound.regeneration_" + i, "Regeneration");
+            add("regen.sound.regeneration_" + i, "Regenerating");
         }
         add("regen.sound.regen_bubble", "Jar bubbles");
         add("regen.sound.hum", "Calming hums");
@@ -117,29 +126,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.sound.rifle", "Rifle fires");
         add("regen.sound.staser", "Staser Fires");
 
-        //Items
-        add(RItems.FOB.get(), "Chameleon Arch");
-        add(RItems.PISTOL.get(), "Staser");
-        add(RItems.RIFLE.get(), "Staser Rifle");
-
-        add(RItems.HAND.get(), "Hand");
         add("item.regen.hand_with_arg", "%s Hand");
-
-        add(RItems.PLASMA_CARTRIDGE.get(), "Plasma Cartridge");
-        add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
-        add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
-        add(RItems.M_ROBES_LEGS.get(), "Timelord Lower Robes (Male)");
-        add(RItems.ROBES_FEET.get(), "Timelord Shoes");
-
-        add(RItems.F_ROBES_HEAD.get(), "Timelord Collar Piece (Female)");
-        add(RItems.F_ROBES_CHEST.get(), "Timelord Suit (Female)");
-        add(RItems.F_ROBES_LEGS.get(), "Timelord Lower Robes (Female)");
-
-        add(RItems.GUARD_HELMET.get(), "Timelord Soldier Helmet");
-        add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
-        add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
-        add(RItems.GUARD_FEET.get(), "Timelord Boots");
-        add(RItems.ZINC.get(), "Zinc Ingot");
 
         //Messages
         add("regen.messages.regen_death_msg", "%s is regenerating...");
@@ -248,7 +235,8 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.gui.preferences", "Preferences");
 
         for (PlayerUtil.SkinType value : PlayerUtil.SkinType.values()) {
-            add("regeneration.skin_type." + value.name().toLowerCase(), grammerNazi(value.name().toLowerCase()));
+            String valueName = value.name().toLowerCase();
+            add("regeneration.skin_type." + valueName, capitalize(valueName));
         }
 
         add("regen.gui.sound_scheme.hum", "Graceful Hum");
@@ -269,11 +257,15 @@ public class RegenEnglishLang extends LanguageProvider {
         add(REntities.WATCHER.get(), "Watcher");
     }
 
-    public String grammerNazi(String text) {
+    public String capitalize(String text) {
         String firstLetter = text.substring(0, 1).toUpperCase();
         return firstLetter + text.substring(1);
     }
 
+    public void addAdvancement(String advancement, String title, String description){
+        add(RegenAdvancementsProvider.RegenAdvancements.getTitleTranslation(advancement), title);
+        add(RegenAdvancementsProvider.RegenAdvancements.getDescriptionTranslation(advancement), description);
+    }
 
     public void addTrait(TraitBase traitBase, String title, String description) {
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".title", title);

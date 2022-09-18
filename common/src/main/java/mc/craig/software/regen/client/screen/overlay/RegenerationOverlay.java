@@ -52,7 +52,7 @@ public class RegenerationOverlay {
                 GuiComponent.blit(poseStack, 8, 10, 40, 8, 8, 8, 64, 64);
             }
 
-            // Render Status
+            // Render Regeneration Status Icon
             RenderSystem.setShaderTexture(0, BACKGROUND);
             GuiComponent.blit(poseStack, 4, 4, cap.regenState().getSpriteSheet().getUOffset(), cap.regenState().getSpriteSheet().getYOffset(), 16, 16, 256, 256);
 
