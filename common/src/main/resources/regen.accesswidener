@@ -13,3 +13,4 @@ accessible method net/minecraft/world/entity/LivingEntity checkTotemDeathProtect
 accessible field net/minecraft/client/gui/screens/inventory/InventoryScreen widthTooNarrow Z
 accessible method net/minecraft/client/gui/Gui renderTextureOverlay (Lnet/minecraft/resources/ResourceLocation;F)V
 accessible field net/minecraft/client/Minecraft itemColors Lnet/minecraft/client/color/item/ItemColors;
+accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;

@@ -19,9 +19,17 @@ public class RegenMobEffectsTags extends TagsProvider<MobEffect> {
     @Override
     protected void addTags() {
         for (MobEffect mobEffect : Registry.MOB_EFFECT) {
+
             if (!mobEffect.isBeneficial() && mobEffect != MobEffects.LEVITATION) {
                 tag(RegenUtil.POST_REGEN_POTIONS).add(mobEffect);
             }
+
+
+            tag(RegenUtil.POST_REGEN_POTIONS).remove(MobEffects.LEVITATION);
+            tag(RegenUtil.POST_REGEN_POTIONS).remove(MobEffects.HARM);
+            tag(RegenUtil.POST_REGEN_POTIONS).remove(MobEffects.WITHER);
+
+
         }
     }
 }

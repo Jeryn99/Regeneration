@@ -33,13 +33,17 @@ public class VisualManipulator {
             UUID uuid = playerEntity.getUUID();
 
             boolean validSkin = iRegen.isSkinValidForUse();
+            if(!validSkin){
+                PLAYER_SKINS.remove(uuid);
+                setPlayerSkinType(playerEntity, getUnmodifiedSkinType(playerEntity));
+                return;
+            }
 
-            // Check if the player has a MOD skin and if the cache is present
-            // if these conditions are true, we want to generate and cache the skin
-            if (validSkin && !hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2)) {
+            // Only time a skin update should occur is if the player does not have a skin cached or the player is mid-regeneration
+            if (!hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2)) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
-                    boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.currentlyAlex() : getUnmodifiedSkinType(playerEntity);
+                    boolean isAlex = iRegen.currentlyAlex();
                     setPlayerSkinType(playerEntity, isAlex);
                     addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
                 }
@@ -65,7 +69,7 @@ public class VisualManipulator {
     public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
         PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
         if (playerInfo == null) return;
-        playerInfo.skinModel = isAlex ? "slim" : null;
+        playerInfo.skinModel = isAlex ? "slim" : "default";
     }
 
     public static void sendResetMessage() {

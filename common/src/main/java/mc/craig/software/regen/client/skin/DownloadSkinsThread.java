@@ -10,7 +10,7 @@ public class DownloadSkinsThread extends Thread {
     public static void setup() {
         DownloadSkinsThread thread = new DownloadSkinsThread();
         thread.setDaemon(true);
-        thread.setName("Regen - Skins");
+        thread.setName("Regeneration - Skins");
 
         ThreadGroup threadGroup = new ThreadGroup("Regen - Skin Threading");
         threadGroup.activeCount();
@@ -28,6 +28,7 @@ public class DownloadSkinsThread extends Thread {
             if (SkinRetriever.shouldUpdateSkins() && !hasStarted) {
                 doDownloads();
                 hasStarted = true;
+                stop();
             }
         } catch (Exception exception) {
             exception.printStackTrace();

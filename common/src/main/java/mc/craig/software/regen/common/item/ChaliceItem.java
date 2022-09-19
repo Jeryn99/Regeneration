@@ -28,7 +28,10 @@ public class ChaliceItem extends Item {
     }
 
     public static TraitBase getTrait(ItemStack stack) {
-        return TraitRegistry.TRAITS_REGISTRY.get(new ResourceLocation(stack.getOrCreateTag().getString("trait")));
+        if (stack.getOrCreateTag().contains("trait")) {
+            return TraitRegistry.TRAITS_REGISTRY.get(new ResourceLocation(stack.getOrCreateTag().getString("trait")));
+        }
+        return TraitRegistry.HUMAN.get();
     }
 
     public static void setTrait(ItemStack stack, TraitBase iTrait) {
