@@ -25,9 +25,6 @@ public class FogTracker {
             if (data.regenState() == RegenStates.GRACE_CRIT) {
                 vec3Color.set(new Vec3(0.5F, 0.5F, 0.5F));
             }
-            if (data.transitionType() == TransitionTypes.TROUGHTON && data.regenState() == RegenStates.REGENERATING) {
-                vec3Color.set(new Vec3(0, 0, 0));
-            }
         });
 
         return vec3Color.get();
@@ -36,16 +33,9 @@ public class FogTracker {
     public static boolean setUpFog(LivingEntity livingEntity) {
         AtomicBoolean cancelEvent = new AtomicBoolean(false);
         RegenerationData.get(livingEntity).ifPresent((data) -> {
-
             if (data.regenState() == RegenStates.GRACE_CRIT) {
                 RenderSystem.setShaderFogStart(-8);
                 RenderSystem.setShaderFogEnd(22 * 0.5F);
-                RenderSystem.setShaderFogShape(FogShape.SPHERE);
-                cancelEvent.set(true);
-            }
-            if (data.transitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
-                RenderSystem.setShaderFogStart(-8);
-                RenderSystem.setShaderFogEnd(17 * 0.5F);
                 RenderSystem.setShaderFogShape(FogShape.SPHERE);
                 cancelEvent.set(true);
             }

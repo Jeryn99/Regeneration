@@ -2,10 +2,13 @@ package mc.craig.software.regen.common.regen.transitions;
 
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
+import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.POVMessage;
+import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -19,19 +22,20 @@ public final class TroughtonTransition extends TransitionType {
     @Override
     public void onStartRegeneration(IRegen cap) {
         if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
-            new POVMessage(RConstants.FIRST_PERSON).send(serverPlayer);
+            new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
         }
     }
 
     @Override
     public void onUpdateMidRegen(IRegen cap) {
         LivingEntity living = cap.getLiving();
+        PlayerUtil.applyPotionIfAbsent(living, MobEffects.DARKNESS, getAnimationLength(), 0, false, false);
     }
 
     @Override
     public void onFinishRegeneration(IRegen cap) {
         if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
-            new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
+            new POVMessage(RConstants.FIRST_PERSON).send(serverPlayer);
         }
         cap.setUpdateTicks(0);
         cap.syncToClients(null);

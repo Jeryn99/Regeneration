@@ -73,14 +73,14 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     public void tick(@NotNull Level currentLevel, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull BioContainerBlockEntity bioContainerBlockEntity) {
 
         if (getHand().isEmpty()) {
-            closeState.stop();
-            if (!openState.isStarted()) {
-                openState.start(Math.toIntExact(currentLevel.getDayTime()));
-            }
-        } else {
             openState.stop();
             if (!closeState.isStarted()) {
                 closeState.start(Math.toIntExact(currentLevel.getDayTime()));
+            }
+        } else {
+            closeState.stop();
+            if (!openState.isStarted()) {
+                openState.start(Math.toIntExact(currentLevel.getDayTime()));
             }
         }
 
