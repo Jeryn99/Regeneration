@@ -1,5 +1,6 @@
 package mc.craig.software.regen.common.item;
 
+import mc.craig.software.regen.common.item.tooltip.hand.HandSkinToolTip;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
@@ -14,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /* Created by Craig on 05/03/2021 */
@@ -34,6 +37,14 @@ public class HandItem extends Item {
     //Skin Type
     public static void setSkinType(PlayerUtil.SkinType skinType, ItemStack stack) {
         stack.getOrCreateTag().putBoolean("is_alex", skinType.isAlex());
+    }
+
+    public static void setPlayerName(String name, ItemStack stack) {
+        stack.getOrCreateTag().putString("name", name);
+    }
+
+    public static String getPlayerName(ItemStack stack) {
+        return stack.getOrCreateTag().getString("name");
     }
 
     public static void setSkin(byte[] skin, ItemStack stack) {
@@ -83,10 +94,11 @@ public class HandItem extends Item {
             setSkinType(iRegen.currentlyAlex() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
             setTrait(iRegen.getCurrentTrait(), itemStack);
             setEnergy(0, itemStack);
+            setPlayerName(livingEntity.getName().getString(), itemStack);
             if (iRegen.isSkinValidForUse()) {
                 setSkin(iRegen.skin(), itemStack);
             }
-            iRegen.setHandState(IRegen.Hand.LEFT_GONE);
+            iRegen.setHandState(IRegen.Hand.CUT);
         });
         livingEntity.hurt(RegenSources.REGEN_DMG_HAND, 3);
         Containers.dropItemStack(livingEntity.level, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), itemStack);
@@ -94,9 +106,9 @@ public class HandItem extends Item {
 
     @Override
     public @NotNull Component getName(ItemStack stack) {
-     /*   if (stack.getOrCreateTag().contains("user")) {
-            return Component.translatable("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack)) + "'s");
-        }*/
+        if (stack.getOrCreateTag().contains("user") && stack.getOrCreateTag().contains("name")) {
+            return Component.translatable("item.regen.hand_with_name", stack.getOrCreateTag().getString("name") + "'s");
+        }
         return super.getName(stack);
     }
 
@@ -117,7 +129,14 @@ public class HandItem extends Item {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(Component.translatable(ChatFormatting.WHITE + "Trait: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).getTitle().getString()));
-        tooltip.add(Component.translatable(ChatFormatting.WHITE + "Energy: %s", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
+        if (getTrait(stack) != null) {
+            tooltip.add(Component.translatable("item.regen.tooltip.trait", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + getTrait(stack).getTitle().getString()));
+        }
+        tooltip.add(Component.translatable("item.regen.tooltip.energy", ChatFormatting.GRAY + ChatFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
+    }
+
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        return Optional.of(new HandSkinToolTip(getSkin(stack), isAlex(stack)));
     }
 }

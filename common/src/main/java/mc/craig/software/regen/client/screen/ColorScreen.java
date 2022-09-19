@@ -104,7 +104,6 @@ public class ColorScreen extends Screen {
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
 
         if (this.minecraft != null) {
             RenderSystem.setShaderTexture(0, BACKGROUND);
@@ -125,6 +124,8 @@ public class ColorScreen extends Screen {
             length = font.width(str);
             this.font.draw(poseStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
+        super.render(poseStack, mouseX, mouseY, partialTick);
+
     }
 
     @Override

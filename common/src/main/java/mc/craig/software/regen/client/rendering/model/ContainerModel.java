@@ -74,8 +74,8 @@ public class ContainerModel extends HierarchicalModel {
 
     public void animate(BioContainerBlockEntity containerBlock) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        animate(containerBlock.getOpenState(), CLOSE, Minecraft.getInstance().player.tickCount);
-        animate(containerBlock.getCloseState(), OPEN, Minecraft.getInstance().player.tickCount);
+        animate(containerBlock.getOpenState(), OPEN, Minecraft.getInstance().player.tickCount);
+        animate(containerBlock.getCloseState(), CLOSE, Minecraft.getInstance().player.tickCount);
         this.fluid.visible = containerBlock.hasWater();
     }
 }

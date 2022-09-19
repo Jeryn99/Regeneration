@@ -35,7 +35,7 @@ public class RConstants {
     public static final String FIRST_PERSON = "FIRST_PERSON";
     public static final String THIRD_PERSON_FRONT = "THIRD_PERSON_FRONT";
     public static final String SOUND_SCHEME = "sound_scheme";
-    public static final String HAND_STATE = "hand_state";
+    public static final String HAND_STATE = "severed_state";
 
     public enum SpriteSheet {
         ALIVE(0, 0), GRACE(32, 0), GRACE_CRIT(48, 0), POST(16, 0), REGENERATING(0, 0), HAND_GLOW(64, 0), MISSING_ARM(80, 0);

@@ -31,7 +31,6 @@ public class DeferredRegistryImpl {
 
         @Override
         public void register() {
-            System.out.println(FMLJavaModLoadingContext.get().getModEventBus());
             this.register.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
 

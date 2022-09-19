@@ -1,6 +1,7 @@
 package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.common.item.tooltip.fob.FobTooltip;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
@@ -21,11 +22,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 
 /**
@@ -193,4 +197,9 @@ public class FobWatchItem extends Item {
         return true;
     }
 
+    @Override
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        if (!stack.isDamaged()) return Optional.empty();
+        return Optional.of(new FobTooltip(stack.getDamageValue()));
+    }
 }

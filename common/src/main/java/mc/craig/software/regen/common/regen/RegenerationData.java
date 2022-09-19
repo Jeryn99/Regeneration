@@ -63,7 +63,7 @@ public class RegenerationData implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private RegenStates currentState = RegenStates.ALIVE;
     private IRegen.TimelordSound timelordSound = IRegen.TimelordSound.HUM;
-    private IRegen.Hand handState = IRegen.Hand.NO_GONE;
+    private IRegen.Hand handState = Hand.NOT_CUT;
 
     // ===== Color Data =====
     private float primaryRed = 0.69411767f, primaryGreen = 0.74509805f, primaryBlue = 0.23529412f;
@@ -122,8 +122,8 @@ public class RegenerationData implements IRegen {
 
         if (livingEntity instanceof ServerPlayer serverPlayer) {
 
-            if(handState() != Hand.NO_GONE){
-                if(!livingEntity.getOffhandItem().isEmpty()){
+            if (handState() != Hand.NOT_CUT) {
+                if (!livingEntity.getOffhandItem().isEmpty()) {
                     serverPlayer.spawnAtLocation(serverPlayer.getOffhandItem().copy());
                     serverPlayer.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
                 }
@@ -684,12 +684,12 @@ public class RegenerationData implements IRegen {
 
         private void endPost() {
             currentState = RegenStates.ALIVE;
-            syncToClients(null);
             nextTransition = null;
             if (livingEntity instanceof Player) {
                 PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.post_ended"), true);
             }
-            handState = IRegen.Hand.NO_GONE;
+            handState = Hand.NOT_CUT;
+            syncToClients(null);
         }
 
         private void finishRegeneration() {

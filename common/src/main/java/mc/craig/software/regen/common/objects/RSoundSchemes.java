@@ -28,7 +28,11 @@ public class RSoundSchemes {
 
 
     public static SoundScheme getRandom(boolean isMale) {
+        if (M_SCHEMES == null || F_SCHEMES == null) {
+            init();
+        }
         SoundScheme[] array = isMale ? M_SCHEMES : F_SCHEMES;
+
         if (array.length == 1) {
             return array[0];
         }

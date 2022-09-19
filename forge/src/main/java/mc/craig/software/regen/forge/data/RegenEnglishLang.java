@@ -1,14 +1,18 @@
 package mc.craig.software.regen.forge.data;
 
+import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
+import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.RegenSources;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class RegenEnglishLang extends LanguageProvider {
@@ -30,6 +34,7 @@ public class RegenEnglishLang extends LanguageProvider {
         addTrait(TraitRegistry.PHOTOSYNTHETIC.get(), "Sol comedentis", "Being out in the world feeds you");
         addTrait(TraitRegistry.SLOW_FALL.get(), "Non volans", "Gracely fall to the ground");
         addTrait(TraitRegistry.KNOCKBACK.get(), "Simia nulla musca", "Negate knockback effects");
+        addTrait(TraitRegistry.JUMP_BOOST.get(), "Lepus Humanus", "Get a extra spring in your step");
 
         // === Advancements ===
         addAdvancement("fob_watch", "This watch, is me!", "Obtain a Fob Watch");
@@ -71,34 +76,58 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RItems.ZINC.get(), "Zinc Ingot");
 
         // === Damages Sources ===
-        add("regen.source.regen_energy", "%s was blasted by Regeneration Energy!");
-        add("regen.source.regen_heal", "%s died by donating too much Regeneration Energy...");
-        add("regen.source.regen_crit", "%s died from holding in their regeneration for too long");
-        add("regen.source.theft", "%s had their body stolen!");
-        add("regen.source.lindos", "%s consumed lindos hormones! They are reborn!");
-        add("regen.source.regen_killed", "%s was killed mid-regeneration...");
-        add("regen.source.staser", "%s was shot dead with a Staser");
-        add("regen.source.rifle", "%s was shot dead with a Rifle");
-        add("regen.source.forced", "%s forced themselves to regenerate!");
-        add("regen.source.hand_cut", "%s died from blood loss!");
-        add("regen.timelord_type.female_council", "Timelord Council (Female)");
-        add("regen.timelord_type.guard", "Timelord Guard");
-        add("regen.timelord_type.male_council", "Timelord Council (Male)");
+        add(RegenSources.REGEN_DMG_CRITICAL, "%s died from holding in their regeneration for too long");
+        add(RegenSources.REGEN_DMG_FORCED, "%s forced themselves to regenerate!");
+        add(RegenSources.REGEN_DMG_HAND, "%s died from blood loss!");
+        add(RegenSources.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
+        add(RegenSources.REGEN_DMG_STASER, "%s was shot dead with a Staser");
+        add(RegenSources.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
+        add(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
 
+        // === Timelords ===
+        addTimelordtype(SpawnItem.Timelord.GUARD, "Timelord Guard");
+        addTimelordtype(SpawnItem.Timelord.FEMALE_COUNCIL, "Timelord Council (Female)");
+        addTimelordtype(SpawnItem.Timelord.MALE_COUNCIL, "Timelord Council (Male)");
 
+        // === Regeneration Transtions ===
+        add(TransitionTypes.ENDER_DRAGON.getTranslationKey(), "Ender-Dragon");
+        add(TransitionTypes.SPARKLE.getTranslationKey(), "Sparkle");
+        add(TransitionTypes.WATCHER.getTranslationKey(), "Watcher");
+        add(TransitionTypes.FIERY.getTranslationKey(), "Fiery");
+        add(TransitionTypes.TROUGHTON.getTranslationKey(), "Troughton");
+        add(TransitionTypes.BLAZE.getTranslationKey(), "Blaze");
+        add(TransitionTypes.TRISTIS_IGNIS.getTranslationKey(), "Tristis Ignis");
+        add(TransitionTypes.SNEEZE.getTranslationKey(), "'Sneeze'");
 
-        //Item Group
+        // === Item Group ===
         add("itemGroup.regen", "Regeneration");
         add("itemGroup.regen.regen", "Regeneration");
 
+        // === Sound Schemes ===
+        addSoundScheme(IRegen.TimelordSound.HUM, "Graceful Hum");
+        addSoundScheme(IRegen.TimelordSound.DRUM, "Resistant Drums");
+        addSoundScheme(IRegen.TimelordSound.SAXON_ENGLAND, "Saxons England");
+
+        // === Entity ===
+        add(REntities.TIMELORD.get(), "Timelord");
+        add(REntities.WATCHER.get(), "Watcher");
+
+        // === Skin Types ===
+        for (PlayerUtil.SkinType value : PlayerUtil.SkinType.values()) {
+            String valueName = value.name().toLowerCase();
+            add("regeneration.skin_type." + valueName, capitalize(valueName));
+        }
 
         //Tooltip
+        add("item.regen.tooltip.trait", "Trait: %s");
+        add("item.regen.tooltip.energy", "Energy: %s");
+
+
         add("button.tooltip.reset_mojang", "Resets your Skin to Mojang Skin");
         add("button.tooltip.previous_skin", "Previous Skin");
         add("button.tooltip.next_skin", "Next Skin");
         add("button.tooltip.save_skin", "Save Changes");
         add("button.tooltip.open_folder", "Open Local Skin Folder");
-        add("button.tooltip.upload2mc", "Upload currently selected skin to Minecraft");
 
         //Sounds
         for (int i = 0; i < 7; i++) {
@@ -129,7 +158,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.sound.rifle", "Rifle fires");
         add("regen.sound.staser", "Staser Fires");
 
-        add("item.regen.hand_with_arg", "%s Hand");
+        add("item.regen.hand_with_name", "%s Hand");
 
         //Messages
         add("regen.messages.regen_death_msg", "%s is regenerating...");
@@ -237,28 +266,6 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.gui.current_skin", "Select Next Incarnation");
         add("regen.gui.back", "Back");
         add("regen.gui.preferences", "Preferences");
-
-        for (PlayerUtil.SkinType value : PlayerUtil.SkinType.values()) {
-            String valueName = value.name().toLowerCase();
-            add("regeneration.skin_type." + valueName, capitalize(valueName));
-        }
-
-        add("regen.gui.sound_scheme.hum", "Graceful Hum");
-        add("regen.gui.sound_scheme.drum", "Resistant Drums");
-        add("regen.gui.sound_scheme.saxon_england", "Saxons England");
-
-        // === Regen ===
-        add(TransitionTypes.ENDER_DRAGON.getTranslationKey(), "Ender-Dragon");
-        add(TransitionTypes.SPARKLE.getTranslationKey(), "Sparkle");
-        add(TransitionTypes.WATCHER.getTranslationKey(), "Watcher");
-        add(TransitionTypes.FIERY.getTranslationKey(), "Fiery");
-        add(TransitionTypes.TROUGHTON.getTranslationKey(), "Troughton");
-        add(TransitionTypes.BLAZE.getTranslationKey(), "Blaze");
-        add(TransitionTypes.TRISTIS_IGNIS.getTranslationKey(), "Tristis Ignis");
-
-        //Entity
-        add(REntities.TIMELORD.get(), "Timelord");
-        add(REntities.WATCHER.get(), "Watcher");
     }
 
     public String capitalize(String text) {
@@ -266,13 +273,26 @@ public class RegenEnglishLang extends LanguageProvider {
         return firstLetter + text.substring(1);
     }
 
-    public void addAdvancement(String advancement, String title, String description){
+    public void addAdvancement(String advancement, String title, String description) {
         add(RegenAdvancementsProvider.RegenAdvancements.getTitleTranslation(advancement), title);
         add(RegenAdvancementsProvider.RegenAdvancements.getDescriptionTranslation(advancement), description);
+    }
+
+    public void addSoundScheme(IRegen.TimelordSound soundScheme, String translation) {
+        add("regen.gui.sound_scheme." + soundScheme.name().toLowerCase(), translation);
+    }
+
+    public void addTimelordtype(SpawnItem.Timelord type, String translation) {
+        add("regen.timelord_type." + type.name().toLowerCase(), translation);
     }
 
     public void addTrait(TraitBase traitBase, String title, String description) {
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".title", title);
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".description", description);
+    }
+
+    public void add(DamageSource damageSource, String message) {
+        add("death.attack." + damageSource.getMsgId(), message);
+        add("death.attack." + damageSource.getMsgId() + ".player", message);
     }
 }

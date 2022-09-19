@@ -381,18 +381,18 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                 TraitRegistry.getRandomTrait().ifPresent(traitBase -> {
                     ItemStack chalice = new ItemStack(RItems.GAUNTLET.get());
                     ChaliceItem.setTrait(chalice, traitBase);
-                    Registry.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).ifPresent(potentialCurrency -> {
-                        TimelordTrade[] trades = new TimelordTrade[]{new Timelord.TimelordTrade(new ItemStack(potentialCurrency.getRandomElement(RegenUtil.RAND).get(), Mth.clamp(random.nextInt(10), 6, 20)), chalice, random.nextInt(7), 5)};
+                    Registry.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).flatMap(potentialCurrency -> potentialCurrency.getRandomElement(random)).ifPresent(itemHolder -> {
+                        TimelordTrade[] trades = new TimelordTrade[]{new TimelordTrade(new ItemStack(itemHolder.value(), Mth.clamp(random.nextInt(10), 6, 20)), chalice, random.nextInt(7), 5)};
                         this.addOffersFromItemListings(merchantoffers, trades, 5);
                     });
                 });
             }
 
-        TimelordTrade[] tradetrades = new TimelordTrade[]{
+        TimelordTrade[] baseTrades = new TimelordTrade[]{
                 new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
                 new Timelord.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
         };
-        this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
+        this.addOffersFromItemListings(merchantoffers, baseTrades, 5);
 
     }
 

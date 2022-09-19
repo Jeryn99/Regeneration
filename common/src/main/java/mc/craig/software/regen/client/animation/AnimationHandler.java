@@ -66,7 +66,7 @@ public class AnimationHandler {
 
     public static boolean showArms(LivingEntity livingEntity) {
         AtomicBoolean show = new AtomicBoolean(true);
-        RegenerationData.get(livingEntity).ifPresent(iRegen -> show.set(iRegen.handState() != IRegen.Hand.NO_GONE));
+        RegenerationData.get(livingEntity).ifPresent(iRegen -> show.set(iRegen.handState() != IRegen.Hand.NOT_CUT));
         return !show.get();
     }
 

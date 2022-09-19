@@ -6,6 +6,7 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.network.messages.SkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
+import mc.craig.software.regen.util.TextureFixer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -83,7 +84,7 @@ public class VisualManipulator {
 
     public static NativeImage genSkinNative(byte[] skinArray) {
         try {
-            return NativeImage.read(new ByteArrayInputStream(skinArray));
+            return TextureFixer.processLegacySkin(NativeImage.read(new ByteArrayInputStream(skinArray)), "@");
         } catch (IOException e) {
             return null;
         }

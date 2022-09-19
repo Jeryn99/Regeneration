@@ -18,7 +18,9 @@ public class PhotosyntheticTrait extends TraitBase {
     public void onAdded(LivingEntity livingEntity, IRegen data) {}
 
     @Override
-    public void onRemoved(LivingEntity livingEntity, IRegen data) {}
+    public void onRemoved(LivingEntity livingEntity, IRegen data) {
+
+    }
 
     @Override
     public void tick(LivingEntity livingEntity, IRegen data) {

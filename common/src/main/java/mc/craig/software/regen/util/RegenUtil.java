@@ -133,7 +133,7 @@ public class RegenUtil {
     public static void spawnHandIfPossible(LivingEntity livingEntity, ItemStack itemStack) {
         if (itemStack.getItem() instanceof DiggerItem || itemStack.getItem() instanceof SwordItem) {
             RegenerationData.get(livingEntity).ifPresent((data) -> {
-                if (data.regenState() == RegenStates.POST && livingEntity.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
+                if (data.regenState() == RegenStates.POST && livingEntity.isShiftKeyDown() & data.handState() == IRegen.Hand.NOT_CUT) {
                     HandItem.createHand(livingEntity);
                 }
             });

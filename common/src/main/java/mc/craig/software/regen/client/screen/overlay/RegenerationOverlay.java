@@ -62,7 +62,7 @@ public class RegenerationOverlay {
                 GuiComponent.blit(poseStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
             }
 
-            if (cap.handState() != IRegen.Hand.NO_GONE) {
+            if (cap.handState() != IRegen.Hand.NOT_CUT) {
                 RConstants.SpriteSheet handGlow = RConstants.SpriteSheet.MISSING_ARM;
                 int positionOffset = player.getMainArm() == HumanoidArm.RIGHT ? Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 91 - 29 : Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 101;
                 GuiComponent.blit(poseStack, positionOffset, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 19, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);

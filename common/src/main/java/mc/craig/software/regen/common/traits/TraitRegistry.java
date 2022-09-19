@@ -26,6 +26,7 @@ public class TraitRegistry {
     public static RegistrySupplier<TraitBase> PHOTOSYNTHETIC = TRAITS.register("photosynthetic", PhotosyntheticTrait::new);
     public static RegistrySupplier<TraitBase> KNOCKBACK = TRAITS.register("knockback", () -> new BlankTrait(Color.WHITE.getRGB()));
     public static RegistrySupplier<TraitBase> SLOW_FALL = TRAITS.register("slow_fall", SlowFallingTrait::new);
+    public static RegistrySupplier<TraitBase> JUMP_BOOST = TRAITS.register("jump_boost", JumpBoostTrait::new);
 
     public static Optional<TraitBase> getRandomTrait(){
         Collection<TraitBase> values = TRAITS_REGISTRY.getValues();

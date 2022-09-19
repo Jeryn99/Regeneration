@@ -23,7 +23,6 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -72,10 +71,6 @@ public class ClientUtil {
                 player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
             }
         }
-    }
-
-    public static void getHandToHide(PlayerModel<?> playerModel, AbstractClientPlayer abstractClientPlayer) {
-
     }
 
     private static void blockMovement(Input moveType) {
@@ -251,6 +246,7 @@ public class ClientUtil {
     public static void createToast(MutableComponent title, MutableComponent subtitle) {
         Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.SystemToastIds.TUTORIAL_HINT, title, subtitle));
     }
+
 
     public static void setPlayerPerspective(String pointOfView) {
         if (RegenConfig.CLIENT.changePerspective.get()) {

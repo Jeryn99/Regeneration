@@ -105,9 +105,8 @@ public interface IRegen extends Serializable<CompoundTag> {
     }
 
     enum Hand {
-        LEFT_GONE,
-        RIGHT_GONE,
-        NO_GONE
+        CUT,
+        NOT_CUT
     }
 
     enum TimelordSound implements RegenUtil.IEnum<TimelordSound> {
