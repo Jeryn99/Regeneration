@@ -99,12 +99,10 @@ public class SkinRetriever {
         FileUtils.cleanDirectory(SKINS_DIR_SLIM_TRENDING);
         FileUtils.cleanDirectory(SKINS_DIR_DEFAULT_TRENDING);
         Regeneration.LOGGER.warn("Downloading new Trending skins");
-        for (int i = 0; i < 3; i++) {
             for (JsonElement skin : MineSkin.interalApiSkins()) {
                 String link = skin.getAsJsonObject().get("link").getAsString();
                 String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
                 downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
-            }
         }
     }
 

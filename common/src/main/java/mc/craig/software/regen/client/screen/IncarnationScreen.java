@@ -43,7 +43,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
     private static int position = 0;
-    private final ArrayList<Button> Buttons = new ArrayList<>();
     private RCheckbox excludeTrending;
     private EditBox searchField;
 
@@ -54,10 +53,13 @@ public class IncarnationScreen extends AbstractContainerScreen {
     }
 
     public static void updateModels() {
+        Minecraft.getInstance().getTextureManager().release(currentTexture);
         if (!skins.isEmpty()) {
             isAlex = skins.get(position).getAbsolutePath().contains("slim");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
             currentTexture = SkinRetriever.fileToTexture(skins.get(position));
+        } else {
+            checkForMissingSkins();
         }
     }
 
@@ -79,11 +81,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         matrix.scale(scale, scale, scale);
         drawCenteredString(matrix, Minecraft.getInstance().font, text, 0, 0, color);
         matrix.popPose();
-    }
-
-    public void addRenderableButton(Button Button) {
-        addRenderableWidget(Button);
-        Buttons.add(Button);
     }
 
     private void stripTrending() {
@@ -140,8 +137,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position++;
                 }
-                Minecraft.getInstance().getTextureManager().release(currentTexture);
-                currentTexture = SkinRetriever.fileToTexture(skins.get(position));
                 updateModels();
             }
         }
@@ -153,7 +148,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                currentTexture = SkinRetriever.fileToTexture(skins.get(position));
                 updateModels();
             }
         }
@@ -190,9 +184,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = SkinRetriever.listAllSkins(PlayerUtil.SkinType.EITHER);
-        if (skins.isEmpty()) {
-            Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
-        }
+        checkForMissingSkins();
 
         this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
             Minecraft.getInstance().setScreen(null);
@@ -210,7 +202,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
             }
             stripTrending();
-            Collections.sort(skins);
             updateModels();
         });
         this.setInitialFocus(this.searchField);
@@ -249,12 +240,9 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                currentTexture = SkinRetriever.fileToTexture(skins.get(position));
                 updateModels();
             }
-        }, (button, poseStack, i, j) -> {
-            this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.next_skin")), Optional.empty(), i, j);
-        });
+        }, (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.next_skin")), Optional.empty(), i, j));
 
         Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
@@ -283,12 +271,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
         });
         this.addRenderableWidget(this.excludeTrending);
 
-        addRenderableButton(btnNext);
-        addRenderableButton(btnPrevious);
-        addRenderableButton(btnOpenFolder);
-        addRenderableButton(btnBack);
-        addRenderableButton(btnSave);
-        addRenderableButton(btnResetSkin);
+        addRenderableWidget(btnNext);
+        addRenderableWidget(btnPrevious);
+        addRenderableWidget(btnOpenFolder);
+        addRenderableWidget(btnBack);
+        addRenderableWidget(btnSave);
+        addRenderableWidget(btnResetSkin);
 
         RegenerationData.get(minecraft.player).ifPresent((data) -> currentSkinType = data.preferredModel());
 
@@ -298,6 +286,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
         excludeTrending.active = true;
 
 
+    }
+
+    private static void checkForMissingSkins() {
+        if (skins.isEmpty()) {
+            Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
+        }
     }
 
 }

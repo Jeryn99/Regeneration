@@ -34,13 +34,13 @@ public class PlayerRendererMixin {
     }
 
     @Inject(at = @At("TAIL"), method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V")
-    protected void setupRotations(AbstractClientPlayer entityLiving, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
-        RegenerationData.get(entityLiving).ifPresent(iRegen -> {
-            if (PlayerUtil.isPlayerAboveZeroGrid(entityLiving) && iRegen.regenState() == RegenStates.POST) {
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(entityLiving.yBodyRot));
+    protected void setupRotations(AbstractClientPlayer abstractClientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
+        RegenerationData.get(abstractClientPlayer).ifPresent(iRegen -> {
+            if (PlayerUtil.isPlayerAboveZeroGrid(abstractClientPlayer) && iRegen.regenState() == RegenStates.POST) {
+                poseStack.mulPose(Vector3f.YP.rotationDegrees(abstractClientPlayer.yBodyRot));
                 poseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
                 poseStack.mulPose(Vector3f.YP.rotationDegrees(270.0F));
-                float offset = Mth.cos(entityLiving.tickCount * 0.1F) * -0.09F;
+                float offset = Mth.cos(abstractClientPlayer.tickCount * 0.1F) * -0.09F;
                 poseStack.translate(0, -1, 0);
                 poseStack.translate(0, 0, -1);
                 poseStack.translate(0, 0, -offset);

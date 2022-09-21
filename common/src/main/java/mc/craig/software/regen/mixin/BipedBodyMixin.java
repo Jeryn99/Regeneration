@@ -35,18 +35,18 @@ public class BipedBodyMixin {
         bipedModel.leftLeg.getAllParts().forEach(ModelPart::resetPose);
         bipedModel.rightLeg.getAllParts().forEach(ModelPart::resetPose);
 
-        RegenerationData.get(livingEntity).ifPresent(iCap -> {
+        RegenerationData.get(livingEntity).ifPresent(data -> {
 
             // Regeneration Animation
-            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.TRISTIS_IGNIS) {
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN, ageInTicks, 1);
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.TRISTIS_IGNIS) {
+                AnimationUtil.animate(bipedModel, data.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
 
             // "Sneeze" animation
-            if (iCap.regenState() == RegenStates.REGENERATING && iCap.transitionType() == TransitionTypes.SNEEZE) {
-                AnimationUtil.animate(bipedModel, iCap.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN_11_12, ageInTicks, 1);
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.SNEEZE) {
+                AnimationUtil.animate(bipedModel, data.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN_11_12, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }

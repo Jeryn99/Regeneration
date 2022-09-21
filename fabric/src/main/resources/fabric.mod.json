@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "id": "regen",
   "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Regeneration",
+  "description": "Minecraft Mod that allows for players to given themselves the power of Regeneration to Regenerate and change bodies like a Time Lord!",
   "authors": [
-    "Me!"
+    "Connor Dawn", "DisasterGae", "Magic Man","End Phoenix", "Asher", "TommyPie", "HoldYourWaffle", "GasMaskVA", "Dhi", "Violet", "Wodaman", "aaliceh"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/mod/regeneration",
+    "sources": "https://github.com/Suff99/Weeping-Angels"
   },
-  "license": "Insert License Here",
-  "icon": "assets/regeneration/icon.png",
+  "license": "https://github.com/Suff99/Weeping-Angels/blob/architectury/1.19/LICENSE",
+  "icon": "regeneration.png",
   "environment": "*",
   "entrypoints": {
     "main": [

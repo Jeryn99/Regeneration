@@ -1,6 +1,8 @@
 package mc.craig.software.regen.util;
 
 import com.mojang.authlib.GameProfile;
+import mc.craig.software.regen.common.traits.TraitRegistry;
+import mc.craig.software.regen.common.traits.trait.TraitBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -9,7 +11,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class RTextHelper {
 
@@ -37,5 +41,17 @@ public class RTextHelper {
         return createTextComponentWithTip(entityName, id.toString());
     }
 
+    public static String formatTraitName(TraitBase trait) {
+        String original = TraitRegistry.TRAITS_REGISTRY.getKey(trait).getPath().trim().replace("	", "").replace("_", " ");
+        String output = Arrays.stream(original.split("\\s+"))
+                .map(t -> t.substring(0, 1).toUpperCase() + t.substring(1))
+                .collect(Collectors.joining(" "));
+        return output;
+    }
 
+    public static MutableComponent getTraitTextObject(TraitBase trait) {
+        if (trait != null)
+            return createTextComponentWithTip(formatTraitName(trait), TraitRegistry.TRAITS_REGISTRY.getKey(trait).toString());
+        return createTextComponentWithTip("Null Trait", "Null");
+    }
 }

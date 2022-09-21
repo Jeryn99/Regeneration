@@ -7,6 +7,7 @@ import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RSoundSchemes;
 import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.config.RegenConfig;
+import mc.craig.software.regen.forge.command.RegenArgumentsForge;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.core.Registry;
@@ -27,6 +28,7 @@ public class RegenerationForge {
     public RegenerationForge() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         Regeneration.init();
+        RegenArgumentsForge.COMMAND_ARGUMENT_TYPES.register(modBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         modBus.addListener(this::clientSetup);

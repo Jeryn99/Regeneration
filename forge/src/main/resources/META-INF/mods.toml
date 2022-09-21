@@ -5,7 +5,7 @@ issueTrackerURL = "https://github.com/Suff99/Regeneration"
 [[mods]]
 itemIcon = "regen:fobwatch"
 modId = "regen"
-version = "41.0.2"
+version = "${version}"
 displayName = "Regeneration"
 updateJSONURL = "https://mc-api.craig.software/update?mod=regen"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration"
