@@ -35,7 +35,7 @@ public class VisualManipulator {
             boolean validSkin = iRegen.isSkinValidForUse();
             if(!validSkin){
                 PLAYER_SKINS.remove(uuid);
-                setPlayerSkinType(playerEntity, getUnmodifiedSkinType(playerEntity));
+                setPlayerSkinType(playerEntity, mojangIsAlex(playerEntity));
                 return;
             }
 
@@ -51,11 +51,9 @@ public class VisualManipulator {
         });
     }
 
-    public static boolean getUnmodifiedSkinType(AbstractClientPlayer abstractClientPlayerEntity) {
+    public static boolean mojangIsAlex(AbstractClientPlayer abstractClientPlayerEntity) {
         if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null) return false;
-
         PlayerInfo info = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
-
         info.registerTextures();
         if (info.getModelName() == null) {
             return false;
@@ -75,9 +73,8 @@ public class VisualManipulator {
     public static void sendResetMessage() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            PlayerInfo info = ClientUtil.getPlayerInfo(player);
-            boolean isAlex = info.getModelName().equals("slim");
-            new SkinMessage(new byte[0], isAlex).send();
+            boolean info = VisualManipulator.mojangIsAlex(player);
+            new SkinMessage(new byte[0], info).send();
         }
     }
 
