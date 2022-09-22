@@ -6,7 +6,7 @@ import mc.craig.software.regen.common.commands.subcommands.GlowCommand;
 import mc.craig.software.regen.common.commands.subcommands.SetRegensCommand;
 import mc.craig.software.regen.common.commands.subcommands.TraitsCommand;
 import mc.craig.software.regen.util.Platform;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 

@@ -2,7 +2,7 @@ package mc.craig.software.regen.common.objects;
 
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

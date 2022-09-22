@@ -9,7 +9,7 @@ import mc.craig.software.regen.client.rendering.types.RenderTypes;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;

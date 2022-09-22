@@ -1,7 +1,7 @@
 package mc.craig.software.regen.common.objects.fabric;
 
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;

@@ -10,7 +10,7 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RTiles;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;

@@ -1,7 +1,7 @@
 package mc.craig.software.regen.forge.command;
 
 import mc.craig.software.regen.common.commands.arguments.TraitArgumentType;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;

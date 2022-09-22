@@ -10,7 +10,9 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
+import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -105,19 +107,19 @@ public class FobWatchItem extends Item {
 
         if (!player.isShiftKeyDown()) { // transferring watch->player
             if (stack.getDamageValue() == getMaxDamage())
-                return msgUsageFailed(player, "regen.messages.transfer.empty_watch", stack);
+                return msgUsageFailed(player, RMessages.TRANSFER_EMPTY_WATCH, stack);
             else if (cap.regens() == getMaxDamage())
-                return msgUsageFailed(player, "regen.messages.transfer.max_regens", stack);
+                return msgUsageFailed(player, RMessages.TRANSFER_MAX_REGENS, stack);
 
             int supply = getMaxDamage() - stack.getDamageValue(), needed = getMaxDamage() - cap.regens(), used = Math.min(supply, needed);
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
-                PlayerUtil.sendMessage(player, Component.translatable("regen.messages.gained_regens", used), true);
+                PlayerUtil.sendMessage(player, Component.translatable(RMessages.GAINED_REGENERATIONS, used), true);
             } else {
                 if (!world.isClientSide) {
                     setOpen(stack, true);
-                    PlayerUtil.sendMessage(player, Component.translatable("regen.messages.now_timelord"), true);
+                    PlayerUtil.sendMessage(player, Component.translatable(RMessages.TIMELORD_STATUS), true);
                 }
             }
 
@@ -141,17 +143,17 @@ public class FobWatchItem extends Item {
             }
 
         } else { // transferring player->watch
-            if (!cap.canRegenerate()) return msgUsageFailed(player, "regen.messages.transfer.no_regens", stack);
+            if (!cap.canRegenerate()) return msgUsageFailed(player, RMessages.TRANSFER_NO_REGENERATIONS, stack);
 
             if (cap.regenState() != RegenStates.ALIVE) {
-                return msgUsageFailed(player, "regen.messages.not_alive", stack);
+                return msgUsageFailed(player, RMessages.TRANSFER_INVALID_STATE, stack);
             }
 
             if (stack.getDamageValue() == 0)
-                return msgUsageFailed(player, "regen.messages.transfer.full_watch", stack);
+                return msgUsageFailed(player, RMessages.TRANSFER_FULL_WATCH, stack);
 
             stack.setDamageValue(stack.getDamageValue() - 1);
-            PlayerUtil.sendMessage(player, "regen.messages.transfer.success", true);
+            PlayerUtil.sendMessage(player, RMessages.TRANSFER_SUCCESSFUL, true);
 
             if (world.isClientSide) {
                 ClientUtil.playPositionedSoundRecord(SoundEvents.FIRE_EXTINGUISH, 5.0F, 2.0F);

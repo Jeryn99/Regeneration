@@ -15,7 +15,7 @@ import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
 import mc.craig.software.regen.util.Platform;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.Holder;

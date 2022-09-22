@@ -1,6 +1,6 @@
 package mc.craig.software.regen.common.advancement;
 
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.advancements.CriteriaTriggers;
 
 public class TriggerManager {

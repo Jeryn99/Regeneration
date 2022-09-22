@@ -6,7 +6,7 @@ import mc.craig.software.regen.client.screen.widgets.ColorWidget;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.network.messages.ColorChangeMessage;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
@@ -31,7 +31,7 @@ public class ColorScreen extends Screen {
     private int cx;
 
     public ColorScreen() {
-        super(Component.translatable("regen.gui.color_gui"));
+        super(Component.translatable("gui.regen.color_gui"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -55,7 +55,7 @@ public class ColorScreen extends Screen {
         }));
 
         // Reset Style Button
-        this.addRenderableWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.undo"), button -> {
+        this.addRenderableWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, Component.translatable("gui.regen.undo"), button -> {
             Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
             Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
             colorChooserPrimary.setColor(primaryColour.getRGB());
@@ -64,10 +64,10 @@ public class ColorScreen extends Screen {
         }));
 
         // Close Button
-        this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
+        this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
 
         // Default Button
-        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, Component.translatable("regen.gui.default"), button -> RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
+        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, Component.translatable("gui.regen.default"), button -> RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
             TransitionType regenType = data.transitionType();
             Vec3 primColor = regenType.getDefaultPrimaryColor();
             Vec3 secColor = regenType.getDefaultSecondaryColor();
@@ -117,10 +117,10 @@ public class ColorScreen extends Screen {
         colorChooserSecondary.render(poseStack, mouseX, mouseY, partialTick);
 
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
-            String str = Component.translatable("regen.gui.primary").getString();
+            String str = Component.translatable("gui.regen.primary").getString();
             int length = Minecraft.getInstance().font.width(str);
             this.font.draw(poseStack, Component.literal(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
-            str = Component.translatable("regen.gui.secondary").getString();
+            str = Component.translatable("gui.regen.secondary").getString();
             length = font.width(str);
             this.font.draw(poseStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });

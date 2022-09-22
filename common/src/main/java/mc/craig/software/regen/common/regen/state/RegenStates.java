@@ -1,6 +1,6 @@
 package mc.craig.software.regen.common.regen.state;
 
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 
 public enum RegenStates {
 

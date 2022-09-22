@@ -6,6 +6,7 @@ import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,7 +54,7 @@ public class LivingEntityMixin {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         RegenerationData data = RegenerationData.get(livingEntity).get();
         if (data.regenState() == RegenStates.POST && value != Integer.MAX_VALUE) { //TODO Do this damage source dependent
-            PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
+            PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             return 1.5F;
         }
         return value;

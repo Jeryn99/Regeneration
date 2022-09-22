@@ -40,7 +40,7 @@ public class ChaliceItem extends Item {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        MutableComponent prefix = Component.literal("Chalice of ");
+        MutableComponent prefix = Component.translatable("item.regen.chalice_of").append(" ");
         return prefix.append((getTrait(stack).getTitle()));
     }
 

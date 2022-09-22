@@ -4,7 +4,7 @@ import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSoundSchemes;
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

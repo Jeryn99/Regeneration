@@ -12,8 +12,9 @@ import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SyncMessage;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.constants.RMessages;
 import mc.craig.software.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -598,7 +599,7 @@ public class RegenerationData implements IRegen {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                     TriggerManager.CHANGE_REFUSAL.trigger(playerEntity);
-                    PlayerUtil.sendMessage(serverPlayer, Component.translatable("regen.messages.regen_delayed"), true);
+                    PlayerUtil.sendMessage(serverPlayer, Component.translatable(RMessages.DELAYED_REGENERATION), true);
                 }
 
                 handGlowTimer.cancel();
@@ -641,7 +642,7 @@ public class RegenerationData implements IRegen {
 
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof Player) {
-                    MutableComponent text = Component.translatable("regen.messages.regen_death_msg", livingEntity.getName());
+                    MutableComponent text = Component.translatable(RMessages.REGENERATION_DEATH_MSG, livingEntity.getName());
                     if (livingEntity.getLastDamageSource() != null) {
                         text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, livingEntity.getLastDamageSource().getLocalizedDeathMessage(livingEntity))));
                     }
@@ -686,7 +687,7 @@ public class RegenerationData implements IRegen {
             currentState = RegenStates.ALIVE;
             nextTransition = null;
             if (livingEntity instanceof Player) {
-                PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.post_ended"), true);
+                PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.END_OF_PROCESS), true);
             }
             handState = Hand.NOT_CUT;
             syncToClients(null);

@@ -1,4 +1,4 @@
-package mc.craig.software.regen.util;
+package mc.craig.software.regen.util.constants;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -55,5 +55,4 @@ public class RConstants {
         }
 
     }
-
 }

@@ -5,7 +5,7 @@ import mc.craig.software.regen.common.advancement.BaseTrigger;
 import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;

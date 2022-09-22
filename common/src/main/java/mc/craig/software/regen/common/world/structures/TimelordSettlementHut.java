@@ -6,7 +6,7 @@ import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.world.RFeatures;
 import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

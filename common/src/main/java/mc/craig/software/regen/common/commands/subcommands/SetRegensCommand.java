@@ -8,6 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.RTextHelper;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -44,15 +45,15 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
                     cap.setRegens(amount);
                     cap.syncToClients(null);
                 });
-                context.getSource().sendSuccess(Component.translatable("command.regen.set_regen.success", entityText, amount), false);
+                context.getSource().sendSuccess(Component.translatable(RMessages.SET_REGEN_SUCCESS, entityText, amount), false);
                 return Command.SINGLE_SUCCESS;
             } else {//Send error message if the config option doesn't allow for it
                 String configOptionKey = "config.regen.mobsHaveRegens";
-                context.getSource().sendFailure(Component.translatable("command.regen.set_regen.config_off", entityText, Component.translatable(configOptionKey).getString(), RegenConfig.COMMON.mobsHaveRegens.get()));
+                context.getSource().sendFailure(Component.translatable(RMessages.SET_REGEN_CONFIG_DISABLED, entityText, Component.translatable(configOptionKey).getString(), RegenConfig.COMMON.mobsHaveRegens.get()));
                 return 0;
             }
-        } else { //Don't make this work for non living entities
-            context.getSource().sendFailure(Component.translatable("command.regen.set_regen.invalid_entity", amount, entityText));
+        } else { //Don't make this work for non-living entities
+            context.getSource().sendFailure(Component.translatable(RMessages.SET_REGEN_INVALID_ENTITY, amount, entityText));
             return 0;
         }
     }

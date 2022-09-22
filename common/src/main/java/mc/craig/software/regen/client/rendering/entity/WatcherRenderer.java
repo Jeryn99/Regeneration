@@ -3,7 +3,7 @@ package mc.craig.software.regen.client.rendering.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.rendering.types.RenderTypes;
 import mc.craig.software.regen.common.entities.Watcher;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;

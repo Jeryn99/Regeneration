@@ -1,6 +1,6 @@
 package mc.craig.software.regen.common.objects;
 
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.resources.ResourceLocation;
 

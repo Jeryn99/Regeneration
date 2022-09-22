@@ -31,12 +31,12 @@ public class SkinRetriever {
     public static final File SKINS_DIR_SLIM_TRENDING = new File(SKINS_DIR_SLIM, "web");
     public static final File SKINS_DIR_DEFAULT = new File(SKINS_DIR, "default");
     public static final File SKINS_DIR_DEFAULT_TRENDING = new File(SKINS_DIR_DEFAULT, "web");
-    public static final File SKINS_DIR_SLIM_TIMELORD = new File(SKINS_DIR, "/timelords/slim");
+    public static final File SKINS_DIR_SLImale_timelord = new File(SKINS_DIR, "/timelords/slim");
     public static final File SKINS_DIR_DEFAULT_TIMELORD = new File(SKINS_DIR, "/timelords/default");
 
     // Setup required folders
     public static void folderSetup() {
-        createFolder(SKINS_DIR, SKINS_DIR_DEFAULT_TIMELORD, SKINS_DIR_SLIM_TIMELORD);
+        createFolder(SKINS_DIR, SKINS_DIR_DEFAULT_TIMELORD, SKINS_DIR_SLImale_timelord);
 
         createFolder();
 
@@ -48,13 +48,13 @@ public class SkinRetriever {
 
     public static void timelord() throws IOException {
         FileUtils.cleanDirectory(SKINS_DIR_DEFAULT_TIMELORD);
-        FileUtils.cleanDirectory(SKINS_DIR_SLIM_TIMELORD);
+        FileUtils.cleanDirectory(SKINS_DIR_SLImale_timelord);
         Regeneration.LOGGER.warn("Refreshing Timelord skins");
 
         String[] genders = new String[]{"male", "female"};
         for (String gender : genders) {
             for (String skin : MineSkin.searchSkins(gender)) {
-                downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + RandomStringUtils.random(5, true, false), gender.equals("male") ? SKINS_DIR_DEFAULT_TIMELORD : SKINS_DIR_SLIM_TIMELORD);
+                downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + RandomStringUtils.random(5, true, false), gender.equals("male") ? SKINS_DIR_DEFAULT_TIMELORD : SKINS_DIR_SLImale_timelord);
             }
         }
     }
@@ -184,7 +184,7 @@ public class SkinRetriever {
 
 
     public static File chooseRandomSkin(RandomSource random, boolean isTimelord, boolean isAlex) {
-        File skins = isTimelord ? (isAlex ? SKINS_DIR_SLIM_TIMELORD : SKINS_DIR_DEFAULT_TIMELORD) : (isAlex ? SKINS_DIR_SLIM : SKINS_DIR_DEFAULT);
+        File skins = isTimelord ? (isAlex ? SKINS_DIR_SLImale_timelord : SKINS_DIR_DEFAULT_TIMELORD) : (isAlex ? SKINS_DIR_SLIM : SKINS_DIR_DEFAULT);
 
         if (!skins.exists()) {
             SkinRetriever.folderSetup();

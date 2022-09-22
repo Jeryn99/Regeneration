@@ -14,7 +14,7 @@ import mc.craig.software.regen.common.item.tooltip.hand.ClientHandSkinToolTip;
 import mc.craig.software.regen.common.item.tooltip.hand.HandSkinToolTip;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RParticles;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;

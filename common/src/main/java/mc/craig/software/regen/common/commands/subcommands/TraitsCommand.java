@@ -9,6 +9,7 @@ import mc.craig.software.regen.common.commands.arguments.TraitArgumentType;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.RTextHelper;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -35,7 +36,7 @@ public class TraitsCommand implements Command<CommandSourceStack> {
         MutableComponent traitText = RTextHelper.getTraitTextObject(trait);
 
         if (player == null || trait == null) {
-            source.sendFailure(Component.translatable("command.regen.set_trait.error", playerText, traitText));
+            source.sendFailure(Component.translatable(RMessages.SET_TRAIT_ERROR, playerText, traitText));
             return 0; //Zero is error
         }
         RegenerationData.get(player).ifPresent((data) -> {
@@ -44,7 +45,7 @@ public class TraitsCommand implements Command<CommandSourceStack> {
             data.setCurrentTrait(trait);
             trait.onAdded(player, data);
             data.syncToClients(null);
-            source.sendSuccess(Component.translatable("command.regen.set_trait.success", playerText, traitText), false);
+            source.sendSuccess(Component.translatable(RMessages.SET_TRAIT_SUCCESS, playerText, traitText), false);
         });
         return Command.SINGLE_SUCCESS;
     }

@@ -1,7 +1,7 @@
 package mc.craig.software.regen.common.objects.forge;
 
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 

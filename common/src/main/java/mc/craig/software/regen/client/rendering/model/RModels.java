@@ -4,7 +4,7 @@ import com.google.common.base.Supplier;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
 import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

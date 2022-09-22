@@ -19,7 +19,7 @@ public class RErrorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.addRenderableWidget(new Button(this.width / 2 - 100, 140, 200, 20, Component.translatable("button.tooltip.open_folder"), (p_213034_1_) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 100, 140, 200, 20, Component.translatable("button_tooltip.regen.open_folder"), (p_213034_1_) -> {
             Util.getPlatform().openFile(SkinRetriever.SKINS_DIR);
             SkinRetriever.folderSetup();
             Minecraft.getInstance().setScreen(null);

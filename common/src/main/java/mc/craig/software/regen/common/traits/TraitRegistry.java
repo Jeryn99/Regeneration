@@ -5,7 +5,7 @@ import mc.craig.software.regen.common.registry.CustomRegistry;
 import mc.craig.software.regen.common.traits.trait.*;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;

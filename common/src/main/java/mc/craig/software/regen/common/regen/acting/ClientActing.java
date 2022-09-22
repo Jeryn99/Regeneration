@@ -95,7 +95,7 @@ public class ClientActing implements Acting {
     public void onGoCritical(IRegen cap) {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
-                ClientUtil.createToast(Component.translatable("regen.toast.enter_critical"), Component.translatable("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
+                ClientUtil.createToast(Component.translatable("toast.regen.enter_critical"), Component.translatable("toast.regen.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
                 ClientUtil.playSound(cap.getLiving(), Registry.SOUND_EVENT.getKey(RSounds.CRITICAL_STAGE.get()), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F, RandomSource.create());
             }
         }

@@ -11,6 +11,7 @@ import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -137,7 +138,7 @@ public class CommonActing implements Acting {
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
-        PlayerUtil.sendMessage(cap.getLiving(), Component.translatable("regen.messages.regen_warning"), true);
+        PlayerUtil.sendMessage(cap.getLiving(), Component.translatable(RMessages.PUNCH_WARNING), true);
     }
 
     @Override

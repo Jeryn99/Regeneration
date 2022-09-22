@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.world.RFeatures;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;

@@ -8,11 +8,14 @@ import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
+import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RConstants;
 import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.constants.RConstants;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class RegenEnglishLang extends LanguageProvider {
@@ -74,6 +77,8 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
         add(RItems.GUARD_FEET.get(), "Timelord Boots");
         add(RItems.ZINC.get(), "Zinc Ingot");
+        add("item.regen.hand_with_name", "%s Hand");
+        add("item.regen.chalice_of", "Chalice of");
 
         // === Damages Sources ===
         add(RegenSources.REGEN_DMG_CRITICAL, "%s died from holding in their regeneration for too long");
@@ -112,6 +117,62 @@ public class RegenEnglishLang extends LanguageProvider {
         add(REntities.TIMELORD.get(), "Timelord");
         add(REntities.WATCHER.get(), "Watcher");
 
+        // === Messages ===
+        add(RMessages.REGENERATION_DEATH_MSG, "%s is regenerating...");
+        add(RMessages.TIMELORD_STATUS, "You are now a Time lord!");
+        add(RMessages.GAINED_REGENERATIONS, "Received Regenerations!");
+        add(RMessages.END_OF_PROCESS, "Your Regeneration process is now entirely completed!");
+        add(RMessages.PUNCH_WARNING, "Punch a block to delay your Regeneration further");
+        add(RMessages.POST_REDUCED_DAMAGE, "Reduced Damage due to post-regen State!");
+        add(RMessages.DELAYED_REGENERATION, "Regeneration delayed!");
+        add(RMessages.TRANSFER_SUCCESSFUL, "You've transferred one of your Regenerations into the watch");
+        add(RMessages.TRANSFER_FULL_WATCH, "You can't store anymore Regenerations in this watch!");
+        add(RMessages.TRANSFER_EMPTY_WATCH, "This watch is empty!");
+        add(RMessages.TRANSFER_MAX_REGENS, "You already have the maximum number of Regenerations");
+        add(RMessages.TRANSFER_NO_REGENERATIONS, "You don't have any Regenerations left to transfer");
+        add(RMessages.TRANSFER_INVALID_STATE, "You cannot transfer Regenerations in this state!");
+
+        // === Command Output ===
+        add(RMessages.FAST_FORWARD_CMD_FAIL, "Nothing to fast forward to!");
+        add(RMessages.SET_TRAIT_SUCCESS, "Set trait for player %s to %s");
+        add(RMessages.SET_TRAIT_ERROR, "Could not set trait for player %s to %s");
+        add(RMessages.SET_REGEN_SUCCESS, "Set Regenerations for entity %s to %s");
+        add(RMessages.SET_REGEN_INVALID_ENTITY, "Could not set %s Regenerations for %s, it is not a Living Entity");
+        add(RMessages.SET_REGEN_CONFIG_DISABLED, "Could not set Regenerations for %s, the Config Option %s is set to %s");
+
+        // === Config ===
+        //Skin
+        addConfig(RegenConfig.CLIENT.downloadTrendingSkins, "Download Trending Skins?");
+        addConfig(RegenConfig.CLIENT.downloadInteralSkins, "Download Doctor Who Skins?");
+
+        //Client
+        addConfig(RegenConfig.CLIENT.changeMySkin, "Change Skin?");
+        addConfig(RegenConfig.CLIENT.changePerspective, "Change Perspective view?");
+        addConfig(RegenConfig.CLIENT.renderTimelordHeadwear, "Render Head layers on Timelords?");
+
+        //Common
+        addConfig(RegenConfig.COMMON.loseRegensOnDeath, "Lose Regenerations on Death?");
+        addConfig(RegenConfig.COMMON.fieryRegen, "Spawn Fire?");
+        addConfig(RegenConfig.COMMON.mobsHaveRegens, "Mobs allowed Regenerations?");
+        addConfig(RegenConfig.COMMON.sendRegenDeathMessages, "Send Regeneration death chat messages?");
+        addConfig(RegenConfig.COMMON.postRegenerationDuration, "Post Regeneration Duration", 2);
+        addConfig(RegenConfig.COMMON.postRegenerationLevel, "Post Regeneration Level", 2);
+        addConfig(RegenConfig.COMMON.resetHunger, "Reset Hunger?",2);
+        addConfig(RegenConfig.COMMON.resetOxygen, "Reset Air?",2);
+        addConfig(RegenConfig.COMMON.regenFireImmune, "Fire immunity?");
+        addConfig(RegenConfig.COMMON.regenerationKnocksbackPlayers, "Knocks back players?",2);
+        addConfig(RegenConfig.COMMON.absorbtionLevel, "Absorption Level?",2);
+        addConfig(RegenConfig.COMMON.gracePhaseLength, "Grace Period Length", 2);
+        addConfig(RegenConfig.COMMON.criticalPhaseLength, "Critical Period Length",2);
+        addConfig(RegenConfig.COMMON.criticalDamageChance, "Critical Damage Chance",2);
+        addConfig(RegenConfig.COMMON.handGlowInterval, "Hand Glow Interval",2);
+        addConfig(RegenConfig.COMMON.handGlowTriggerDelay, "Hand Trigger Delay",2);
+        addConfig(RegenConfig.COMMON.regenerativeKillRange, "Regeneration hurt range",2);
+        addConfig(RegenConfig.COMMON.regenerativeKnockback, "Knockback Radius",2);
+        addConfig(RegenConfig.COMMON.regenKnockbackRange, "Knockback Range",2);
+        addConfig(RegenConfig.COMMON.allowUpwardsMotion, "Upwards motion?",2);
+
+
         // === Skin Types ===
         for (PlayerUtil.SkinType value : PlayerUtil.SkinType.values()) {
             String valueName = value.name().toLowerCase();
@@ -123,16 +184,14 @@ public class RegenEnglishLang extends LanguageProvider {
         add("item.regen.tooltip.energy", "Energy: %s");
 
 
-        add("button.tooltip.reset_mojang", "Resets your Skin to Mojang Skin");
-        add("button.tooltip.previous_skin", "Previous Skin");
-        add("button.tooltip.next_skin", "Next Skin");
-        add("button.tooltip.save_skin", "Save Changes");
-        add("button.tooltip.open_folder", "Open Local Skin Folder");
+        add("button_tooltip.regen.reset_mojang", "Resets your Skin to Mojang Skin");
+        add("button_tooltip.regen.previous_skin", "Previous Skin");
+        add("button_tooltip.regen.next_skin", "Next Skin");
+        add("button_tooltip.regen.save_skin", "Save Changes");
+        add("button_tooltip.regen.open_folder", "Open Local Skin Folder");
 
         //Sounds
-        for (int i = 0; i < 7; i++) {
-            add("regen.sound.regeneration_" + i, "Regenerating");
-        }
+        add("regen.sound.regeneration", "Regenerating");
         add("regen.sound.regen_bubble", "Jar bubbles");
         add("regen.sound.hum", "Calming hums");
         add("regen.sound.fob_watch_dialogue", "Fob Watch Speaks");
@@ -143,129 +202,48 @@ public class RegenEnglishLang extends LanguageProvider {
         add("regen.sound.regen_breath", "Regeneration exhale");
         add("regen.sound.alarm", "Regeneration Alarm");
 
-        add("regen.sound.m_timelord.hurt", "Male Timelord Hurts");
-        add("regen.sound.m_timelord.die", "Male Timelord Dies");
-        add("regen.sound.m_timelord.trade_fail", "Male Timelord Trade Fail");
-        add("regen.sound.m_timelord.trade_success", "Male Timelord Trade Success");
-        add("regen.sound.m_timelord.scream", "Male Timelord Screams");
+        add("regen.sound.male_timelord.hurt", "Male Timelord Hurts");
+        add("regen.sound.male_timelord.die", "Male Timelord Dies");
+        add("regen.sound.male_timelord.trade_fail", "Male Timelord Trade Fail");
+        add("regen.sound.male_timelord.trade_success", "Male Timelord Trade Success");
+        add("regen.sound.male_timelord.scream", "Male Timelord Screams");
 
-        add("regen.sound.f_timelord.hurt", "Female Timelord Hurts");
-        add("regen.sound.f_timelord.die", "Female Timelord Dies");
-        add("regen.sound.f_timelord.trade_fail", "Female Timelord Trade Fail");
-        add("regen.sound.f_timelord.trade_success", "Female Timelord Trade Success");
-        add("regen.sound.f_timelord.scream", "Female Timelord Screams");
+        add("regen.sound.female_timelord.hurt", "Female Timelord Hurts");
+        add("regen.sound.female_timelord.die", "Female Timelord Dies");
+        add("regen.sound.female_timelord.trade_fail", "Female Timelord Trade Fail");
+        add("regen.sound.female_timelord.trade_success", "Female Timelord Trade Success");
+        add("regen.sound.female_timelord.scream", "Female Timelord Screams");
 
         add("regen.sound.rifle", "Rifle fires");
         add("regen.sound.staser", "Staser Fires");
 
-        add("item.regen.hand_with_name", "%s Hand");
-
-        //Messages
-        add("regen.messages.regen_death_msg", "%s is regenerating...");
-        add("regen.messages.now_timelord", "You are now a Time lord!");
-        add("regen.messages.gained_regens", "Recieved Regenerations!");
-        add("regen.messages.new_skin", "Your skin will change next Regeneration!");
-        add("regen.messages.transfer.success", "You've transferred one of your Regenerations into the watch");
-        add("regen.messages.transfer.full_watch", "You can't store anymore Regenerations in this watch!");
-        add("regen.messages.transfer.empty_watch", "This watch is empty!");
-        add("regen.messages.transfer.max_regens", "You already have the maximum number of Regenerations");
-        add("regen.messages.transfer.no_regens", "You don't have any Regenerations left to transfer");
-        add("regen.messages.regen_chat_message", "%s is regenerating...");
-        add("regen.messages.warning.grace", "You are in a state of grace! || Press %s to regenerate!");
-        add("regen.messages.warning.grace_critical", "You are near death! || Press %s to regenerate!");
-        add("regen.messages.regen_delayed", "Regeneration delayed!");
-        add("regen.messages.regen_warning", "Punch a block to delay your Regeneration further");
-        add("regen.messages.jar", "You have gained a Regeneration from harvested lindos!");
-        add("regen.messages.jar_not_enough", "There is not enough Lindos in this jar! [100 Lindos = 1 free Regeneration]");
-        add("regen.messages.jar_no_break", "You cannot break this Jar while it has %s Lindos Energy!");
-        add("regen.messages.not_alive", "You cannot transfer Regenerations in this state!");
-        add("regen.messages.item_taken_regens", "You have gained %s regenerations from %s");
-        add("regen.messages.cannot_use", "You cannot use this right now!");
-        add("regen.messages.healed", "You have given %s some of your Regeneration Energy!");
-        add("regen.messages.reduced_dmg", "Reduced Damage due to post-regen State!");
-        add("regen.messages.fall_dmg", "Fall damage reduced due to post-regen state! Although you're gonna feel sick..");
-        add("regen.messages.post_ended", "Your Regeneration process is now entirely completed!");
-        add("regen.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
-        add("regen.messages.new_trait", "New Trait: %s");
-        add("regen.messages.cant_glow", "You cannot activate a glowing hand without being in a grace period");
-
-        // === Command Output ===
-        add("command.regen.set_trait.success", "Set trait for player %s to %s");
-        add("command.regen.set_trait.error", "Could not set trait for player %s to %s");
-        add("command.regen.set_regen.success", "Set Regenerations for entity %s to %s");
-        add("command.regen.set_regen.invalid_entity", "Could not set %s Regenerations for %s, it is not a Living Entity");
-        add("command.regen.set_regen.config_off", "Could not set Regenerations for %s, the Config Option %s is set to %s");
-
-        // === Config ===
-        //Skin
-        add("config.regen.downloadTrendingSkins", "Download Trending Skins?");
-        add("config.regen.downloadPreviousSkins", "Download Previous Skins?");
-        add("config.regen.downloadInternalSkins", "Download Doctor Who Skins?");
-
-        //Client
-        add("config.regen.changemyskin", "Change Skin?");
-        add("config.regen.perspective", "Change Perspective view?");
-        add("config.regen.timelordRenderSecondLayers", "Render Head layers on Timelords?");
-        add("config.regen.heartIcons", "Regeneration Hearts?");
-
-        //Common
-        add("config.regen.max_regens", "Maximum Regenerations?");
-        add("config.regen.lose_regens_on_death", "Lose Regenerations on Death?");
-        add("config.regen.fiery_regen", "Spawn Fire?");
-        add("config.regen.genFobLoot", "Chameleon Arch in chests?");
-        add("config.regen.mobsHaveRegens", "Mobs allowed Regenerations?");
-        add("config.regen.regen_messages", "Send Regeneration death chat messages?");
-        add("config.regen.skindir", "Base Skin Directory");
-        add("config.regen.post_regen_duration", "Post Regeneration Duration");
-        add("config.regen.post_regenerationEffect_level", "Post Regeneration Level");
-        add("config.regen.reset_hunger", "Reset Hunger?");
-        add("config.regen.reset_oxygen", "Reset Air?");
-        add("config.regen.regeneration_fire_immunity", "Fire immunity?");
-        add("config.regen.regeneration_knocksback_players", "Knocks back players?");
-        add("config.regen.absorption_level", "Absorption Level?");
-        add("config.regen.post_effects", "Post Regeneration Effects");
-        add("config.regen.gracePeriodLength", "Grace Period Length");
-        add("config.regen.criticalPhaseLength", "Critical Period Length");
-        add("config.regen.criticalDamageChance", "Critical Damage Chance");
-        add("config.regen.handGlowInterval", "Hand Glow Interval");
-        add("config.regen.handGlowTriggerDelay", "Hand Trigger Delay");
-        add("config.regen.regenerative_kill_range", "Regeneration hurt range");
-        add("config.regen.regenerative_knockback", "Knockback Radius");
-        add("config.regen.regenerative_knockback_range", "Knockback Range");
-        add("config.regen.traitsenabled", "Traits Enabled?");
-        add("config.regen.disabledTraits", "Disabled Traits");
-        add("config.regen.upwards_motion", "Upwards motion?");
-        add("config.regen.update_checker", "Enable Update Checker");
-
 
         // === Toasts ===
-        add("regen.toast.regenerated", "You have regenerated!");
-        add("regen.toast.regenerations_left", "%s Regenerations left");
-        add("regen.toast.enter_critical", "You are going critical");
-        add("regen.toast.enter_critical.sub", "%s minutes left...");
-        add("regen.toast.timelord", "You are now a Time lord!");
-        add("regen.toast.to_use", "You have %s lives now!");
+        add("toast.regen.regenerated", "You have regenerated!");
+        add("toast.regen.regenerations_left", "%s Regenerations left");
+        add("toast.regen.enter_critical", "You are going critical");
+        add("toast.regen.enter_critical.sub", "%s minutes left...");
 
         // === GUI Elements ===
-        add("regen.gui.primary", "Primary");
-        add("regen.gui.secondary", "Secondary");
-        add("regen.gui.undo", "Undo");
-        add("regen.gui.close", "Close");
-        add("regen.gui.input_color", "Hex");
-        add("regen.gui.previous", "<");
-        add("regen.gui.next", ">");
-        add("regen.gui.default", "Default");
-        add("regen.gui.open_folder", "Skin Dir");
-        add("regen.gui.skin_choice", "Skin");
-        add("regen.gui.save", "Save");
-        add("regen.gui.next_incarnation", "Select next incarnation");
-        add("regen.gui.reset_skin", "Reset");
-        add("regen.gui.infinite_regenerations", "Infinite Regeneration Mode");
-        add("regen.gui.remaining_regens.status", "Regenerations: %s");
-        add("regen.gui.color_gui", "Colors");
-        add("regen.gui.current_skin", "Select Next Incarnation");
-        add("regen.gui.back", "Back");
-        add("regen.gui.preferences", "Preferences");
+        add("gui.regen.primary", "Primary");
+        add("gui.regen.secondary", "Secondary");
+        add("gui.regen.undo", "Undo");
+        add("gui.regen.close", "Close");
+        add("gui.regen.input_color", "Hex");
+        add("gui.regen.previous", "<");
+        add("gui.regen.next", ">");
+        add("gui.regen.default", "Default");
+        add("gui.regen.open_folder", "Skin Directory");
+        add("gui.regen.skin_choice", "Skin");
+        add("gui.regen.save", "Save");
+        add("gui.regen.next_incarnation", "Select next incarnation");
+        add("gui.regen.reset_skin", "Reset");
+        add("gui.regen.infinite_regenerations", "Infinite Regeneration Mode");
+        add("gui.regen.remaining_regens.status", "Regenerations: %s");
+        add("gui.regen.color_gui", "Colors");
+        add("gui.regen.current_skin", "Select Next Incarnation");
+        add("gui.regen.back", "Back");
+        add("gui.regen.preferences", "Preferences");
     }
 
     public String capitalize(String text) {
@@ -279,7 +257,16 @@ public class RegenEnglishLang extends LanguageProvider {
     }
 
     public void addSoundScheme(IRegen.TimelordSound soundScheme, String translation) {
-        add("regen.gui.sound_scheme." + soundScheme.name().toLowerCase(), translation);
+        add("gui.regen.sound_scheme." + soundScheme.name().toLowerCase(), translation);
+    }
+
+    public void addConfig(ForgeConfigSpec.ConfigValue waConfiguration, String message) {
+        addConfig(waConfiguration, message, 1);
+    }
+
+
+    public void addConfig(ForgeConfigSpec.ConfigValue waConfiguration, String message, int index) {
+        add("config.regen." + waConfiguration.getPath().get(index), message);
     }
 
     public void addTimelordtype(SpawnItem.Timelord type, String translation) {

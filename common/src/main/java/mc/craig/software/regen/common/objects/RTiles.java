@@ -3,7 +3,7 @@ package mc.craig.software.regen.common.objects;
 import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

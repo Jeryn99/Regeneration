@@ -10,7 +10,7 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RTiles;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;

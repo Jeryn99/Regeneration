@@ -6,7 +6,7 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.world.structures.TimelordSettlementHut;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.features.OreFeatures;

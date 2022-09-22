@@ -1,7 +1,7 @@
 package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.util.ClientUtil;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

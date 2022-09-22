@@ -9,6 +9,8 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RConstants;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -44,7 +46,7 @@ public class CommonEvents {
             //Handle Post
             if (data.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
-                PlayerUtil.sendMessage(livingEntity, Component.translatable("regen.messages.reduced_dmg"), true);
+                PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             }
 
             if(data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().isFire()){

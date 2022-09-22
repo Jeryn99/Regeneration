@@ -5,7 +5,7 @@ import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.POVMessage;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;

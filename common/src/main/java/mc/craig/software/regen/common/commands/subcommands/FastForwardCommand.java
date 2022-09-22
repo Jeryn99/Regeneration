@@ -8,6 +8,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.network.messages.RemoveSkinPlayerMessage;
+import mc.craig.software.regen.util.constants.RConstants;
+import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -34,7 +36,7 @@ public class FastForwardCommand implements Command<CommandSourceStack> {
                     e.printStackTrace();
                 }
             } else {
-                throw new CommandRuntimeException(Component.translatable("regen.messages.fast_forward_cmd_fail"));
+                throw new CommandRuntimeException(Component.translatable(RMessages.FAST_FORWARD_CMD_FAIL));
             }
         });
         return Command.SINGLE_SUCCESS;

@@ -9,7 +9,7 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.network.messages.NextSkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RConstants;
+import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -95,7 +95,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         RenderSystem.setShaderTexture(0, screenBackground);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         renderSkinToGui(matrixStack, x, y);
-        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
+        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("gui.regen.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.pushPose();
             String name = skins.get(position).getName().replaceAll(".png", "");
@@ -208,7 +208,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         this.addWidget(this.searchField);
 
 
-        Button btnPrevious = new Button(cx + 140, cy + 60, 20, 20, Component.translatable("regen.gui.previous"), button -> {
+        Button btnPrevious = new Button(cx + 140, cy + 60, 20, 20, Component.translatable("gui.regen.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
             }
@@ -223,10 +223,10 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 updateModels();
             }
         }, (button, poseStack, i, j) -> {
-            this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.previous_skin")), Optional.empty(), i, j);
+            this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.previous_skin")), Optional.empty(), i, j);
         });
 
-        Button btnNext = new Button(cx + 215, cy + 60, 20, 20, Component.translatable("regen.gui.next"), button -> {
+        Button btnNext = new Button(cx + 215, cy + 60, 20, 20, Component.translatable("gui.regen.next"), button -> {
             // Previous
             if (searchField.getValue().isEmpty()) {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
@@ -242,20 +242,20 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 }
                 updateModels();
             }
-        }, (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.next_skin")), Optional.empty(), i, j));
+        }, (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.next_skin")), Optional.empty(), i, j));
 
-        Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
+        Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
-        Button btnOpenFolder = new Button(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIR), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.open_folder")), Optional.empty(), i, j));
+        Button btnOpenFolder = new Button(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIR), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.open_folder")), Optional.empty(), i, j));
 
-        Button btnSave = new Button(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.save"), button -> {
+        Button btnSave = new Button(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.save"), button -> {
             updateModels();
             new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
         }, (button, poseStack, i, j) -> {
-            this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.save_skin")), Optional.empty(), i, j);
+            this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.save_skin")), Optional.empty(), i, j);
         });
 
-        Button btnResetSkin = new Button(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("regen.gui.reset_skin"), button -> VisualManipulator.sendResetMessage(), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button.tooltip.reset_mojang")), Optional.empty(), i, j));
+        Button btnResetSkin = new Button(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.reset_skin"), button -> VisualManipulator.sendResetMessage(), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.reset_mojang")), Optional.empty(), i, j));
 
         this.excludeTrending = new RCheckbox(cx + 10, cy + 145, 150, 20, Component.translatable("Include Web Skins?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {
