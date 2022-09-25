@@ -203,7 +203,7 @@ public class ClientUtil {
         }
 
         if (!ARMOR_MODELS.containsKey(itemStack.getItem())) {
-            throw new UnsupportedOperationException("No model registered for: " + itemStack.getItem());
+           return null;
         }
         return ARMOR_MODELS.get(itemStack.getItem());
     }

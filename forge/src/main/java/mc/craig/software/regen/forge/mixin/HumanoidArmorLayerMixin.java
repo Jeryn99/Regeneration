@@ -43,6 +43,8 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
     private void getArmorModelHook(LivingEntity entity, ItemStack itemStack, EquipmentSlot slot, HumanoidModel<?> model, CallbackInfoReturnable<Model> ci) {
         HumanoidModel m = ArmorModelManager.getArmorModel(itemStack, entity, slot);
 
+        if(m == null) return;
+
         if (m instanceof LivingArmor livingArmor) {
             livingArmor.setLiving(entity);
         }
