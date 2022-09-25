@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
-import me.suff.mc.regen.client.screen.PreferencesScreen;
-import me.suff.mc.regen.common.objects.RItems;
+import me.craig.software.regen.client.screen.PreferencesScreen;
+import me.craig.software.regen.common.objects.RItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
