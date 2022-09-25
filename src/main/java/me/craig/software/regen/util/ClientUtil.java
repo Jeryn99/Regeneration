@@ -16,12 +16,10 @@ import me.craig.software.regen.client.rendering.model.armor.GuardModel;
 import me.craig.software.regen.client.rendering.model.armor.RobesModel;
 import me.craig.software.regen.client.rendering.transitions.*;
 import me.craig.software.regen.common.objects.*;
-import me.suff.mc.regen.client.rendering.transitions.*;
 import me.craig.software.regen.client.sound.SoundReverb;
 import me.craig.software.regen.common.item.ElixirItem;
 import me.craig.software.regen.common.item.HandItem;
 import me.craig.software.regen.common.item.SpawnItem;
-import me.suff.mc.regen.common.objects.*;
 import me.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.craig.software.regen.common.regen.transitions.TransitionTypes;
 import me.craig.software.regen.config.RegenConfig;
@@ -125,6 +123,9 @@ public class ClientUtil {
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayerEntity) {
             AbstractClientPlayerEntity abstractClientPlayerEntity = (AbstractClientPlayerEntity) livingEntity;
+            if (abstractClientPlayerEntity.playerInfo == null || abstractClientPlayerEntity.playerInfo.skinModel == null)
+                return false;
+
             if (abstractClientPlayerEntity.playerInfo.skinModel.isEmpty()) {
                 return false;
             }
