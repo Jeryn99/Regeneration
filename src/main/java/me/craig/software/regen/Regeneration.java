@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import me.craig.software.regen.common.advancement.TriggerManager;
 import me.craig.software.regen.common.entities.TimelordEntity;
 import me.craig.software.regen.common.objects.*;
-import me.suff.mc.regen.common.objects.*;
 import me.craig.software.regen.common.regen.IRegen;
 import me.craig.software.regen.common.regen.RegenCap;
 import me.craig.software.regen.common.regen.RegenStorage;

@@ -5,13 +5,13 @@ import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.craig.software.regen.network.NetworkDispatcher;
 import me.craig.software.regen.network.messages.SkinMessage;
-import me.craig.software.regen.util.TexUtil;
 import me.craig.software.regen.common.regen.RegenCap;
 import me.craig.software.regen.common.regen.state.RegenStates;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.client.renderer.texture.DownloadingTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -82,13 +82,13 @@ public class SkinHandler {
 
     public static ResourceLocation loadImage(NativeImage nativeImage) {
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        NativeImage converted = TexUtil.processLegacySkin(nativeImage);
+        NativeImage converted = DownloadingTexture.processLegacySkin(nativeImage);
         return textureManager.register("player_", new DynamicTexture(converted));
     }
 
     public static NativeImage genSkinNative(byte[] skinArray) {
         try {
-            return NativeImage.read(new ByteArrayInputStream(skinArray));
+            return DownloadingTexture.processLegacySkin(NativeImage.read(new ByteArrayInputStream(skinArray)));
         } catch (IOException e) {
             return null;
         }
@@ -103,19 +103,6 @@ public class SkinHandler {
         if (playerInfo == null) return;
         Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
-        if (texture == null) {
-            playerInfo.pendingTextures = false;
-        }
-    }
-
-    public static void setPlayerCape(AbstractClientPlayerEntity player, ResourceLocation texture) {
-        if (player.getSkinTextureLocation().equals(texture)) {
-            return;
-        }
-        NetworkPlayerInfo playerInfo = player.playerInfo;
-        if (playerInfo == null) return;
-        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
-        playerTextures.put(MinecraftProfileTexture.Type.CAPE, texture);
         if (texture == null) {
             playerInfo.pendingTextures = false;
         }

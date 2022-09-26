@@ -25,7 +25,7 @@ public class DownloadSkinsThread extends Thread {
             }
             trending();
             timelord();
-            newSkins();
+            skinpacks();
         } catch (Exception exception) {
             exception.printStackTrace();
         }

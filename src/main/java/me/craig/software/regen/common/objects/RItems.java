@@ -2,7 +2,6 @@ package me.craig.software.regen.common.objects;
 
 import me.craig.software.regen.common.item.*;
 import me.craig.software.regen.util.RConstants;
-import me.suff.mc.regen.common.item.*;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

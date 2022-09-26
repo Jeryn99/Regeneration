@@ -68,23 +68,6 @@ public class IncarnationScreen extends ContainerScreen {
         }
     }
 
-    public static void getHash() throws IOException {
-        StringBuilder end = new StringBuilder();
-        for (File file : skins) {
-            if (!file.getName().startsWith("mk_")) {
-                String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(new FileInputStream(file));
-
-                String md5Line = "\n&quot;" + md5 + "&quot;:{";
-                String authorLine = "\n&quot;author&quot;:&quot;" + "author_here" + "&quot;";
-                String nameLine = "\n&quot;name&quot;:&quot;" + file.getName() + "&quot;}\n";
-
-                String line = md5Line + authorLine + nameLine;
-                end.append(line);
-            }
-        }
-        System.out.println(end);
-    }
-
     @Override
     public boolean isPauseScreen() {
         return true;

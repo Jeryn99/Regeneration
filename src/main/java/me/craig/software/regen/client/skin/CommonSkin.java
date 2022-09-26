@@ -1,11 +1,15 @@
 package me.craig.software.regen.client.skin;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.craig.software.regen.Regeneration;
 import me.craig.software.regen.config.RegenConfig;
-import me.craig.software.regen.util.*;
-import me.suff.mc.regen.util.*;
+import me.craig.software.regen.util.DownloadSkinsThread;
+import me.craig.software.regen.util.MineSkin;
+import me.craig.software.regen.util.PlayerUtil;
+import me.craig.software.regen.util.RegenUtil;
+import net.minecraft.client.renderer.texture.DownloadingTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
@@ -13,9 +17,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.imageio.ImageIO;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -36,8 +38,7 @@ public class CommonSkin {
     public static ResourceLocation fileTotexture(File file) {
         NativeImage nativeImage = null;
         try {
-            nativeImage = NativeImage.read(Files.newInputStream(file.toPath()));
-            nativeImage = TexUtil.processLegacySkin(nativeImage);
+            nativeImage = DownloadingTexture.processLegacySkin(NativeImage.read(Files.newInputStream(file.toPath())));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,53 +84,57 @@ public class CommonSkin {
      * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
      * @throws IOException
      */
-    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
-        URLConnection uc = url.openConnection();
-        uc.connect();
-        uc = url.openConnection();
-        uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-        BufferedImage img = ImageIO.read(uc.getInputStream());
-        //img = toBlackAndWhite(img);
+    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) {
 
-        File file = isAlexSkin(img) ? alexDir : steveDir;
-        if (!file.exists()) {
-            file.mkdirs();
+        URLConnection uc = null;
+        try {
+            uc = url.openConnection();
+            uc.connect();
+            uc = url.openConnection();
+            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+            BufferedImage img = ImageIO.read(uc.getInputStream());
+
+            File file = isAlexSkin(img) ? alexDir : steveDir;
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+
+            if (!steveDir.exists()) {
+                steveDir.mkdirs();
+            }
+
+            if (!alexDir.exists()) {
+                alexDir.mkdirs();
+            }
+
+            Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
+            ImageIO.write(img, "png", new File(file, filename + ".png"));
+        } catch (IOException e) {
+            Regeneration.LOG.error("Issue while downloading skin {}, error: {}", url.toString(), e);
         }
-
-        if (!steveDir.exists()) {
-            steveDir.mkdirs();
-        }
-
-        if (!alexDir.exists()) {
-            alexDir.mkdirs();
-        }
-
-        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
-        ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
-    public static void downloadSkinsSpecific(URL url, String filename, File specific) throws IOException {
+    public static void downloadSkinsSpecific(URL url, String filename, File specific) {
         Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, specific.getPath());
 
-        URLConnection uc = url.openConnection();
-        uc.connect();
-        uc = url.openConnection();
-        uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-        BufferedImage img = ImageIO.read(uc.getInputStream());
-        if (!specific.exists()) {
-            specific.mkdirs();
+        URLConnection uc = null;
+        try {
+            uc = url.openConnection();
+            uc.connect();
+            uc = url.openConnection();
+            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+            BufferedImage img = ImageIO.read(uc.getInputStream());
+            if (!specific.exists()) {
+                specific.mkdirs();
+            }
+
+            ImageIO.write(img, "png", new File(specific, filename + ".png"));
+        } catch (IOException e) {
+            Regeneration.LOG.error("Issue while downloading skin {}, error: {}", url.toString(), e);
         }
-
-        ImageIO.write(img, "png", new File(specific, filename + ".png"));
     }
 
-    public static BufferedImage toBlackAndWhite(BufferedImage img) {
-        BufferedImage gray = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-        return op.filter(img, gray);
-    }
-
-    public static void newSkins() throws IOException {
+    public static void skinpacks() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
         String packsUrl = "https://mc-api.craig.software/skins";
         JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
@@ -191,24 +196,22 @@ public class CommonSkin {
     public static void trending() throws IOException {
         if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
-        if (!trendingDir.exists()) {
-            if (trendingDir.mkdirs()) {
-                Regeneration.LOG.info("Creating Directory: " + trendingDir);
-                Regeneration.LOG.info("Creating Directory: " + TRENDING_ALEX);
-                Regeneration.LOG.info("Creating Directory: " + TRENDING_STEVE);
-            }
+        createFolder(trendingDir, TRENDING_ALEX, TRENDING_STEVE);
+        FileUtils.cleanDirectory(TRENDING_ALEX);
+        FileUtils.cleanDirectory(TRENDING_STEVE);
+        Regeneration.LOG.warn("Downloading new Trending skins");
+        for (JsonElement skin : MineSkin.interalApiSkins()) {
+            String link = skin.getAsJsonObject().get("link").getAsString();
+            String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
+            downloadSkins(new URL(link), "web_" + id, TRENDING_ALEX, TRENDING_STEVE);
         }
-        long attr = trendingDir.lastModified();
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
-            FileUtils.cleanDirectory(trendingDir);
-            Regeneration.LOG.warn("Refreshing Trending skins");
+    }
 
-            int randomPage = RegenUtil.RAND.nextInt(7800);
-
-            for (int i = 3; i > 0; i--) {
-                for (String skin : MineSkin.getSkinsFromPage(randomPage + i)) {
-                    downloadSkins(new URL(skin), "mk_" + RandomStringUtils.random(5, true, false), TRENDING_ALEX, TRENDING_STEVE);
-                }
+    private static void createFolder(File... folder) {
+        for (File file : folder) {
+            if (file.exists()) continue;
+            if (file.mkdirs()) {
+                Regeneration.LOG.info("Setup missing Regeneration Folder: {}", file);
             }
         }
     }

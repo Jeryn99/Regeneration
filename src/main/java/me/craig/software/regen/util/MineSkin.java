@@ -1,7 +1,9 @@
 package me.craig.software.regen.util;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.craig.software.regen.Regeneration;
 import net.minecraft.util.JSONUtils;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,6 +19,7 @@ public class MineSkin {
 
     private static final String USER_AGENT = "Regeneration MC Mod/1.0";
     private static final String URL = "https://api.mineskin.org";
+    private static final String API_ENDPOINT = "https://mc.craig.software/api/skin/random-skins";
 
     /**
      * @param page Specify what page you want a list of skins from
@@ -87,5 +90,25 @@ public class MineSkin {
         return JSONUtils.parse(new BufferedReader(new InputStreamReader(inputStream)));
     }
 
+    public static JsonArray getApiResponseArray(URL url) throws IOException {
+        HttpsURLConnection uc = (HttpsURLConnection) url.openConnection();
+        uc.connect();
+        uc = (HttpsURLConnection) url.openConnection();
+        uc.addRequestProperty("User-Agent", USER_AGENT);
+        InputStream inputStream = uc.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        return JSONUtils.fromJson(Regeneration.GSON, br, JsonArray.class, false);
+    }
 
+    public static ArrayList<JsonElement> interalApiSkins() throws IOException {
+        ArrayList<JsonElement> foundSkins = new ArrayList<>();
+        JsonArray json = getApiResponseArray(new URL(API_ENDPOINT)).getAsJsonArray();
+        for (JsonElement jsonElement : json) {
+            JsonObject jsonData = jsonElement.getAsJsonObject();
+            foundSkins.add(jsonData);
+        }
+
+        System.out.println(json);
+        return foundSkins;
+    }
 }

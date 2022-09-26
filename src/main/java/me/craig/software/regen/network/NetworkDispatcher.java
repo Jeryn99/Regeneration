@@ -2,7 +2,6 @@ package me.craig.software.regen.network;
 
 import me.craig.software.regen.network.messages.*;
 import me.craig.software.regen.util.RConstants;
-import me.suff.mc.regen.network.messages.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;

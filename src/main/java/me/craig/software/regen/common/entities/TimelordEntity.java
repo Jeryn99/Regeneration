@@ -11,7 +11,6 @@ import me.craig.software.regen.util.RegenUtil;
 import me.craig.software.regen.client.skin.CommonSkin;
 import me.craig.software.regen.common.item.ElixirItem;
 import me.craig.software.regen.common.item.SpawnItem;
-import me.suff.mc.regen.common.objects.*;
 import me.craig.software.regen.common.regen.IRegen;
 import me.craig.software.regen.common.regen.RegenCap;
 import me.craig.software.regen.common.regen.state.RegenStates;
