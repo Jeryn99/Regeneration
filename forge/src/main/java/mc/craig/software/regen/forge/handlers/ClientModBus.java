@@ -22,10 +22,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -36,8 +33,8 @@ import java.util.function.Function;
 public class ClientModBus {
 
     @SubscribeEvent
-    public static void clientSetup(final FMLClientSetupEvent event) {
-        Minecraft.getInstance().getItemColors().register((arg, i) -> {
+    public static void onItemColors(RegisterColorHandlersEvent.Item item){
+        item.getItemColors().register((arg, i) -> {
             if (i == 0) {
                 return ChaliceItem.getTrait(arg).getPotionColor();
             }
