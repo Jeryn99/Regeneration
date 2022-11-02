@@ -213,7 +213,7 @@ public class RegenCap implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getCommandSenderWorld().dimension()), new SyncMessage(this.livingEntity.getId(), nbt));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncMessage(this.livingEntity.getId(), nbt));
         } else {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getId(), nbt));
         }

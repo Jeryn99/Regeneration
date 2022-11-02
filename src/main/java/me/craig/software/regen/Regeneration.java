@@ -15,11 +15,12 @@ import me.craig.software.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.craig.software.regen.common.world.gen.RStructures;
 import me.craig.software.regen.compat.TardisMod;
 import me.craig.software.regen.config.RegenConfig;
-import me.craig.software.regen.data.EnglishLang;
+import me.craig.software.regen.data.*;
 import me.craig.software.regen.network.NetworkDispatcher;
 import me.craig.software.regen.util.ClientUtil;
 import me.craig.software.regen.util.DownloadSkinsThread;
 import me.craig.software.regen.util.PlayerUtil;
+import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraftforge.api.distmarker.Dist;
@@ -107,16 +108,16 @@ public class Regeneration {
         boolean reports = false;
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLang(generator));
-//        generator.addProvider(new RBlockLootTableGen(generator));
-//        generator.addProvider(new LootGen(generator));
-//        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
-//        generator.addProvider(blockTags);
-//        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
-//        generator.addProvider(new RRecipeGen(generator));
-//        generator.addProvider(new AdvancementGen(generator));
-//        if (reports) {
-//            generator.addProvider(new BiomeProvider(generator));
-//        }
+        generator.addProvider(new RBlockLootTableGen(generator));
+        generator.addProvider(new LootGen(generator));
+        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
+        generator.addProvider(blockTags);
+        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
+        generator.addProvider(new RRecipeGen(generator));
+        generator.addProvider(new AdvancementGen(generator));
+        if (reports) {
+            generator.addProvider(new BiomeProvider(generator));
+       }
     }
 
 }
