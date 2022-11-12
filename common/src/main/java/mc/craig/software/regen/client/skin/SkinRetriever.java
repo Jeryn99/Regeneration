@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -87,14 +88,13 @@ public class SkinRetriever {
                 specific.mkdirs();
             }
 
-            Regeneration.LOGGER.info("URL: {} || Name: {} || Path: {}", url, filename, specific.getPath());
+            Regeneration.LOGGER.info("URL: {} || Name: {} || Path: {}", url, filename, specific);
             ImageIO.write(img, "png", new File(specific, filename + ".png"));
         } catch (IOException e) {
             Regeneration.LOGGER.error("Failed to Download: " + url);
             e.printStackTrace();
         }
     }
-
     public static void remoteSkins() throws IOException {
         FileUtils.cleanDirectory(SKINS_DIR_SLIM_TRENDING);
         FileUtils.cleanDirectory(SKINS_DIR_DEFAULT_TRENDING);
@@ -119,6 +119,7 @@ public class SkinRetriever {
     }
 
     public static void internalSkins() throws IOException {
+        //if(!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
         Regeneration.LOGGER.warn("Re-downloading internal skins");
         String packsUrl = "https://mc-api.craig.software/skins";
         JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
