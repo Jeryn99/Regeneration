@@ -254,7 +254,7 @@ public class RegenerationData implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            new SyncMessage(this.livingEntity.getId(), nbt).sendToDimension(livingEntity.getCommandSenderWorld());
+            new SyncMessage(this.livingEntity.getId(), nbt).sendToAll();
         } else {
             new SyncMessage(this.livingEntity.getId(), nbt).send(serverPlayerEntity);
         }
