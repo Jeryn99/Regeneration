@@ -103,12 +103,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                 add(Attributes.ARMOR, 2.0D);
     }
 
-
-    @Override
-    public @NotNull AttributeMap getAttributes() {
-        return new AttributeMap(createAttributes().build());
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();

@@ -2,6 +2,8 @@ package mc.craig.software.regen.fabric;
 
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.commands.arguments.TraitArgumentType;
+import mc.craig.software.regen.common.entities.Timelord;
+import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.fabric.handlers.CommonEvents;
@@ -11,6 +13,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -30,6 +33,9 @@ public class RegenerationFabric implements ModInitializer {
         StructurePieces.init();
         levelManipulation();
         ArgumentTypeRegistry.registerArgumentType(new ResourceLocation(RConstants.MODID, "traits"), TraitArgumentType.class, SingletonArgumentInfo.contextFree(TraitArgumentType::traitArgumentType));
+
+
+        FabricDefaultAttributeRegistry.register(REntities.TIMELORD.get(), Timelord.createAttributes());
 
     }
 
