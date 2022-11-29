@@ -12,6 +12,8 @@ import me.craig.software.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.DownloadingTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -194,7 +196,7 @@ public class CommonSkin {
     }
 
     public static void trending() throws IOException {
-        if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet() || FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
         File trendingDir = TRENDING_ALEX;
         createFolder(trendingDir, TRENDING_ALEX, TRENDING_STEVE);
         FileUtils.cleanDirectory(TRENDING_ALEX);

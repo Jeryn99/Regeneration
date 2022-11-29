@@ -5,6 +5,8 @@
   "client": [
     "BipedBodyMixin",
     "MakeTheSunMixin",
+    "PlayerInfoMixin",
+    "PlayerRendererMixin",
     "RenderPlayerMixin",
     "SoundSourceMixin"
   ],

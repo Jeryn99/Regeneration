@@ -6,7 +6,7 @@ issueTrackerURL = "https://github.com/Suff99/Regeneration/issues"
 [[mods]] #mandatory
 itemIcon = "regen:fobwatch"
 modId = "regen" #mandatory
-version = "36.0.1" #mandatory
+version = "36.0.3" #mandatory
 updateJSONURL = "https://mc-api.craig.software/update?mod=regen" #optional
 displayName = "Regeneration" #mandatory
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional

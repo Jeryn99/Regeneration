@@ -44,7 +44,7 @@ public class IncarnationScreen extends ContainerScreen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     public static boolean isAlex = true;
-    private static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
+    public static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
@@ -217,12 +217,9 @@ public class IncarnationScreen extends ContainerScreen {
     private void renderSkinToGui(MatrixStack matrixStack, int x, int y) {
         matrixStack.pushPose();
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        ResourceLocation backup = player.playerInfo.getSkinLocation();
         boolean backupSkinType = ClientUtil.isAlex(player);
-        SkinHandler.PLAYER_SKINS.put(player.getUUID(), currentTexture);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-        SkinHandler.PLAYER_SKINS.put(player.getUUID(), backup);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }
