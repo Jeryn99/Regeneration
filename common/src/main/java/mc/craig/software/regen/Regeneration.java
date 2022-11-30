@@ -10,7 +10,12 @@ import mc.craig.software.regen.common.world.RFeatures;
 import mc.craig.software.regen.client.skin.DownloadSkinsThread;
 import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.Platform;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
+
+import java.io.File;
+import java.util.Collection;
 
 public class Regeneration {
 
@@ -18,6 +23,7 @@ public class Regeneration {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static void init() {
+
         RegenNetwork.init();
         ActingForwarder.init(Platform.isClient());
         RItems.ITEMS.register();
@@ -33,5 +39,7 @@ public class Regeneration {
         TransitionTypes.init();
         DownloadSkinsThread.setup();
         TriggerManager.init();
+
+
     }
 }

@@ -18,17 +18,18 @@ public class LivingDeathInvoker {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         RegenerationData data = RegenerationData.get(livingEntity).get();
 
-        if (livingEntity instanceof ServerPlayer serverPlayer)
-            data.syncToClients(serverPlayer);
-
-        if (data.stateManager() == null) return;
+        if (data.stateManager() == null && livingEntity.level.isClientSide()) return;
         boolean notDead = data.stateManager().onKilled(source);
         if (notDead) {
+            System.out.println("Cancelling death!!!!!!!!!!");
             ci.cancel();
         } else {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 data.extractRegens(data.regens());
             }
         }
+
+        data.syncToClients(null);
+
     }
 }

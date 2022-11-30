@@ -483,7 +483,7 @@ public class RegenerationData implements IRegen {
         private StateManager() {
             this.transitionCallbacks = new HashMap<>();
             transitionCallbacks.put(RegenStates.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, this::midSequenceKill);
+            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, () -> midSequenceKill(true));
             transitionCallbacks.put(RegenStates.Transition.FINISH_REGENERATION, this::finishRegeneration);
             transitionCallbacks.put(RegenStates.Transition.END_POST, this::endPost);
 
@@ -531,8 +531,7 @@ public class RegenerationData implements IRegen {
                 return false;
             }
 
-            if (source == RegenSources.REGEN_DMG_CRITICAL || source == RegenSources.REGEN_DMG_KILLED) {
-                // We died from something that doesn't allow us to regenerate :(
+            if (source == RegenSources.REGEN_DMG_CRITICAL) {
                 if (nextTransition != null) {
                     nextTransition.cancel();
                 }
@@ -540,52 +539,44 @@ public class RegenerationData implements IRegen {
             }
 
             switch (currentState) {
-                case ALIVE -> {
+                case ALIVE:
                     if (!canRegenerate()) // that's too bad :(
                         return false;
 
                     // We're entering grace period...
-                    enterGrace();
+                    scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
+                    scheduleHandGlowTrigger();
+
+                    currentState = RegenStates.GRACE;
+                    syncToClients(null);
+                    ActingForwarder.onEnterGrace(RegenerationData.this);
                     return true;
-                }
-                case REGENERATING -> {
+                case REGENERATING:
                     // We've been killed mid regeneration!
                     nextTransition.cancel(); // ... cancel the finishing of the regeneration
-                    midSequenceKill();
+                    midSequenceKill(false);
                     return false;
-                }
-                case GRACE_CRIT -> {
+                case GRACE_CRIT:
                     nextTransition.cancel();
                     if (source == RegenSources.REGEN_DMG_FORCED) {
-                        // Player (finally) triggered regeneration
                         triggerRegeneration();
                         return true;
                     } else {
-                        // Killed in critical phase, can't regenerate anymore :(
-                        midSequenceKill();
+                        midSequenceKill(true);
                         return false;
                     }
-                }
-                case POST -> {
+                case POST:
                     currentState = RegenStates.ALIVE;
                     nextTransition.cancel();
                     return false;
-                }
-                case GRACE -> {
-                    if (source == RegenSources.REGEN_DMG_FORCED) {
-                        // Player triggered regeneration
-                        triggerRegeneration();
-                    } else {
-                        // Cancel scheduled transition, we're going critical right now!
-                        nextTransition.cancel();
-                        enterCriticalPhase();
-                    }
+                case GRACE:
+                    // We're being forced to regenerate...
+                    triggerRegeneration();
                     return true;
-                }
-                default -> {
-                    return false;
-                }
+                default:
+                    break;
             }
+            return false;
         }
 
         @Override
@@ -670,15 +661,16 @@ public class RegenerationData implements IRegen {
             syncToClients(null);
         }
 
-        private void midSequenceKill() {
+        private void midSequenceKill(boolean isGrace) {
             currentState = RegenStates.ALIVE;
             nextTransition = null;
             handGlowTimer = null;
             transitionType.onFinishRegeneration(RegenerationData.this);
-            livingEntity.hurt(RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+            livingEntity.hurt(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }
+            setCurrentTrait(TraitRegistry.HUMAN.get());
             setSkin(new byte[0]);
             syncToClients(null);
         }

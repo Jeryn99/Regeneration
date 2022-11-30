@@ -44,6 +44,10 @@ public class SkinRetriever {
         if (Platform.isClient()) {
             createFolder(SKINS_DIR_DEFAULT, SKINS_DIR_SLIM, SKINS_DIR_DEFAULT_TRENDING, SKINS_DIR_SLIM_TRENDING);
         }
+
+
+
+
     }
 
 
