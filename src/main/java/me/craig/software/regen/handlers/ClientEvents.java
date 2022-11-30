@@ -121,7 +121,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre playerEvent) {
         PlayerEntity player = playerEvent.getPlayer();
-        SkinHandler.tick((ClientPlayerEntity) playerEvent.getPlayer());
+        SkinHandler.tick(player);
         RegenCap.get(player).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
             TransitionTypeRenderers.get(type).onPlayerRenderPre(playerEvent);

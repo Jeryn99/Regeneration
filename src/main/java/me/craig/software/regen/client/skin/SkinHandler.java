@@ -3,10 +3,10 @@ package me.craig.software.regen.client.skin;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import me.craig.software.regen.network.NetworkDispatcher;
-import me.craig.software.regen.network.messages.SkinMessage;
 import me.craig.software.regen.common.regen.RegenCap;
 import me.craig.software.regen.common.regen.state.RegenStates;
+import me.craig.software.regen.network.NetworkDispatcher;
+import me.craig.software.regen.network.messages.SkinMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +31,7 @@ public class SkinHandler {
     //Skin Storage
     public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
-    public static void tick(ClientPlayerEntity playerEntity) {
+    public static void tick(PlayerEntity playerEntity) {
 
 
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
@@ -53,22 +54,29 @@ public class SkinHandler {
         });
     }
 
-    public static boolean getUnmodifiedSkinType(AbstractClientPlayerEntity abstractClientPlayerEntity) {
-        if (abstractClientPlayerEntity.playerInfo == null) return false;
-        abstractClientPlayerEntity.playerInfo.registerTextures();
-        if (abstractClientPlayerEntity.playerInfo.getModelName() == null) {
-            return false;
+    public static boolean getUnmodifiedSkinType(PlayerEntity player) {
+        if (player instanceof AbstractClientPlayerEntity) {
+            AbstractClientPlayerEntity abstractClientPlayerEntity = (AbstractClientPlayerEntity) player;
+            if (abstractClientPlayerEntity.playerInfo == null) return false;
+            abstractClientPlayerEntity.playerInfo.registerTextures();
+            if (abstractClientPlayerEntity.playerInfo.getModelName() == null) {
+                return false;
+            }
+            if (abstractClientPlayerEntity.playerInfo.getModelName().isEmpty()) {
+                return false;
+            }
+            return abstractClientPlayerEntity.playerInfo.getModelName().contentEquals("slim");
         }
-        if (abstractClientPlayerEntity.playerInfo.getModelName().isEmpty()) {
-            return false;
-        }
-        return abstractClientPlayerEntity.playerInfo.getModelName().contentEquals("slim");
+        return false;
     }
 
-    public static void setPlayerSkinType(AbstractClientPlayerEntity player, boolean isAlex) {
-        NetworkPlayerInfo playerInfo = player.playerInfo;
-        if (playerInfo == null) return;
-        playerInfo.skinModel = isAlex ? "slim" : "default";
+    public static void setPlayerSkinType(PlayerEntity player, boolean isAlex) {
+        if (player instanceof AbstractClientPlayerEntity) {
+            AbstractClientPlayerEntity abstractClientPlayerEntity = (AbstractClientPlayerEntity) player;
+            NetworkPlayerInfo playerInfo = abstractClientPlayerEntity.playerInfo;
+            if (playerInfo == null) return;
+            playerInfo.skinModel = isAlex ? "slim" : "default";
+        }
     }
 
     public static void sendResetMessage() {
