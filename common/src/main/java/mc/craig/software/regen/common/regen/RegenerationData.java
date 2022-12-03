@@ -230,6 +230,7 @@ public class RegenerationData implements IRegen {
 
     @Override
     public void extractRegens(int amount) {
+        System.out.println("Extracting: " + amount);
         regensLeft = regensLeft - amount;
     }
 

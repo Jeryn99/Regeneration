@@ -1,12 +1,8 @@
 package mc.craig.software.regen.client.skin;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -22,6 +18,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,22 +32,23 @@ public class SkinRetriever {
     public static final File SKINS_DIR_SLImale_timelord = new File(SKINS_DIR, "/timelords/slim");
     public static final File SKINS_DIR_DEFAULT_TIMELORD = new File(SKINS_DIR, "/timelords/default");
 
-    // Setup required folders
+    /**
+     * Sets up the necessary folders for storing skins.
+     */
     public static void folderSetup() {
         createFolder(SKINS_DIR, SKINS_DIR_DEFAULT_TIMELORD, SKINS_DIR_SLImale_timelord);
-
-        createFolder();
 
         if (Platform.isClient()) {
             createFolder(SKINS_DIR_DEFAULT, SKINS_DIR_SLIM, SKINS_DIR_DEFAULT_TRENDING, SKINS_DIR_SLIM_TRENDING);
         }
-
-
-
-
     }
 
 
+    /**
+     * Downloads and cleans the Timelord skins.
+     *
+     * @throws IOException if an error occurs while downloading or cleaning the skins
+     */
     public static void timelord() throws IOException {
         FileUtils.cleanDirectory(SKINS_DIR_DEFAULT_TIMELORD);
         FileUtils.cleanDirectory(SKINS_DIR_SLImale_timelord);
@@ -58,14 +56,28 @@ public class SkinRetriever {
 
         String[] genders = new String[]{"male", "female"};
         for (String gender : genders) {
-            for (String skin : MineSkin.searchSkins(gender)) {
-                downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + RandomStringUtils.random(5, true, false), gender.equals("male") ? SKINS_DIR_DEFAULT_TIMELORD : SKINS_DIR_SLImale_timelord);
+            for (String skin : SkinApi.searchSkins(gender)) {
+                downloadSkinToDirectory(new URL(skin), "timelord_" + gender + "_" + RandomStringUtils.random(5, true, false), gender.equals("male") ? SKINS_DIR_DEFAULT_TIMELORD : SKINS_DIR_SLImale_timelord);
             }
         }
     }
 
-
+    /**
+     * Determines whether the given image represents a slim model skin.
+     *
+     * This method is not guaranteed to be 100% accurate, as it is based on a limited set of assumptions about the characteristics of slim model skins. However, it should work well enough for most purposes.
+     *
+     * @param image the image to check
+     * @return true if the image represents a slim model skin, false otherwise
+     */
+    /**
+     * Determines whether the given image represents an Alex model skin.
+     *
+     * @param image the image to check
+     * @return true if the image represents an Alex model skin, false otherwise
+     */
     public static boolean isAlexSkin(BufferedImage image) {
+        // Check if the image has a transparent 2x8 or 8x2 pixel area on the arms
         for (int i = 0; i < 8; i++) {
             if (!hasAlpha(54, i + 20, image) || !hasAlpha(55, i + 20, image)) {
                 return false;
@@ -74,73 +86,152 @@ public class SkinRetriever {
         return true;
     }
 
+    /**
+     * Determines whether the pixel at the specified coordinates in the given image has an alpha value.
+     *
+     * @param x the x coordinate of the pixel
+     * @param y the y coordinate of the pixel
+     * @param image the image containing the pixel
+     * @return true if the pixel has an alpha value, false otherwise
+     */
     public static boolean hasAlpha(int x, int y, BufferedImage image) {
         int pixel = image.getRGB(x, y);
         return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
     }
 
-    public static void downloadSkinsSpecific(URL url, String filename, File specific) {
+
+    /**
+     * Downloads a skin pack from the given URL and saves it to the specified directory.
+     *
+     * @param url the URL of the skin pack to download
+     * @param filename the filename to use when saving the skin pack
+     * @param specific the directory to save the skin pack to
+     */
+    public static void downloadSkinToDirectory(URL url, String filename, File specific) {
+        // Open a connection to the given URL
         URLConnection uc = null;
         try {
             uc = url.openConnection();
             uc.connect();
             uc = url.openConnection();
+
+            // Set the connection timeout to an infinite value to prevent timeouts
             uc.setConnectTimeout(0);
+
+            // Set the User-Agent header to identify the client
             uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+
+            // Read the skin pack image from the connection and save it to the specified directory
             BufferedImage img = ImageIO.read(uc.getInputStream());
             if (!specific.exists()) {
                 specific.mkdirs();
             }
 
+            // Log the URL, filename, and destination path of the skin pack
             Regeneration.LOGGER.info("URL: {} || Name: {} || Path: {}", url, filename, specific);
+
+            // Save the skin pack to the specified directory
             ImageIO.write(img, "png", new File(specific, filename + ".png"));
         } catch (IOException e) {
+            // Log an error message and print the stack trace if an error occurred
             Regeneration.LOGGER.error("Failed to Download: " + url);
             e.printStackTrace();
         }
     }
+
+    /**
+     * Downloads skin packs from the internal API and saves them to the specified directories.
+     *
+     * @throws IOException if there is an error while downloading or saving the skin packs
+     */
     public static void remoteSkins() throws IOException {
+        // Delete any existing files in the skin directories
         FileUtils.cleanDirectory(SKINS_DIR_SLIM_TRENDING);
         FileUtils.cleanDirectory(SKINS_DIR_DEFAULT_TRENDING);
+
+        // Log a warning message indicating that new Trending skins are being downloaded
         Regeneration.LOGGER.warn("Downloading new Trending skins");
-            for (JsonElement skin : MineSkin.interalApiSkins()) {
-                String link = skin.getAsJsonObject().get("link").getAsString();
-                String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
-                downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
+
+        // Iterate over the skins returned by the internal API
+        for (JsonElement skin : SkinApi.interalApiSkins()) {
+            // Get the link and ID of the current skin
+            String link = skin.getAsJsonObject().get("link").getAsString();
+            String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
+
+            // Download the skin from the given link and save it to the specified directories
+            downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
         }
     }
 
+    /**
+     * Downloads a skin from the given URL and saves it to the specified directory.
+     *
+     * @param url the URL of the skin to download
+     * @param filename the name to give the downloaded skin file
+     * @param alexDir the directory to save Alex skins to
+     * @param steveDir the directory to save Steve skins to
+     * @throws IOException if there is an error while downloading or saving the skin
+     */
     public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
+        // Open a connection to the URL
         URLConnection uc = url.openConnection();
-        uc.connect();
-        uc = url.openConnection();
+
+        // Set the User-Agent request property to simulate a web browser
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+
+        // Read the image data from the URL
         BufferedImage img = ImageIO.read(uc.getInputStream());
+
+        // Determine the correct directory to save the image to based on its type (Alex or Steve)
         File file = isAlexSkin(img) ? alexDir : steveDir;
+
+        // Create the directories if they don't already exist
         createFolder(file, steveDir, alexDir);
+
+        // Log the URL, filename, and destination of the skin
         Regeneration.LOGGER.info("URL: {} || Name: {} || Path: {}", url, filename, file.getPath());
+
+        // Save the image to the specified directory
         ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
+    /**
+     * Downloads skin packs from the internal API.
+     *
+     * @throws IOException if there is an error while downloading the skin packs
+     */
     public static void internalSkins() throws IOException {
         //if(!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
         Regeneration.LOGGER.warn("Re-downloading internal skins");
         String packsUrl = "https://mc-api.craig.software/skins";
-        JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
+        JsonElement links = SkinApi.getApiData(packsUrl);
 
-        for (int skins = links.getAsJsonArray("data").size() - 1; skins >= 0; skins--) {
-            JsonArray data = links.getAsJsonArray("data");
-            JsonObject currentSkin = data.get(skins).getAsJsonObject();
-            String packName = currentSkin.get("name").getAsString();
-            String downloadLink = currentSkin.get("url").getAsString();
-            String destination = currentSkin.get("destination").getAsString();
+        // Check if the links element is a JSON object
+        if (links.isJsonObject()) {
+            JsonArray data = links.getAsJsonObject().getAsJsonArray("data");
+            for (JsonElement jsonElement : data) {
+                JsonObject currentSkin = jsonElement.getAsJsonObject();
 
-            File skinPackDir = new File(SKINS_DIR + "/" + destination.replaceAll("alex", "slim").replaceAll("steve", "default"));
-            createFolder(skinPackDir);
-            downloadSkinsSpecific(new URL(downloadLink), packName, skinPackDir);
+                // Get the name, download link, and destination of the current skin
+                String packName = currentSkin.get("name").getAsString();
+                String downloadLink = currentSkin.get("url").getAsString();
+                String destination = currentSkin.get("destination").getAsString();
+
+                // Create the skin pack directory
+                File skinPackDir = new File(SKINS_DIR + "/" + destination.replaceAll("alex", "slim").replaceAll("steve", "default"));
+                createFolder(skinPackDir);
+
+                // Download the skin pack to the specified directory
+                downloadSkinToDirectory(new URL(downloadLink), packName, skinPackDir);
+            }
         }
     }
 
+    /**
+     * Writes the current time to the cache tracker file.
+     *
+     * @throws IOException if an error occurs while writing to the cache tracker file
+     */
     public static void writeTime() throws IOException {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("last_downloaded", new JsonPrimitive(System.currentTimeMillis()));
@@ -151,6 +242,11 @@ public class SkinRetriever {
         }
     }
 
+    /**
+     * Downloads and updates the necessary skins.
+     *
+     * @throws IOException if an error occurs while downloading or updating the skins
+     */
     public static void doDownloads() throws IOException {
         folderSetup();
         writeTime();
@@ -160,57 +256,94 @@ public class SkinRetriever {
     }
 
     public static boolean shouldUpdateSkins() throws FileNotFoundException {
+        // Check if the "cache_tracker.json" file exists
         File cacheFile = new File(SKINS_DIR, "cache_tracker.json");
         if (!cacheFile.exists()) {
             Regeneration.LOGGER.info("Looks like no skins have been downloaded! Commencing first time set up!");
             return true;
         }
 
+        // Read and parse the JSON file
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(cacheFile)));
-        JsonObject json = GsonHelper.parse(br);
-        long timeSinceDownloaded = json.getAsJsonPrimitive("last_downloaded").getAsLong();
+        JsonObject json;
+        try {
+            json = GsonHelper.parse(br);
+        } catch (JsonSyntaxException e) {
+            Regeneration.LOGGER.error("Failed to parse the JSON file! Skins will not be updated.");
+            return false;
+        }
 
+        // Get the update interval from the JSON file
+        int updateInterval = json.getAsJsonPrimitive("update_interval").getAsInt();
+
+        // Get the time in minutes since the last update
+        long timeSinceDownloaded = json.getAsJsonPrimitive("last_downloaded").getAsLong();
         long minutesSince = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - timeSinceDownloaded);
-        boolean shouldDownload = minutesSince > 1440;
+
+        // Check if it's time to update the skins
+        boolean shouldDownload = minutesSince > updateInterval;
         Regeneration.LOGGER.info("It has been {} minutes since last skin update! {}", minutesSince, shouldDownload ? "A Skin update will commence!" : "A Skin update will not commence just now!");
         return shouldDownload;
     }
 
-
-    // Helper for creating folders if they do not currently exist
-    private static void createFolder(File... folder) {
-        for (File file : folder) {
-            if (file.exists()) continue;
-            if (file.mkdirs()) {
-                Regeneration.LOGGER.info("Setup missing Regeneration Folder: {}", file);
+    /**
+     * Creates the given folders if they do not currently exist.
+     *
+     * @param folders the folders to create
+     */
+    public static void createFolder(File... folders) {
+        for (File folder : folders) {
+            if (folder.exists()) continue;
+            if (folder.mkdirs()) {
+                Regeneration.LOGGER.info("Setup missing Regeneration Folder: {}", folder);
             }
         }
     }
 
-
+    /**
+     * Chooses a random skin from the given skin directory.
+     *
+     * @param random the random source to use for choosing the skin
+     * @param isTimelord whether to choose a Timelord skin
+     * @param isAlex whether to choose an Alex skin
+     * @return a file representing the chosen skin
+     */
     public static File chooseRandomSkin(RandomSource random, boolean isTimelord, boolean isAlex) {
         File skins = isTimelord ? (isAlex ? SKINS_DIR_SLImale_timelord : SKINS_DIR_DEFAULT_TIMELORD) : (isAlex ? SKINS_DIR_SLIM : SKINS_DIR_DEFAULT);
 
         if (!skins.exists()) {
-            SkinRetriever.folderSetup();
+            folderSetup();
         }
 
         Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
-        return (File) folderFiles.toArray()[random.nextInt(folderFiles.size())];
+        File[] files = folderFiles.toArray(new File[0]);
+        return files[random.nextInt(files.length)];
     }
 
+    /**
+     * Converts a file to a texture resource location.
+     *
+     * @param file the file to convert
+     * @return the texture resource location
+     */
     public static ResourceLocation fileToTexture(File file) {
         NativeImage nativeImage = null;
         try {
             nativeImage = TextureFixer.processLegacySkin(NativeImage.read(new FileInputStream(file)), file.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            Regeneration.LOGGER.error("Failed to convert file to texture: {}", e.getMessage());
         }
         return VisualManipulator.loadImage(nativeImage);
     }
 
+    /**
+     * Lists all the available skins for the given skin type.
+     *
+     * @param currentSkinType the type of skins to list
+     * @return a list of files representing the available skins
+     */
     public static List<File> listAllSkins(PlayerUtil.SkinType currentSkinType) {
         File DIR = switch (currentSkinType) {
             case EITHER -> SKINS_DIR;
@@ -219,7 +352,7 @@ public class SkinRetriever {
         };
 
         if (!DIR.exists()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         Collection<File> folderFiles = FileUtils.listFiles(DIR, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);

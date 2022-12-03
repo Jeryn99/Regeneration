@@ -11,6 +11,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * This interface represents a renderer for a transition in the regeneration process for living entities.
+ */
 public interface TransitionRenderer extends AnimationHandler.Animation {
 
     void onPlayerRenderPre(Player player, PlayerRenderer renderer, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight);

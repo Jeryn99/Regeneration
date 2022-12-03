@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,37 +29,82 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.Iterator;
 
+import static net.minecraft.core.BlockPos.betweenClosedStream;
+
 public class PlayerUtil {
 
+    /**
+     * Checks if the given player is currently inside a Zero Room.
+     *
+     * @param playerEntity the player to check
+     * @return true if the player is above a Zero Room, false otherwise
+     */
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
+        // Get the block position below the player
         BlockPos livingPos = playerEntity.blockPosition().below();
+
+        // Create an axis-aligned bounding box that covers the area below the player
         AABB grid = new AABB(livingPos.north().west(), livingPos.south().east());
-        for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
-            BlockPos pos = iterator.next();
+
+        // Iterate over all blocks in the grid
+        for (BlockPos pos : betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).toList()) {
+
+            // Check if the block at this position is not a Zero Room block
             BlockState state = playerEntity.level.getBlockState(pos);
-            if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() && state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
+            if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() &&
+                    state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
+
+                // If the block is not a Zero Room block, return false
                 return false;
             }
         }
+
+        // If all blocks in the grid are Zero Room blocks, trigger the Zero Room trigger
+        // and return true
         if (playerEntity instanceof ServerPlayer serverPlayer) {
             TriggerManager.ZERO_ROOM.trigger(serverPlayer);
         }
         return true;
     }
 
+    /**
+     * Handles the effects of a Zero Room on the given player.
+     *
+     * @param playerEntity the player to handle the effects for
+     */
     public static void handleZeroGrid(LivingEntity playerEntity) {
+        // Get the set of mob effects that are tagged with the POST_REGEN_POTIONS tag
         HolderSet.Named<MobEffect> mobEffects = Registry.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
+
+        // Iterate over all mob effects in the set
         for (Holder<MobEffect> mobEffect : mobEffects) {
+            // Check if the player has the current mob effect
             MobEffect effect = mobEffect.value();
             if (playerEntity.hasEffect(effect)) {
+                // If the player has the mob effect, remove it
                 playerEntity.removeEffect(effect);
             }
         }
     }
 
+    /**
+     * Sends the given message to all players on the given server.
+     *
+     * @param body the message to send
+     * @param server the server to send the message to
+     */
     public static void globalMessage(Component body, MinecraftServer server) {
-        if (server == null) return;
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+        // Return early if the server is null
+        if (server == null) {
+            return;
+        }
+
+        // Get the list of players on the server
+        PlayerList playerList = server.getPlayerList();
+
+        // Iterate over all players on the server
+        for (ServerPlayer player : playerList.getPlayers()) {
+            // Send the message to the player
             player.sendSystemMessage(body);
         }
     }
@@ -117,12 +163,29 @@ public class PlayerUtil {
         });
     }
 
+    /**
+     * Updates the model for the given SkinType.
+     *
+     * @param choices the SkinType to update the model for
+     */
     public static void updateModel(SkinType choices) {
+        // Create a new ModelMessage for the given SkinType and send it
         new ModelMessage(choices).send();
     }
 
+    /**
+     * Checks if the given item is in the given hand of the given entity.
+     *
+     * @param hand the hand to check
+     * @param holder the entity to check the hand of
+     * @param item the item to check for
+     * @return true if the given item is in the given hand of the given entity, false otherwise
+     */
     public static boolean isInHand(InteractionHand hand, LivingEntity holder, Item item) {
+        // Get the item that the entity is currently holding in the given hand
         ItemStack heldItem = holder.getItemInHand(hand);
+
+        // Check if the held item is the same as the given item
         return heldItem.getItem() == item;
     }
 

@@ -26,6 +26,13 @@ public class ViewUtil {
 
     private static final float headSize = 0.15f;
 
+    /**
+     * Returns whether or not the given target entity is in front of the given entity.
+     *
+     * @param entity The entity to check from.
+     * @param target The target entity to check for.
+     * @return True if the target is in front of the entity, false otherwise.
+     */
     public static boolean isInFrontOfEntity(LivingEntity entity, Entity target) {
         Vec3 vecTargetsPos = target.position();
         Vec3 vecLook;
@@ -120,143 +127,174 @@ public class ViewUtil {
     }
 
 
+    /**
+     * Performs a ray trace in the given world, starting at the given start position and ending at the
+     * given end position. If the given stop condition is satisfied at any point along the trace, the
+     * trace will be terminated and the result up to that point will be returned.
+     *
+     * @param livingEntity the entity performing the trace
+     * @param world        the world in which the trace is performed
+     * @param startPos     the starting position of the trace
+     * @param endPos       the ending position of the trace
+     * @param stopOn       a condition that, when satisfied, will cause the trace to stop and return the result
+     *                     up to that point
+     * @return the result of the trace, or null if the trace failed to find any satisfactory results
+     */
     @Nullable
-    private static HitResult rayTraceBlocks(LivingEntity livingEntity, Level world, Vec3 vec31, Vec3 vec32, Predicate<BlockPos> stopOn) {
-        if (!Double.isNaN(vec31.x) && !Double.isNaN(vec31.y) && !Double.isNaN(vec31.z)) {
-            if (!Double.isNaN(vec32.x) && !Double.isNaN(vec32.y) && !Double.isNaN(vec32.z)) {
-                int i = Mth.floor(vec32.x);
-                int j = Mth.floor(vec32.y);
-                int k = Mth.floor(vec32.z);
-                int l = Mth.floor(vec31.x);
-                int i1 = Mth.floor(vec31.y);
-                int j1 = Mth.floor(vec31.z);
-                BlockPos blockpos = new BlockPos(l, i1, j1);
-                if (stopOn.test(blockpos)) {
-                    HitResult raytraceresult = world.clip(new ClipContext(vec31, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
-                    if (raytraceresult != null) {
-                        return raytraceresult;
-                    }
-                }
+    private static HitResult rayTraceBlocks(LivingEntity livingEntity, Level world, Vec3 startPos, Vec3 endPos, Predicate<BlockPos> stopOn) {
+        // Return null if the start or end positions are NaN
+        if (Double.isNaN(startPos.x) || Double.isNaN(startPos.y) || Double.isNaN(startPos.z) ||
+                Double.isNaN(endPos.x) || Double.isNaN(endPos.y) || Double.isNaN(endPos.z)) {
+            return null;
+        }
 
-                int k1 = 200;
+        int startX = Mth.floor(startPos.x);
+        int startY = Mth.floor(startPos.y);
+        int startZ = Mth.floor(startPos.z);
+        int endX = Mth.floor(endPos.x);
+        int endY = Mth.floor(endPos.y);
+        int endZ = Mth.floor(endPos.z);
 
-                while (k1-- >= 0) {
-                    if (Double.isNaN(vec31.x) || Double.isNaN(vec31.y) || Double.isNaN(vec31.z)) {
-                        return null;
-                    }
+        // Create a BlockPos object representing the starting position of the trace
+        BlockPos startBlockPos = new BlockPos(startX, startY, startZ);
 
-                    if (l == i && i1 == j && j1 == k) {
-                        return null;
-                    }
+        // If the stop condition is satisfied at the starting position, perform a clip and return the result
+        if (stopOn.test(startBlockPos)) {
+            HitResult raytraceresult = world.clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
+            if (raytraceresult != null) {
+                return raytraceresult;
+            }
+        }
 
-                    boolean flag2 = true;
-                    boolean flag = true;
-                    boolean flag1 = true;
-                    double d0 = 999.0D;
-                    double d1 = 999.0D;
-                    double d2 = 999.0D;
+        // Perform the ray trace
+        int maxSteps = 200;
+        while (maxSteps-- >= 0) {
+            // Return null if the start position becomes NaN
+            if (Double.isNaN(startPos.x) || Double.isNaN(startPos.y) || Double.isNaN(startPos.z)) {
+                return null;
+            }
 
-                    if (i > l) {
-                        d0 = (double) l + 1.0D;
-                    } else if (i < l) {
-                        d0 = (double) l + 0.0D;
-                    } else {
-                        flag2 = false;
-                    }
+            // Return null if the start position has reached the end position
+            if (startX == endX && startY == endY && startZ == endZ) {
+                return null;
+            }
 
-                    if (j > i1) {
-                        d1 = (double) i1 + 1.0D;
-                    } else if (j < i1) {
-                        d1 = (double) i1 + 0.0D;
-                    } else {
-                        flag = false;
-                    }
+            // Determine the direction of the trace
+            boolean xStep = true;
+            boolean yStep = true;
+            boolean zStep = true;
+            double xDist = 999.0D;
+            double yDist = 999.0D;
+            double zDist = 999.0D;
 
-                    if (k > j1) {
-                        d2 = (double) j1 + 1.0D;
-                    } else if (k < j1) {
-                        d2 = (double) j1 + 0.0D;
-                    } else {
-                        flag1 = false;
-                    }
+            if (endX > startX) {
+                xDist = (double) startX + 1.0D;
+            } else if (endX < startX) {
+                xDist = (double) startX + 0.0D;
+            } else {
+                xStep = false;
+            }
 
-                    double d3 = 999.0D;
-                    double d4 = 999.0D;
-                    double d5 = 999.0D;
-                    double d6 = vec32.x - vec31.x;
-                    double d7 = vec32.y - vec31.y;
-                    double d8 = vec32.z - vec31.z;
+            if (endY > startY) {
+                yDist = (double) startY + 1.0D;
+            } else if (endY < startY) {
+                yDist = (double) startY + 0.0D;
+            } else {
+                yStep = false;
+            }
 
-                    if (flag2) {
-                        d3 = (d0 - vec31.x) / d6;
-                    }
+            if (endZ > startZ) {
+                zDist = (double) startZ + 1.0D;
+            } else if (endZ < startZ) {
+                zDist = (double) startZ + 0.0D;
+            } else {
+                zStep = false;
+            }
 
-                    if (flag) {
-                        d4 = (d1 - vec31.y) / d7;
-                    }
+            double xMove = 999.0D;
+            double yMove = 999.0D;
+            double zMove = 999.0D;
+            double xDelta = endPos.x - startPos.x;
+            double yDelta = endPos.y - startPos.y;
+            double zDelta = endPos.z - startPos.z;
 
-                    if (flag1) {
-                        d5 = (d2 - vec31.z) / d8;
-                    }
+            if (xStep) {
+                xMove = (xDist - startPos.x) / xDelta;
+            }
 
-                    if (d3 == -0.0D) {
-                        d3 = -1.0E-4D;
-                    }
+            if (yStep) {
+                yMove = (yDist - startPos.y) / yDelta;
+            }
 
-                    if (d4 == -0.0D) {
-                        d4 = -1.0E-4D;
-                    }
+            if (zStep) {
+                zMove = (zDist - startPos.z) / zDelta;
+            }
 
-                    if (d5 == -0.0D) {
-                        d5 = -1.0E-4D;
-                    }
+            if (xMove == -0.0D) {
+                xMove = -1.0E-4D;
+            }
 
-                    Direction enumfacing;
+            if (yMove == -0.0D) {
+                yMove = -1.0E-4D;
+            }
 
-                    if (d3 < d4 && d3 < d5) {
-                        enumfacing = i > l ? Direction.WEST : Direction.EAST;
-                        vec31 = new Vec3(d0, vec31.y + d7 * d3, vec31.z + d8 * d3);
-                    } else if (d4 < d5) {
-                        enumfacing = j > i1 ? Direction.DOWN : Direction.UP;
-                        vec31 = new Vec3(vec31.x + d6 * d4, d1, vec31.z + d8 * d4);
-                    } else {
-                        enumfacing = k > j1 ? Direction.NORTH : Direction.SOUTH;
-                        vec31 = new Vec3(vec31.x + d6 * d5, vec31.y + d7 * d5, d2);
-                    }
+            if (zMove == -0.0D) {
+                zMove = -1.0E-4D;
+            }
 
-                    l = Mth.floor(vec31.x) - (enumfacing == Direction.EAST ? 1 : 0);
-                    i1 = Mth.floor(vec31.y) - (enumfacing == Direction.UP ? 1 : 0);
-                    j1 = Mth.floor(vec31.z) - (enumfacing == Direction.SOUTH ? 1 : 0);
-                    blockpos = new BlockPos(l, i1, j1);
-                    if (stopOn.test(blockpos)) {
-                        HitResult raytraceresult1 = world.clip(new ClipContext(vec31, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
+            Direction facing;
 
-                        if (raytraceresult1 != null) {
-                            return raytraceresult1;
-                        }
-                    }
+            if (xMove < yMove && xMove < zMove) {
+                facing = endX > startX ? Direction.WEST : Direction.EAST;
+                startPos = new Vec3(xDist, startPos.y + yDelta * xMove, startPos.z + zDelta * xMove);
+            } else if (yMove < zMove) {
+                facing = endY > startY ? Direction.DOWN : Direction.UP;
+                startPos = new Vec3(startPos.x + xDelta * yMove, yDist, startPos.z + zDelta * yMove);
+            } else {
+                facing = endZ > startZ ? Direction.NORTH : Direction.SOUTH;
+                startPos = new Vec3(startPos.x + xDelta * zMove, startPos.y + yDelta * zMove, zDist);
+            }
+
+            startX = Mth.floor(startPos.x) - (facing == Direction.EAST ? 1 : 0);
+            startY = Mth.floor(startPos.y) - (facing == Direction.UP ? 1 : 0);
+            startZ = Mth.floor(startPos.z) - (facing == Direction.SOUTH ? 1 : 0);
+            BlockPos blockpos = new BlockPos(startX, startY, startZ);
+            BlockState blockstate = world.getBlockState(blockpos);
+
+            if (stopOn.test(blockpos)) {
+                HitResult raytraceresult = world.clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
+                if (raytraceresult != null) {
+                    return raytraceresult;
                 }
             }
         }
 
+        // Return null if the trace failed to find any satisfactory results
         return null;
     }
 
-    // This is bloated, I know, but I want to make sure I cover EVERY basis :/
+    /**
+     * Determines if a given block state can be seen through by the player.
+     *
+     * @param blockState the block state to be checked
+     * @param world      the world in which the block exists
+     * @param pos        the position of the block in the world
+     * @return true if the block can be seen through, false otherwise
+     */
     public static boolean canSeeThrough(BlockState blockState, Level world, BlockPos pos) {
-
-        // Covers all Block, Material and Tag checks :D
+        // Check if the block can be occluded and if it has a solid render in the world
         if (!blockState.canOcclude() || !blockState.isSolidRender(world, pos)) {
             return true;
         }
 
         Block block = blockState.getBlock();
 
-        // Special Snowflakes
+        // Check if the block is a door in the upper half
         if (block instanceof DoorBlock) {
             return blockState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER;
         }
 
+        // Check if the block has an empty support shape in the world
         return blockState.getBlockSupportShape(world, pos) == Shapes.empty();
     }
 

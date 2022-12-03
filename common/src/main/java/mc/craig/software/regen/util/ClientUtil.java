@@ -28,6 +28,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
@@ -41,10 +42,12 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ClientUtil {
@@ -53,13 +56,25 @@ public class ClientUtil {
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
     private static SimpleSoundInstance humAmbienceSound;
 
+    /**
+     * Handles the given input for the given local player.
+     *
+     * @param localPlayer the local player to handle the input for
+     * @param input       the input to handle
+     */
     public static void handleInput(LocalPlayer localPlayer, Input input) {
-        RegenerationData.get(localPlayer).ifPresent((data -> {
-            if (data.regenState() == RegenStates.REGENERATING) { // locking user
+        // Get the RegenerationData for the given player, if it exists
+        Optional<RegenerationData> regenerationData = RegenerationData.get(localPlayer);
+        if (regenerationData.isPresent()) {
+            RegenerationData data = regenerationData.get();
+
+            // If the player is currently regenerating, block their movement and
+            // handle upwards movement
+            if (data.regenState() == RegenStates.REGENERATING) {
                 blockMovement(input);
                 upwardsMovement(localPlayer, data);
             }
-        }));
+        }
     }
 
     private static void upwardsMovement(LocalPlayer player, IRegen data) {
@@ -73,7 +88,13 @@ public class ClientUtil {
         }
     }
 
+    /**
+     * Blocks movement for the given input.
+     *
+     * @param moveType the input to block movement for
+     */
     private static void blockMovement(Input moveType) {
+        // Set all movement-related fields to false or 0.0F to block movement
         moveType.right = false;
         moveType.left = false;
         moveType.down = false;
@@ -83,59 +104,99 @@ public class ClientUtil {
         moveType.leftImpulse = 0.0F;
     }
 
+    /**
+     * Checks if the given living entity is the Alex skin type.
+     *
+     * @param livingEntity the living entity to check
+     * @return true if the given living entity is the Alex skin type, false otherwise
+     */
     public static boolean isAlex(Entity livingEntity) {
+        // Check if the given entity is an AbstractClientPlayer
         if (livingEntity instanceof AbstractClientPlayer abstractClientPlayerEntity) {
+            // Get the PlayerInfo for the AbstractClientPlayer
+            PlayerInfo playerInfo = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
 
-            if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null || ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel == null)
-                return false;
-
-            if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel.isEmpty()) {
+            // Return false if the PlayerInfo is null or the skin model is empty
+            if (playerInfo == null || playerInfo.skinModel == null || playerInfo.skinModel.isEmpty()) {
                 return false;
             }
 
-            return Objects.equals(ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel, "slim");
+            // Return true if the skin model is "slim" (which corresponds to the Alex skin type)
+            return Objects.equals(playerInfo.skinModel, "slim");
         }
+
+        // If the given entity is not an AbstractClientPlayer, return false
         return false;
     }
 
+    /**
+     * Ticks the client-side code.
+     */
     public static void tickClient() {
-        if (Minecraft.getInstance().player != null) {
-            LocalPlayer ep = Minecraft.getInstance().player;
-            SoundManager sound = Minecraft.getInstance().getSoundManager();
-            RegenerationData.get(ep).ifPresent(iRegen -> {
-                if (iRegen.regenState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
+        // Get the current player and the sound manager
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer ep = minecraft.player;
+        SoundManager sound = minecraft.getSoundManager();
 
+        // If the player and sound manager are not null, update the ambience sound
+        if (ep != null && sound != null) {
+            // Get the RegenerationData for the player, if it exists
+            Optional<RegenerationData> optionalData = RegenerationData.get(ep);
+            if (optionalData.isPresent()) {
+                RegenerationData data = optionalData.get();
+
+                // If the player is in the POST regen state and above the Zero Grid,
+                // play the hum ambience sound
+                if (data.regenState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
+                    // Create the hum ambience sound if it doesn't exist
                     if (humAmbienceSound == null) {
                         humAmbienceSound = SimpleSoundInstance.forLocalAmbience(RSounds.GRACE_HUM.get(), 1, 1);
                     }
 
+                    // Play the hum ambience sound if it is not already playing
                     if (!sound.isActive(humAmbienceSound)) {
                         sound.play(humAmbienceSound);
                     }
                 } else {
+                    // Stop the hum ambience sound if it is currently playing
                     if (sound.isActive(humAmbienceSound)) {
                         sound.stop(humAmbienceSound);
                     }
                 }
-            });
+            }
         }
 
+        // Update the keybinds and destroy any unused textures
         RKeybinds.tickKeybinds();
         destroyTextures();
     }
 
+    /**
+     * Destroys any unused textures.
+     */
     public static void destroyTextures() {
-        //Clean up our mess we might have made!
-        if (Minecraft.getInstance().level == null) {
-            if (VisualManipulator.PLAYER_SKINS.size() > 0) {
-                VisualManipulator.PLAYER_SKINS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
-                VisualManipulator.PLAYER_SKINS.clear();
-                TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
-                TimelordRenderer.TIMELORDS.clear();
-                JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
-                JarTileRender.TEXTURES.clear();
-                Regeneration.LOGGER.warn("Cleared Regeneration texture cache");
-            }
+        // Get the current Minecraft instance and level
+        Minecraft minecraft = Minecraft.getInstance();
+        Level level = minecraft.level;
+
+        // If the level is null, clear the texture caches and release the textures
+        if (level == null) {
+            TextureManager textureManager = minecraft.getTextureManager();
+
+            // Release the textures in the player skins cache and clear the cache
+            VisualManipulator.PLAYER_SKINS.forEach((uuid, texture) -> textureManager.release(texture));
+            VisualManipulator.PLAYER_SKINS.clear();
+
+            // Release the textures in the timelords cache and clear the cache
+            TimelordRenderer.TIMELORDS.forEach((uuid, texture) -> textureManager.release(texture));
+            TimelordRenderer.TIMELORDS.clear();
+
+            // Release the textures in the jar tile render cache and clear the cache
+            JarTileRender.TEXTURES.forEach((uuid, texture) -> textureManager.release(texture));
+            JarTileRender.TEXTURES.clear();
+
+            // Log a warning message
+            Regeneration.LOGGER.warn("Cleared Regeneration texture cache");
         }
     }
 
@@ -182,30 +243,50 @@ public class ClientUtil {
 
     }
 
+    /**
+     * Gets the armor model for the specified item stack and living entity.
+     *
+     * @param itemStack the item stack
+     * @param livingEntity the living entity
+     * @return the armor model
+     */
     public static HumanoidModel<?> getArmorModel(ItemStack itemStack, LivingEntity livingEntity) {
-
+        // If the living entity is a player, check if it has a slim model
         if (livingEntity instanceof AbstractClientPlayer player) {
             boolean isSlim = (Objects.equals(ClientUtil.getPlayerInfo(player).skinModel, "slim"));
+
+            // If the player has a slim model, return the slim armor model for the item stack
             if (isSlim) {
                 return getHumanoidModel(itemStack, false);
             }
         }
+
+        // Return the default armor model for the item stack
         return getHumanoidModel(itemStack, true);
     }
 
 
+
+    /**
+     * Gets the humanoid model for the specified item stack and model type.
+     *
+     * @param itemStack the item stack
+     * @param trySteve whether to try to get the Steve model, or the default model
+     * @return the humanoid model, or null if no model was found
+     */
     private static HumanoidModel<?> getHumanoidModel(ItemStack itemStack, boolean trySteve) {
-
-        if (trySteve) {
-            if (ARMOR_MODELS_STEVE.containsKey(itemStack.getItem())) {
-                return ARMOR_MODELS_STEVE.get(itemStack.getItem());
-            }
+        // If trySteve is true and the item stack is in the ARMOR_MODELS_STEVE map, return the Steve model for the item stack
+        if (trySteve && ARMOR_MODELS_STEVE.containsKey(itemStack.getItem())) {
+            return ARMOR_MODELS_STEVE.get(itemStack.getItem());
         }
 
-        if (!ARMOR_MODELS.containsKey(itemStack.getItem())) {
-           return null;
+        // If the item stack is in the ARMOR_MODELS map, return the default model for the item stack
+        if (ARMOR_MODELS.containsKey(itemStack.getItem())) {
+            return ARMOR_MODELS.get(itemStack.getItem());
         }
-        return ARMOR_MODELS.get(itemStack.getItem());
+
+        // If no model was found, return null
+        return null;
     }
 
     public static void doClientStuff() {
@@ -235,25 +316,58 @@ public class ClientUtil {
         TransitionTypeRenderers.add(TransitionTypes.SNEEZE, SneezeTransitionRenderer.INSTANCE);
     }
 
+    /**
+     * Plays the specified positioned sound record.
+     *
+     * @param sound the sound to play
+     * @param pitch the pitch of the sound
+     * @param volume the volume of the sound
+     */
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, pitch, volume));
     }
 
+    /**
+     * Plays the specified sound.
+     *
+     * @param entity the entity associated with the sound
+     * @param soundName the name of the sound
+     * @param category the sound category
+     * @param repeat whether the sound should repeat
+     * @param stopCondition a supplier that determines when the sound should stop
+     * @param volume the volume of the sound
+     * @param randomSource the random source for the sound
+     */
     public static void playSound(Object entity, ResourceLocation soundName, SoundSource category, boolean repeat, Supplier<Boolean> stopCondition, float volume, RandomSource randomSource) {
         Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume, randomSource));
     }
 
+    /**
+     * Creates a toast with the specified title and subtitle.
+     *
+     * @param title the title of the toast
+     * @param subtitle the subtitle of the toast
+     */
     public static void createToast(MutableComponent title, MutableComponent subtitle) {
         Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.SystemToastIds.TUTORIAL_HINT, title, subtitle));
     }
 
+    /**
 
+     Sets the player's perspective based on the specified point of view.
+     @param pointOfView the point of view to set the player's perspective to
+     */
     public static void setPlayerPerspective(String pointOfView) {
         if (RegenConfig.CLIENT.changePerspective.get()) {
             Minecraft.getInstance().options.setCameraType(CameraType.valueOf(pointOfView));
         }
     }
+    /**
 
+     Gets the player info for the specified player.
+     @param player the player
+     @return the player info for the player
+     */
     public static PlayerInfo getPlayerInfo(AbstractClientPlayer player) {
         return player.playerInfo;
     }

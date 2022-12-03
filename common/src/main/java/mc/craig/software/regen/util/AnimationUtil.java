@@ -28,24 +28,33 @@ public class AnimationUtil {
         };
     }
 
-    public static void animate(HumanoidModel<?> humanoidModel, AnimationDefinition animationDefinition, long p_232322_, float p_232323_, Vector3f vector3f) {
-        float elapsedSeconds = getElapsedSeconds(animationDefinition, p_232322_);
+    /**
+     * Animates the given humanoid model based on the given animation definition, elapsed time, and weight.
+     *
+     * @param humanoidModel       the humanoid model to animate
+     * @param animationDefinition the animation definition to use for animating the model
+     * @param elapsedTime         the elapsed time, in milliseconds, since the animation started
+     * @param weight              the weight of the animation, which determines how much it should be applied to the model
+     * @param vec                 a vector that can be used to store temporary values while animating the model
+     */
+    public static void animate(HumanoidModel<?> humanoidModel, AnimationDefinition animationDefinition, long elapsedTime, float weight, Vector3f vec) {
+        float elapsedSeconds = getElapsedSeconds(animationDefinition, elapsedTime);
         for (Map.Entry<String, List<AnimationChannel>> entry : animationDefinition.boneAnimations().entrySet()) {
-            ModelPart optional = getAnyDescendantWithName(humanoidModel, entry.getKey());
+            ModelPart modelPart = getAnyDescendantWithName(humanoidModel, entry.getKey());
 
-            List<AnimationChannel> list = entry.getValue();
+            List<AnimationChannel> channels = entry.getValue();
 
-            if (optional != null) {
-                list.forEach((p_232311_) -> {
-                    Keyframe[] akeyframe = p_232311_.keyframes();
-                    int i = Math.max(0, Mth.binarySearch(0, akeyframe.length, (p_232315_) -> elapsedSeconds <= akeyframe[p_232315_].timestamp()) - 1);
-                    int j = Math.min(akeyframe.length - 1, i + 1);
-                    Keyframe keyframe = akeyframe[i];
-                    Keyframe keyframe1 = akeyframe[j];
-                    float f1 = elapsedSeconds - keyframe.timestamp();
-                    float f2 = Mth.clamp(f1 / (keyframe1.timestamp() - keyframe.timestamp()), 0.0F, 1.0F);
-                    keyframe1.interpolation().apply(vector3f, f2, akeyframe, i, j, p_232323_);
-                    p_232311_.target().apply(optional, vector3f);
+            if (modelPart != null) {
+                channels.forEach((channel) -> {
+                    Keyframe[] keyframes = channel.keyframes();
+                    int startKeyframeIndex = Math.max(0, Mth.binarySearch(0, keyframes.length, (i) -> elapsedSeconds <= keyframes[i].timestamp()) - 1);
+                    int endKeyframeIndex = Math.min(keyframes.length - 1, startKeyframeIndex + 1);
+                    Keyframe startKeyframe = keyframes[startKeyframeIndex];
+                    Keyframe endKeyframe = keyframes[endKeyframeIndex];
+                    float interval = elapsedSeconds - startKeyframe.timestamp();
+                    float progress = Mth.clamp(interval / (endKeyframe.timestamp() - startKeyframe.timestamp()), 0.0F, 1.0F);
+                    endKeyframe.interpolation().apply(vec, progress, keyframes, startKeyframeIndex, endKeyframeIndex, weight);
+                    channel.target().apply(modelPart, vec);
                 });
             } else {
                 System.out.println("Could not find:" + entry.getKey());
@@ -53,15 +62,22 @@ public class AnimationUtil {
         }
     }
 
-    private static float getElapsedSeconds(AnimationDefinition animationDefinition, long p_232318_) {
-        float f = (float) p_232318_ / 1000.0F;
-        return animationDefinition.looping() ? f % animationDefinition.lengthInSeconds() : f;
+    /**
+     * Returns the elapsed seconds for a given animation definition and time.
+     *
+     * @param animationDefinition the animation definition
+     * @param time                the time in milliseconds
+     * @return the elapsed seconds
+     */
+    private static float getElapsedSeconds(AnimationDefinition animationDefinition, long time) {
+        float seconds = (float) time / 1000.0F;
+        return animationDefinition.looping() ? seconds % animationDefinition.lengthInSeconds() : seconds;
     }
 
-    public static void animate(HumanoidModel<?> model, AnimationState animationState, AnimationDefinition animationDefinition, float p_233388_, float p_233389_) {
-        animationState.updateTime(p_233388_, p_233389_);
-        animationState.ifStarted((p_233392_) -> {
-            animate(model, animationDefinition, p_233392_.getAccumulatedTime(), 1.0F, ANIMATION_VECTOR_CACHE);
+    public static void animate(HumanoidModel<?> model, AnimationState animationState, AnimationDefinition animationDefinition, float elapsedTime, float speed) {
+        animationState.updateTime(elapsedTime, speed);
+        animationState.ifStarted((state) -> {
+            animate(model, animationDefinition, state.getAccumulatedTime(), 1.0F, ANIMATION_VECTOR_CACHE);
         });
     }
 
