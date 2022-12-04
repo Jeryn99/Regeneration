@@ -204,7 +204,7 @@ public class CommonSkin {
         Regeneration.LOG.warn("Downloading new Trending skins");
         for (JsonElement skin : MineSkin.interalApiSkins()) {
             String link = skin.getAsJsonObject().get("link").getAsString();
-            String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
+            String id = skin.getAsJsonObject().get("name").getAsString();
             downloadSkins(new URL(link), "web_" + id, TRENDING_ALEX, TRENDING_STEVE);
         }
     }

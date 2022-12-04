@@ -41,6 +41,10 @@ public class SkinHandler {
 
             boolean validSkin = iRegen.isSkinValidForUse();
 
+            if(!validSkin){
+                removePlayerSkin(uuid);
+            }
+
             // Check if the player has a MOD skin and if the cache is present
             // if these conditions are true, we want to generate and cache the skin
             if (validSkin && !hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= 140) {

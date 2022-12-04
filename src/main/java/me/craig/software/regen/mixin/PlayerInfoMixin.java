@@ -26,8 +26,11 @@ public abstract class PlayerInfoMixin {
     private void getSkinLocation(CallbackInfoReturnable<ResourceLocation> cir) {
         UUID uuid = profile.getId();
 
-        if (Minecraft.getInstance().screen instanceof IncarnationScreen) {
-            cir.setReturnValue(IncarnationScreen.currentTexture);
+        if(Minecraft.getInstance().screen instanceof IncarnationScreen){
+            IncarnationScreen screen = (IncarnationScreen) Minecraft.getInstance().screen;
+            if(!screen.isAfterRendering) {
+                cir.setReturnValue(IncarnationScreen.currentTexture);
+            }
         }
 
         if (SkinHandler.PLAYER_SKINS.containsKey(uuid)) {

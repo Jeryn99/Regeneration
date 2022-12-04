@@ -1,5 +1,6 @@
 package me.craig.software.regen.mixin;
 
+import com.terraforged.noise.combiner.Min;
 import me.craig.software.regen.client.screen.IncarnationScreen;
 import me.craig.software.regen.client.skin.SkinHandler;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,10 @@ public class PlayerRendererMixin {
     private void getTextureLocation(AbstractClientPlayerEntity entity, CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
 
         if(Minecraft.getInstance().screen instanceof IncarnationScreen){
-            callbackInfoReturnable.setReturnValue(IncarnationScreen.currentTexture);
+            IncarnationScreen screen = (IncarnationScreen) Minecraft.getInstance().screen;
+            if(!screen.isAfterRendering) {
+                callbackInfoReturnable.setReturnValue(IncarnationScreen.currentTexture);
+            }
         }
 
         if (SkinHandler.PLAYER_SKINS.containsKey(entity.getUUID())) {

@@ -53,6 +53,8 @@ public class IncarnationScreen extends ContainerScreen {
     private RCheckbox excludeTrending;
     private TextFieldWidget searchField;
 
+    public boolean isAfterRendering = false;
+
     public IncarnationScreen() {
         super(new BlankContainer(), Minecraft.getInstance().player.inventory, new StringTextComponent("Next Incarnation"));
         imageWidth = 256;
@@ -112,14 +114,13 @@ public class IncarnationScreen extends ContainerScreen {
             }
             stripTrending();
 
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position >= skins.size() - 1) {
-                    position = 0;
-                } else {
-                    position++;
-                }
-                updateModels();
+            if (position >= skins.size() - 1) {
+                position = 0;
+            } else {
+                position++;
             }
+            updateModels();
+
         }).setDescription(new String[]{"button.tooltip.previous_skin"});
 
         DescButton btnNext = new DescButton(cx + 215, cy + 60, 20, 20, new TranslationTextComponent("regen.gui.next"), button -> {
@@ -130,15 +131,14 @@ public class IncarnationScreen extends ContainerScreen {
 
             stripTrending();
 
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position > 0) {
-                    position--;
-                } else {
-                    position = skins.size() - 1;
-                }
-                currentTexture = CommonSkin.fileTotexture(skins.get(position));
-                updateModels();
+            if (position > 0) {
+                position--;
+            } else {
+                position = skins.size() - 1;
             }
+            currentTexture = CommonSkin.fileTotexture(skins.get(position));
+            updateModels();
+
         }).setDescription(new String[]{"button.tooltip.next_skin"});
 
         DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
@@ -201,7 +201,10 @@ public class IncarnationScreen extends ContainerScreen {
         this.renderBackground(matrixStack);
         Minecraft.getInstance().getTextureManager().bind(screenBackground);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+
+        isAfterRendering = false;
         renderSkinToGui(matrixStack, x, y);
+        isAfterRendering = true;
 
         drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
@@ -228,12 +231,10 @@ public class IncarnationScreen extends ContainerScreen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         this.searchField.keyPressed(keyCode, scanCode, modifiers);
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position >= skins.size() - 1) {
-                    position = 0;
-                } else {
-                    position++;
-                }
+            if (position >= skins.size() - 1) {
+                position = 0;
+            } else {
+                position++;
                 Minecraft.getInstance().getTextureManager().release(currentTexture);
                 currentTexture = CommonSkin.fileTotexture(skins.get(position));
                 updateModels();
@@ -241,15 +242,13 @@ public class IncarnationScreen extends ContainerScreen {
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position > 0) {
-                    position--;
-                } else {
-                    position = skins.size() - 1;
-                }
-                currentTexture = CommonSkin.fileTotexture(skins.get(position));
-                updateModels();
+            if (position > 0) {
+                position--;
+            } else {
+                position = skins.size() - 1;
             }
+            currentTexture = CommonSkin.fileTotexture(skins.get(position));
+            updateModels();
         }
 
         if (keyCode == 256 && this.shouldCloseOnEsc()) {

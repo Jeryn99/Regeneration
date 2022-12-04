@@ -1,10 +1,12 @@
 package me.craig.software.regen.mixin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.craig.software.regen.client.screen.IncarnationScreen;
 import me.craig.software.regen.util.PlayerUtil;
 import me.craig.software.regen.client.skin.SkinHandler;
 import me.craig.software.regen.common.regen.RegenCap;
 import me.craig.software.regen.common.regen.state.RegenStates;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +40,14 @@ public class RenderPlayerMixin {
 
     @Inject(at = @At("TAIL"), cancellable = true, method = "getTextureLocation(Lnet/minecraft/client/entity/player/AbstractClientPlayerEntity;)Lnet/minecraft/util/ResourceLocation;")
     protected void getTextureLocation(AbstractClientPlayerEntity player, CallbackInfoReturnable<ResourceLocation> ci) {
+
+        if(Minecraft.getInstance().screen instanceof IncarnationScreen){
+            IncarnationScreen screen = (IncarnationScreen) Minecraft.getInstance().screen;
+            if(!screen.isAfterRendering) {
+                ci.setReturnValue(IncarnationScreen.currentTexture);
+            }
+        }
+
         if (SkinHandler.PLAYER_SKINS.containsKey(player.getUUID())) {
             ResourceLocation skin = SkinHandler.PLAYER_SKINS.get(player.getUUID());
             ci.setReturnValue(skin);
