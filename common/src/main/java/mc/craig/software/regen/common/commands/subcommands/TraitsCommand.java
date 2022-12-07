@@ -29,26 +29,32 @@ public class TraitsCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        // Get the command source, player, and trait from the command context.
         CommandSourceStack source = context.getSource();
         TraitBase trait = context.getArgument("trait", TraitBase.class);
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
+
+        // Get the player and trait text components for use in the messages.
         MutableComponent playerText = RTextHelper.getPlayerTextObject(source.getLevel(), player.getUUID());
         MutableComponent traitText = RTextHelper.getTraitTextObject(trait);
 
+        // Check if the player and trait are valid. If not, send an error message and return 0 (error).
         if (player == null || trait == null) {
             source.sendFailure(Component.translatable(RMessages.SET_TRAIT_ERROR, playerText, traitText));
-            return 0; //Zero is error
+            return 0;
         }
+
+        // If the player has a RegenerationData instance, set the current trait and sync the data to the clients.
+        // Send a success message to the command source.
         RegenerationData.get(player).ifPresent((data) -> {
             TraitBase oldTrait = data.getCurrentTrait();
             oldTrait.onRemoved(player, data);
             data.setCurrentTrait(trait);
-            trait.onAdded(player, data);
+            trait.onAdded(player, data); // Start from here
             data.syncToClients(null);
             source.sendSuccess(Component.translatable(RMessages.SET_TRAIT_SUCCESS, playerText, traitText), false);
         });
         return Command.SINGLE_SUCCESS;
     }
-
 
 }

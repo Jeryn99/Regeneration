@@ -43,15 +43,28 @@ public class FobWatchItem extends Item {
         super(new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(12));
     }
 
+    /**
+     * Gets the CompoundTag for the given ItemStack.
+     * If the CompoundTag does not exist or does not contain the "is_open" and "is_gold" tags,
+     * then it creates them and initializes them with default values.
+     *
+     * @param stack the ItemStack to get the CompoundTag for
+     * @return the CompoundTag for the given ItemStack
+     */
     public static CompoundTag getStackTag(ItemStack stack) {
         CompoundTag stackTag = stack.getOrCreateTag();
-        if (!stackTag.contains("is_open") || !stackTag.contains("is_gold")) {
+
+        // Check if the stackTag contains the "is_open" and "is_gold" tags.
+        // If not, create them and initialize them with default values.
+        if (!stackTag.contains("is_open")) {
             stackTag.putBoolean("is_open", false);
+        }
+        if (!stackTag.contains("is_gold")) {
             stackTag.putBoolean("is_gold", RegenUtil.RAND.nextBoolean());
         }
+
         return stackTag;
     }
-
     public static boolean getEngrave(ItemStack stack) {
         return getStackTag(stack).getBoolean("is_gold");
     }

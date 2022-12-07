@@ -25,7 +25,9 @@ public class PlayerRendererMixin {
     private void getTextureLocation(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
 
         if(Minecraft.getInstance().screen instanceof IncarnationScreen screen){
-            callbackInfoReturnable.setReturnValue(IncarnationScreen.currentTexture);
+            if(!screen.postRenderedPlayer) {
+                callbackInfoReturnable.setReturnValue(IncarnationScreen.currentTexture);
+            }
         }
 
         if (VisualManipulator.PLAYER_SKINS.containsKey(entity.getUUID())) {

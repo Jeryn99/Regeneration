@@ -234,7 +234,7 @@ public class SkinRetriever {
      */
     public static void writeTime() throws IOException {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("last_downloaded", new JsonPrimitive(System.currentTimeMillis()));
+        jsonObject.add("update_interval", new JsonPrimitive(System.currentTimeMillis()));
 
         try (FileWriter writer = new FileWriter(new File(SKINS_DIR, "cache_tracker.json"))) {
             RegenUtil.GSON.toJson(jsonObject, writer);
@@ -331,6 +331,7 @@ public class SkinRetriever {
     public static ResourceLocation fileToTexture(File file) {
         NativeImage nativeImage = null;
         try {
+
             nativeImage = TextureFixer.processLegacySkin(NativeImage.read(new FileInputStream(file)), file.toString());
         } catch (IOException e) {
             Regeneration.LOGGER.error("Failed to convert file to texture: {}", e.getMessage());

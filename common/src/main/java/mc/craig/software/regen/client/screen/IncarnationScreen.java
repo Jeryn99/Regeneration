@@ -43,6 +43,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
     private static int position = 0;
+    public boolean postRenderedPlayer;
     private RCheckbox excludeTrending;
     private EditBox searchField;
 
@@ -108,12 +109,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private void renderSkinToGui(PoseStack matrixStack, int x, int y) {
         matrixStack.pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
-        ResourceLocation backup = ClientUtil.getPlayerInfo(player).getSkinLocation();
         boolean backupSkinType = ClientUtil.isAlex(player);
-        VisualManipulator.PLAYER_SKINS.put(player.getUUID(), currentTexture);
+        postRenderedPlayer = false;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-        VisualManipulator.PLAYER_SKINS.put(player.getUUID(), backup);
+        postRenderedPlayer = true;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }
@@ -131,25 +131,21 @@ public class IncarnationScreen extends AbstractContainerScreen {
         searchField.keyPressed(keyCode, scanCode, modifiers);
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position >= skins.size() - 1) {
-                    position = 0;
-                } else {
-                    position++;
-                }
-                updateModels();
+            if (position >= skins.size() - 1) {
+                position = 0;
+            } else {
+                position++;
             }
+            updateModels();
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position > 0) {
-                    position--;
-                } else {
-                    position = skins.size() - 1;
-                }
-                updateModels();
+            if (position > 0) {
+                position--;
+            } else {
+                position = skins.size() - 1;
             }
+            updateModels();
         }
 
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
@@ -214,14 +210,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
             }
             stripTrending();
 
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position >= skins.size() - 1) {
-                    position = 0;
-                } else {
-                    position++;
-                }
-                updateModels();
+            if (position >= skins.size() - 1) {
+                position = 0;
+            } else {
+                position++;
             }
+            updateModels();
         }, (button, poseStack, i, j) -> {
             this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.previous_skin")), Optional.empty(), i, j);
         });
@@ -234,14 +228,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
             stripTrending();
 
-            if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
-                if (position > 0) {
-                    position--;
-                } else {
-                    position = skins.size() - 1;
-                }
-                updateModels();
+            if (position > 0) {
+                position--;
+            } else {
+                position = skins.size() - 1;
             }
+            updateModels();
         }, (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.next_skin")), Optional.empty(), i, j));
 
         Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
