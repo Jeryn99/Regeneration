@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.*;
 
 
-public class IncarnationScreen extends AbstractContainerScreen {
+public class IncarnationScreen extends Screen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     public static boolean isAlex = true;
@@ -47,8 +48,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private RCheckbox excludeTrending;
     private EditBox searchField;
 
+    protected int imageWidth, imageHeight = 0;
+    private int leftPos, topPos;
+
     public IncarnationScreen() {
-        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), Component.literal("Next Incarnation"));
+        super(Component.literal("Next Incarnation"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -88,22 +92,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         if (!excludeTrending.selected()) {
             skins.removeIf(file -> file.getPath().contains("web"));
         }
-    }
-
-    @Override
-    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
-        this.renderBackground(matrixStack);
-        RenderSystem.setShaderTexture(0, screenBackground);
-        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        renderSkinToGui(matrixStack, x, y);
-        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("gui.regen.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
-        if (!skins.isEmpty() && position < skins.size()) {
-            matrixStack.pushPose();
-            String name = skins.get(position).getName().replaceAll(".png", "");
-            renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
-            matrixStack.popPose();
-        }
-        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("Search"), (width - imageWidth) / 2 + 28, (height - imageHeight) / 2 + 20 + 15, Color.WHITE.getRGB());
     }
 
     private void renderSkinToGui(PoseStack matrixStack, int x, int y) {
@@ -156,15 +144,24 @@ public class IncarnationScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderLabels(@NotNull PoseStack matrixStack, int x, int y) {
-        this.font.draw(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
-    }
-
-    @Override
     public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
+        RenderSystem.setShaderTexture(0, screenBackground);
+        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        renderSkinToGui(matrixStack, mouseX, mouseY);
+        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("gui.regen.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
+        if (!skins.isEmpty() && position < skins.size()) {
+            matrixStack.pushPose();
+            String name = skins.get(position).getName().replaceAll(".png", "");
+            renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
+            matrixStack.popPose();
+        }
+        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("Search"), (width - imageWidth) / 2 + 28, (height - imageHeight) / 2 + 20 + 15, Color.WHITE.getRGB());
+
+        this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
+
 
     }
 
@@ -173,6 +170,9 @@ public class IncarnationScreen extends AbstractContainerScreen {
     @Override
     public void init() {
         super.init();
+
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.topPos = (this.height - this.imageHeight) / 2;
 
         int buttonOffset = 15;
         int cx = (width - imageWidth) / 2;

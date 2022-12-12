@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -25,15 +26,18 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.function.Function;
 
-public class PreferencesScreen extends AbstractContainerScreen {
+public class PreferencesScreen extends Screen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/preferences.png");
     private static final PlayerUtil.SkinType skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
     private static TransitionType transitionType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound soundScheme = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
 
+    protected int imageWidth, imageHeight = 0;
+    private int leftPos, topPos;
+
     public PreferencesScreen() {
-        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), Component.literal("Regeneration"));
+        super(Component.literal("Regeneration"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -44,6 +48,10 @@ public class PreferencesScreen extends AbstractContainerScreen {
 
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
+
+        this.leftPos = (this.width - this.imageWidth) / 2;
+        this.topPos = (this.height - this.imageHeight) / 2;
+
         final int btnW = 66, btnH = 20;
 
         this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
@@ -99,13 +107,15 @@ public class PreferencesScreen extends AbstractContainerScreen {
     }
 
     @Override
-    protected void renderBg(@NotNull PoseStack matrixStack, float partialTicks, int x, int y) {
+    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(matrixStack);
+
         RenderSystem.setShaderTexture(0, screenBackground);
         IRegen data = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
-        InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - x, (float) (topPos + 75 - 50) - y, Minecraft.getInstance().player);
+        InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - mouseX, (float) (topPos + 75 - 50) - mouseY, Minecraft.getInstance().player);
         String str = Component.translatable("gui.regen.remaining_regens.status", data.regens()).getString();
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 
@@ -121,16 +131,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
         IncarnationScreen.renderWidthScaledText(traitLang.getString(), matrixStack, font, width / 2 + 120 - 70, cy + 135, color, 100);
         Component traitLangDesc = data.getCurrentTrait().getDescription();
         IncarnationScreen.renderWidthScaledText(traitLangDesc.getString(), matrixStack, font, width / 2 + 120 - 70, cy + 145, color, 100);
-    }
 
-    @Override
-    protected void renderLabels(@NotNull PoseStack matrixStack, int x, int y) {
-        this.font.draw(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
-    }
-
-    @Override
-    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
