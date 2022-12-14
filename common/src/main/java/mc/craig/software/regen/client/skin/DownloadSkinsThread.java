@@ -5,9 +5,10 @@ import static mc.craig.software.regen.client.skin.SkinRetriever.doDownloads;
 public class DownloadSkinsThread extends Thread {
 
     public static boolean hasStarted = false;
+    public static boolean isClient = false;
 
-
-    public static void setup() {
+    public static void setup(boolean client) {
+        DownloadSkinsThread.isClient = client;
         DownloadSkinsThread thread = new DownloadSkinsThread();
         thread.setDaemon(true);
         thread.setName("Regeneration - Skins");
@@ -26,7 +27,7 @@ public class DownloadSkinsThread extends Thread {
     public void run() {
         try {
             if (SkinRetriever.shouldUpdateSkins() && !hasStarted) {
-                doDownloads();
+                doDownloads(isClient);
                 hasStarted = true;
                 stop();
             }

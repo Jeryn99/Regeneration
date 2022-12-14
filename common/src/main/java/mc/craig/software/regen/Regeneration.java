@@ -37,7 +37,7 @@ public class Regeneration {
         RParticles.TYPES.register();
         TraitRegistry.TRAITS.register();
         TransitionTypes.init();
-        DownloadSkinsThread.setup();
+        DownloadSkinsThread.setup(Platform.isClient());
         TriggerManager.init();
 
 

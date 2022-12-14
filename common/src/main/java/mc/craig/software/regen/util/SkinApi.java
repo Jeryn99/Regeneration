@@ -92,15 +92,15 @@ public class SkinApi {
         // Fetch the JSON data from the API
         JsonElement response = getApiData(URL + "/get/list?filter=" + searchTerm);
 
+        System.out.println(response);
+
         // Create a list to hold the found skins
         ArrayList<String> foundSkins = new ArrayList<>();
 
-        if (response.isJsonArray()) {
-            JsonArray skinData = response.getAsJsonObject().get("skins").getAsJsonArray();
-            for (int skinIndex = skinData.size() - 1; skinIndex >= 0; skinIndex--) {
-                JsonElement skin = skinData.get(skinIndex).getAsJsonObject().get("url");
-                foundSkins.add(skin.getAsString());
-            }
+        JsonArray skinData = response.getAsJsonObject().get("skins").getAsJsonArray();
+        for (int skinIndex = skinData.size() - 1; skinIndex >= 0; skinIndex--) {
+            JsonElement skin = skinData.get(skinIndex).getAsJsonObject().get("url");
+            foundSkins.add(skin.getAsString());
         }
 
         return foundSkins;
