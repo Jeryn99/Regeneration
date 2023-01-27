@@ -26,17 +26,17 @@ public class RItems {
 
     public static RegistrySupplier<Item> ZINC = ITEMS.register("zinc", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
     public static RegistrySupplier<Item> HAND = ITEMS.register("hand", () -> new HandItem(new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
-    public static RegistrySupplier<Item> GUARD_HELMET = ITEMS.register("guard_helmet", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
-    public static RegistrySupplier<Item> GUARD_CHEST = ITEMS.register("guard_chest", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
-    public static RegistrySupplier<Item> GUARD_LEGS = ITEMS.register("guard_legs", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
-    public static RegistrySupplier<Item> GUARD_FEET = ITEMS.register("guard_feet", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
-    public static RegistrySupplier<Item> F_ROBES_HEAD = ITEMS.register("f_robes_head", () -> new ClothingItem(LEATHER, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(280)));
-    public static RegistrySupplier<Item> F_ROBES_CHEST = ITEMS.register("f_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(400)));
-    public static RegistrySupplier<Item> F_ROBES_LEGS = ITEMS.register("f_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
-    public static RegistrySupplier<Item> M_ROBES_HEAD = ITEMS.register("m_robes_head", () -> new ClothingItem(LEATHER, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(280)));
-    public static RegistrySupplier<Item> M_ROBES_CHEST = ITEMS.register("m_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(400)));
-    public static RegistrySupplier<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
-    public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
+    public static RegistrySupplier<Item> GUARD_HELMET = ITEMS.register("guard_helmet", () -> new ClothingItem("guard_armor", RMaterials.TIMELORD, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
+    public static RegistrySupplier<Item> GUARD_CHEST = ITEMS.register("guard_chest", () -> new ClothingItem("guard_armor",RMaterials.TIMELORD, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
+    public static RegistrySupplier<Item> GUARD_LEGS = ITEMS.register("guard_legs", () -> new ClothingItem("guard_armor",RMaterials.TIMELORD, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
+    public static RegistrySupplier<Item> GUARD_FEET = ITEMS.register("guard_feet", () -> new ClothingItem("guard_armor",RMaterials.TIMELORD, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
+    public static RegistrySupplier<Item> F_ROBES_HEAD = ITEMS.register("f_robes_head", () -> new ClothingItem("robes_female",LEATHER, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(280)));
+    public static RegistrySupplier<Item> F_ROBES_CHEST = ITEMS.register("f_robes_chest", () -> new ClothingItem("robes_female",LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(400)));
+    public static RegistrySupplier<Item> F_ROBES_LEGS = ITEMS.register("f_robes_legs", () -> new ClothingItem("robes_female",LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
+    public static RegistrySupplier<Item> M_ROBES_HEAD = ITEMS.register("m_robes_head", () -> new ClothingItem("robes_male",LEATHER, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(280)));
+    public static RegistrySupplier<Item> M_ROBES_CHEST = ITEMS.register("m_robes_chest", () -> new ClothingItem("robes_male", LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(400)));
+    public static RegistrySupplier<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem("robes_male",LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
+    public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem("robes",LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
     public static RegistrySupplier<Item> GAUNTLET = ITEMS.register("chalice", ChaliceItem::new);
 
 

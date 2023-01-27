@@ -27,9 +27,7 @@ public abstract class PlayerInfoMixin {
         UUID uuid = profile.getId();
 
         if(Minecraft.getInstance().screen instanceof IncarnationScreen screen){
-            if(!screen.postRenderedPlayer) {
-                cir.setReturnValue(IncarnationScreen.currentTexture);
-            }
+            cir.setReturnValue(IncarnationScreen.currentTexture);
         }
 
         if (VisualManipulator.PLAYER_SKINS.containsKey(uuid)) {

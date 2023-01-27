@@ -21,7 +21,6 @@ public class LivingDeathInvoker {
         if (data.stateManager() == null && livingEntity.level.isClientSide()) return;
         boolean notDead = data.stateManager().onKilled(source);
         if (notDead) {
-            System.out.println("Cancelling death!!!!!!!!!!");
             ci.cancel();
         } else {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {

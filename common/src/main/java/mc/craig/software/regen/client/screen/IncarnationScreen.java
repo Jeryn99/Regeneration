@@ -98,10 +98,11 @@ public class IncarnationScreen extends Screen {
         matrixStack.pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
         boolean backupSkinType = ClientUtil.isAlex(player);
-        postRenderedPlayer = false;
+        postRenderedPlayer = true;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-        postRenderedPlayer = true;
+        System.out.println(currentTexture);
+        postRenderedPlayer = false;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }

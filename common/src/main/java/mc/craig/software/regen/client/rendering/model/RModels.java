@@ -2,8 +2,7 @@ package mc.craig.software.regen.client.rendering.model;
 
 import com.google.common.base.Supplier;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
-import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
+import mc.craig.software.regen.client.rendering.model.armor.ArmorModel;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -26,10 +25,8 @@ public class RModels {
         ARM_STEVE = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "arm_steve"), "arm_steve"), () -> ArmModel.createMesh(false));
 
         // Armor
-        COUNCIL_ROBES = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "robes"), "robes"), () -> RobesModel.createBodyLayer(true));
-        COUNCIL_ROBES_STEVE = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "council_robes_steve"), "council_robes_steve"), () -> RobesModel.createBodyLayer(false));
-        GUARD_ARMOR = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "guard_armor"), "guard_armor"), () -> GuardArmorModel.createBodyLayer(true));
-        GUARD_ARMOR_STEVE = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "guard_armor_steve"), "guard_armor_steve"), () -> GuardArmorModel.createBodyLayer(false));
+        COUNCIL_ROBES = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "robes"), "robes"), () -> ArmorModel.createBodyLayer(true));
+        COUNCIL_ROBES_STEVE = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "council_robes_steve"), "council_robes_steve"), () -> ArmorModel.createBodyLayer(false));
         CONTAINER = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "container"), "container"), ContainerModel::createBodyLayer);
 
     }

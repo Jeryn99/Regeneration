@@ -1,13 +1,11 @@
 package mc.craig.software.regen.util;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.client.rendering.JarTileRender;
 import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.model.RModels;
-import mc.craig.software.regen.client.rendering.model.armor.GuardArmorModel;
-import mc.craig.software.regen.client.rendering.model.armor.RobesModel;
+import mc.craig.software.regen.client.rendering.model.armor.ArmorModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.objects.RItems;
@@ -184,19 +182,23 @@ public class ClientUtil {
             TextureManager textureManager = minecraft.getTextureManager();
 
             // Release the textures in the player skins cache and clear the cache
-            VisualManipulator.PLAYER_SKINS.forEach((uuid, texture) -> textureManager.release(texture));
-            VisualManipulator.PLAYER_SKINS.clear();
+            if (!VisualManipulator.PLAYER_SKINS.isEmpty()) {
+                VisualManipulator.PLAYER_SKINS.forEach((uuid, texture) -> textureManager.release(texture));
+                VisualManipulator.PLAYER_SKINS.clear();
+            }
 
-            // Release the textures in the timelords cache and clear the cache
-            TimelordRenderer.TIMELORDS.forEach((uuid, texture) -> textureManager.release(texture));
-            TimelordRenderer.TIMELORDS.clear();
+            if (!TimelordRenderer.TIMELORDS.isEmpty()) {
+                // Release the textures in the timelords cache and clear the cache
+                TimelordRenderer.TIMELORDS.forEach((uuid, texture) -> textureManager.release(texture));
+                TimelordRenderer.TIMELORDS.clear();
+            }
 
-            // Release the textures in the jar tile render cache and clear the cache
-            JarTileRender.TEXTURES.forEach((uuid, texture) -> textureManager.release(texture));
-            JarTileRender.TEXTURES.clear();
+            if (!JarTileRender.TEXTURES.isEmpty()) {
+                // Release the textures in the jar tile render cache and clear the cache
+                JarTileRender.TEXTURES.forEach((uuid, texture) -> textureManager.release(texture));
+                JarTileRender.TEXTURES.clear();
+            }
 
-            // Log a warning message
-            Regeneration.LOGGER.warn("Cleared Regeneration texture cache");
         }
     }
 
@@ -204,23 +206,20 @@ public class ClientUtil {
 
         if (!ARMOR_MODELS.isEmpty()) return;
 
-        ModelPart bakedGuard = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR);
+/*        ModelPart bakedGuard = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR);
         GuardArmorModel guardHead = new GuardArmorModel(bakedGuard, EquipmentSlot.HEAD);
         GuardArmorModel guardChest = new GuardArmorModel(bakedGuard, EquipmentSlot.CHEST);
         GuardArmorModel guardLegs = new GuardArmorModel(bakedGuard, EquipmentSlot.LEGS);
-        GuardArmorModel guardFeet = new GuardArmorModel(bakedGuard, EquipmentSlot.FEET);
+        GuardArmorModel guardFeet = new GuardArmorModel(bakedGuard, EquipmentSlot.FEET);*/
 
         ModelPart bakedRobes = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.COUNCIL_ROBES);
-        RobesModel robesHead = new RobesModel(bakedRobes, EquipmentSlot.HEAD);
-        RobesModel robesChest = new RobesModel(bakedRobes, EquipmentSlot.CHEST);
-        RobesModel robesLegs = new RobesModel(bakedRobes, EquipmentSlot.LEGS);
-        RobesModel robesFeet = new RobesModel(bakedRobes, EquipmentSlot.FEET);
+        ArmorModel robesHead = new ArmorModel(bakedRobes, EquipmentSlot.HEAD);
+        ArmorModel robesChest = new ArmorModel(bakedRobes, EquipmentSlot.CHEST);
+        ArmorModel robesLegs = new ArmorModel(bakedRobes, EquipmentSlot.LEGS);
+        ArmorModel robesFeet = new ArmorModel(bakedRobes, EquipmentSlot.FEET);
 
         ModelPart bakedRobesSteve = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.COUNCIL_ROBES_STEVE);
-        RobesModel robesChestSteve = new RobesModel(bakedRobesSteve, EquipmentSlot.CHEST);
-
-        ModelPart bakedGuardSteve = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR_STEVE);
-        GuardArmorModel armorSteve = new GuardArmorModel(bakedGuardSteve, EquipmentSlot.CHEST);
+        ArmorModel robesChestSteve = new ArmorModel(bakedRobesSteve, EquipmentSlot.CHEST);
 
         //Robes
         ARMOR_MODELS_STEVE.put(RItems.F_ROBES_CHEST.get(), robesChestSteve);
@@ -235,11 +234,11 @@ public class ClientUtil {
         ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
 
         //Guard
-        ARMOR_MODELS_STEVE.put(RItems.GUARD_CHEST.get(), armorSteve);
-        ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), guardHead);
-        ARMOR_MODELS.put(RItems.GUARD_CHEST.get(), guardChest);
-        ARMOR_MODELS.put(RItems.GUARD_LEGS.get(), guardLegs);
-        ARMOR_MODELS.put(RItems.GUARD_FEET.get(), guardFeet);
+        ARMOR_MODELS_STEVE.put(RItems.GUARD_CHEST.get(), robesChestSteve);
+        ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), robesHead);
+        ARMOR_MODELS.put(RItems.GUARD_CHEST.get(), robesChest);
+        ARMOR_MODELS.put(RItems.GUARD_LEGS.get(), robesLegs);
+        ARMOR_MODELS.put(RItems.GUARD_FEET.get(), robesFeet);
 
     }
 
