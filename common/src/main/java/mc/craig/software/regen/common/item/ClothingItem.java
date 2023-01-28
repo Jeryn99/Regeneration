@@ -21,10 +21,7 @@ public class ClothingItem extends ArmorItem implements ICustomArmorTexture {
 
     @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        String skinType = "";
-        if (slot == EquipmentSlot.CHEST  || texture.contains("guard")) {
-            skinType = (ClientUtil.isAlex(entity) ? "alex_" : "steve_");
-        }
+        String skinType = (ClientUtil.isAlex(entity) ? "alex_" : "steve_");
         return new ResourceLocation(RConstants.MODID, "textures/entity/armour/" + skinType + texture + ".png");
     }
 

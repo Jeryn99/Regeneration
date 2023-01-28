@@ -36,7 +36,7 @@ public class RItems {
     public static RegistrySupplier<Item> M_ROBES_HEAD = ITEMS.register("m_robes_head", () -> new ClothingItem("robes_male",LEATHER, EquipmentSlot.HEAD, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(280)));
     public static RegistrySupplier<Item> M_ROBES_CHEST = ITEMS.register("m_robes_chest", () -> new ClothingItem("robes_male", LEATHER, EquipmentSlot.CHEST, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(400)));
     public static RegistrySupplier<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem("robes_male",LEATHER, EquipmentSlot.LEGS, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(375)));
-    public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem("robes",LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
+    public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem("robes_male",LEATHER, EquipmentSlot.FEET, new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(350)));
     public static RegistrySupplier<Item> GAUNTLET = ITEMS.register("chalice", ChaliceItem::new);
 
 

@@ -416,9 +416,22 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     protected void populateDefaultEquipmentSlots(@NotNull RandomSource random, @NotNull DifficultyInstance difficulty) {
         if (getTimelordType() == TimelordType.GUARD) {
             Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
+
+            setItemSlot(EquipmentSlot.HEAD, new ItemStack(RItems.GUARD_HELMET.get()));
+            setItemSlot(EquipmentSlot.CHEST, new ItemStack(RItems.GUARD_CHEST.get()));
+            setItemSlot(EquipmentSlot.LEGS, new ItemStack(RItems.GUARD_LEGS.get()));
+            setItemSlot(EquipmentSlot.FEET, new ItemStack(RItems.GUARD_FEET.get()));
+
             this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(stack));
         }
         if (getTimelordType() == TimelordType.COUNCIL) {
+
+            boolean isMale = male();
+            setItemSlot(EquipmentSlot.HEAD, new ItemStack(isMale ? RItems.M_ROBES_HEAD.get() : RItems.F_ROBES_HEAD.get()));
+            setItemSlot(EquipmentSlot.CHEST, new ItemStack(isMale ? RItems.M_ROBES_CHEST.get() : RItems.F_ROBES_CHEST.get()));
+            setItemSlot(EquipmentSlot.LEGS, new ItemStack(isMale ? RItems.M_ROBES_LEGS.get() : RItems.F_ROBES_LEGS.get()));
+            setItemSlot(EquipmentSlot.FEET, new ItemStack(RItems.ROBES_FEET.get()));
+
             this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.ENCHANTED_BOOK));
         }
     }

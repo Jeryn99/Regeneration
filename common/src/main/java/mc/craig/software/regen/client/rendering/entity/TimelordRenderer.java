@@ -4,22 +4,22 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.rendering.layers.HandLayer;
 import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
-import mc.craig.software.regen.client.rendering.layers.TimelordHeadLayer;
+import mc.craig.software.regen.client.rendering.model.ModifiedPlayerModel;
 import mc.craig.software.regen.client.rendering.model.RModels;
-import mc.craig.software.regen.client.rendering.model.TimelordGuardModel;
-import mc.craig.software.regen.client.rendering.model.TimelordModel;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.config.RegenConfig;
-import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -39,28 +39,21 @@ import java.util.UUID;
  */
 public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord>> {
 
-    public static PlayerModel mainModel;
-    public static TimelordModel councilModel;
-    public static TimelordGuardModel guardModel;
-
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
     public TimelordRenderer(EntityRendererProvider.Context entityRendererManager) {
-        super(entityRendererManager, new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD)), 0.1F);
-        councilModel = new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD));
-        guardModel = new TimelordGuardModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD_GUARD));
-        mainModel = councilModel;
+        super(entityRendererManager, new ModifiedPlayerModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.MOD_PLAYER), true), 0.1F);;
         addLayer(new RenderRegenLayer(this));
+        addLayer(new HumanoidArmorLayer(this, new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR))));
         addLayer(new HandLayer(this));
         this.addLayer(new ItemInHandLayer<>(this, entityRendererManager.getItemInHandRenderer()) {
 
             @Override
-            public void render(PoseStack p_114569_, MultiBufferSource p_114570_, int p_114571_, Timelord p_114572_, float p_114573_, float p_114574_, float p_114575_, float p_114576_, float p_114577_, float p_114578_) {
-                super.render(p_114569_, p_114570_, p_114571_, p_114572_, p_114573_, p_114574_, p_114575_, p_114576_, p_114577_, p_114578_);
+            public void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, Timelord livingEntity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+                super.render(matrixStack, buffer, packedLight, livingEntity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             }
         });
         addLayer(new ArrowLayer(entityRendererManager, this));
-        addLayer(new TimelordHeadLayer(this));
     }
 
 
@@ -101,13 +94,13 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
 
     @Override
     public void render(Timelord entityIn, float entityYaw, float partialTicks, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        switch (entityIn.getTimelordType()) {
-            case GUARD -> mainModel = guardModel;
-            case COUNCIL -> mainModel = councilModel;
-        }
-        model = mainModel;
-        model.setAllVisible(false);
-        model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
+        model.hat.visible = true;
+
+        model.rightSleeve.visible = false;
+        model.leftSleeve.visible = false;
+        model.leftPants.visible = false;
+        model.rightPants.visible = false;
+        model.jacket.visible = false;
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
@@ -115,11 +108,12 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(Timelord entity) {
-        String gender = entity.male() ? "male" : "female";
+        return TimelordRenderer.getTimelordFace(entity);
+        /*String gender = entity.male() ? "male" : "female";
         return switch (entity.getTimelordType()) {
             case COUNCIL ->
                     new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
             case GUARD -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/guards/timelord_guard.png");
-        };
+        };*/
     }
 }
