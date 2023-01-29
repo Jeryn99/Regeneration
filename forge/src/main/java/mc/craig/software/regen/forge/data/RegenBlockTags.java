@@ -1,8 +1,8 @@
 package mc.craig.software.regen.forge.data;
 
 import mc.craig.software.regen.common.objects.RBlocks;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
@@ -24,7 +24,7 @@ public class RegenBlockTags extends BlockTagsProvider {
         add(RegenUtil.ZINC, RBlocks.ZINC_ORE.get(), RBlocks.ZINC_ORE_DEEPSLATE.get());
         add(RegenUtil.BANNED_BLOCKS, RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.BIO_CONTAINER.get(), RBlocks.ZINC_ORE.get());
         add(RegenUtil.ARS, RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.BIO_CONTAINER.get());
-        add(BlockTags.MINEABLE_WITH_PICKAXE, RBlocks.ZINC_ORE.get(), RBlocks.BIO_CONTAINER.get(), RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.AZBANTIUM.get());
+        add(BlockTags.MINEABLE_WITH_PICKAXE, RBlocks.ZINC_ORE.get(), RBlocks.ZINC_ORE_DEEPSLATE.get(), RBlocks.BIO_CONTAINER.get(), RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.AZBANTIUM.get());
     }
 
     public void add(TagKey<Block> branch, Block block) {
