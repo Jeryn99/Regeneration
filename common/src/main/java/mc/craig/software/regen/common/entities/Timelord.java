@@ -236,7 +236,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
         level.getServer().submit(() -> {
-            File file = SkinRetriever.chooseRandomSkin(level.random, !male(), true);
+            File file = SkinRetriever.chooseRandomSkin(level.random, true, true);
             if (file != null) {
                 data.setSkin(RegenUtil.fileToBytes(file));
             }

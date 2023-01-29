@@ -9,7 +9,6 @@ import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.config.RegenConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -57,7 +56,7 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
     }
 
 
-    public static ResourceLocation getTimelordFace(Timelord timelord) {
+    public static ResourceLocation getTimelordTexture(Timelord timelord) {
         IRegen data = RegenerationData.get(timelord).orElseGet(null);
 
         if (data.updateTicks() > 100 && data.updateTicks() < 105) {
@@ -66,6 +65,11 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
 
         if (TIMELORDS.containsKey(timelord.getUUID())) {
             return TIMELORDS.get(timelord.getUUID());
+        }
+
+        if(TIMELORDS.get(timelord.getUUID()) == DefaultPlayerSkin.getDefaultSkin()){
+            TIMELORDS.remove(timelord.getUUID());
+            return DefaultPlayerSkin.getDefaultSkin();
         }
 
         NativeImage nativeImage = null;
@@ -108,12 +112,6 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(Timelord entity) {
-        return TimelordRenderer.getTimelordFace(entity);
-        /*String gender = entity.male() ? "male" : "female";
-        return switch (entity.getTimelordType()) {
-            case COUNCIL ->
-                    new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
-            case GUARD -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/guards/timelord_guard.png");
-        };*/
+        return TimelordRenderer.getTimelordTexture(entity);
     }
 }

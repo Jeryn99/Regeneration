@@ -320,6 +320,10 @@ public class SkinRetriever {
         Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
+        if(folderFiles.size() == 0){
+            return null;
+        }
+
         File[] files = folderFiles.toArray(new File[0]);
         return files[random.nextInt(files.length)];
     }

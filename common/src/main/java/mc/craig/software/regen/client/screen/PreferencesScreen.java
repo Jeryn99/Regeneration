@@ -29,7 +29,7 @@ import java.util.function.Function;
 public class PreferencesScreen extends Screen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/preferences.png");
-    private static final PlayerUtil.SkinType skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
+    private static PlayerUtil.SkinType skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
     private static TransitionType transitionType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound soundScheme = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
 
@@ -45,6 +45,8 @@ public class PreferencesScreen extends Screen {
     @Override
     public void init() {
         super.init();
+
+        skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
 
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
@@ -88,6 +90,7 @@ public class PreferencesScreen extends Screen {
         });
 
         this.addRenderableWidget(CycleButton.builder((Function<PlayerUtil.SkinType, Component>) skinType -> Component.translatable("regeneration.skin_type." + skinType.name().toLowerCase())).withValues(PlayerUtil.SkinType.values()).withInitialValue(skinType).create(width / 2 + 50 - 66, cy + 81, btnW, btnH, Component.nullToEmpty("Model"), (skinTypeCycleButton, skinType) -> {
+            PreferencesScreen.skinType = skinType;
             PlayerUtil.updateModel(skinType);
         }));
 

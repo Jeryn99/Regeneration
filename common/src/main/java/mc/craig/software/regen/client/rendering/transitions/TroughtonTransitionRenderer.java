@@ -65,7 +65,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                 ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
 
                 if (entitylivingbaseIn instanceof Timelord timelord) {
-                    headTexture = TimelordRenderer.getTimelordFace(timelord);
+                    headTexture = TimelordRenderer.getTimelordTexture(timelord);
                 }
 
                 Vec3 color = new Vec3(1, 1, 1);
