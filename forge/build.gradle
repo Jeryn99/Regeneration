@@ -31,6 +31,7 @@ loom {
     }
 }
 
+/*
 unifiedPublishing {
     project {
         displayName = "[Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
@@ -43,8 +44,8 @@ unifiedPublishing {
 
         }
 
-        var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge")
-        if (CURSE_API_KEY != null) {
+        var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge") ?: ""
+        if (CURSE_API_KEY != "") {
             curseforge {
                 token = CURSE_API_KEY
                 id = "274275"
@@ -52,8 +53,8 @@ unifiedPublishing {
             }
         }
 
-        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth")
-        if (MODRINTH_TOKEN != null) {
+        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
+        if (MODRINTH_TOKEN != "") {
             modrinth {
                 token = MODRINTH_TOKEN
                 id = "8gkWtwQu"
@@ -62,6 +63,7 @@ unifiedPublishing {
         }
     }
 }
+*/
 
 
 
