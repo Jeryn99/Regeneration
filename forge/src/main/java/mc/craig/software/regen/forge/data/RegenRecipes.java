@@ -4,10 +4,7 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -51,6 +48,7 @@ public class RegenRecipes extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RBlocks.ZERO_ROOM_FULL.get()).pattern("ZZZ").pattern("ZIZ").pattern("ZZZ").define('I', RItems.ZINC.get()).define('Z', ItemTags.STONE_BRICKS).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
         ShapedRecipeBuilder.shaped(RBlocks.BIO_CONTAINER.get()).pattern("FZF").pattern("FPF").pattern("FOF").define('Z', RItems.ZINC.get()).define('F', Items.IRON_INGOT).define('P', Items.ROTTEN_FLESH).define('O', Items.GLOWSTONE_DUST).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
         ShapedRecipeBuilder.shaped(RBlocks.AZBANTIUM.get(), 2).pattern("ZZZ").pattern("Z Z").pattern("ZZZ").define('Z', RItems.ZINC.get()).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapelessRecipeBuilder.shapeless(RItems.PLASMA_CARTRIDGE.get(), 20).requires(RItems.ZINC.get()).requires(Items.IRON_INGOT).requires(Items.GUNPOWDER).unlockedBy("has_zinc", has(RBlocks.ZINC_ORE.get())).save(consumer, "zinc");
 
     }
 }

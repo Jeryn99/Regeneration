@@ -1,4 +1,6 @@
-// 1.19.2	2022-09-06T16:04:32.1458763	Recipes
+// 1.19.2	2023-01-29T10:29:48.3825246	Recipes
+ac93b8bfe0ece603a98d3e9a85f57c8b8feddddc data/minecraft/advancements/recipes/regen/zinc.json
+f709a918c273bd3a30732f336a4a17dc535adc17 data/minecraft/recipes/zinc.json
 d3657feb1bd9955a23c50551c3d9fae232ce593b data/regen/advancements/recipes/regen/azbantium.json
 d72b1e1ae572753be5f4a687bff06e1a0411a4df data/regen/advancements/recipes/regen/bio_container.json
 3621d4bf394a5400e573128660a75ae147ca2540 data/regen/advancements/recipes/regen/blast_zinc.json
