@@ -88,8 +88,8 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
 
     @Nullable
     @Override
-    protected RenderType getRenderType(Timelord p_115322_, boolean p_115323_, boolean p_115324_, boolean p_115325_) {
-        return RenderType.entityTranslucent(getTextureLocation(p_115322_));
+    protected RenderType getRenderType(Timelord livingEntity, boolean bodyVisible, boolean translucent, boolean glowing) {
+        return RenderType.entityTranslucent(getTextureLocation(livingEntity));
     }
 
     @Override

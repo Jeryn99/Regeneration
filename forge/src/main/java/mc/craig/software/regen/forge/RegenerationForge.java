@@ -1,6 +1,7 @@
 package mc.craig.software.regen.forge;
 
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.entities.Watcher;
 import mc.craig.software.regen.common.objects.REntities;
@@ -12,10 +13,12 @@ import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -32,10 +35,17 @@ public class RegenerationForge {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         modBus.addListener(this::clientSetup);
+        modBus.addListener(this::keyMapping);
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::onAttributeAssign);
         modBus.addListener(this::onGatherData);
     }
+
+    public void keyMapping(RegisterKeyMappingsEvent event) {
+        event.register(RKeybinds.FORCE_REGEN);
+        event.register(RKeybinds.REGEN_GUI);
+    }
+
 
     private void clientSetup(final FMLClientSetupEvent event) {
         ClientUtil.doClientStuff();

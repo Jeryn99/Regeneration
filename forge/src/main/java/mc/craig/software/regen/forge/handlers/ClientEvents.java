@@ -62,13 +62,6 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void keyMapping(RegisterKeyMappingsEvent event) {
-        event.register(RKeybinds.FORCE_REGEN);
-        event.register(RKeybinds.REGEN_GUI);
-    }
-
-
-    @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         VisualManipulator.tick(player);
