@@ -41,6 +41,10 @@ allprojects {
       }
 
       maven {
+          url = 'https://jitpack.io'
+      }
+
+      maven {
           url = 'https://www.cursemaven.com'
           content {
               includeGroup 'curse.maven'
@@ -86,14 +90,15 @@ allprojects {
           }
       }
 
+      flatDir {
+          dirs '../libs'
+      }
+
       maven {
           name = "Fuzs Mod Resources"
           url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
       }
 
-      maven {
-          url = 'https://jitpack.io'
-      }
   }
 
     tasks.withType(JavaCompile) {

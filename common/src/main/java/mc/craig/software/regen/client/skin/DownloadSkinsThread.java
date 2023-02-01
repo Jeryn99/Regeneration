@@ -7,20 +7,8 @@ public class DownloadSkinsThread extends Thread {
     public static boolean hasStarted = false;
     public static boolean isClient = false;
 
-    public static void setup(boolean client) {
-        DownloadSkinsThread.isClient = client;
-        DownloadSkinsThread thread = new DownloadSkinsThread();
-        thread.setDaemon(true);
-        thread.setName("Regeneration - Skins");
-
-        ThreadGroup threadGroup = new ThreadGroup("Regen - Skin Threading");
-        threadGroup.activeCount();
-
-        if (threadGroup.activeCount() == 0) {
-            Thread newThread = new Thread(threadGroup, thread);
-            newThread.start();
-        }
-
+    public DownloadSkinsThread(boolean isClient){
+        DownloadSkinsThread.isClient = isClient;
     }
 
     @Override

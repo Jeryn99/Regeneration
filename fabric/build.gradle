@@ -73,6 +73,13 @@ dependencies {
     // Mod Menu
     modImplementation "curse.maven:modmenu-308702:3920481"
 
+    modImplementation "ignored:tardis_refined:1.0.0:fabric"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${rootProject.cardinal_components_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${rootProject.cardinal_components_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${rootProject.cardinal_components_version}"
+
+
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
