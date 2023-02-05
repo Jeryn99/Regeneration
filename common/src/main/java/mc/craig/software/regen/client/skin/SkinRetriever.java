@@ -271,7 +271,7 @@ public class SkinRetriever {
             return false;
         }
 
-        if(!json.has("update_internval")){
+        if(!json.has("update_interval")){
             return true;
         }
 

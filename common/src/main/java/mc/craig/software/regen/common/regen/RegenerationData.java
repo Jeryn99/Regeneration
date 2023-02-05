@@ -254,10 +254,11 @@ public class RegenerationData implements IRegen {
         CompoundTag nbt = serializeNBT();
         nbt.remove(RConstants.STATE_MANAGER);
 
+        SyncMessage message = new SyncMessage(this.livingEntity.getId(), nbt);
         if (serverPlayerEntity == null) {
-            new SyncMessage(this.livingEntity.getId(), nbt).sendToAll();
+            message.sendToAll();
         } else {
-            new SyncMessage(this.livingEntity.getId(), nbt).send(serverPlayerEntity);
+            message.send(serverPlayerEntity);
         }
     }
 
@@ -540,24 +541,25 @@ public class RegenerationData implements IRegen {
             }
 
             switch (currentState) {
-                case ALIVE:
+                case ALIVE -> {
                     if (!canRegenerate()) // that's too bad :(
                         return false;
 
                     // We're entering grace period...
                     scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
                     scheduleHandGlowTrigger();
-
                     currentState = RegenStates.GRACE;
                     syncToClients(null);
                     ActingForwarder.onEnterGrace(RegenerationData.this);
                     return true;
-                case REGENERATING:
+                }
+                case REGENERATING -> {
                     // We've been killed mid regeneration!
                     nextTransition.cancel(); // ... cancel the finishing of the regeneration
                     midSequenceKill(false);
                     return false;
-                case GRACE_CRIT:
+                }
+                case GRACE_CRIT -> {
                     nextTransition.cancel();
                     if (source == RegenSources.REGEN_DMG_FORCED) {
                         triggerRegeneration();
@@ -566,16 +568,19 @@ public class RegenerationData implements IRegen {
                         midSequenceKill(true);
                         return false;
                     }
-                case POST:
+                }
+                case POST -> {
                     currentState = RegenStates.ALIVE;
                     nextTransition.cancel();
                     return false;
-                case GRACE:
+                }
+                case GRACE -> {
                     // We're being forced to regenerate...
                     triggerRegeneration();
                     return true;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
             return false;
         }
