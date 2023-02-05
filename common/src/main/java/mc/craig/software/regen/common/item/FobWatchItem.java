@@ -177,7 +177,7 @@ public class FobWatchItem extends Item {
             }
 
         }
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 
 

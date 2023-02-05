@@ -34,7 +34,6 @@ public class RegenerationFabric implements ModInitializer {
         levelManipulation();
         ArgumentTypeRegistry.registerArgumentType(new ResourceLocation(RConstants.MODID, "traits"), TraitArgumentType.class, SingletonArgumentInfo.contextFree(TraitArgumentType::traitArgumentType));
 
-
         FabricDefaultAttributeRegistry.register(REntities.TIMELORD.get(), Timelord.createAttributes());
 
     }

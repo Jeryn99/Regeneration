@@ -19,9 +19,7 @@ public class RegenerationComponents implements EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-
-        registry.registerForPlayers(REGENERATION_DATA, RegenerationDataImpl::new, (from, to, lossless, keepInventory, sameCharacter) -> to.deserializeNBT(from.serializeNBT()));
-
         registry.registerFor(LivingEntity.class, REGENERATION_DATA, RegenerationDataImpl::new);
+        registry.registerForPlayers(REGENERATION_DATA, RegenerationDataImpl::new, RespawnCopyStrategy.ALWAYS_COPY);
     }
 }

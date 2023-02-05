@@ -26,7 +26,7 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("set-regens")
                 .then(Commands.argument("entities", EntityArgument.entities())
-                        .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                        .then(Commands.argument("amount", IntegerArgumentType.integer(0))
                                 .executes(context -> setRegenForMultipleEntities(context, EntityArgument.getEntities(context, "entities"), IntegerArgumentType.getInteger(context, "amount")))));
     }
 

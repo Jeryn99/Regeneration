@@ -15,6 +15,7 @@ public abstract class MessageS2C extends Message {
     }
 
     public void sendToAll() {
+        if(Platform.getServer() == null) return;
         for (ServerPlayer player : Platform.getServer().getPlayerList().getPlayers()) {
             send(player);
         }
