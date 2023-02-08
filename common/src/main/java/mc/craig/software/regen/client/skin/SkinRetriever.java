@@ -279,7 +279,7 @@ public class SkinRetriever {
         int updateInterval = json.getAsJsonPrimitive("update_interval").getAsInt();
 
         // Get the time in minutes since the last update
-        long timeSinceDownloaded = json.getAsJsonPrimitive("last_downloaded").getAsLong();
+        long timeSinceDownloaded = json.getAsJsonPrimitive("update_interval").getAsLong();
         long minutesSince = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - timeSinceDownloaded);
 
         // Check if it's time to update the skins
