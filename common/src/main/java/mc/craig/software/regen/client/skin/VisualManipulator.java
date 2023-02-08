@@ -40,7 +40,8 @@ public class VisualManipulator {
             }
 
             // Only time a skin update should occur is if the player does not have a skin cached or the player is mid-regeneration
-            if (!hasPlayerSkin(uuid) || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2)) {
+            boolean isHalfWay = iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2);
+            if (iRegen.regenState() == RegenStates.REGENERATING && isHalfWay || iRegen.regenState() != RegenStates.REGENERATING && !hasPlayerSkin(uuid)) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
                     boolean isAlex = iRegen.currentlyAlex();
@@ -54,6 +55,7 @@ public class VisualManipulator {
     public static boolean mojangIsAlex(AbstractClientPlayer abstractClientPlayerEntity) {
         if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null) return false;
         PlayerInfo info = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
+        info.pendingTextures = true;
         info.registerTextures();
         if (info.getModelName() == null) {
             return false;

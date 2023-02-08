@@ -21,6 +21,7 @@ public class RegenMobEffectsTags extends TagsProvider<MobEffect> {
         for (MobEffect mobEffect : Registry.MOB_EFFECT) {
 
             if (!mobEffect.isBeneficial() && mobEffect != MobEffects.LEVITATION) {
+                System.out.println(mobEffect.getDescriptionId());
                 tag(RegenUtil.POST_REGEN_POTIONS).add(mobEffect);
             }
 
