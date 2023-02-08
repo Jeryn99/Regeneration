@@ -11,8 +11,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import whocraft.tardis_refined.common.capability.TardisLevelOperator;
+import whocraft.tardis_refined.common.dimension.DimensionHandler;
 import whocraft.tardis_refined.common.tardis.TardisArchitectureHandler;
 import whocraft.tardis_refined.common.tardis.manager.TardisControlManager;
+import whocraft.tardis_refined.registry.DimensionTypes;
 
 public class TardisRefinedCompat implements Acting {
 
@@ -43,6 +45,7 @@ public class TardisRefinedCompat implements Acting {
     }
 
     private static void playCloister(ServerLevel serverLevel) {
+        if(!isTardis(serverLevel)) return;
         for (int i = 0; i < 3; i++) {
             serverLevel.playSound(null, TardisArchitectureHandler.DESKTOP_CENTER_POS, SoundEvents.BELL_BLOCK, SoundSource.BLOCKS, 1000f, 0.1f);
         }
@@ -82,5 +85,9 @@ public class TardisRefinedCompat implements Acting {
     @Override
     public void onPerformingPost(IRegen cap) {
 
+    }
+
+    public static boolean isTardis(ServerLevel serverLevel){
+        return serverLevel.dimensionTypeId() == DimensionTypes.TARDIS;
     }
 }

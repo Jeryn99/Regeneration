@@ -31,7 +31,7 @@ loom {
     }
 }
 
-/*
+
 unifiedPublishing {
     project {
         displayName = "[Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
@@ -63,7 +63,7 @@ unifiedPublishing {
         }
     }
 }
-*/
+
 
 
 
