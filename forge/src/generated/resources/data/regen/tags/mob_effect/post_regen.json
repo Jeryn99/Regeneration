@@ -2,16 +2,10 @@
   "values": [
     "minecraft:slowness",
     "minecraft:mining_fatigue",
-    "minecraft:instant_damage",
     "minecraft:nausea",
-    "minecraft:blindness",
     "minecraft:hunger",
     "minecraft:weakness",
     "minecraft:poison",
-    "minecraft:wither",
-    "minecraft:glowing",
-    "minecraft:unluck",
-    "minecraft:bad_omen",
     "minecraft:darkness"
   ]
 }

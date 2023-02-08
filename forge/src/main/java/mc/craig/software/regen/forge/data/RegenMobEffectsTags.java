@@ -1,7 +1,7 @@
 package mc.craig.software.regen.forge.data;
 
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.TagsProvider;
@@ -18,19 +18,7 @@ public class RegenMobEffectsTags extends TagsProvider<MobEffect> {
 
     @Override
     protected void addTags() {
-        for (MobEffect mobEffect : Registry.MOB_EFFECT) {
-
-            if (!mobEffect.isBeneficial() && mobEffect != MobEffects.LEVITATION) {
-                System.out.println(mobEffect.getDescriptionId());
-                tag(RegenUtil.POST_REGEN_POTIONS).add(mobEffect);
-            }
-
-
-            tag(RegenUtil.POST_REGEN_POTIONS).remove(MobEffects.LEVITATION);
-            tag(RegenUtil.POST_REGEN_POTIONS).remove(MobEffects.HARM);
-            tag(RegenUtil.POST_REGEN_POTIONS).remove(MobEffects.WITHER);
-
-
-        }
+        TagAppender<MobEffect> postRegen = tag(RegenUtil.POST_REGEN_POTIONS);
+        postRegen.add(MobEffects.MOVEMENT_SLOWDOWN, MobEffects.DIG_SLOWDOWN, MobEffects.CONFUSION, MobEffects.HUNGER, MobEffects.WEAKNESS, MobEffects.POISON, MobEffects.DARKNESS);
     }
 }
