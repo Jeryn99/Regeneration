@@ -25,6 +25,7 @@ public class VisualManipulator {
 
     //Skin Storage
     public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
+    public static final HashMap<UUID, Boolean> MOJANG_BACKUP = new HashMap<>();
 
     public static void tick(AbstractClientPlayer playerEntity) {
         RegenerationData.get(playerEntity).ifPresent(iRegen -> {
@@ -53,9 +54,15 @@ public class VisualManipulator {
     }
 
     public static boolean mojangIsAlex(AbstractClientPlayer abstractClientPlayerEntity) {
+
+        if(MOJANG_BACKUP.containsKey(abstractClientPlayerEntity.getUUID())){
+            return MOJANG_BACKUP.get(abstractClientPlayerEntity.getUUID());
+        }
+
         if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null) return false;
         PlayerInfo info = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
-        info.pendingTextures = true;
+
+
         info.registerTextures();
         if (info.getModelName() == null) {
             return false;
@@ -68,6 +75,12 @@ public class VisualManipulator {
 
     public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
         PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
+
+        if(!MOJANG_BACKUP.containsKey(player.getUUID())) {
+            boolean skinType = (playerInfo.getModelName() == null || playerInfo.getModelName().isEmpty());
+            MOJANG_BACKUP.put(player.getUUID(), !skinType);
+        }
+
         if (playerInfo == null) return;
         playerInfo.skinModel = isAlex ? "slim" : "default";
     }

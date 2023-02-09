@@ -181,6 +181,8 @@ public class ClientUtil {
         if (level == null) {
             TextureManager textureManager = minecraft.getTextureManager();
 
+            VisualManipulator.MOJANG_BACKUP.clear();
+
             // Release the textures in the player skins cache and clear the cache
             if (!VisualManipulator.PLAYER_SKINS.isEmpty()) {
                 VisualManipulator.PLAYER_SKINS.forEach((uuid, texture) -> textureManager.release(texture));
