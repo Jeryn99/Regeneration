@@ -60,7 +60,7 @@ body:
   - type: textarea
     attributes:
       label: Other relevant versions
-      description: If this issue is related to any other mods that have been installed alongside Tardis Refined, list the mod's name and version here.
+      description: If this issue is related to any other mods that have been installed alongside Regeneration, list the mod's name and version here.
   - type: input
     attributes:
       label: "Attach the relevant crash report file or log file: (Don't know how to find a crash report file? See the [Minecraft Wiki Tutorial](https://minecraft.fandom.com/wiki/Tutorials/How_to_get_a_crash_report)"
