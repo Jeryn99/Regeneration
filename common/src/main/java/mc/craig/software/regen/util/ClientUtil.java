@@ -7,6 +7,7 @@ import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.ArmorModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
+import mc.craig.software.regen.client.screen.IncarnationScreen;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
@@ -46,6 +47,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class ClientUtil {
@@ -203,6 +205,18 @@ public class ClientUtil {
 
         }
     }
+
+    public static ResourceLocation redirectSkin(UUID uuid){
+        if (Minecraft.getInstance().screen instanceof IncarnationScreen screen) {
+            return IncarnationScreen.currentTexture;
+        }
+
+        if (VisualManipulator.PLAYER_SKINS.containsKey(uuid)) {
+           return VisualManipulator.PLAYER_SKINS.get(uuid);
+        }
+        return null;
+    }
+
 
     public static void clothingModels() {
 

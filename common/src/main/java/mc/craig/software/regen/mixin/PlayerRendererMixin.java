@@ -6,6 +6,7 @@ import mc.craig.software.regen.client.screen.IncarnationScreen;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
+import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -18,21 +19,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.UUID;
+
 @Mixin(PlayerRenderer.class)
 public class PlayerRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", cancellable = true)
-    private void getTextureLocation(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> callbackInfoReturnable) {
+    public void getTextureLocation(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> cir) {
+        UUID uuid = entity.getUUID();
 
-        if(Minecraft.getInstance().screen instanceof IncarnationScreen screen){
-            callbackInfoReturnable.setReturnValue(IncarnationScreen.currentTexture);
-        }
-
-        if (VisualManipulator.PLAYER_SKINS.containsKey(entity.getUUID())) {
-            callbackInfoReturnable.setReturnValue(VisualManipulator.PLAYER_SKINS.get(entity.getUUID()));
+        ResourceLocation resourceLocation = ClientUtil.redirectSkin(uuid);
+        if (resourceLocation != null) {
+            cir.setReturnValue(resourceLocation);
         }
     }
-
     @Inject(at = @At("TAIL"), method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V")
     protected void setupRotations(AbstractClientPlayer abstractClientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
         RegenerationData.get(abstractClientPlayer).ifPresent(iRegen -> {

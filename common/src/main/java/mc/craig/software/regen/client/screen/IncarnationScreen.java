@@ -9,8 +9,8 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.network.messages.NextSkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -19,7 +19,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -32,7 +31,8 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 import java.io.File;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 
 public class IncarnationScreen extends Screen {
@@ -165,8 +165,6 @@ public class IncarnationScreen extends Screen {
 
     }
 
-    //Spectre0987
-
     @Override
     public void init() {
         super.init();
@@ -217,7 +215,9 @@ public class IncarnationScreen extends Screen {
             }
             updateModels();
         }, (button, poseStack, i, j) -> {
-            this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.previous_skin")), Optional.empty(), i, j);
+            if (button.isHoveredOrFocused()) {
+                this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.previous_skin")), Optional.empty(), i, j);
+            }
         });
 
         Button btnNext = new Button(cx + 215, cy + 60, 20, 20, Component.translatable("gui.regen.next"), button -> {
@@ -234,7 +234,11 @@ public class IncarnationScreen extends Screen {
                 position = skins.size() - 1;
             }
             updateModels();
-        }, (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.next_skin")), Optional.empty(), i, j));
+        }, (button, poseStack, i, j) -> {
+            if (button.isHoveredOrFocused()) {
+                this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.next_skin")), Optional.empty(), i, j);
+            }
+        });
 
         Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 

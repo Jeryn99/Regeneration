@@ -3,6 +3,7 @@ package mc.craig.software.regen.mixin;
 import com.mojang.authlib.GameProfile;
 import mc.craig.software.regen.client.screen.IncarnationScreen;
 import mc.craig.software.regen.client.skin.VisualManipulator;
+import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.resources.ResourceLocation;
@@ -26,12 +27,9 @@ public abstract class PlayerInfoMixin {
     private void getSkinLocation(CallbackInfoReturnable<ResourceLocation> cir) {
         UUID uuid = profile.getId();
 
-        if(Minecraft.getInstance().screen instanceof IncarnationScreen screen){
-            cir.setReturnValue(IncarnationScreen.currentTexture);
-        }
-
-        if (VisualManipulator.PLAYER_SKINS.containsKey(uuid)) {
-            cir.setReturnValue(VisualManipulator.PLAYER_SKINS.get(uuid));
+        ResourceLocation resourceLocation = ClientUtil.redirectSkin(uuid);
+        if (resourceLocation != null) {
+            cir.setReturnValue(resourceLocation);
         }
     }
 
