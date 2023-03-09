@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 public class RegenNetwork {
 
     public static final NetworkManager NETWORK = NetworkManager.create(new ResourceLocation(Regeneration.MOD_ID, "channel"));
-    public static MessageType TRANSITION_TYPE, UPLOAD_SKIN, SET_NEXT_SKIN, CHANGE_MODEL, UPDATE_POV, REMOVE_LOCAL_SKIN, PLAY_SFX, UPDATE_LOCAL_STATE, REMOVE_LOCAL_TIMELORD_SKIN, SYNC_CAP, CHANGE_SOUNDSCHEME, COLOR_CHANGE, FORCE_REGENERATION;
+    public static MessageType TOGGLE_TRAIT, TRANSITION_TYPE, UPLOAD_SKIN, SET_NEXT_SKIN, CHANGE_MODEL, UPDATE_POV, REMOVE_LOCAL_SKIN, PLAY_SFX, UPDATE_LOCAL_STATE, REMOVE_LOCAL_TIMELORD_SKIN, SYNC_CAP, CHANGE_SOUNDSCHEME, COLOR_CHANGE, FORCE_REGENERATION;
 
     public static void init() {
         UPDATE_POV = NETWORK.registerS2C("update_pov", POVMessage::new);
@@ -23,6 +23,7 @@ public class RegenNetwork {
         SET_NEXT_SKIN = NETWORK.registerC2S("set_next_skin", NextSkinMessage::new);
         UPLOAD_SKIN = NETWORK.registerC2S("upload_skin", SkinMessage::new);
         TRANSITION_TYPE = NETWORK.registerC2S("transition_type", TypeMessage::new);
+        TOGGLE_TRAIT = NETWORK.registerC2S("toggle_trait", ToggleTraitMessage::new);
     }
 
 }

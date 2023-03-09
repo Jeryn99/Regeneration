@@ -94,6 +94,10 @@ public interface IRegen extends Serializable<CompoundTag> {
 
     void setHandState(Hand handState);
 
+    boolean isTraitActive();
+
+    void toggleTrait();
+
     TraitBase getCurrentTrait();
     void setCurrentTrait(TraitBase trait);
 
