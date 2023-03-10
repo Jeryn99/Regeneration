@@ -76,12 +76,13 @@ public class VisualManipulator {
     public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
         PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
 
+        if (playerInfo == null) return;
+
         if(!MOJANG_BACKUP.containsKey(player.getUUID())) {
             boolean skinType = (playerInfo.getModelName() == null || playerInfo.getModelName().isEmpty());
             MOJANG_BACKUP.put(player.getUUID(), !skinType);
         }
 
-        if (playerInfo == null) return;
         playerInfo.skinModel = isAlex ? "slim" : "default";
     }
 
