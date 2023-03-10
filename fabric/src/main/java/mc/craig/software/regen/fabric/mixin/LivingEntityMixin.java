@@ -23,11 +23,11 @@ public class LivingEntityMixin {
     @Inject(at = @At("HEAD"), method = "knockback(DDD)V", cancellable = true)
     public void knockback(double strength, double x, double z, CallbackInfo ci) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
-         RegenerationData.get(livingEntity).ifPresent(regenerationData -> {
-             if(regenerationData.getCurrentTrait() == TraitRegistry.KNOCKBACK.get()){
-                 ci.cancel();
-             }
-         });
+        RegenerationData.get(livingEntity).ifPresent(regenerationData -> {
+            if (regenerationData.isTraitActive() && regenerationData.getCurrentTrait() == TraitRegistry.KNOCKBACK.get()) {
+                ci.cancel();
+            }
+        });
     }
 
     @Inject(at = @At("HEAD"), method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", cancellable = true)
@@ -39,7 +39,7 @@ public class LivingEntityMixin {
         if (source == RegenSources.REGEN_DMG_KILLED)
             return;
 
-        if (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.isFire() || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.isProjectile()) {
+        if (data.isTraitActive() && (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.isFire() || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.isProjectile())) {
             cir.setReturnValue(false);
         }
 

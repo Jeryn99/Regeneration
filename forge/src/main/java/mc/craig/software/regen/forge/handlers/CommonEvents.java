@@ -49,12 +49,14 @@ public class CommonEvents {
                 PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             }
 
-            if(data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().isFire()){
-                event.setCanceled(true);
-            }
+            if (data.isTraitActive()) {
+                if (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().isFire()) {
+                    event.setCanceled(true);
+                }
 
-            if(data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && event.getSource().isProjectile()){
-                event.setCanceled(true);
+                if (data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && event.getSource().isProjectile()) {
+                    event.setCanceled(true);
+                }
             }
 
 
@@ -100,7 +102,20 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onKnockback(LivingKnockBackEvent event) {
         LivingEntity livingEntity = event.getEntity();
-        RegenerationData.get(livingEntity).ifPresent((data) -> event.setCanceled(data.regenState() == RegenStates.REGENERATING));
+
+
+        RegenerationData.get(livingEntity).ifPresent((data) -> {
+            boolean isRegenerating = data.regenState() == RegenStates.REGENERATING;
+
+            if (!isRegenerating) {
+                if (data.isTraitActive() && data.getCurrentTrait() == TraitRegistry.KNOCKBACK.get()) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+
+            event.setCanceled(isRegenerating);
+        });
     }
 
     @SubscribeEvent
