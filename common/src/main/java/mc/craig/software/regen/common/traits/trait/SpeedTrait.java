@@ -24,7 +24,7 @@ public class SpeedTrait extends TraitBase {
 
     @Override
     public void onRemoved(LivingEntity livingEntity, IRegen data) {
-
+        Objects.requireNonNull(livingEntity.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(SPRINT_UUID);
     }
 
     @Override
