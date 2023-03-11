@@ -50,10 +50,9 @@ public class RegenerationData implements IRegen {
     public AnimationState regen = new AnimationState();
     public AnimationState grace = new AnimationState();
     //Don't save to disk
-    private boolean didSetup = false;
-
+    private boolean didSetup = false, traitActive = true;
     private int regensLeft = 0, animationTicks = 0;
-    public boolean areHandsGlowing = false, traitActive = true, nextSkinTypeAlex = false, isAlex = false;
+    public boolean areHandsGlowing = false, nextSkinTypeAlex = false, isAlex = false;
 
     // ===== Skin Data =====
     private byte[] nextSkin = new byte[0], skinArray = new byte[0];
@@ -117,7 +116,7 @@ public class RegenerationData implements IRegen {
         AnimationState regenAnimState = getAnimationState(IRegen.RegenAnimation.REGEN);
         AnimationState graceAnimState = getAnimationState(IRegen.RegenAnimation.GRACE);
 
-        if (getCurrentTrait() != null) {
+        if (traitActive && getCurrentTrait() != null) {
             getCurrentTrait().tick(getLiving(), this);
         }
 
@@ -454,6 +453,14 @@ public class RegenerationData implements IRegen {
     @Override
     public void setHandState(IRegen.Hand handState) {
         this.handState = handState;
+    }
+
+    @Override
+    public boolean isTraitActive() { return traitActive; }
+
+    @Override
+    public void toggleTrait() {
+        this.traitActive = !traitActive;
     }
 
     @Override

@@ -129,7 +129,13 @@ public class PreferencesScreen extends Screen {
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
         }
 
-        int color = Color.WHITE.getRGB();
+        int deactivatedColor = Color.RED.getRGB();
+        int activatedColor = Color.GREEN.getRGB();
+
+        boolean isTraitActivated = data.isTraitActive();
+
+        int color = isTraitActivated ? activatedColor : deactivatedColor;
+
         Component traitLang = data.getCurrentTrait().getTitle();
         IncarnationScreen.renderWidthScaledText(traitLang.getString(), matrixStack, font, width / 2 + 120 - 70, cy + 135, color, 100);
         Component traitLangDesc = data.getCurrentTrait().getDescription();
