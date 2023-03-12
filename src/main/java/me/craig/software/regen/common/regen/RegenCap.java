@@ -518,11 +518,15 @@ public class RegenCap implements IRegen {
                     return true;
                 case REGENERATING:
                     // We've been killed mid regeneration!
-                    nextTransition.cancel(); // ... cancel the finishing of the regeneration
+                    if (nextTransition != null) {
+                        nextTransition.cancel();
+                    }
                     midSequenceKill(false);
                     return false;
                 case GRACE_CRIT:
-                    nextTransition.cancel();
+                    if (nextTransition != null) {
+                        nextTransition.cancel();
+                    }
                     if (source == RegenSources.REGEN_DMG_FORCED) {
                         triggerRegeneration();
                         return true;
@@ -532,7 +536,9 @@ public class RegenCap implements IRegen {
                     }
                 case POST:
                     currentState = RegenStates.ALIVE;
-                    nextTransition.cancel();
+                    if (nextTransition != null) {
+                        nextTransition.cancel();
+                    }
                     return false;
                 case GRACE:
                     // We're being forced to regenerate...
@@ -617,7 +623,9 @@ public class RegenCap implements IRegen {
                 }
             }
 
-            nextTransition.cancel(); // ... cancel any state shift we had planned
+            if (nextTransition != null) {
+                        nextTransition.cancel();
+            }
             if (currentState.isGraceful()) handGlowTimer.cancel();
             scheduleTransitionInTicks(RegenStates.Transition.FINISH_REGENERATION, transitionType.getAnimationLength());
 
