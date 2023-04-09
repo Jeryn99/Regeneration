@@ -1,0 +1,10 @@
+{
+  "structure_resource_location": "regen:mccoy",
+  "display_name": "McCoy Interior",
+  "x_offset": -11,
+  "y_offset": 127,
+  "z_offset": -30,
+  "using_remote_image": false,
+  "remote_image_url": "",
+  "image_resource_location": "regen:textures/gui/interiors/mccoy.png"
+}

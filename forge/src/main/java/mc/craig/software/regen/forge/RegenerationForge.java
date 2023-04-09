@@ -9,6 +9,7 @@ import mc.craig.software.regen.common.objects.RSoundSchemes;
 import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.forge.command.RegenArgumentsForge;
+import mc.craig.software.regen.forge.compat.TardisMod;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
 import net.minecraft.core.Registry;
@@ -19,6 +20,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -55,6 +57,9 @@ public class RegenerationForge {
         RSoundSchemes.init();
         event.enqueueWork(StructurePieces::init);
         //BrewingRecipeRegistry.addRecipe(Ingredient.of(new ItemStack(RItems.FOB.get())), Ingredient.of(new ItemStack(Items.COOKIE)), new ItemStack(RItems.GUARD_FEET.get()));
+        if (ModList.get().isLoaded("tardis")) {
+            TardisMod.tardis();
+        }
     }
 
     public void onAttributeAssign(EntityAttributeCreationEvent event) {

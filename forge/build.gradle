@@ -64,9 +64,9 @@ unifiedPublishing {
     }
 }
 
-
-
-
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
 
 configurations {
     common
@@ -81,6 +81,8 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    modImplementation "net.tardis.mod:Tardis-Mod-1.19.2:${tardis_version}"
 }
 
 processResources {

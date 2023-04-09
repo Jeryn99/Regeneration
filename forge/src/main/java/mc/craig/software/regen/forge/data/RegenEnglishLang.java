@@ -108,6 +108,9 @@ public class RegenEnglishLang extends LanguageProvider {
         add("itemGroup.regen", "Regeneration");
         add("itemGroup.regen.regen", "Regeneration");
 
+        // === ARS Pieces ===
+        add("ars.piece.category.regen.room", "Room (Regeneration Mod)");
+
         // === Sound Schemes ===
         addSoundScheme(IRegen.TimelordSound.HUM, "Graceful Hum");
         addSoundScheme(IRegen.TimelordSound.DRUM, "Resistant Drums");
