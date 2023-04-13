@@ -35,15 +35,9 @@ public class RegenerationForge {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         modBus.addListener(this::clientSetup);
-        modBus.addListener(this::keyMapping);
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::onAttributeAssign);
         modBus.addListener(this::onGatherData);
-    }
-
-    public void keyMapping(RegisterKeyMappingsEvent event) {
-        event.register(RKeybinds.FORCE_REGEN);
-        event.register(RKeybinds.REGEN_GUI);
     }
 
 
