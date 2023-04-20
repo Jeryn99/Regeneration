@@ -3,18 +3,19 @@ package mc.craig.software.regen.forge.handlers;
 import mc.craig.software.regen.common.commands.RegenCommand;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.forge.RegenerationDataImpl;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -65,6 +66,22 @@ public class CommonEvents {
                 event.setCanceled(true);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void playerCloneEvent(final PlayerEvent.Clone event) {
+        if(event.isWasDeath()){
+            Player player = event.getOriginal();
+            player.reviveCaps();
+
+            player.getCapability(RegenerationDataImpl.REGENERATION_DATA).ifPresent(cap ->
+                event.getEntity().getCapability(RegenerationDataImpl.REGENERATION_DATA).ifPresent(newcap ->
+                    newcap.deserializeNBT(cap.serializeNBT())
+                )
+            );
+
+            player.invalidateCaps();
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
