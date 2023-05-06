@@ -2,7 +2,6 @@ package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.common.objects.RSoundSchemes;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
@@ -65,7 +64,6 @@ public class SpawnItem extends Item {
         if (!worldIn.isClientSide) {
             mc.craig.software.regen.common.entities.Timelord timelord = REntities.TIMELORD.get().create(worldIn);
             timelord.setMale(getType(context.getItemInHand()).isMale());
-            timelord.setPersonality(RSoundSchemes.getRandom(timelord.male()).identify().toString());
             if (getType(context.getItemInHand()) == SpawnItem.Timelord.GUARD) {
                 timelord.setTimelordType(mc.craig.software.regen.common.entities.Timelord.TimelordType.GUARD);
             } else {

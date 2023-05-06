@@ -72,7 +72,6 @@ import java.util.Set;
 public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant {
 
     private static final EntityDataAccessor<String> TYPE = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<String> PERSONALITY = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> AIMING = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_MALE = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_SETUP = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.BOOLEAN);
@@ -110,7 +109,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         getEntityData().define(AIMING, false);
         getEntityData().define(AIMING_TICKS, 0.0F);
         getEntityData().define(IS_MALE, random.nextBoolean());
-        getEntityData().define(PERSONALITY, RSoundSchemes.getRandom(male()).identify().toString());
         getEntityData().define(HAS_SETUP, false);
         setup();
     }
@@ -196,12 +194,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         return null;
     }
 
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return getPersonality().deathSound();
-    }
-
     @Override
     protected void tickDeath() {
         super.tickDeath();
@@ -281,14 +273,8 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
 
                 if (data.regenState() == RegenStates.REGENERATING) {
-                    if (data.updateTicks() == 10) {
-                        if (getPersonality().screamSound() != null) {
-                            playSound(getPersonality().screamSound(), 1, 1);
-                        }
-                    }
                     if (data.updateTicks() == (data.transitionType().getAnimationLength() / 2)) {
                         setMale(random.nextBoolean());
-                        setPersonality(RSoundSchemes.getRandom(male()).identify());
                         initSkin(data);
                         new RemoveTimelordSkinMessage(this).sendToAll();
                     }
@@ -317,26 +303,12 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         remove(RemovalReason.KILLED);
     }
 
-    public SoundScheme getPersonality() {
-        return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)), male());
-    }
-
-    public void setPersonality(ResourceLocation per) {
-        getEntityData().set(PERSONALITY, per.toString());
-    }
-
-    //Exists for easier NBT
-    public void setPersonality(String per) {
-        getEntityData().set(PERSONALITY, per);
-    }
-
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("timelord_type", getTimelordType().name());
         compound.putBoolean("is_male", male());
         compound.putBoolean("setup", getEntityData().get(HAS_SETUP));
-        compound.putString("personality", getPersonality().identify().toString());
     }
 
     @Override
@@ -348,10 +320,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
         if (compound.contains("is_male")) {
             setMale(compound.getBoolean("is_male"));
-        }
-
-        if (compound.contains("personality")) {
-            setPersonality(compound.getString("personality"));
         }
 
         if (compound.contains("setup")) {
@@ -436,10 +404,6 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         }
     }
 
-    @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return getPersonality().hurtSound();
-    }
 
     @Override
     public void performRangedAttack(LivingEntity target, float distanceFactor) {
@@ -549,12 +513,8 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public void notifyTradeUpdated(ItemStack itemStack) {
-        if (!this.level.isClientSide && this.ambientSoundTime > -this.getAmbientSoundInterval() + 20) {
-            this.ambientSoundTime = -this.getAmbientSoundInterval();
-            SoundScheme personality = getPersonality();
-            this.playSound(!itemStack.isEmpty() ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound());
-        }
+    public void notifyTradeUpdated(ItemStack stack) {
+
     }
 
     @Override

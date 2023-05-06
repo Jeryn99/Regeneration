@@ -1,9 +1,7 @@
 package mc.craig.software.regen.fabric.handlers;
 
 import mc.craig.software.regen.common.commands.RegenCommand;
-import mc.craig.software.regen.common.objects.RSoundSchemes;
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

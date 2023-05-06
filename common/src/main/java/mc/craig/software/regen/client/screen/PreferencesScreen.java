@@ -17,7 +17,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -109,6 +108,9 @@ public class PreferencesScreen extends Screen {
         transitionType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     }
 
+    private static final int deactivatedColor = Color.RED.getRGB();
+    private static final int activatedColor = Color.GREEN.getRGB();
+
     @Override
     public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
@@ -129,8 +131,6 @@ public class PreferencesScreen extends Screen {
             GuiComponent.blit(matrixStack, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
         }
 
-        int deactivatedColor = Color.RED.getRGB();
-        int activatedColor = Color.GREEN.getRGB();
 
         boolean isTraitActivated = data.isTraitActive();
 
