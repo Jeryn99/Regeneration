@@ -21,7 +21,6 @@ public class CommonEvents {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> RegenCommand.register(dispatcher));
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            RSoundSchemes.init();
             RegenUtil.setupNames();
         });
 
