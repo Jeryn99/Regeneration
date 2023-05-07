@@ -21,12 +21,13 @@ public class FogTracker {
         AtomicReference<Vec3> vec3Color = new AtomicReference<>();
         vec3Color.set(null);
 
-        RegenerationData.get((LivingEntity) renderView).ifPresent((data) -> {
-            if (data.regenState() == RegenStates.GRACE_CRIT) {
-                vec3Color.set(new Vec3(0.5F, 0.5F, 0.5F));
-            }
-        });
-
+        if(renderView instanceof LivingEntity livingEntity){
+            RegenerationData.get(livingEntity).ifPresent((data) -> {
+                if (data.regenState() == RegenStates.GRACE_CRIT) {
+                    vec3Color.set(new Vec3(0.5F, 0.5F, 0.5F));
+                }
+            });
+        }
         return vec3Color.get();
     }
 
