@@ -1,6 +1,7 @@
 package mc.craig.software.regen.common.objects;
 
 import com.google.common.base.Supplier;
+import mc.craig.software.regen.common.entities.Cyberman;
 import mc.craig.software.regen.common.entities.Laser;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.entities.Watcher;
@@ -19,6 +20,7 @@ public class REntities {
 
     public static final RegistrySupplier<EntityType<Timelord>> TIMELORD = ENTITY_TYPES.register("timelord", () -> EntityType.Builder.of((EntityType.EntityFactory<Timelord>) (entityType, level) -> new Timelord(level), MobCategory.CREATURE).sized(0.6F, 1.95F).build(RConstants.MODID + ":timelord"));
     public static final RegistrySupplier<EntityType<Watcher>> WATCHER = ENTITY_TYPES.register("watcher", () -> EntityType.Builder.of((EntityType.EntityFactory<Watcher>) (entityType, level) -> new Watcher(level), MobCategory.MISC).sized(0.6F, 1.95F).updateInterval(10).clientTrackingRange(4).build(RConstants.MODID + ":watcher"));
+    public static final RegistrySupplier<EntityType<Cyberman>> CYBER = ENTITY_TYPES.register("cyber_master", () -> EntityType.Builder.of(Cyberman::new, MobCategory.MISC).sized(0.6F, 1.95F).build(RConstants.MODID + ":cyber"));
 
     public static <T extends Entity> RegistrySupplier<EntityType<T>> register(String id, Supplier<EntityType.Builder<T>> builderSupplier) {
         return ENTITY_TYPES.register(id, () -> builderSupplier.get().build(RConstants.MODID + ":" + id));

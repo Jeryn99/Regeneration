@@ -1,6 +1,7 @@
 package mc.craig.software.regen.util.fabric;
 
 import mc.craig.software.regen.client.rendering.JarTileRender;
+import mc.craig.software.regen.client.rendering.entity.CybermanRenderer;
 import mc.craig.software.regen.client.rendering.entity.RenderLaser;
 import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.entity.WatcherRenderer;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 
@@ -28,6 +30,7 @@ public class ClientUtilImpl {
         BlockRenderLayerMap.INSTANCE.putBlock(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
 
         EntityRendererRegistry.register(REntities.TIMELORD.get(), TimelordRenderer::new);
+        EntityRendererRegistry.register(REntities.CYBER.get(), CybermanRenderer::new);
         EntityRendererRegistry.register(REntities.LASER.get(), RenderLaser::new);
         EntityRendererRegistry.register(REntities.WATCHER.get(), WatcherRenderer::new);
     }

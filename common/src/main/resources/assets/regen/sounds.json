@@ -136,6 +136,19 @@
       "regen:rifle"
     ]
   },
+  "cyber_walk": {
+    "subtitle": "regen.sound.cyber_walk",
+    "sounds": [
+      "regen:cyber_walk",
+      "regen:cyber_walk_two"
+    ]
+  },
+  "cyber_fire": {
+    "subtitle": "regen.sound.cyber_fire",
+    "sounds": [
+      "regen:cyber_fire"
+    ]
+  },
   "staser": {
     "subtitle": "regen.sound.staser",
     "sounds": [

@@ -2,6 +2,7 @@ package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.RegenerationData;
+import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.RegenSources;
@@ -72,7 +73,7 @@ public class ChaliceItem extends Item {
 
     @Override
     public int getUseDuration(@NotNull ItemStack stack) {
-        return 32;
+        return 1;
     }
 
     @Override
@@ -81,10 +82,18 @@ public class ChaliceItem extends Item {
         RegenerationData.get(entityLiving).ifPresent(iRegen -> {
             if (iRegen.canRegenerate()) {
                 iRegen.setNextTrait(getTrait(stack));
-                iRegen.syncToClients(null);
                 entityLiving.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
-                stack.shrink(1);
+
+                if(entityLiving instanceof Player player){
+                    if(!player.isCreative()){
+                        stack.shrink(1);
+                    }
+                }
+
                 entityLiving.playSound(SoundEvents.GENERIC_DRINK, 0.3F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
+                iRegen.setTransitionType(TransitionTypes.DRINK);
+                iRegen.forceRegeneration();
+                iRegen.syncToClients(null);
             }
         });
         return super.finishUsingItem(stack, worldIn, entityLiving);

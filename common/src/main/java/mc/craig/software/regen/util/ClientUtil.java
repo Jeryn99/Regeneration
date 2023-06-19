@@ -268,7 +268,14 @@ public class ClientUtil {
     public static HumanoidModel<?> getArmorModel(ItemStack itemStack, LivingEntity livingEntity) {
         // If the living entity is a player, check if it has a slim model
         if (livingEntity instanceof AbstractClientPlayer player) {
-            boolean isSlim = (Objects.equals(ClientUtil.getPlayerInfo(player).skinModel, "slim"));
+
+            PlayerInfo playerInfo = player.playerInfo;
+            if(playerInfo == null) getHumanoidModel(itemStack, true);
+
+            boolean isSlim = false;
+            if (playerInfo != null && playerInfo.skinModel != null) {
+                isSlim = (Objects.equals(playerInfo.skinModel, "slim"));
+            }
 
             // If the player has a slim model, return the slim armor model for the item stack
             if (isSlim) {
@@ -329,6 +336,7 @@ public class ClientUtil {
         TransitionTypeRenderers.add(TransitionTypes.BLAZE, BlazeTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.ENDER_DRAGON, EnderDragonTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.SNEEZE, SneezeTransitionRenderer.INSTANCE);
+        TransitionTypeRenderers.add(TransitionTypes.DRINK, DrinkTransitionRenderer.INSTANCE);
     }
 
     /**

@@ -1,6 +1,7 @@
 package mc.craig.software.regen.util.forge;
 
 import mc.craig.software.regen.client.rendering.JarTileRender;
+import mc.craig.software.regen.client.rendering.entity.CybermanRenderer;
 import mc.craig.software.regen.client.rendering.entity.RenderLaser;
 import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.entity.WatcherRenderer;
@@ -73,6 +74,7 @@ public class ClientUtilImpl {
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
 
         EntityRenderers.register(REntities.TIMELORD.get(), TimelordRenderer::new);
+        EntityRenderers.register(REntities.CYBER.get(), CybermanRenderer::new);
         EntityRenderers.register(REntities.LASER.get(), RenderLaser::new);
         EntityRenderers.register(REntities.WATCHER.get(), WatcherRenderer::new);
     }

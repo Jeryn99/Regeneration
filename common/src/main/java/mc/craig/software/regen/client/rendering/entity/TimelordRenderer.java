@@ -41,7 +41,7 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
     public TimelordRenderer(EntityRendererProvider.Context entityRendererManager) {
-        super(entityRendererManager, new ModifiedPlayerModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.MOD_PLAYER), true), 0.1F);;
+        super(entityRendererManager, new ModifiedPlayerModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.MOD_PLAYER), true), 0.1F);
         addLayer(new RenderRegenLayer(this));
         addLayer(new HumanoidArmorLayer(this, new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR))));
         addLayer(new HandLayer(this));

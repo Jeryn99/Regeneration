@@ -35,7 +35,9 @@ public class RSounds {
     public static final RegistrySupplier<SoundEvent> STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
     public static final RegistrySupplier<SoundEvent> RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
     public static final RegistrySupplier<SoundEvent> REGEN_LONG = SOUNDS.register("regen_long", () -> setUpSound("regen_long"));
-
+    //Cyber
+    public static final RegistrySupplier<SoundEvent> CYBER_WALK = SOUNDS.register("cyber_walk", () -> setUpSound("cyber_walk"));
+    public static final RegistrySupplier<SoundEvent> CYBER_FIRE = SOUNDS.register("cyber_fire", () -> setUpSound("cyber_fire"));
     private static SoundEvent setUpSound(String soundName) {
         return new SoundEvent(new ResourceLocation(RConstants.MODID, soundName));
     }

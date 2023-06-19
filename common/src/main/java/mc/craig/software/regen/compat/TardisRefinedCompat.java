@@ -20,7 +20,7 @@ public class TardisRefinedCompat implements Acting {
 
     public static void init() {
         if (Platform.isModLoaded("tardis_refined")) {
-            ActingForwarder.register(new TardisRefinedCompat(), ActingForwarder.Side.COMMON);
+         //   ActingForwarder.register(new TardisRefinedCompat(), ActingForwarder.Side.COMMON);
         }
     }
 

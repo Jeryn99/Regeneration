@@ -244,6 +244,8 @@ public class RegenEnglishLang extends LanguageProvider {
         add("gui.regen.current_skin", "Select Next Incarnation");
         add("gui.regen.back", "Back");
         add("gui.regen.preferences", "Preferences");
+
+        add(REntities.CYBER.get(), "Cyberlord");
     }
 
     public String capitalize(String text) {

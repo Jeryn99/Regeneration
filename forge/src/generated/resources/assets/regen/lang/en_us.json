@@ -75,6 +75,7 @@
   "death.attack.severed_arm.player": "%s died from blood loss!",
   "death.attack.staser_shot": "%s was shot dead with a Staser",
   "death.attack.staser_shot.player": "%s was shot dead with a Staser",
+  "entity.regen.cyber_master": "Cyberlord",
   "entity.regen.timelord": "Timelord",
   "entity.regen.watcher": "Watcher",
   "gui.regen.back": "Back",

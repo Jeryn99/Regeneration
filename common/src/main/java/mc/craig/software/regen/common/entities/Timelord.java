@@ -163,6 +163,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(Timelord.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Zombie.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Skeleton.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Cyberman.class, false));
     }
 
     public void setup() {
