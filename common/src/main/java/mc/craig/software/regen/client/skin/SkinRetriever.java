@@ -280,11 +280,11 @@ public class SkinRetriever {
 
         // Get the time in minutes since the last update
         long timeSinceDownloaded = json.getAsJsonPrimitive("update_interval").getAsLong();
-        long minutesSince = TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - timeSinceDownloaded);
+        long hoursSince = TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis() - timeSinceDownloaded);
 
         // Check if it's time to update the skins
-        boolean shouldDownload = minutesSince > updateInterval;
-        Regeneration.LOGGER.info("It has been {} minutes since last skin update! {}", minutesSince, shouldDownload ? "A Skin update will commence!" : "A Skin update will not commence just now!");
+        boolean shouldDownload = hoursSince > 24;
+        Regeneration.LOGGER.info("It has been {} hours since last skin update! {}", hoursSince, shouldDownload ? "A Skin update will commence!" : "A Skin update will not commence just now!");
         return shouldDownload;
     }
 

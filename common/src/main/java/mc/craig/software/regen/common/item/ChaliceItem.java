@@ -66,6 +66,7 @@ public class ChaliceItem extends Item {
         return InteractionResultHolder.fail(itemstack);
     }
 
+
     @Override
     public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.EAT;
@@ -79,9 +80,9 @@ public class ChaliceItem extends Item {
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, Level worldIn, @NotNull LivingEntity entityLiving) {
         if (worldIn.isClientSide) return super.finishUsingItem(stack, worldIn, entityLiving);
-        RegenerationData.get(entityLiving).ifPresent(iRegen -> {
-            if (iRegen.canRegenerate()) {
-                iRegen.setNextTrait(getTrait(stack));
+        RegenerationData.get(entityLiving).ifPresent(regenData -> {
+            if (regenData.canRegenerate()) {
+                regenData.setNextTrait(getTrait(stack));
                 entityLiving.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
 
                 if(entityLiving instanceof Player player){
@@ -91,9 +92,9 @@ public class ChaliceItem extends Item {
                 }
 
                 entityLiving.playSound(SoundEvents.GENERIC_DRINK, 0.3F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
-                iRegen.setTransitionType(TransitionTypes.DRINK);
-                iRegen.forceRegeneration();
-                iRegen.syncToClients(null);
+                regenData.setTransitionType(TransitionTypes.DRINK);
+                regenData.forceRegeneration();
+                regenData.syncToClients(null);
             }
         });
         return super.finishUsingItem(stack, worldIn, entityLiving);
