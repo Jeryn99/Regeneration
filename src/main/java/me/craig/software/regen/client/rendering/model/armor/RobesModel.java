@@ -89,22 +89,19 @@ public class RobesModel extends BipedModel<LivingEntity> implements LivingArmor 
 
     }
 
-    public static void capeBob(ModelRenderer p_239101_0_, float p_239101_2_) {
-        //p_239101_0_.xRot += MathHelper.sin(p_239101_2_ * 0.03F) * 0.01F;
-    }
-
     @Override
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (slot == EquipmentSlotType.CHEST || slot == EquipmentSlotType.HEAD) {
             updateArms(livingEntity);
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
             Body.visible = true;
-            Collar.visible = true;
+
+            Collar.visible = slot == EquipmentSlotType.HEAD;
+            Collar.render(matrixStack, buffer, packedLight, packedOverlay);
 
             if (slot == EquipmentSlotType.HEAD) return;
             mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
-            capeBob(this.Cape, livingEntity.tickCount);
             Cape.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlotType.LEGS || slot == EquipmentSlotType.FEET) {

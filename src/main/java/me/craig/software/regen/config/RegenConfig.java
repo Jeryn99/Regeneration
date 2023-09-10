@@ -92,7 +92,7 @@ public class RegenConfig {
             skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skindir").define("skinDir", ".");
 
             builder.comment("Post Regen Settings").push("Post Regeneration");
-            postRegenerationDuration = builder.comment("Amount of seconds the post-regeneration effect lasts").translation("config.regeneration.post_regen_duration").defineInRange("postRegenDuration", 360, 0, Integer.MAX_VALUE);
+            postRegenerationDuration = builder.comment("Amount of seconds the post-regeneration potion effect lasts").translation("config.regeneration.post_regen_duration").defineInRange("postRegenDuration", 360, 0, Integer.MAX_VALUE);
             postRegenerationLevel = builder.comment("The level of the regeneration status effect granted after you regenerate").translation("config.regeneration.post_regenerationEffect_level").defineInRange("postRegenLevel", 4, 0, Integer.MAX_VALUE);
             resetHunger = builder.comment("Regenerate hunger bars").translation("config.regeneration.reset_hunger").define("resetHunger", true);
             resetOxygen = builder.comment("Regenerate Oxygen").translation("config.regeneration.reset_oxygen").define("resetOxygen", true);

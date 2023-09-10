@@ -3,7 +3,6 @@ package me.craig.software.regen.common.item;
 import me.craig.software.regen.common.entities.TimelordEntity;
 import me.craig.software.regen.common.objects.REntities;
 import me.craig.software.regen.common.objects.RItems;
-import me.craig.software.regen.common.objects.RSoundSchemes;
 import me.craig.software.regen.common.regen.RegenCap;
 import me.craig.software.regen.util.RConstants;
 import net.minecraft.entity.player.PlayerEntity;
@@ -65,7 +64,6 @@ public class SpawnItem<E extends TimelordEntity> extends Item {
         if (!worldIn.isClientSide) {
             TimelordEntity timelord = REntities.TIMELORD.get().create(worldIn);
             timelord.setMale(getType(context.getItemInHand()).isMale());
-            timelord.setPersonality(RSoundSchemes.getRandom(timelord.male()).identify().toString());
             if (getType(context.getItemInHand()) == Timelord.GUARD) {
                 timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
             } else {

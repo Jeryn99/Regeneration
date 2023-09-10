@@ -100,11 +100,15 @@ public class SkinHandler {
 
     public static NativeImage genSkinNative(byte[] skinArray) {
         try {
-            return DownloadingTexture.processLegacySkin(NativeImage.read(new ByteArrayInputStream(skinArray)));
-        } catch (IOException e) {
+            NativeImage skinImage = NativeImage.read(new ByteArrayInputStream(skinArray));
+            return DownloadingTexture.processLegacySkin(skinImage);
+        } catch (Throwable e) {
+            System.err.println("Error while processing skin:");
+            e.printStackTrace();
             return null;
         }
     }
+
 
     //Set players skin
     public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {

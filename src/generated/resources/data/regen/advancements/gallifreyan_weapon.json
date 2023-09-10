@@ -1,0 +1,40 @@
+{
+  "parent": "regen:guard",
+  "display": {
+    "icon": {
+      "item": "regen:staser",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.regen.title.gallifreyan_weapon"
+    },
+    "description": {
+      "translate": "advancements.regen.desc.gallifreyan_weapon"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regen:textures/block/zero_roundel_half.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "regen:staser"
+          },
+          {
+            "item": "regen:rifle"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

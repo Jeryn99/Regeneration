@@ -90,7 +90,6 @@ public class Regeneration {
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
         GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
         DownloadSkinsThread.setup();
-        RSoundSchemes.init();
         TriggerManager.init();
 
         if (ModList.get().isLoaded("tardis")) {

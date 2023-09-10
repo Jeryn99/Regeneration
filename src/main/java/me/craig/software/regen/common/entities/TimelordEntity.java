@@ -61,7 +61,6 @@ import java.util.Random;
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
     private static final DataParameter<String> TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> PERSONALITY = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> AIMING = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_MALE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> HAS_SETUP = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
@@ -100,7 +99,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getEntityData().define(AIMING, false);
         getEntityData().define(AIMING_TICKS, 0.0F);
         getEntityData().define(IS_MALE, random.nextBoolean());
-        getEntityData().define(PERSONALITY, RSoundSchemes.getRandom(male()).identify().toString());
         getEntityData().define(HAS_SETUP, false);
         setup();
     }
@@ -183,26 +181,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
-    @Override
-    protected SoundEvent getTradeUpdatedSound(boolean getYesSound) {
-        SoundScheme personality = getPersonality();
-        if (!getYesSound) {
-            setUnhappyCounter(40);
-        }
-        return getYesSound ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound();
-    }
-
-
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
         return null;
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getDeathSound() {
-        return getPersonality().getDeathSound();
     }
 
     @Override
@@ -288,14 +270,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 if (data.regenState().isGraceful() && data.glowing())
 
                     if (data.regenState() == RegenStates.REGENERATING) {
-                        if (data.updateTicks() == 10) {
-                            if (getPersonality().getScreamSound() != null) {
-                                playSound(getPersonality().getScreamSound(), 1, 1);
-                            }
-                        }
                         if (data.updateTicks() == 100) {
                             setMale(random.nextBoolean());
-                            setPersonality(RSoundSchemes.getRandom(male()).identify());
                             initSkin(data);
                         }
                         setNoAi(true);
@@ -317,26 +293,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         remove();
     }
 
-    public SoundScheme getPersonality() {
-        return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)), male());
-    }
-
-    public void setPersonality(ResourceLocation per) {
-        getEntityData().set(PERSONALITY, per.toString());
-    }
-
-    //Exists for easier NBT
-    public void setPersonality(String per) {
-        getEntityData().set(PERSONALITY, per);
-    }
-
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("timelord_type", getTimelordType().name());
         compound.putBoolean("is_male", male());
         compound.putBoolean("setup", getEntityData().get(HAS_SETUP));
-        compound.putString("personality", getPersonality().identify().toString());
     }
 
     @Override
@@ -348,10 +310,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
         if (compound.contains("is_male")) {
             setMale(compound.getBoolean("is_male"));
-        }
-
-        if (compound.contains("personality")) {
-            setPersonality(compound.getString("personality"));
         }
 
         if (compound.contains("setup")) {
@@ -400,11 +358,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
             this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(stack));
         }
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return getPersonality().getHurtSound();
     }
 
     @Override

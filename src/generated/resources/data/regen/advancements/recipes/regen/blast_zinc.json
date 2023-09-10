@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "regen:blast_zinc"
+    ]
+  },
+  "criteria": {
+    "has_any_kontron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "regen:zinc_ore"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "regen:blast_zinc"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_any_kontron",
+      "has_the_recipe"
+    ]
+  ]
+}
