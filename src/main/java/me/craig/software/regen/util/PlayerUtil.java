@@ -6,6 +6,7 @@ import me.craig.software.regen.config.RegenConfig;
 import me.craig.software.regen.network.NetworkDispatcher;
 import me.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -18,6 +19,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
@@ -129,7 +132,9 @@ public class PlayerUtil {
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof CreatureEntity && entity.canChangeDimensions()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.hurt(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
+                if(!RegenConfig.COMMON.regenerativeKillBlacklist.get().contains(entity.getType().getRegistryName().toString().toLowerCase())) {
+                    entity.hurt(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
+                }
         });
     }
 
