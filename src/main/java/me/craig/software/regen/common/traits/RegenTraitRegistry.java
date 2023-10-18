@@ -61,8 +61,8 @@ public class RegenTraitRegistry {
         Collection<AbstractTrait> value = TRAIT_REGISTRY.get().getValues();
         ArrayList<AbstractTrait> traits = new ArrayList<>(value);
         traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(RegenTraitRegistry.BORING.get().getRegistryName()) || RegenConfig.COMMON.disabledTraits.get().contains(trait.getRegistryName().toString().toLowerCase()));
-        int i = random.nextInt(value.size());
-        return Iterables.get(value, i);
+        int i = random.nextInt(traits.size());
+        return Iterables.get(traits, i);
     }
 
     public static boolean stripElixir(ItemStack stack) {

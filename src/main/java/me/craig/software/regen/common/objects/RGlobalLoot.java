@@ -27,7 +27,7 @@ public class RGlobalLoot {
     public static ItemStack createBrokenFob(Random random) {
         ItemStack itemStack = new ItemStack(RItems.FOB.get());
         FobWatchItem.setEngrave(itemStack, random.nextBoolean());
-        itemStack.setDamageValue(random.nextInt(8));
+        itemStack.setDamageValue(random.nextInt(RegenConfig.COMMON.regenCapacity.get()));
         return itemStack;
     }
 
