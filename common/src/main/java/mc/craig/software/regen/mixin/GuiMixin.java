@@ -6,7 +6,7 @@ import mc.craig.software.regen.common.item.GunItem;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,8 +20,8 @@ import static mc.craig.software.regen.client.screen.overlay.RegenerationOverlay.
 public class GuiMixin {
 
 
-    @Inject(at = @At("HEAD"), method = "renderHearts(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V", cancellable = true)
-    private void renderHearts(PoseStack poseStack, Player player, int x, int y, int height, int i, float f, int j, int k, int l, boolean bl, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderHearts", cancellable = true)
+    private void renderHearts(GuiGraphics guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
         RegenerationData.get(player).ifPresent(regenerationData -> {
             if(regenerationData.regens() > 0){
                 RenderSystem.setShaderTexture(0, CUSTOM_ICONS);
@@ -29,8 +29,8 @@ public class GuiMixin {
         });
     }
 
-    @Inject(at = @At("TAIL"), method = "renderHearts(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V", cancellable = true)
-    private void renderHeartsTail(PoseStack poseStack, Player player, int x, int y, int height, int i, float f, int j, int k, int l, boolean bl, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "renderHearts", cancellable = true)
+    private void renderHeartsTail(GuiGraphics guiGraphics, Player player, int x, int y, int height, int i, float f, int j, int k, int l, boolean bl, CallbackInfo ci) {
         RegenerationData.get(player).ifPresent(regenerationData -> {
             if(regenerationData.regens() > 0){
                 RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
@@ -38,19 +38,19 @@ public class GuiMixin {
         });
     }
 
-    @Inject(at = @At("HEAD"), method = "renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", cancellable = true)
-    private void renderCrosshair(PoseStack poseStack, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderCrosshair", cancellable = true)
+    private void renderCrosshair(GuiGraphics guiGraphics, CallbackInfo ci) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
             RenderSystem.setShaderTexture(0, CUSTOM_ICONS);
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", cancellable = true)
-    private void renderCrosshairTail(PoseStack poseStack, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "renderCrosshair", cancellable = true)
+    private void renderCrosshairTail(GuiGraphics guiGraphics, CallbackInfo ci) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderTexture(0, guiGraphics.);
         }
     }
 

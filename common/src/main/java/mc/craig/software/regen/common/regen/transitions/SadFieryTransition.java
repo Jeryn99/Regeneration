@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,18 +27,17 @@ public class SadFieryTransition extends TransitionType {
         LivingEntity livingEntity = capability.getLiving();
         livingEntity.clearFire();
 
-        if (!livingEntity.level.isClientSide) {
+        if (!livingEntity.level().isClientSide) {
             if (livingEntity instanceof ServerPlayer serverPlayer) {
                 new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
             }
         }
 
-        if (livingEntity.level.isClientSide) return;
+        if (livingEntity.level().isClientSide) return;
 
-        if (livingEntity.getType() == EntityType.PLAYER && capability.updateTicks() > 280 && capability.updateTicks() < 560) {
-            BlockPos livingPos = new BlockPos(livingEntity.position());
-            if (livingEntity.level.getBlockState(livingPos).getBlock() instanceof FireBlock)
-                livingEntity.level.removeBlock(livingPos, false);
+        if (livingEntity.getType() == EntityType.PLAYER && capability.updateTicks() > 280 && capability.updateTicks() < 560) {;
+            if (livingEntity.level().getBlockState(livingEntity.blockPosition()).getBlock() instanceof FireBlock)
+                livingEntity.level().removeBlock(livingEntity.blockPosition(), false);
 
 
             PlayerUtil.regenerationExplosion(livingEntity);
@@ -45,13 +45,13 @@ public class SadFieryTransition extends TransitionType {
             double y = livingEntity.getY() + 0.5 + livingEntity.getRandom().nextGaussian() * 2;
             double z = livingEntity.getZ() + livingEntity.getRandom().nextGaussian() * 2;
             if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && livingEntity.tickCount % 40 == 0) {
-                livingEntity.level.explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.BlockInteraction.NONE);
+                livingEntity.level().explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Level.ExplosionInteraction.NONE);
             }
-            Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
+            Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(livingEntity.blockPosition().north().west(), livingEntity.blockPosition().south().east()).iterator();
             while (iterator.hasNext()) {
                 iterator.forEachRemaining((blockPos -> {
-                    if (livingEntity.level.getBlockState(blockPos).getBlock() instanceof FireBlock) {
-                        livingEntity.level.removeBlock(blockPos, false);
+                    if (livingEntity.level().getBlockState(blockPos).getBlock() instanceof FireBlock) {
+                        livingEntity.level().removeBlock(blockPos, false);
                     }
                 }));
             }

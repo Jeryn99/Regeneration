@@ -26,6 +26,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,8 +36,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 import static mc.craig.software.regen.util.RegenUtil.shouldGiveCouncilAdvancement;
@@ -81,7 +82,7 @@ public class RegenerationData implements IRegen {
         this.livingEntity = livingEntity;
         this.nextTrait = TraitRegistry.HUMAN.get();
         this.currentTrait = TraitRegistry.HUMAN.get();
-        if (!livingEntity.level.isClientSide) {
+        if (!livingEntity.level().isClientSide) {
             this.stateManager = new RegenerationData.StateManager();
         }
         else
@@ -150,7 +151,7 @@ public class RegenerationData implements IRegen {
             graceAnimState.stop();
         }
 
-        if (livingEntity.level.isClientSide) return;
+        if (livingEntity.level().isClientSide) return;
         //Login setup
         if (!didSetup) {
             syncToClients(null);
@@ -244,7 +245,7 @@ public class RegenerationData implements IRegen {
 
     @Override
     public void syncToClients(@Nullable ServerPlayer serverPlayerEntity) {
-        if (livingEntity != null && livingEntity.level.isClientSide)
+        if (livingEntity != null && livingEntity.level().isClientSide)
             throw new IllegalStateException("Don't sync client -> server");
 
         areHandsGlowing = regenState().isGraceful() && stateManager.handGlowTimer.getTransition() == RegenStates.Transition.HAND_GLOW_TRIGGER;
@@ -297,7 +298,7 @@ public class RegenerationData implements IRegen {
             compoundNBT.putByteArray("next_" + RConstants.SKIN, nextSkin());
         }
 
-        if (!livingEntity.level.isClientSide) {
+        if (!livingEntity.level().isClientSide) {
             if (stateManager != null) {
                 compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT());
             }
@@ -535,7 +536,8 @@ public class RegenerationData implements IRegen {
 
         @Override
         public boolean onKilled(DamageSource source) {
-            if (source == DamageSource.IN_WALL || source == DamageSource.CRAMMING) {
+            DamageSources damageSources = getLiving().level().damageSources();
+            if (source == damageSources.inWall() || source == damageSources.cramming()) {
                 return false;
             }
 
@@ -597,7 +599,7 @@ public class RegenerationData implements IRegen {
             if (currentState.isGraceful() && glowing()) {
 
                 if (blockState.getBlock() == Blocks.SNOW || blockState.getBlock() == Blocks.SNOW_BLOCK) {
-                    entity.level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
+                    entity.level().playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
                 }
                 if (entity instanceof ServerPlayer serverPlayer) {
                     ServerPlayer playerEntity = (ServerPlayer) livingEntity;
@@ -613,7 +615,7 @@ public class RegenerationData implements IRegen {
         }
 
         private void tick() {
-            if (livingEntity.level.isClientSide)
+            if (livingEntity.level().isClientSide)
                 throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
             if (currentState == RegenStates.ALIVE)
                 throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
@@ -699,7 +701,7 @@ public class RegenerationData implements IRegen {
 
         private void finishRegeneration() {
             currentState = RegenStates.POST;
-            scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.level.random.nextInt(300) + 10);
+            scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.level().random.nextInt(300) + 10);
             handGlowTimer = null;
             transitionType.onFinishRegeneration(RegenerationData.this);
             ActingForwarder.onRegenFinish(RegenerationData.this);

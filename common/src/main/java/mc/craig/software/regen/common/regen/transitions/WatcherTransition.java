@@ -25,10 +25,10 @@ public final class WatcherTransition extends TransitionType {
                 Direction facing = player.getMotionDirection();
                 BlockPos playerPos = player.blockPosition();
                 BlockPos spawnPos = playerPos.relative(facing, 4);
-                Watcher watcher = new Watcher(player.level);
+                Watcher watcher = new Watcher(player.level());
                 watcher.setTarget(player);
                 watcher.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-                player.level.addFreshEntity(watcher);
+                player.level().addFreshEntity(watcher);
             }
         });
     }
@@ -36,7 +36,7 @@ public final class WatcherTransition extends TransitionType {
     @Override
     public void tick(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        Level world = living.level;
+        Level world = living.level();
         List<Watcher> watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcher -> watcher.getTarget() == living);
 
         if (watchers.isEmpty()) {

@@ -9,6 +9,7 @@ import mc.craig.software.regen.registry.RegistrySupplier;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -22,11 +23,11 @@ import java.util.List;
 
 public class RFeatures {
 
-    public static final DeferredRegistry<StructureType<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegistry.create(RConstants.MODID, Registry.STRUCTURE_TYPE_REGISTRY);
+    public static final DeferredRegistry<StructureType<?>> DEFERRED_REGISTRY_STRUCTURE = DeferredRegistry.create(RConstants.MODID, Registries.STRUCTURE_TYPE);
 
     public static final RegistrySupplier<StructureType<?>> SETTLEMENT_HUT = DEFERRED_REGISTRY_STRUCTURE.register("timelord_settlement", () -> typeConvert(TimelordSettlementHut.CODEC));
-    public static final DeferredRegistry<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegistry.create(RConstants.MODID, Registry.CONFIGURED_FEATURE_REGISTRY);
-    public static final DeferredRegistry<PlacedFeature> PLACED_FEATURES = DeferredRegistry.create(RConstants.MODID, Registry.PLACED_FEATURE_REGISTRY);
+    public static final DeferredRegistry<ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = DeferredRegistry.create(RConstants.MODID, Registries.CONFIGURED_FEATURE);
+    public static final DeferredRegistry<PlacedFeature> PLACED_FEATURES = DeferredRegistry.create(RConstants.MODID, Registries.PLACED_FEATURE);
     public static RegistrySupplier<ConfiguredFeature<?, ?>> ORE_ZINC_CONFIGURED = CONFIGURED_FEATURES.register("ore_zinc", () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ImmutableList.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, RBlocks.ZINC_ORE.get().defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, RBlocks.ZINC_ORE_DEEPSLATE.get().defaultBlockState())), 9)));
     public static RegistrySupplier<PlacedFeature> ORE_ZINC = PLACED_FEATURES.register("ore_zinc", () -> new PlacedFeature(Holder.direct(RFeatures.ORE_ZINC_CONFIGURED.get()), List.copyOf(commonOrePlacement(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-24), VerticalAnchor.absolute(56))))));
     public static RegistrySupplier<ConfiguredFeature<?, ?>> ORE_ZINC_SMALL_CONFIGURED = CONFIGURED_FEATURES.register("ore_zinc_small", () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ImmutableList.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, RBlocks.ZINC_ORE.get().defaultBlockState()), OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, RBlocks.ZINC_ORE_DEEPSLATE.get().defaultBlockState())), 4)));

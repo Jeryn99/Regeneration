@@ -32,7 +32,7 @@ unifiedPublishing {
             curseforge {
                 token = CURSE_API_KEY
                 id = "274275"
-                gameVersions.addAll "Java 17", "1.19.2"
+                gameVersions.addAll "Java 17", "1.20.1"
             }
         }
 
@@ -60,8 +60,8 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     // Forge Config API Port
-    modApi "net.minecraftforge:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
-    include "net.minecraftforge:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    include "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
     
     // Cardinal Components
     modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${rootProject.cardinal_components_version}"
@@ -99,18 +99,18 @@ shadowJar {
     exclude "regen.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     injectAccessWidener = true
-    input.set shadowJar.archiveFile
+    inputFile = shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier = null
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {

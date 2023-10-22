@@ -19,7 +19,7 @@ public class BlazeTranstion extends TransitionType {
     @Override
     public void onUpdateMidRegen(IRegen cap) {
         LivingEntity entity = cap.getLiving();
-        if (!cap.getLiving().level.isClientSide) {
+        if (!cap.getLiving().level().isClientSide) {
             if (cap.getLiving() instanceof ServerPlayer serverPlayer) {
                 new POVMessage(RConstants.THIRD_PERSON_FRONT).send(serverPlayer);
             }

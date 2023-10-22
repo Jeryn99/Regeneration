@@ -12,9 +12,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
     // Forge Config API Port
-    modCompileOnlyApi "net.minecraftforge:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    modCompileOnlyApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
 
-    modCompileOnlyApi "ignored:tardis_refined:1.0.0:fabric"
+    //modCompileOnlyApi "ignored:tardis_refined:1.0.0:fabric"
 
 
 }
