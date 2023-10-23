@@ -21,7 +21,6 @@ loom {
         dataGen {
             mod "regen"
         }
-
     }
 
     runs {
@@ -31,13 +30,12 @@ loom {
     }
 }
 
-
 unifiedPublishing {
     project {
         displayName = "[Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
-        gameVersions = ["1.19.2"]
+        gameVersions = ["1.20.1"]
         mainPublication tasks.remapJar
         gameLoaders = ["forge"]
         relations {
@@ -45,6 +43,8 @@ unifiedPublishing {
         }
 
         var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge") ?: ""
+        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
+
         if (CURSE_API_KEY != "") {
             curseforge {
                 token = CURSE_API_KEY
@@ -53,7 +53,6 @@ unifiedPublishing {
             }
         }
 
-        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
         if (MODRINTH_TOKEN != "") {
             modrinth {
                 token = MODRINTH_TOKEN
@@ -63,10 +62,6 @@ unifiedPublishing {
         }
     }
 }
-
-
-
-
 
 configurations {
     common

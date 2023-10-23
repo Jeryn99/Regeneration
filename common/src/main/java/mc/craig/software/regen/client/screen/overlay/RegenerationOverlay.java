@@ -14,6 +14,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
 
@@ -40,7 +41,7 @@ public class RegenerationOverlay {
                 default -> remaining + "th";
             };
 
-        /*    if(Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON){
+       /*    if(Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON){
                 if(cap.regenState() == RegenStates.POST && player.hurtTime > 0){
                     ScreenEffectRenderer.renderFire(Minecraft.getInstance(), poseStack);
                 }
