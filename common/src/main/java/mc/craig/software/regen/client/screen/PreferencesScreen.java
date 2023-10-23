@@ -130,8 +130,8 @@ public class PreferencesScreen extends Screen {
         RenderSystem.setShaderTexture(0, RegenerationOverlay.CUSTOM_ICONS);
 
         for (int i = 0; i < data.regens(); i++) {
-            guiGraphics.blit(screenBackground, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 34, 0, 9, 9, 256, 256);
-            guiGraphics.blit(screenBackground, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
+            guiGraphics.blit(RegenerationOverlay.CUSTOM_ICONS, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 34, 0, 9, 9, 256, 256);
+            guiGraphics.blit(RegenerationOverlay.CUSTOM_ICONS, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
         }
 
 
