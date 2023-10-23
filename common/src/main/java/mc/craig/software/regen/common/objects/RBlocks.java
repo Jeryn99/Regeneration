@@ -6,14 +6,14 @@ import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.Supplier;
 
@@ -21,15 +21,15 @@ import static mc.craig.software.regen.common.objects.RItems.MAIN;
 
 public class RBlocks {
 
-    public static final DeferredRegistry<Block> BLOCKS = DeferredRegistry.create(RConstants.MODID, Registry.BLOCK_REGISTRY);
+    public static final DeferredRegistry<Block> BLOCKS = DeferredRegistry.create(RConstants.MODID, Registries.BLOCK);
 
     public static final RegistrySupplier<Block> BIO_CONTAINER = register("bio_container", JarBlock::new, MAIN);
-    public static final RegistrySupplier<Block> ZERO_ROUNDEL = register("zero_roundel_half", () -> new Block(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
-    public static final RegistrySupplier<Block> ZERO_ROOM_FULL = register("zero_roundel_full", () -> new Block(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
-    public static final RegistrySupplier<Block> AZBANTIUM = register("azbantium", () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
-    static BlockBehaviour.Properties PROP = BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(3.0F, 3.0F);
+    public static final RegistrySupplier<Block> ZERO_ROUNDEL = register("zero_roundel_half", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
+    public static final RegistrySupplier<Block> ZERO_ROOM_FULL = register("zero_roundel_full", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
+    public static final RegistrySupplier<Block> AZBANTIUM = register("azbantium", () -> new Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().mapColor(MapColor.STONE).strength(50.0F, 1200.0F)));
+    static BlockBehaviour.Properties PROP = BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(3.0F, 3.0F);
     public static final RegistrySupplier<Block> ZINC_ORE = register("zinc_ore", () -> new ROreBlock(PROP));
-    public static final RegistrySupplier<Block> ZINC_ORE_DEEPSLATE = register("deepslate_zinc_ore", () -> new ROreBlock(PROP.strength(4.5F, 3F).sound(SoundType.DEEPSLATE).color(MaterialColor.DEEPSLATE)));
+    public static final RegistrySupplier<Block> ZINC_ORE_DEEPSLATE = register("deepslate_zinc_ore", () -> new ROreBlock(PROP.strength(4.5F, 3F).sound(SoundType.DEEPSLATE).mapColor(MapColor.DEEPSLATE)));
 
     /**
      * Registers a Block and BlockItem to the ItemGroup of your choice

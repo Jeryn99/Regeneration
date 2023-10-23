@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -536,8 +537,7 @@ public class RegenerationData implements IRegen {
 
         @Override
         public boolean onKilled(DamageSource source) {
-            DamageSources damageSources = getLiving().level().damageSources();
-            if (source == damageSources.inWall() || source == damageSources.cramming()) {
+            if (source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.CRAMMING)) {
                 return false;
             }
 

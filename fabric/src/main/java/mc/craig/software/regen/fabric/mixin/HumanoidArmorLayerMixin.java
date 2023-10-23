@@ -59,7 +59,7 @@ public abstract class HumanoidArmorLayerMixin<T extends LivingEntity, M extends 
                 humanoidModel = (A) model;
             }
 
-            if (armorItem.getSlot() == equipmentSlot) {
+            if (armorItem.getType().getSlot() == equipmentSlot) {
                 this.getParentModel().copyPropertiesTo(humanoidModel);
                 this.setPartVisibility(humanoidModel, equipmentSlot);
                 boolean bl = this.usesInnerModel(equipmentSlot);

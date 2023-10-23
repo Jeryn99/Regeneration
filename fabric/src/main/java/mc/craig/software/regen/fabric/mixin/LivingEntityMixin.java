@@ -9,6 +9,7 @@ import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,12 +40,12 @@ public class LivingEntityMixin {
         if (source == RegenSources.REGEN_DMG_KILLED)
             return;
 
-        if (data.isTraitActive() && (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.isFire() || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.isProjectile())) {
+        if (data.isTraitActive() && (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.is(DamageTypes.ON_FIRE) || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.is(DamageTypes.MOB_PROJECTILE))) {
             cir.setReturnValue(false);
         }
 
         //Handle Death
-        if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && source.isFire() || data.regenState() == RegenStates.REGENERATING && source.isExplosion()) {
+        if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && source.is(DamageTypes.ON_FIRE) || data.regenState() == RegenStates.REGENERATING && source.is(DamageTypes.EXPLOSION)) {
             cir.setReturnValue(false);
         }
     }

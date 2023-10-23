@@ -52,7 +52,7 @@ public class TraitsCommand implements Command<CommandSourceStack> {
             data.setCurrentTrait(trait);
             trait.onAdded(player, data); // Start from here
             data.syncToClients(null);
-            source.sendSuccess(Component.translatable(RMessages.SET_TRAIT_SUCCESS, playerText, traitText), false);
+            source.sendSuccess(() -> Component.translatable(RMessages.SET_TRAIT_SUCCESS, playerText, traitText), false);
         });
         return Command.SINGLE_SUCCESS;
     }

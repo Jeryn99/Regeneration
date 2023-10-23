@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -47,10 +48,10 @@ public class PlayerUtil {
         AABB grid = new AABB(livingPos.north().west(), livingPos.south().east());
 
         // Iterate over all blocks in the grid
-        for (BlockPos pos : betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).toList()) {
+        for (BlockPos pos : betweenClosedStream(new BlockPos((int) grid.maxX, (int) grid.maxY, (int) grid.maxZ), new BlockPos((int) grid.minX, (int) grid.minY, (int) grid.minZ)).toList()) {
 
             // Check if the block at this position is not a Zero Room block
-            BlockState state = playerEntity.level.getBlockState(pos);
+            BlockState state = playerEntity.level().getBlockState(pos);
             if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() &&
                     state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
 
@@ -74,7 +75,7 @@ public class PlayerUtil {
      */
     public static void handleZeroGrid(LivingEntity playerEntity) {
         // Get the set of mob effects that are tagged with the POST_REGEN_POTIONS tag
-        HolderSet.Named<MobEffect> mobEffects = Registry.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
+        HolderSet.Named<MobEffect> mobEffects = BuiltInRegistries.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
 
         // Iterate over all mob effects in the set
         for (Holder<MobEffect> mobEffect : mobEffects) {
@@ -111,14 +112,14 @@ public class PlayerUtil {
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof Player player)) return;
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide) {
             player.displayClientMessage(Component.translatable(message), hotBar);
         }
     }
 
     public static void sendMessage(LivingEntity livingEntity, MutableComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof Player player)) return;
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide) {
             player.displayClientMessage(translation, hotBar);
         }
     }
@@ -152,8 +153,8 @@ public class PlayerUtil {
     }
 
     public static void regenerationExplosion(LivingEntity player) {
-        explodeKnockback(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
-        explodeKill(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKillRange.get());
+        explodeKnockback(player, player.level(), player.blockPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+        explodeKill(player, player.level(), player.blockPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
     }
 
     public static void explodeKill(Entity exploder, Level world, BlockPos pos, int range) {

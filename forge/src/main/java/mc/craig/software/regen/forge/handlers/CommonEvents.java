@@ -15,8 +15,12 @@ import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Explosion;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -46,24 +50,24 @@ public class CommonEvents {
                 return;
 
             //Handle Post
-            if (data.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
+            if (data.regenState() == RegenStates.POST && event.getSource() != event.getEntity().damageSources().fellOutOfWorld() && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             }
 
             if (data.isTraitActive()) {
-                if (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().isFire()) {
+                if (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().is(DamageTypes.ON_FIRE)) {
                     event.setCanceled(true);
                 }
 
-                if (data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && event.getSource().isProjectile()) {
+                if (data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && event.getSource().getEntity() instanceof Projectile) {
                     event.setCanceled(true);
                 }
             }
 
 
             //Handle Death
-            if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || data.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+            if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().is(DamageTypes.ON_FIRE) || data.regenState() == RegenStates.REGENERATING && event.getSource().is(DamageTypes.EXPLOSION)) {
                 event.setCanceled(true);
             }
         });
@@ -143,7 +147,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getEntity().level.isClientSide) return;
+        if (e.getEntity().level().isClientSide) return;
         RegenerationData.get(e.getEntity()).ifPresent((data) -> data.stateManager().onPunchBlock(e.getPos(), e.getLevel().getBlockState(e.getPos()), e.getEntity()));
     }
 

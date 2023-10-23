@@ -1,12 +1,12 @@
 package mc.craig.software.regen.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 
 public abstract class Message {
 
-    @Nonnull
+    @NotNull
     public abstract MessageType getType();
 
     public abstract void toBytes(FriendlyByteBuf buf);

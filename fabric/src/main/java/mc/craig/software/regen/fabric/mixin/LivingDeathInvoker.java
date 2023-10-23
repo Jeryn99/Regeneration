@@ -18,7 +18,7 @@ public class LivingDeathInvoker {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         RegenerationData data = RegenerationData.get(livingEntity).get();
 
-        if (data.stateManager() == null && livingEntity.level.isClientSide()) return;
+        if (data.stateManager() == null && livingEntity.level().isClientSide()) return;
         boolean notDead = data.stateManager().onKilled(source);
         if (notDead) {
             ci.cancel();

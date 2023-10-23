@@ -18,8 +18,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class ViewUtil {
@@ -76,12 +76,12 @@ public class ViewUtil {
         Vec3[] angelPoints = {new Vec3(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.minZ), new Vec3(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.minZ),};
 
         for (int i = 0; i < viewerPoints.length; i++) {
-            if (viewer.level.clip(new ClipContext(viewerPoints[i], angelPoints[i], ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, viewer)).getType() == HitResult.Type.MISS) {
+            if (viewer.level().clip(new ClipContext(viewerPoints[i], angelPoints[i], ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, viewer)).getType() == HitResult.Type.MISS) {
                 return false;
             }
-            if (rayTraceBlocks(viewer, viewer.level, viewerPoints[i], angelPoints[i], pos -> {
-                BlockState state = viewer.level.getBlockState(pos);
-                return !canSeeThrough(state, viewer.level, pos);
+            if (rayTraceBlocks(viewer, viewer.level(), viewerPoints[i], angelPoints[i], pos -> {
+                BlockState state = viewer.level().getBlockState(pos);
+                return !canSeeThrough(state, viewer.level(), pos);
             }) == null) return false;
         }
 
@@ -96,7 +96,7 @@ public class ViewUtil {
 
     public static boolean viewBlocked(LivingEntity viewer, BlockState blockState, BlockPos blockPos) {
         AABB viewerBoundBox = viewer.getBoundingBox();
-        AABB angelBoundingBox = blockState.getShape(viewer.level, blockPos).bounds();
+        AABB angelBoundingBox = blockState.getShape(viewer.level(), blockPos).bounds();
         Vec3[] viewerPoints = {new Vec3(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vec3(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vec3(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vec3(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vec3(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vec3(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vec3(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vec3(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ),};
 
         if (viewer instanceof Player) {
@@ -115,12 +115,12 @@ public class ViewUtil {
         Vec3[] angelPoints = {new Vec3(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.minZ), new Vec3(angelBoundingBox.minX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3(angelBoundingBox.minX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.minZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.maxY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.maxZ), new Vec3(angelBoundingBox.maxX, angelBoundingBox.minY, angelBoundingBox.minZ),};
 
         for (int i = 0; i < viewerPoints.length; i++) {
-            if (viewer.level.clip(new ClipContext(viewerPoints[i], angelPoints[i], ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, viewer)).getType() == HitResult.Type.MISS) {
+            if (viewer.level().clip(new ClipContext(viewerPoints[i], angelPoints[i], ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, viewer)).getType() == HitResult.Type.MISS) {
                 return false;
             }
-            if (rayTraceBlocks(viewer, viewer.level, viewerPoints[i], angelPoints[i], pos -> {
-                BlockState state = viewer.level.getBlockState(pos);
-                return !canSeeThrough(state, viewer.level, pos);
+            if (rayTraceBlocks(viewer, viewer.level(), viewerPoints[i], angelPoints[i], pos -> {
+                BlockState state = viewer.level().getBlockState(pos);
+                return !canSeeThrough(state, viewer.level(), pos);
             }) == null) return false;
         }
         return true;

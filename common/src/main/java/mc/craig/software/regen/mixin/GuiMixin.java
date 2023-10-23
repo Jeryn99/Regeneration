@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,7 +34,7 @@ public class GuiMixin {
     private void renderHeartsTail(GuiGraphics guiGraphics, Player player, int x, int y, int height, int i, float f, int j, int k, int l, boolean bl, CallbackInfo ci) {
         RegenerationData.get(player).ifPresent(regenerationData -> {
             if(regenerationData.regens() > 0){
-                RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+                RenderSystem.setShaderTexture(0, new ResourceLocation("textures/gui/icons.png"));
             }
         });
     }
@@ -50,7 +51,7 @@ public class GuiMixin {
     private void renderCrosshairTail(GuiGraphics guiGraphics, CallbackInfo ci) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
-            RenderSystem.setShaderTexture(0, guiGraphics.);
+            RenderSystem.setShaderTexture(0, new ResourceLocation("textures/gui/icons.png"));
         }
     }
 

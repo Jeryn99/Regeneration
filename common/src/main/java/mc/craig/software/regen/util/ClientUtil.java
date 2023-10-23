@@ -362,7 +362,7 @@ public class ClientUtil {
      * @param randomSource the random source for the sound
      */
     public static void playSound(Object entity, ResourceLocation soundName, SoundSource category, boolean repeat, Supplier<Boolean> stopCondition, float volume, RandomSource randomSource) {
-        Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume, randomSource));
+        Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, SoundEvent.createVariableRangeEvent(soundName), category, repeat, stopCondition, volume, randomSource));
     }
 
     /**

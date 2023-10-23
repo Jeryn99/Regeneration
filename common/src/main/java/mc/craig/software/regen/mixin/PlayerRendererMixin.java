@@ -1,14 +1,11 @@
 package mc.craig.software.regen.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
-import mc.craig.software.regen.client.screen.IncarnationScreen;
-import mc.craig.software.regen.client.skin.VisualManipulator;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -37,9 +34,9 @@ public class PlayerRendererMixin {
     protected void setupRotations(AbstractClientPlayer abstractClientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
         RegenerationData.get(abstractClientPlayer).ifPresent(iRegen -> {
             if (PlayerUtil.isPlayerAboveZeroGrid(abstractClientPlayer) && iRegen.regenState() == RegenStates.POST) {
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(abstractClientPlayer.yBodyRot));
-                poseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
-                poseStack.mulPose(Vector3f.YP.rotationDegrees(270.0F));
+                poseStack.mulPose(Axis.YP.rotationDegrees(abstractClientPlayer.yBodyRot));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90));
+                poseStack.mulPose(Axis.YP.rotationDegrees(270.0F));
                 float offset = Mth.cos(abstractClientPlayer.tickCount * 0.1F) * -0.09F;
                 poseStack.translate(0, -1, 0);
                 poseStack.translate(0, 0, -1);

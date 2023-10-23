@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 public class ClothingItem extends ArmorItem implements ICustomArmorTexture {
     private final String texture;
 
-    public ClothingItem(String texture, ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn) {
-        super(materialIn, slot, builderIn);
+    public ClothingItem(String texture, ArmorMaterial materialIn, ArmorItem.Type type, Properties builderIn) {
+        super(materialIn, type, builderIn);
         this.texture = texture;
     }
 

@@ -2,7 +2,7 @@ package mc.craig.software.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.client.animation.AnimationHandler;
 import mc.craig.software.regen.client.rendering.types.RenderTypes;
 import mc.craig.software.regen.common.entities.Timelord;
@@ -94,7 +94,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 matrix.pushPose();
                 bipedModel.head.translateAndRotate(matrix);
                 matrix.translate(0.0f, 0.09f, 0.2f);
-                matrix.mulPose(Vector3f.XP.rotation(180));
+                matrix.mulPose(Axis.XP.rotation(180));
                 double x = iRegen.updateTicks();
                 double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                 double r = 0.09890109890109888;

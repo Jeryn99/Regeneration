@@ -66,7 +66,7 @@ public class ClientModBus {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
+        event.registerSpriteSet(RParticles.CONTAINER.get(), JarParticle.Factory::new);
     }
 
     @SubscribeEvent

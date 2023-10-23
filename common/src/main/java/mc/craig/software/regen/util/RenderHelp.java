@@ -3,11 +3,11 @@ package mc.craig.software.regen.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 public class RenderHelp {
     public static final ResourceLocation VIGNETTE_LOCATION = new ResourceLocation(RConstants.MODID, "textures/gui/vignette.png");
@@ -79,7 +79,7 @@ public class RenderHelp {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
         RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
+        //RenderSystem.disableTexture();
         RenderSystem.blendFuncSeparate(770, 771, 1, 0);
         RenderSystem.setShaderColor(red, green, blue, alpha);
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -88,7 +88,7 @@ public class RenderHelp {
         bufferBuilder.vertex(right, top, 0.0D).endVertex();
         bufferBuilder.vertex(left, top, 0.0D).endVertex();
         tessellator.end();
-        RenderSystem.enableTexture();
+        //RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 

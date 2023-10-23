@@ -1,6 +1,5 @@
 package mc.craig.software.regen.common.entities;
 
-import com.mojang.math.Vector3d;
 import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.util.RegenSources;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,6 +18,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 
 /* Created by Craig on 01/03/2021 */
 public class Laser extends ThrowableProjectile {
@@ -70,7 +70,7 @@ public class Laser extends ThrowableProjectile {
     public void tick() {
         super.tick();
         double speed = (new Vec3(this.getX(), this.getY(), this.getZ())).distanceTo(new Vec3(this.xo, this.yo, this.zo));
-        if (!this.level.isClientSide && (this.tickCount > 600 || speed < 0.01D)) {
+        if (!this.level().isClientSide && (this.tickCount > 600 || speed < 0.01D)) {
             this.remove(RemovalReason.DISCARDED);
         }
         if (isAlive()) {
@@ -81,8 +81,8 @@ public class Laser extends ThrowableProjectile {
     @Override
     protected void onHit(@NotNull HitResult result) {
         super.onHit(result);
-        if (this.level.isClientSide()) {
-            this.level.addParticle(ParticleTypes.SMOKE, true, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+        if (this.level().isClientSide()) {
+            this.level().addParticle(ParticleTypes.SMOKE, true, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 

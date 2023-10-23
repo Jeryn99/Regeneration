@@ -7,6 +7,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
+@SuppressWarnings("NoTranslation")
 public class RKeybinds {
     public static KeyMapping FORCE_REGEN = new KeyMapping("Force Regeneration", GLFW.GLFW_KEY_Y, "Regeneration");
     public static KeyMapping REGEN_GUI = new KeyMapping("Open Preferences", GLFW.GLFW_KEY_F10, "Regeneration");

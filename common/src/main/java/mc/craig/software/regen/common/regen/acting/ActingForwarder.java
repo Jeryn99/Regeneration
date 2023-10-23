@@ -37,7 +37,7 @@ public class ActingForwarder {
 
     public static void onRegenTick(RegenerationData cap) {
         // Never forwarded, as per the documentation
-        if (cap.getLiving().level.isClientSide)
+        if (cap.getLiving().level().isClientSide)
             throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
 
         for (Acting handler : SERVER_HANDLERS) {
@@ -117,7 +117,7 @@ public class ActingForwarder {
      * Knows what to forward by reflection magic
      */
     private static void checkAndForward(RegenerationData cap, RegenEvent event) {
-        if (cap.getLiving().level.isClientSide) {
+        if (cap.getLiving().level().isClientSide) {
             throw new IllegalStateException("'Posting' \"acting\" `event` from client");
         }
          new StateMessage(cap.getLiving(), event).sendToAll();

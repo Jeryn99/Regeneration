@@ -15,6 +15,7 @@ import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,9 +56,9 @@ public class CommonActing implements Acting {
 
         switch (cap.regenState()) {
             case POST:
-                HolderSet.Named<MobEffect> mobEffects = Registry.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
+                HolderSet.Named<MobEffect> mobEffects = BuiltInRegistries.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
                 if (livingEntity.tickCount % 210 == 0 && !PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
-                    mobEffects.getRandomElement(RandomSource.create()).ifPresent(mobEffectHolder -> PlayerUtil.applyPotionIfAbsent(livingEntity, mobEffectHolder.value(), livingEntity.level.random.nextInt(400), 1, false, false));
+                    mobEffects.getRandomElement(RandomSource.create()).ifPresent(mobEffectHolder -> PlayerUtil.applyPotionIfAbsent(livingEntity, mobEffectHolder.value(), livingEntity.level().random.nextInt(400), 1, false, false));
                 }
 
                 if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
@@ -70,21 +71,21 @@ public class CommonActing implements Acting {
                     TriggerManager.FIRST_REGENERATION.trigger(playerEntity);
                 }
 
-                float dm = Math.max(1, (livingEntity.level.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
+                float dm = Math.max(1, (livingEntity.level().getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 livingEntity.heal(stateProgress * 0.3F * dm);
                 livingEntity.setArrowCount(0);
 
                 AABB box = livingEntity.getBoundingBox().inflate(25);
-                for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+                for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos((int) box.maxX, (int) box.maxY, (int) box.maxZ), new BlockPos((int) box.minX, (int) box.minY, (int) box.minZ)).iterator(); iterator.hasNext(); ) {
                     BlockPos pos = iterator.next();
-                    ServerLevel serverWorld = (ServerLevel) livingEntity.level;
+                    ServerLevel serverWorld = (ServerLevel) livingEntity.level();
                     BlockState blockState = serverWorld.getBlockState(pos);
                     if (blockState.getBlock() instanceof JarBlock) {
                         BioContainerBlockEntity bioContainerBlockEntity = (BioContainerBlockEntity) serverWorld.getBlockEntity(pos);
                         if (!bioContainerBlockEntity.isValid(BioContainerBlockEntity.Action.ADD)) {
                             continue;
                         }
-                        if (livingEntity.level.random.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
+                        if (livingEntity.level().random.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
                             bioContainerBlockEntity.setLindos(bioContainerBlockEntity.getLindos() + 0.7F);
                         }
                         bioContainerBlockEntity.sendUpdates();
@@ -104,8 +105,8 @@ public class CommonActing implements Acting {
 
                 PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
-                if (livingEntity.level.random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
-                    livingEntity.hurt(RegenSources.REGEN_DMG_CRITICAL, livingEntity.level.random.nextFloat() + .5F);
+                if (livingEntity.level().random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
+                    livingEntity.hurt(RegenSources.REGEN_DMG_CRITICAL, livingEntity.level().random.nextFloat() + .5F);
                 }
                 break;
 
@@ -125,7 +126,7 @@ public class CommonActing implements Acting {
     @Override
     public void onEnterGrace(IRegen cap) {
         LivingEntity player = cap.getLiving();
-        PlayerUtil.explodeKnockback(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
+        PlayerUtil.explodeKnockback(player, player.level(), player.blockPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
         // Reduce number of hearts, but compensate with absorption
         player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
         if (!player.getAttribute(Attributes.MAX_HEALTH).hasModifier(heartModifier)) {
@@ -167,7 +168,7 @@ public class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        new SFXMessage(getRandomSound(living.getRandom(), cap).getLocation(), living.getId()).sendToDimension(living.level);
+        new SFXMessage(getRandomSound(living.getRandom(), cap).getLocation(), living.getId()).sendToDimension(living.level());
 
         living.getAttribute(Attributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);

@@ -6,6 +6,7 @@ import mc.craig.software.regen.common.item.*;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -15,7 +16,7 @@ import static net.minecraft.world.item.ArmorMaterials.LEATHER;
 public class RItems {
 
 
-    public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MOD_ID, Registry.ITEM_REGISTRY);
+    public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MOD_ID, Registries.ITEM);
     public static CreativeModeTab MAIN = getCreativeTab();
 
     public static RegistrySupplier<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
