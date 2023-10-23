@@ -42,11 +42,11 @@ public class CommonEvents {
         RegenerationData.get(livingEntity).ifPresent(data -> {
 
             // Stop certain damages
-            if (event.getSource() == RegenDamageTypes.REGEN_DMG_KILLED)
+            if (event.getSource().is(RegenDamageTypes.REGEN_DMG_KILLED))
                 return;
 
             //Handle Post
-            if (data.regenState() == RegenStates.POST && event.getSource() != event.getEntity().damageSources().fellOutOfWorld() && event.getSource() != RegenDamageTypes.REGEN_DMG_HAND) {
+            if (data.regenState() == RegenStates.POST && event.getSource() != event.getEntity().damageSources().fellOutOfWorld() && !event.getSource().is(RegenDamageTypes.REGEN_DMG_HAND)) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             }
@@ -102,7 +102,7 @@ public class CommonEvents {
     public static void adMortemInimicus(LivingDeathEvent event) {
         if (event.getEntity() == null) return;
         RegenerationData.get(event.getEntity()).ifPresent((cap) -> {
-            if ((event.getSource() == RegenDamageTypes.REGEN_DMG_CRITICAL || event.getSource() == RegenDamageTypes.REGEN_DMG_KILLED)) {
+            if ((event.getSource().is(RegenDamageTypes.REGEN_DMG_CRITICAL) || event.getSource().is(RegenDamageTypes.REGEN_DMG_KILLED))) {
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                     cap.extractRegens(cap.regens());
                 }

@@ -5,12 +5,14 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.RegenDamageTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -71,7 +73,7 @@ public class ChaliceItem extends Item {
         RegenerationData.get(entityLiving).ifPresent(regenData -> {
             if (regenData.canRegenerate()) {
                 regenData.setNextTrait(getTrait(stack));
-                entityLiving.hurt(RegenDamageTypes.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+                entityLiving.hurt(new DamageSource(worldIn.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(RegenDamageTypes.REGEN_DMG_FORCED)), Integer.MAX_VALUE);
 
                 if(entityLiving instanceof Player player){
                     if(!player.isCreative()){

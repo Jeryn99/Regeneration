@@ -14,7 +14,8 @@ import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -103,10 +104,10 @@ public class RegenEnglishLang extends LanguageProvider {
         add(TransitionTypes.BLAZE.getTranslationKey(), "Blaze");
         add(TransitionTypes.TRISTIS_IGNIS.getTranslationKey(), "Tristis Ignis");
         add(TransitionTypes.SNEEZE.getTranslationKey(), "'Sneeze'");
+        add(TransitionTypes.DRINK.getTranslationKey(), "'Drink'");
 
         // === Item Group ===
         add("itemGroup.regen", "Regeneration");
-        add("itemGroup.regen.regen", "Regeneration");
 
         // === Sound Schemes ===
         addSoundScheme(IRegen.TimelordSound.HUM, "Graceful Hum");
@@ -280,8 +281,8 @@ public class RegenEnglishLang extends LanguageProvider {
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".description", description);
     }
 
-    public void add(DamageSource damageSource, String message) {
-        add("death.attack." + damageSource.getMsgId(), message);
-        add("death.attack." + damageSource.getMsgId() + ".player", message);
+    public void add(ResourceKey<DamageType> damagetype, String message) {
+        add("death.attack." + damagetype.location().getPath(), message);
+        add("death.attack." + damagetype.location().getPath() + ".player", message);
     }
 }

@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "regen:critical_period",
+      "required": false
+    },
+    {
+      "id": "regen:mid_regeneration",
+      "required": false
+    },
+    {
+      "id": "regen:forced_regeneration",
+      "required": false
+    },
+    {
+      "id": "regen:rifle_shot",
+      "required": false
+    },
+    {
+      "id": "regen:severed_arm",
+      "required": false
+    }
+  ]
+}

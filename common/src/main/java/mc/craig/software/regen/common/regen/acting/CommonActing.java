@@ -14,12 +14,16 @@ import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -105,7 +109,8 @@ public class CommonActing implements Acting {
                 PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
                 if (livingEntity.level().random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
-                    livingEntity.hurt(RegenDamageTypes.REGEN_DMG_CRITICAL, livingEntity.level().random.nextFloat() + .5F);
+                    Registry<DamageType> damageTypeRegistry = livingEntity.level().registryAccess().registry(Registries.DAMAGE_TYPE).get();
+                    livingEntity.hurt(new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_CRITICAL)), livingEntity.level().random.nextFloat() + .5F);
                 }
                 break;
 

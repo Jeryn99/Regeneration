@@ -2,6 +2,7 @@ package mc.craig.software.regen.common.entities;
 
 import mc.craig.software.regen.util.RegenDamageTypes;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -28,7 +29,7 @@ public class Laser extends ThrowableProjectile {
     private static final EntityDataAccessor<Float> GREEN = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> BLUE = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private float damage = 3;
-    private DamageSource damageSrc = RegenDamageTypes.REGEN_DMG_RIFLE;
+    private DamageSource damageSrc = new DamageSource(level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_RIFLE));
 
     public Laser(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);

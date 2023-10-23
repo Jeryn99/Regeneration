@@ -39,5 +39,6 @@
     [
       "ready_for_war"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

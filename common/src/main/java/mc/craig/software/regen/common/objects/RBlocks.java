@@ -5,10 +5,8 @@ import mc.craig.software.regen.common.block.ROreBlock;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import mc.craig.software.regen.util.constants.RConstants;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -16,8 +14,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.Supplier;
-
-import static mc.craig.software.regen.common.objects.RItems.MAIN;
 
 public class RBlocks {
 

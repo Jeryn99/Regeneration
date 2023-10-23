@@ -7,13 +7,16 @@ import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -157,7 +160,7 @@ public class PlayerUtil {
     public static void explodeKill(Entity exploder, Level world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof PathfinderMob && entity.canChangeDimensions()) || (entity instanceof Player)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.hurt(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
+                entity.hurt(new DamageSource(world.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION)), 3.5F);
         });
     }
 

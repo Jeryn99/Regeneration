@@ -11,7 +11,7 @@ public class RTabsImpl {
     public static CreativeModeTab createTab(){
         return FabricItemGroup.builder()
                 .icon(RTabs::makeIcon)
-                .title(Component.translatable("itemGroup.regeneration"))
+                .title(Component.translatable("itemGroup.regen"))
                 .displayItems((itemDisplayParameters, output) -> RTabs.outputAccept(output))
                 .build();
     }

@@ -24,5 +24,6 @@
     [
       "zero_status"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

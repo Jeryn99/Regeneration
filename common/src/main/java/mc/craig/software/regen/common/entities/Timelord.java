@@ -18,7 +18,9 @@ import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -36,6 +38,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -412,7 +415,8 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
         Laser laser = new Laser(REntities.LASER.get(), this, level());
         laser.setDamage(isPistol ? 4 : 10);
-        laser.setDamageSource(isPistol ? RegenDamageTypes.REGEN_DMG_STASER : RegenDamageTypes.REGEN_DMG_RIFLE);
+        Registry<DamageType> damageTypeRegistry = target.level().registryAccess().registry(Registries.DAMAGE_TYPE).get();
+        laser.setDamageSource(isPistol ? new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_STASER)) : new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_RIFLE)));
         double d0 = target.getEyeY() - (double) 1.1F;
         double d1 = target.getX() - this.getX();
         double d2 = d0 - laser.getY();

@@ -1,0 +1,6 @@
+// 1.20.1	2023-10-22T22:51:32.9811167	Tags for minecraft:block mod id regen
+0fae77a77f270f7b3b1b69cd4b935606bad5f1de data/forge/tags/blocks/ores.json
+0fae77a77f270f7b3b1b69cd4b935606bad5f1de data/forge/tags/blocks/ores/zinc.json
+1ab11555209acccada48f7e248c734dcbe064784 data/minecraft/tags/blocks/mineable/pickaxe.json
+13e0a7c5268a4b97bd42f8e866b45b85791c4a92 data/tardis/tags/blocks/ars.json
+e9d83009b2d27610fcc5b25d67ab732653de132b data/weeping_angels/tags/blocks/angel_proof.json

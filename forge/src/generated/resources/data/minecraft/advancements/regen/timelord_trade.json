@@ -24,5 +24,6 @@
     [
       "timelord_trade"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

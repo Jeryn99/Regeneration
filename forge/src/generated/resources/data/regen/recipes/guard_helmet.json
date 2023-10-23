@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "group": "regen",
   "key": {
     "I": {
@@ -16,5 +17,6 @@
   ],
   "result": {
     "item": "regen:guard_helmet"
-  }
+  },
+  "show_notification": true
 }

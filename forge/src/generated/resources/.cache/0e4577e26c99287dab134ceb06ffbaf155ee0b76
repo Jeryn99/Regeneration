@@ -1,0 +1,3 @@
+// 1.20.1	2023-10-22T22:51:32.9841097	Tags for minecraft:worldgen/biome mod id regen
+0dbc9816cff0a2df18f6d21455724c530e1bf58d data/regen/tags/worldgen/biome/has_structure/timelord_settlement.json
+9d21a837a31dc7f53628eff549108b90786e78ce data/regen/tags/worldgen/biome/overworld_ore.json

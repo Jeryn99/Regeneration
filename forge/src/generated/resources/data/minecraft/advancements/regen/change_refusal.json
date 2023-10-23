@@ -24,5 +24,6 @@
     [
       "change_refusal"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

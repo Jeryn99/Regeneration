@@ -34,5 +34,6 @@
     [
       "obtained_fob_watch"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

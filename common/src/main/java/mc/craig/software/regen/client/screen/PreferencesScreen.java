@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 
 import java.awt.*;
 import java.util.function.Function;
@@ -75,7 +76,7 @@ public class PreferencesScreen extends Screen {
             }
             button.setMessage(Component.translatable("gui.regen.sound_scheme." + newOne.name().toLowerCase()));
             new ChangeSoundScheme(newOne).send();
-        }).build();
+        }).bounds(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH).build();
 
 
         Button btnRegenType = Button.builder(transitionType.getTranslation(), button -> {
@@ -122,7 +123,7 @@ public class PreferencesScreen extends Screen {
         guiGraphics.blit(screenBackground, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
-        InventoryScreen.renderEntityInInventory(guiGraphics, width / 2 - 75, height / 2 + 45, 55, Axis.ZP.rotationDegrees(180.0F), null, Minecraft.getInstance().player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - mouseX, (float) (topPos + 75 - 50) - mouseY, Minecraft.getInstance().player);
         String str = Component.translatable("gui.regen.remaining_regens.status", data.regens()).getString();
         guiGraphics.drawString(font, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 

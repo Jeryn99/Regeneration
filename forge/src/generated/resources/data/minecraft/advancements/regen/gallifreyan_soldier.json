@@ -49,5 +49,6 @@
     [
       "gallifreyan_soldier"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

@@ -37,15 +37,15 @@ public class LivingEntityMixin {
         RegenerationData data = RegenerationData.get(livingEntity).get();
 
         // Stop certain damages
-        if (source == RegenDamageTypes.REGEN_DMG_KILLED)
+        if (source.is(RegenDamageTypes.REGEN_DMG_KILLED))
             return;
 
-        if (data.isTraitActive() && (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.is(DamageTypes.ON_FIRE) || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.is(DamageTypes.MOB_PROJECTILE))) {
+        if (data.isTraitActive() && (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && (source.is(DamageTypes.IN_FIRE) || source.is(DamageTypes.ON_FIRE)) || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.is(DamageTypes.MOB_PROJECTILE))) {
             cir.setReturnValue(false);
         }
 
         //Handle Death
-        if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && source.is(DamageTypes.ON_FIRE) || data.regenState() == RegenStates.REGENERATING && source.is(DamageTypes.EXPLOSION)) {
+        if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && (source.is(DamageTypes.IN_FIRE) || source.is(DamageTypes.ON_FIRE)) || data.regenState() == RegenStates.REGENERATING && source.is(DamageTypes.EXPLOSION)) {
             cir.setReturnValue(false);
         }
     }

@@ -27,8 +27,6 @@ public class Regeneration {
         RBlocks.BLOCKS.register();
         REntities.ENTITY_TYPES.register();
         RTiles.TILES.register();
-        RFeatures.CONFIGURED_FEATURES.register();
-        RFeatures.PLACED_FEATURES.register();
         RFeatures.DEFERRED_REGISTRY_STRUCTURE.register();
         RParticles.TYPES.register();
         TraitRegistry.TRAITS.register();

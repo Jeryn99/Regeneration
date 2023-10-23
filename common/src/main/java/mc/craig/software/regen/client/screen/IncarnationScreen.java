@@ -96,13 +96,13 @@ public class IncarnationScreen extends Screen {
         }
     }
 
-    private void renderSkinToGui(GuiGraphics guiGraphics, int x, int y) {
+    private void renderSkinToGui(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.pose().pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
         boolean backupSkinType = ClientUtil.isAlex(player);
         postRenderedPlayer = true;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
-        InventoryScreen.renderEntityInInventory(guiGraphics, width / 2 + 60, height / 2 + 20, 45, Axis.ZP.rotationDegrees(180.0F), null, Minecraft.getInstance().player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - mouseX, (float) (topPos + 75 - 25) - mouseY, Minecraft.getInstance().player);
         postRenderedPlayer = false;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         guiGraphics.pose().popPose();

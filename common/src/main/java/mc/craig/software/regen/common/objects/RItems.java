@@ -18,7 +18,6 @@ public class RItems {
 
 
     public static final DeferredRegistry<Item> ITEMS = DeferredRegistry.create(Regeneration.MOD_ID, Registries.ITEM);
-    public static CreativeModeTab MAIN = getCreativeTab();
 
     public static RegistrySupplier<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     public static RegistrySupplier<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
@@ -40,11 +39,5 @@ public class RItems {
     public static RegistrySupplier<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem("robes_male",LEATHER,  ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1).durability(375)));
     public static RegistrySupplier<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem("robes_male",LEATHER, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1).durability(350)));
     public static RegistrySupplier<Item> GAUNTLET = ITEMS.register("chalice", ChaliceItem::new);
-
-
-    @ExpectPlatform
-    public static CreativeModeTab getCreativeTab() {
-        throw new AssertionError();
-    }
 
 }

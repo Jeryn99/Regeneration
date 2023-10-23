@@ -37,8 +37,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class Cyberman extends PathfinderMob implements RangedAttackMob {
 
@@ -46,7 +45,7 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
         super(entityType, level);
     }
 
-    @Override
+    /*@Override
     public boolean wasKilled(ServerLevel serverLevel, LivingEntity livingEntity) {
         boolean wasKilled = super.wasKilled(serverLevel, livingEntity);
         if ((serverLevel.getDifficulty() == Difficulty.NORMAL || serverLevel.getDifficulty() == Difficulty.HARD) && livingEntity instanceof Timelord timelord) {
@@ -62,13 +61,13 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
         }
 
         return wasKilled;
-    }
+    }*/
 
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor p_21434_, @NotNull DifficultyInstance p_21435_, @NotNull MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
         RegenerationData.get(this).ifPresent((data) -> {
-            data.addRegens(level.getRandom().nextInt(12));
+            data.addRegens(level().getRandom().nextInt(12));
             data.setTransitionType(TransitionTypes.FIERY);
         });
         return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
@@ -113,7 +112,7 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
 
     @Override
     protected void playStepSound(@NotNull BlockPos blockPos, BlockState blockState) {
-        if (!blockState.getMaterial().isLiquid()) {
+        if (blockState.isSolid()) {
            this.playSound(RSounds.CYBER_WALK.get(), 0.15F, 1);
         }
     }
@@ -127,16 +126,16 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     public void performRangedAttack(@NotNull LivingEntity livingEntity, float p_33318_) {
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.regenState() != RegenStates.REGENERATING) {
-                Laser laser = new Laser(REntities.LASER.get(), this, level);
+                Laser laser = new Laser(REntities.LASER.get(), this, level());
                 laser.setColors(0, 0, 0.2F);
                 double d0 = livingEntity.getEyeY() - (double) 1.1F;
                 double d1 = livingEntity.getX() - this.getX();
                 double d2 = d0 - laser.getY();
                 double d3 = livingEntity.getZ() - this.getZ();
                 double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double) 0.2F;
-                laser.shoot(d1, d2 + d4, d3, 0.5F, 14 - livingEntity.level.getDifficulty().getId() * 4);
+                laser.shoot(d1, d2 + d4, d3, 0.5F, 14 - livingEntity.level().getDifficulty().getId() * 4);
                this.playSound(RSounds.CYBER_FIRE.get(), 0.5F, 0.0F);
-                this.level.addFreshEntity(laser);
+                this.level().addFreshEntity(laser);
             }
         });
     }

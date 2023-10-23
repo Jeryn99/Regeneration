@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class RTabsImpl {
     public static CreativeModeTab createTab(){
-        return CreativeModeTab.builder().title(Component.translatable("itemGroup.regeneration"))
+        return CreativeModeTab.builder().title(Component.translatable("itemGroup.regen"))
                 .icon(RTabs::makeIcon).displayItems((itemDisplayParameters, output) ->
                         RTabs.outputAccept(output)).build();
     }
