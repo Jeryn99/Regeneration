@@ -150,8 +150,7 @@ public class SkinRetriever {
         for (JsonElement skin : SkinApi.interalApiSkins()) {
             // Get the link and ID of the current skin
             String link = skin.getAsJsonObject().get("link").getAsString();
-            String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
-
+            String id = skin.getAsJsonObject().get("name").getAsString();
             // Download the skin from the given link and save it to the specified directories
             downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
         }
