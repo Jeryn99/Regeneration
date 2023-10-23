@@ -1,12 +1,10 @@
 package mc.craig.software.regen.common.item;
 
-import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
-import mc.craig.software.regen.util.RegenSources;
-import net.minecraft.core.NonNullList;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +23,7 @@ import java.util.List;
 public class ChaliceItem extends Item {
 
     public ChaliceItem() {
-        super(new Item.Properties().tab(RItems.MAIN).stacksTo(1).rarity(Rarity.EPIC));
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     }
 
     public static TraitBase getTrait(ItemStack stack) {
@@ -45,16 +43,6 @@ public class ChaliceItem extends Item {
         return prefix.append((getTrait(stack).getTitle()));
     }
 
-    @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        if (allowedIn(group)) {
-            for (TraitBase trait : TraitRegistry.TRAITS_REGISTRY.getValues()) {
-                    ItemStack stack = new ItemStack(this);
-                    setTrait(stack, trait);
-                    items.add(stack);
-            }
-        }
-    }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level worldIn, Player playerIn, @NotNull InteractionHand handIn) {
@@ -83,7 +71,7 @@ public class ChaliceItem extends Item {
         RegenerationData.get(entityLiving).ifPresent(regenData -> {
             if (regenData.canRegenerate()) {
                 regenData.setNextTrait(getTrait(stack));
-                entityLiving.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+                entityLiving.hurt(RegenDamageTypes.REGEN_DMG_FORCED, Integer.MAX_VALUE);
 
                 if(entityLiving instanceof Player player){
                     if(!player.isCreative()){

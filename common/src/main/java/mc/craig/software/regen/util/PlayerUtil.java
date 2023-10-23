@@ -7,7 +7,6 @@ import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,8 +26,6 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-
-import java.util.Iterator;
 
 import static net.minecraft.core.BlockPos.betweenClosedStream;
 
@@ -160,7 +157,7 @@ public class PlayerUtil {
     public static void explodeKill(Entity exploder, Level world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof PathfinderMob && entity.canChangeDimensions()) || (entity instanceof Player)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.hurt(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
+                entity.hurt(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
         });
     }
 

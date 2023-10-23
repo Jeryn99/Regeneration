@@ -23,22 +23,13 @@ public class RBlocks {
 
     public static final DeferredRegistry<Block> BLOCKS = DeferredRegistry.create(RConstants.MODID, Registries.BLOCK);
 
-    public static final RegistrySupplier<Block> BIO_CONTAINER = register("bio_container", JarBlock::new, MAIN);
+    public static final RegistrySupplier<Block> BIO_CONTAINER = register("bio_container", JarBlock::new);
     public static final RegistrySupplier<Block> ZERO_ROUNDEL = register("zero_roundel_half", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
     public static final RegistrySupplier<Block> ZERO_ROOM_FULL = register("zero_roundel_full", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
     public static final RegistrySupplier<Block> AZBANTIUM = register("azbantium", () -> new Block(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().mapColor(MapColor.STONE).strength(50.0F, 1200.0F)));
     static BlockBehaviour.Properties PROP = BlockBehaviour.Properties.of().mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(3.0F, 3.0F);
     public static final RegistrySupplier<Block> ZINC_ORE = register("zinc_ore", () -> new ROreBlock(PROP));
     public static final RegistrySupplier<Block> ZINC_ORE_DEEPSLATE = register("deepslate_zinc_ore", () -> new ROreBlock(PROP.strength(4.5F, 3F).sound(SoundType.DEEPSLATE).mapColor(MapColor.DEEPSLATE)));
-
-    /**
-     * Registers a Block and BlockItem to the ItemGroup of your choice
-     */
-    private static <T extends Block> RegistrySupplier<T> register(String id, Supplier<T> blockSupplier, CreativeModeTab itemGroup) {
-        RegistrySupplier<T> RegistrySupplier = BLOCKS.register(id, blockSupplier);
-        RItems.ITEMS.register(id, () -> new BlockItem(RegistrySupplier.get(), new Item.Properties().tab(itemGroup)));
-        return RegistrySupplier;
-    }
 
     /**
      * Registers a Block without a BlockItem
@@ -53,7 +44,7 @@ public class RBlocks {
      */
     private static <T extends Block> RegistrySupplier<T> register(String id, Supplier<T> blockSupplier) {
         RegistrySupplier<T> RegistrySupplier = BLOCKS.register(id, blockSupplier);
-        RItems.ITEMS.register(id, () -> new BlockItem(RegistrySupplier.get(), new Item.Properties().tab(MAIN)));
+        RItems.ITEMS.register(id, () -> new BlockItem(RegistrySupplier.get(), new Item.Properties()));
         return RegistrySupplier;
     }
 

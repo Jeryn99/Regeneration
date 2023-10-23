@@ -5,7 +5,7 @@ import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
@@ -37,7 +37,7 @@ public class LivingEntityMixin {
         RegenerationData data = RegenerationData.get(livingEntity).get();
 
         // Stop certain damages
-        if (source == RegenSources.REGEN_DMG_KILLED)
+        if (source == RegenDamageTypes.REGEN_DMG_KILLED)
             return;
 
         if (data.isTraitActive() && (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && source.is(DamageTypes.ON_FIRE) || data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && source.is(DamageTypes.MOB_PROJECTILE))) {

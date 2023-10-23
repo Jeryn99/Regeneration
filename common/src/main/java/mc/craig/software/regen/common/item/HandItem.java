@@ -7,16 +7,14 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -100,7 +98,7 @@ public class HandItem extends Item {
             }
             iRegen.setHandState(IRegen.Hand.CUT);
         });
-        livingEntity.hurt(RegenSources.REGEN_DMG_HAND, 3);
+        livingEntity.hurt(RegenDamageTypes.REGEN_DMG_HAND, 3);
         Containers.dropItemStack(livingEntity.level(), livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), itemStack);
     }
 
@@ -110,20 +108,6 @@ public class HandItem extends Item {
             return Component.translatable("item.regen.hand_with_name", stack.getOrCreateTag().getString("name") + "'s");
         }
         return super.getName(stack);
-    }
-
-    @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        if (allowedIn(group)) {
-            for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
-                if (skinType != PlayerUtil.SkinType.EITHER) {
-                    ItemStack itemstack = new ItemStack(this);
-                    setSkinType(skinType, itemstack);
-                    setTrait(TraitRegistry.HUMAN.get(), itemstack);
-                    items.add(itemstack);
-                }
-            }
-        }
     }
 
     @Override

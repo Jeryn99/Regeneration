@@ -8,6 +8,8 @@ import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.util.ViewUtil;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -51,7 +53,7 @@ public class Watcher extends Mob {
         RegenerationData.get(this).ifPresent(iRegen -> iRegen.setRegens(0));
 
         if (getTarget() == null) {
-            for (Player worldPlayer : level.players()) {
+            for (Player worldPlayer : level().players()) {
                 RegenerationData.get(worldPlayer).ifPresent(iRegen -> {
                     if (iRegen.regenState().isGraceful() && iRegen.transitionType() == TransitionTypes.WATCHER) {
                         setTarget(worldPlayer);
@@ -64,7 +66,7 @@ public class Watcher extends Mob {
             }
         } else {
             RegenerationData.get(getTarget()).ifPresent(iRegen -> {
-                if (iRegen.transitionType() != TransitionTypes.WATCHER || iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
+                if (iRegen.transitionType() != TransitionTypes.WATCHER || iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.ALIVE || getTarget().level().dimension() != level().dimension()) {
                     remove(RemovalReason.DISCARDED);
                 } else {
 
@@ -118,7 +120,7 @@ public class Watcher extends Mob {
     }
 
     protected boolean teleportRandomly() {
-        if (!this.level.isClientSide() && this.isAlive()) {
+        if (!this.level().isClientSide() && this.isAlive()) {
             double d0 = getTarget().getX() + this.random.nextInt(5);
             double d1 = getTarget().getY() + this.random.nextInt(5);
             double d2 = getTarget().getZ() + this.random.nextInt(5);
@@ -129,7 +131,7 @@ public class Watcher extends Mob {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkManager.spawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 }

@@ -2,6 +2,7 @@ package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.client.screen.widgets.RCheckbox;
 import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
@@ -14,10 +15,10 @@ import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -77,15 +79,15 @@ public class IncarnationScreen extends Screen {
      * @param text  - The text you'd like to draw
      * @param width - The max width of the text, scales to maintain this width if larger than it
      */
-    public static void renderWidthScaledText(String text, PoseStack matrix, Font font, float x, float y, int color, int width) {
-        matrix.pushPose();
+    public static void renderWidthScaledText(String text, GuiGraphics guiGraphics, Font font, float x, float y, int color, int width) {
+        guiGraphics.pose().pushPose();
         int textWidth = font.width(text);
         float scale = width / (float) textWidth;
         scale = Mth.clamp(scale, 0.0F, 1.0F);
-        matrix.translate(x, y, 0);
-        matrix.scale(scale, scale, scale);
-        drawCenteredString(matrix, Minecraft.getInstance().font, text, 0, 0, color);
-        matrix.popPose();
+        guiGraphics.pose().translate(x, y, 0);
+        guiGraphics.pose().scale(scale, scale, scale);
+        guiGraphics.drawCenteredString(Minecraft.getInstance().font, text, 0, 0, color);
+        guiGraphics.pose().popPose();
     }
 
     private void stripTrending() {
@@ -94,16 +96,16 @@ public class IncarnationScreen extends Screen {
         }
     }
 
-    private void renderSkinToGui(PoseStack matrixStack, int x, int y) {
-        matrixStack.pushPose();
+    private void renderSkinToGui(GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.pose().pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
         boolean backupSkinType = ClientUtil.isAlex(player);
         postRenderedPlayer = true;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
-        InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
+        InventoryScreen.renderEntityInInventory(guiGraphics, width / 2 + 60, height / 2 + 20, 45, Axis.ZP.rotationDegrees(180.0F), null, Minecraft.getInstance().player);
         postRenderedPlayer = false;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
-        matrixStack.popPose();
+        guiGraphics.pose().popPose();
     }
 
     @Override
@@ -144,23 +146,23 @@ public class IncarnationScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(guiGraphics);
         RenderSystem.setShaderTexture(0, screenBackground);
-        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        renderSkinToGui(matrixStack, mouseX, mouseY);
-        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("gui.regen.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
+        guiGraphics.blit(screenBackground, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        renderSkinToGui(guiGraphics, mouseX, mouseY);
+        guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("gui.regen.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
-            matrixStack.pushPose();
+            guiGraphics.pose().pushPose();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
-            matrixStack.popPose();
+            renderWidthScaledText(name, guiGraphics, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
+            guiGraphics.pose().popPose();
         }
-        drawCenteredString(matrixStack, Minecraft.getInstance().font, Component.translatable("Search"), (width - imageWidth) / 2 + 28, (height - imageHeight) / 2 + 20 + 15, Color.WHITE.getRGB());
+        guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("Search"), (width - imageWidth) / 2 + 28, (height - imageHeight) / 2 + 20 + 15, Color.WHITE.getRGB());
 
-        this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.searchField.render(guiGraphics, mouseX, mouseY, partialTicks);
 
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 
     }
@@ -187,7 +189,7 @@ public class IncarnationScreen extends Screen {
         this.searchField = new EditBox(this.font, cx + 10, cy + 30 + buttonOffset, cx - 15, 20, this.searchField, Component.translatable("skins.search"));
 
         this.searchField.setMaxLength(128);
-        this.searchField.setFocus(true);
+        this.searchField.setFocused(true);
 
         this.searchField.setResponder((s) -> {
             position = 0;
@@ -202,7 +204,7 @@ public class IncarnationScreen extends Screen {
         this.addWidget(this.searchField);
 
 
-        Button btnPrevious = new Button(cx + 140, cy + 60, 20, 20, Component.translatable("gui.regen.previous"), button -> {
+        Button btnPrevious = Button.builder(Component.translatable("gui.regen.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
             }
@@ -214,13 +216,9 @@ public class IncarnationScreen extends Screen {
                 position++;
             }
             updateModels();
-        }, (button, poseStack, i, j) -> {
-            if (button.isHoveredOrFocused()) {
-                this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.previous_skin")), Optional.empty(), i, j);
-            }
-        });
+        }).bounds(cx + 140, cy + 60, 20, 20).tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.previous_skin"))).build();
 
-        Button btnNext = new Button(cx + 215, cy + 60, 20, 20, Component.translatable("gui.regen.next"), button -> {
+        Button btnNext = Button.builder(Component.translatable("gui.regen.next"), button -> {
             // Previous
             if (searchField.getValue().isEmpty()) {
                 skins = SkinRetriever.listAllSkins(currentSkinType);
@@ -234,24 +232,19 @@ public class IncarnationScreen extends Screen {
                 position = skins.size() - 1;
             }
             updateModels();
-        }, (button, poseStack, i, j) -> {
-            if (button.isHoveredOrFocused()) {
-                this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.next_skin")), Optional.empty(), i, j);
-            }
-        });
+        }).bounds(cx + 215, cy + 60, 20, 20).tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.next_skin"))).build();
 
-        Button btnBack = new Button(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
+        Button btnBack = Button.builder(Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())).bounds(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2).build();
 
-        Button btnOpenFolder = new Button(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIR), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.open_folder")), Optional.empty(), i, j));
+        Button btnOpenFolder = Button.builder(Component.translatable("gui.regen.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIR)).bounds(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2).tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.open_folder"))).build();
 
-        Button btnSave = new Button(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.save"), button -> {
+        Button btnSave = Button.builder(Component.translatable("gui.regen.save"), button -> {
             updateModels();
             new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
-        }, (button, poseStack, i, j) -> {
-            this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.save_skin")), Optional.empty(), i, j);
-        });
+        }).bounds(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2)
+                .tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.save_skin"))).build();
 
-        Button btnResetSkin = new Button(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.reset_skin"), button -> VisualManipulator.sendResetMessage(), (button, poseStack, i, j) -> this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.reset_mojang")), Optional.empty(), i, j));
+        Button btnResetSkin = Button.builder(Component.translatable("gui.regen.reset_skin"), button -> VisualManipulator.sendResetMessage()).bounds(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2).tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.reset_mojang"))).build();
 
         this.excludeTrending = new RCheckbox(cx + 10, cy + 145, 150, 20, Component.translatable("Include Web Skins?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {

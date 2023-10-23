@@ -8,19 +8,15 @@ import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.RegenUtil;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.Explosion;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -46,11 +42,11 @@ public class CommonEvents {
         RegenerationData.get(livingEntity).ifPresent(data -> {
 
             // Stop certain damages
-            if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
+            if (event.getSource() == RegenDamageTypes.REGEN_DMG_KILLED)
                 return;
 
             //Handle Post
-            if (data.regenState() == RegenStates.POST && event.getSource() != event.getEntity().damageSources().fellOutOfWorld() && event.getSource() != RegenSources.REGEN_DMG_HAND) {
+            if (data.regenState() == RegenStates.POST && event.getSource() != event.getEntity().damageSources().fellOutOfWorld() && event.getSource() != RegenDamageTypes.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             }
@@ -106,7 +102,7 @@ public class CommonEvents {
     public static void adMortemInimicus(LivingDeathEvent event) {
         if (event.getEntity() == null) return;
         RegenerationData.get(event.getEntity()).ifPresent((cap) -> {
-            if ((event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)) {
+            if ((event.getSource() == RegenDamageTypes.REGEN_DMG_CRITICAL || event.getSource() == RegenDamageTypes.REGEN_DMG_KILLED)) {
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                     cap.extractRegens(cap.regens());
                 }
@@ -166,5 +162,14 @@ public class CommonEvents {
         RegenUtil.spawnHandIfPossible(event.getEntity(), event.getItemStack());
     }
 
-
+    /*@SubscribeEvent
+    public static void buildContents(BuildCreativeModeTabContentsEvent buildEvent){
+        if(buildEvent.getTabKey() == CreativeModeTabs.SPAWN_EGGS){
+            for (SpawnItem.Timelord timelordType : SpawnItem.Timelord.values()) {
+                ItemStack itemstack = new ItemStack(RItems.SPAWN_ITEM.get());
+                SpawnItem.setType(itemstack, timelordType);
+                buildEvent.accept(itemstack);
+            }
+        }
+    }*/
 }

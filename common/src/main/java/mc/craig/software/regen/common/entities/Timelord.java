@@ -12,17 +12,18 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
-import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
 import mc.craig.software.regen.util.Platform;
 import mc.craig.software.regen.util.constants.RConstants;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -36,7 +37,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -60,8 +60,8 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Set;
 
@@ -116,13 +116,13 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_35282_, DifficultyInstance p_35283_, MobSpawnType p_35284_, @org.jetbrains.annotations.Nullable SpawnGroupData p_35285_, @org.jetbrains.annotations.Nullable CompoundTag p_35286_) {
-        populateDefaultEquipmentSlots(random, level.getCurrentDifficultyAt(blockPosition()));
+        populateDefaultEquipmentSlots(random, level().getCurrentDifficultyAt(blockPosition()));
         return super.finalizeSpawn(p_35282_, p_35283_, p_35284_, p_35285_, p_35286_);
     }
 
     @Override
     public void updateSwimming() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (this.isEffectiveAi() && this.isInWater()) {
                 this.navigation = this.waterNavigator;
                 this.setSwimming(true);
@@ -147,7 +147,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         }
 
         if (getTimelordType() == TimelordType.COUNCIL) {
-            for (Holder<Item> holder : Registry.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).get()) {
+            for (Holder<Item> holder : BuiltInRegistries.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).get()) {
                 this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(holder.value()), false));
             }
 
@@ -167,10 +167,10 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     public void setup() {
-        if (!level.isClientSide()) {
+        if (!level().isClientSide()) {
 
             RegenerationData.get(this).ifPresent((data) -> {
-                data.addRegens(level.getRandom().nextInt(12));
+                data.addRegens(level().getRandom().nextInt(12));
                 CompoundTag nbt = new CompoundTag();
                 nbt.putFloat(RConstants.PRIMARY_RED, random.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.PRIMARY_GREEN, random.nextInt(255) / 255.0F);
@@ -183,7 +183,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                 data.setTransitionType(TransitionTypes.getRandomTimelordType());
                 initSkin(data);
                 genName();
-                populateDefaultEquipmentSlots(random, level.getCurrentDifficultyAt(blockPosition()));
+                populateDefaultEquipmentSlots(random, level().getCurrentDifficultyAt(blockPosition()));
                 getEntityData().set(HAS_SETUP, true);
             });
         }
@@ -198,13 +198,13 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        if (Platform.isModLoaded("weeping_angels") && !level.isClientSide) {
-            EntityType<?> weepingAngel = Registry.ENTITY_TYPE.get(new ResourceLocation("weeping_angels", "weeping_angel"));
+        if (Platform.isModLoaded("weeping_angels") && !level().isClientSide) {
+            EntityType<?> weepingAngel = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation("weeping_angels", "weeping_angel"));
             if (weepingAngel != null) {
-                if (level.random.nextInt(100) < 10) {
-                    Entity entity = weepingAngel.create(level);
+                if (level().random.nextInt(100) < 10) {
+                    Entity entity = weepingAngel.create(level());
                     entity.moveTo(getX(), getY(), getZ(), getYRot(), getXRot());
-                    level.addFreshEntity(entity);
+                    level().addFreshEntity(entity);
                 }
             }
         }
@@ -220,7 +220,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     @Override
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             new RemoveTimelordSkinMessage(this).sendToAll();
         }
     }
@@ -228,8 +228,8 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
-        level.getServer().submit(() -> {
-            File file = SkinRetriever.chooseRandomSkin(level.random, true, true);
+        level().getServer().submit(() -> {
+            File file = SkinRetriever.chooseRandomSkin(level().random, true, true);
             if (file != null) {
                 data.setSkin(RegenUtil.fileToBytes(file));
             }
@@ -261,7 +261,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         }
         super.tick();
         RegenerationData.get(this).ifPresent((data) -> {
-            if (!level.isClientSide) {
+            if (!level().isClientSide) {
 
                 if (!data.isSkinValidForUse()) {
                     initSkin(data);
@@ -298,7 +298,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
     @Override
     public void kill() {
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             new RemoveTimelordSkinMessage(this).sendToAll();
         }
         remove(RemovalReason.KILLED);
@@ -344,7 +344,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                 TraitRegistry.getRandomTrait().ifPresent(traitBase -> {
                     ItemStack chalice = new ItemStack(RItems.GAUNTLET.get());
                     ChaliceItem.setTrait(chalice, traitBase);
-                    Registry.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).flatMap(potentialCurrency -> potentialCurrency.getRandomElement(random)).ifPresent(itemHolder -> {
+                    BuiltInRegistries.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).flatMap(potentialCurrency -> potentialCurrency.getRandomElement(random)).ifPresent(itemHolder -> {
                         TimelordTrade[] trades = new TimelordTrade[]{new TimelordTrade(new ItemStack(itemHolder.value(), Mth.clamp(random.nextInt(10), 6, 20)), chalice, random.nextInt(7), 5)};
                         this.addOffersFromItemListings(merchantoffers, trades, 5);
                     });
@@ -410,9 +410,9 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     public void performRangedAttack(LivingEntity target, float distanceFactor) {
         boolean isPistol = getItemBySlot(EquipmentSlot.MAINHAND).getItem() == RItems.PISTOL.get();
 
-        Laser laser = new Laser(REntities.LASER.get(), this, level);
+        Laser laser = new Laser(REntities.LASER.get(), this, level());
         laser.setDamage(isPistol ? 4 : 10);
-        laser.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
+        laser.setDamageSource(isPistol ? RegenDamageTypes.REGEN_DMG_STASER : RegenDamageTypes.REGEN_DMG_RIFLE);
         double d0 = target.getEyeY() - (double) 1.1F;
         double d1 = target.getX() - this.getX();
         double d2 = d0 - laser.getY();
@@ -420,7 +420,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
         laser.shoot(d1, d2 + (double) f, d3, 1.6F, 0);
         this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 0.3F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(laser);
+        this.level().addFreshEntity(laser);
     }
 
     public boolean getAiming() {
@@ -448,7 +448,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         ItemStack itemstack = player.getItemInHand(interactionHand);
         if (itemstack.getItem() != RItems.SPAWN_ITEM.get() && this.isAlive() && !this.isTrading() && !this.isBaby()) {
             if (!this.getOffers().isEmpty()) {
-                if (!this.level.isClientSide) {
+                if (!this.level().isClientSide) {
                     this.setTradingPlayer(player);
                     if (player instanceof ServerPlayer playerEntity) {
                         TriggerManager.TIMELORD_TRADE.trigger(playerEntity);
@@ -456,7 +456,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
                     this.openTradingScreen(player, this.getDisplayName(), 1);
                 }
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(player, interactionHand);
         }
@@ -509,7 +509,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
         merchantOffer.increaseUses();
         if (merchantOffer.shouldRewardExp()) {
             int i = 3 + this.random.nextInt(4);
-            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
+            this.level().addFreshEntity(new ExperienceOrb(this.level(), this.getX(), this.getY() + 0.5D, this.getZ(), i));
         }
     }
 
@@ -519,8 +519,8 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkManager.spawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     @Override
@@ -545,7 +545,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
     @Override
     public boolean isClientSide() {
-        return this.level.isClientSide;
+        return this.level().isClientSide;
     }
 
 

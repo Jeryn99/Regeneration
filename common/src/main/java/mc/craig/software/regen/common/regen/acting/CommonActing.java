@@ -9,12 +9,11 @@ import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -106,7 +105,7 @@ public class CommonActing implements Acting {
                 PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
                 if (livingEntity.level().random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
-                    livingEntity.hurt(RegenSources.REGEN_DMG_CRITICAL, livingEntity.level().random.nextFloat() + .5F);
+                    livingEntity.hurt(RegenDamageTypes.REGEN_DMG_CRITICAL, livingEntity.level().random.nextFloat() + .5F);
                 }
                 break;
 

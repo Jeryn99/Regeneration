@@ -4,7 +4,7 @@ import mc.craig.software.regen.common.entities.Laser;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +27,7 @@ public class GunItem extends Item {
     private final float damage;
 
     public GunItem(int shotsPerRound, int cooldown, float damage) {
-        super(new Item.Properties().tab(RItems.MAIN).durability(shotsPerRound));
+        super(new Item.Properties().durability(shotsPerRound));
         this.cooldown = cooldown;
         this.damage = damage;
     }
@@ -51,7 +51,7 @@ public class GunItem extends Item {
                 if (!worldIn.isClientSide) {
                     Laser laserProjectile = new Laser(REntities.LASER.get(), playerIn, worldIn);
                     laserProjectile.setDamage(damage);
-                    laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
+                    laserProjectile.setDamageSource(isPistol ? RegenDamageTypes.REGEN_DMG_STASER : RegenDamageTypes.REGEN_DMG_RIFLE);
                     laserProjectile.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
                     entityLiving.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
                     worldIn.addFreshEntity(laserProjectile);

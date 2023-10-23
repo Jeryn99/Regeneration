@@ -10,18 +10,18 @@ import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class RegenEnglishLang extends LanguageProvider {
 
-    public RegenEnglishLang(DataGenerator gen) {
-        super(gen, RConstants.MODID, "en_us");
+    public RegenEnglishLang(PackOutput output) {
+        super(output, RConstants.MODID, "en_us");
     }
 
     @Override
@@ -81,13 +81,13 @@ public class RegenEnglishLang extends LanguageProvider {
         add("item.regen.chalice_of", "Chalice of");
 
         // === Damages Sources ===
-        add(RegenSources.REGEN_DMG_CRITICAL, "%s died from holding in their regeneration for too long");
-        add(RegenSources.REGEN_DMG_FORCED, "%s forced themselves to regenerate!");
-        add(RegenSources.REGEN_DMG_HAND, "%s died from blood loss!");
-        add(RegenSources.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
-        add(RegenSources.REGEN_DMG_STASER, "%s was shot dead with a Staser");
-        add(RegenSources.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
-        add(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
+        add(RegenDamageTypes.REGEN_DMG_CRITICAL, "%s died from holding in their regeneration for too long");
+        add(RegenDamageTypes.REGEN_DMG_FORCED, "%s forced themselves to regenerate!");
+        add(RegenDamageTypes.REGEN_DMG_HAND, "%s died from blood loss!");
+        add(RegenDamageTypes.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
+        add(RegenDamageTypes.REGEN_DMG_STASER, "%s was shot dead with a Staser");
+        add(RegenDamageTypes.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
+        add(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
 
         // === Timelords ===
         addTimelordtype(SpawnItem.Timelord.GUARD, "Timelord Guard");

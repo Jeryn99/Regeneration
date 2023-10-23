@@ -38,6 +38,8 @@ public class RegenUtil {
     public static TagKey<Block> ZINC = makeBlock("forge", "ores/zinc");
     public static TagKey<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
     public static TagKey<Biome> TIMELORD_SETTLEMENT = makeBiome("has_structure/timelord_settlement");
+    public static TagKey<Biome> IS_OVERWORLD = makeBiome("overworld_ore");
+
     public static TagKey<MobEffect> POST_REGEN_POTIONS = makeMobEffects("post_regen");
 
     public static RandomSource RAND = RandomSource.create();

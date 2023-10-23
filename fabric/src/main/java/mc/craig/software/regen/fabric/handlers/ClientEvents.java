@@ -21,7 +21,7 @@ public class ClientEvents {
             return -1;
         }, RItems.GAUNTLET.get());
 
-        HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> RegenerationOverlay.renderAll(guiGraphics.pose()));
+        HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> RegenerationOverlay.renderAll(guiGraphics));
 
     }
 

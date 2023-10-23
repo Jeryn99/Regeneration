@@ -86,7 +86,7 @@ public class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderOverlay(RenderGuiOverlayEvent.Pre event) {
-        RegenerationOverlay.renderUi(event.getGuiGraphics().pose());
+        RegenerationOverlay.renderUi(event.getGuiGraphics());
     }
 
     @SubscribeEvent

@@ -9,14 +9,9 @@ public class DescButton extends Button {
 
     private ArrayList<Component> description = null;
 
-    public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction) {
-        super(x, y, width, height, title, pressedAction);
+    public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction, CreateNarration createNarration) {
+        super(x, y, width, height, title, pressedAction, createNarration);
     }
-
-    public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction, OnTooltip onTooltip) {
-        super(x, y, width, height, title, pressedAction, onTooltip);
-    }
-
     public ArrayList<Component> getDescription() {
         return description;
     }

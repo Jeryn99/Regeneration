@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class SpawnItem extends Item {
 
     public SpawnItem() {
-        super(new Properties().tab(RItems.MAIN));
+        super(new Properties());
     }
 
     public static void setType(ItemStack stack, Timelord type) {
@@ -35,17 +35,6 @@ public class SpawnItem extends Item {
         String timelordType = tag.getString("type");
         timelordType = timelordType.isEmpty() ? SpawnItem.Timelord.FEMALE_COUNCIL.name() : timelordType;
         return SpawnItem.Timelord.valueOf(timelordType);
-    }
-
-    @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        if (allowedIn(group)) {
-            for (Timelord timelordType : SpawnItem.Timelord.values()) {
-                ItemStack itemstack = new ItemStack(this);
-                setType(itemstack, timelordType);
-                items.add(itemstack);
-            }
-        }
     }
 
     @Override

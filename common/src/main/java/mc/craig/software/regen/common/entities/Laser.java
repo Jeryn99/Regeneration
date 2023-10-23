@@ -1,10 +1,11 @@
 package mc.craig.software.regen.common.entities;
 
-import mc.craig.software.regen.network.NetworkManager;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -27,7 +28,7 @@ public class Laser extends ThrowableProjectile {
     private static final EntityDataAccessor<Float> GREEN = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> BLUE = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private float damage = 3;
-    private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
+    private DamageSource damageSrc = RegenDamageTypes.REGEN_DMG_RIFLE;
 
     public Laser(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
@@ -110,8 +111,8 @@ public class Laser extends ThrowableProjectile {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkManager.spawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
     }
 
     @Override

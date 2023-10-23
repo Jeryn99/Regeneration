@@ -33,6 +33,7 @@ public class Regeneration {
         RParticles.TYPES.register();
         TraitRegistry.TRAITS.register();
         RMotives.TYPES.register();
+        RTabs.TABS.register();
         TransitionTypes.init();
         DownloadSkinsThread skinsThread = new DownloadSkinsThread(Platform.isClient());
         skinsThread.setName("Skins Downloader");

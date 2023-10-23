@@ -2,15 +2,15 @@ package mc.craig.software.regen.common.item.tooltip.hand;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import mc.craig.software.regen.client.screen.IncarnationScreen;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Matrix4f;
 
 import java.util.Arrays;
 
@@ -47,12 +47,12 @@ public class ClientHandSkinToolTip implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
-        poseStack.pushPose();
+    public void renderImage(Font font, int mouseX, int mouseY, GuiGraphics guiGraphics) {
+        guiGraphics.pose().pushPose();
         IncarnationScreen.currentTexture = Arrays.equals(skin, new byte[0]) ? (isAlex ? ALEX_SKIN_LOCATION : STEVE_SKIN_LOCATION) : VisualManipulator.loadImage(VisualManipulator.genSkinNative(getSkin()));
         RenderSystem.setShaderTexture(0, IncarnationScreen.currentTexture);
-        GuiComponent.blit(poseStack, mouseX, mouseY, 8, 8, 8, 8, 64, 64);
-        GuiComponent.blit(poseStack, mouseX, mouseY, 40, 8, 8, 8, 64, 64);
-        poseStack.popPose();
+        guiGraphics.blit(IncarnationScreen.currentTexture, mouseX, mouseY, 8, 8, 8, 8, 64, 64);
+        guiGraphics.blit(IncarnationScreen.currentTexture, mouseX, mouseY, 40, 8, 8, 8, 64, 64);
+        guiGraphics.pose().popPose();
     }
 }

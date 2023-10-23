@@ -8,6 +8,7 @@ import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.network.messages.ColorChangeMessage;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -55,19 +56,20 @@ public class ColorScreen extends Screen {
         }));
 
         // Reset Style Button
-        this.addRenderableWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, Component.translatable("gui.regen.undo"), button -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.undo"), button -> {
             Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
             Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
             colorChooserPrimary.setColor(primaryColour.getRGB());
             colorChooserSecondary.setColor(secondaryColour.getRGB());
             updateScreenAndServer();
-        }));
+        }).bounds(cx + 100, cy + 145, btnW, btnH + 2).build());
 
         // Close Button
-        this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, Component.translatable("gui.regen.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.back"),
+                button -> Minecraft.getInstance().setScreen(new PreferencesScreen())).bounds(cx + 25, cy + 145, btnW, btnH + 2).build());
 
         // Default Button
-        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, Component.translatable("gui.regen.default"), button -> RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.default"), button -> RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
             TransitionType regenType = data.transitionType();
             Vec3 primColor = regenType.getDefaultPrimaryColor();
             Vec3 secColor = regenType.getDefaultSecondaryColor();
@@ -76,7 +78,7 @@ public class ColorScreen extends Screen {
             colorChooserPrimary.setColor(primaryColour.getRGB());
             colorChooserSecondary.setColor(secondaryColour.getRGB());
             updateScreenAndServer();
-        })));
+        })).bounds(cx + (90 * 2), cy + 145, btnW, btnH + 2).build());
 
         colorChooserPrimary = new ColorWidget(font, cx + 20, cy + 35, 70, 20, Component.literal("Regen"), new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
@@ -102,29 +104,29 @@ public class ColorScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(poseStack);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(guiGraphics);
 
         if (this.minecraft != null) {
             RenderSystem.setShaderTexture(0, BACKGROUND);
-            this.blit(poseStack, cx, cy, 0, 0, this.imageWidth, this.imageHeight);
+            guiGraphics.blit(BACKGROUND, cx, cy, 0, 0, this.imageWidth, this.imageHeight);
         }
 
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
-        colorChooserPrimary.render(poseStack, mouseX, mouseY, partialTick);
-        colorChooserSecondary.render(poseStack, mouseX, mouseY, partialTick);
+        colorChooserPrimary.render(guiGraphics, mouseX, mouseY, partialTick);
+        colorChooserSecondary.render(guiGraphics, mouseX, mouseY, partialTick);
 
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
             String str = Component.translatable("gui.regen.primary").getString();
             int length = Minecraft.getInstance().font.width(str);
-            this.font.draw(poseStack, Component.literal(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
+            guiGraphics.drawString(this.font, Component.literal(str).getString(),  cx + 55 - length / 2, cy + 19, 4210752);
             str = Component.translatable("gui.regen.secondary").getString();
             length = font.width(str);
-            this.font.draw(poseStack, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
+            guiGraphics.drawString(this.font, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
     }
 

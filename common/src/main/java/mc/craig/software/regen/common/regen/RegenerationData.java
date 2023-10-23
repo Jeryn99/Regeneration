@@ -13,7 +13,7 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SyncMessage;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.constants.RConstants;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.constants.RMessages;
 import mc.craig.software.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -363,7 +362,7 @@ public class RegenerationData implements IRegen {
     @Override
     public void forceRegeneration() {
         if (livingEntity != null) {
-            livingEntity.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+            livingEntity.hurt(RegenDamageTypes.REGEN_DMG_FORCED, Integer.MAX_VALUE);
         }
     }
 
@@ -541,7 +540,7 @@ public class RegenerationData implements IRegen {
                 return false;
             }
 
-            if (source == RegenSources.REGEN_DMG_CRITICAL) {
+            if (source == RegenDamageTypes.REGEN_DMG_CRITICAL) {
                 if (nextTransition != null) {
                     nextTransition.cancel();
                 }
@@ -569,7 +568,7 @@ public class RegenerationData implements IRegen {
                 }
                 case GRACE_CRIT -> {
                     nextTransition.cancel();
-                    if (source == RegenSources.REGEN_DMG_FORCED) {
+                    if (source == RegenDamageTypes.REGEN_DMG_FORCED) {
                         triggerRegeneration();
                         return true;
                     } else {
@@ -680,7 +679,7 @@ public class RegenerationData implements IRegen {
             nextTransition = null;
             handGlowTimer = null;
             transitionType.onFinishRegeneration(RegenerationData.this);
-            livingEntity.hurt(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+            livingEntity.hurt(isGrace ? RegenDamageTypes.REGEN_DMG_CRITICAL : RegenDamageTypes.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }

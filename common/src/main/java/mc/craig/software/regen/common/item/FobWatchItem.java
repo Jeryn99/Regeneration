@@ -40,7 +40,7 @@ import java.util.Optional;
 public class FobWatchItem extends Item {
 
     public FobWatchItem() {
-        super(new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(12));
+        super(new Item.Properties().stacksTo(1).durability(12));
     }
 
     /**
@@ -80,19 +80,6 @@ public class FobWatchItem extends Item {
     public static void setOpen(ItemStack stack, boolean isOpen) {
         getStackTag(stack).putBoolean("is_open", isOpen);
     }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
-        if (this.allowedIn(category)) {
-            ItemStack fobGold = new ItemStack(RItems.FOB.get());
-            ItemStack fobSilver = new ItemStack(RItems.FOB.get());
-            FobWatchItem.setEngrave(fobGold, true);
-            FobWatchItem.setEngrave(fobSilver, false);
-            items.add(fobGold);
-            items.add(fobSilver);
-        }
-    }
-
     @Override
     public void onCraftedBy(@NotNull ItemStack stack, @NotNull Level worldIn, @NotNull Player playerIn) {
         super.onCraftedBy(stack, worldIn, playerIn);
