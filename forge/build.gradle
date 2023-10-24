@@ -45,7 +45,7 @@ unifiedPublishing {
         var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge") ?: ""
         var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
 
-        if (CURSE_API_KEY != "") {
+        if (CURSE_API_KEY != null) {
             curseforge {
                 token = CURSE_API_KEY
                 id = "274275"
@@ -53,7 +53,7 @@ unifiedPublishing {
             }
         }
 
-        if (MODRINTH_TOKEN != "") {
+        if (MODRINTH_TOKEN != null) {
             modrinth {
                 token = MODRINTH_TOKEN
                 id = "8gkWtwQu"

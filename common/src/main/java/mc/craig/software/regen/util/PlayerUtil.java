@@ -28,6 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import java.util.stream.Stream;
+
 import static net.minecraft.core.BlockPos.betweenClosedStream;
 
 public class PlayerUtil {
@@ -39,32 +41,26 @@ public class PlayerUtil {
      * @return true if the player is above a Zero Room, false otherwise
      */
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
-        // Get the block position below the player
         BlockPos livingPos = playerEntity.blockPosition().below();
-
-        // Create an axis-aligned bounding box that covers the area below the player
         AABB grid = new AABB(livingPos.north().west(), livingPos.south().east());
 
-        // Iterate over all blocks in the grid
-        for (BlockPos pos : betweenClosedStream(new BlockPos((int) grid.maxX, (int) grid.maxY, (int) grid.maxZ), new BlockPos((int) grid.minX, (int) grid.minY, (int) grid.minZ)).toList()) {
+        Stream<BlockPos> blockPositions = betweenClosedStream(
+                new BlockPos((int) grid.maxX, (int) grid.maxY, (int) grid.maxZ),
+                new BlockPos((int) grid.minX, (int) grid.minY, (int) grid.minZ)
+        );
 
-            // Check if the block at this position is not a Zero Room block
+        boolean allZeroRoomBlocks = blockPositions.allMatch(pos -> {
             BlockState state = playerEntity.level().getBlockState(pos);
-            if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() &&
-                    state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
+            return state.getBlock() == RBlocks.ZERO_ROOM_FULL.get() || state.getBlock() == RBlocks.ZERO_ROUNDEL.get();
+        });
 
-                // If the block is not a Zero Room block, return false
-                return false;
-            }
-        }
-
-        // If all blocks in the grid are Zero Room blocks, trigger the Zero Room trigger
-        // and return true
-        if (playerEntity instanceof ServerPlayer serverPlayer) {
+        if (allZeroRoomBlocks && playerEntity instanceof ServerPlayer serverPlayer) {
             TriggerManager.ZERO_ROOM.trigger(serverPlayer);
         }
-        return true;
+
+        return allZeroRoomBlocks;
     }
+
 
     /**
      * Handles the effects of a Zero Room on the given player.
