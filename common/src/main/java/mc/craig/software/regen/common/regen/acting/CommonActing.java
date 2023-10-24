@@ -109,8 +109,7 @@ public class CommonActing implements Acting {
                 PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
                 if (livingEntity.level().random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
-                    Registry<DamageType> damageTypeRegistry = livingEntity.level().registryAccess().registry(Registries.DAMAGE_TYPE).get();
-                    livingEntity.hurt(new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_CRITICAL)), livingEntity.level().random.nextFloat() + .5F);
+                    livingEntity.hurt(new DamageSource(RegenDamageTypes.getHolder(livingEntity, RegenDamageTypes.REGEN_DMG_CRITICAL)), livingEntity.level().random.nextFloat() + .5F);
                 }
                 break;
 

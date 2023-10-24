@@ -29,7 +29,7 @@ public class Laser extends ThrowableProjectile {
     private static final EntityDataAccessor<Float> GREEN = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> BLUE = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private float damage = 3;
-    private DamageSource damageSrc = new DamageSource(level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_RIFLE));
+    private DamageSource damageSrc = new DamageSource(RegenDamageTypes.getHolder(level(), RegenDamageTypes.REGEN_DMG_RIFLE));
 
     public Laser(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);

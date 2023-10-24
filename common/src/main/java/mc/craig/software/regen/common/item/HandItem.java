@@ -100,7 +100,7 @@ public class HandItem extends Item {
             }
             iRegen.setHandState(IRegen.Hand.CUT);
         });
-        livingEntity.hurt(new DamageSource(livingEntity.level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_HAND)), 3);
+        livingEntity.hurt(new DamageSource(RegenDamageTypes.getHolder(livingEntity, RegenDamageTypes.REGEN_DMG_HAND)), 3);
         Containers.dropItemStack(livingEntity.level(), livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), itemStack);
     }
 

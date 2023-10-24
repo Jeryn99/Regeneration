@@ -5,6 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.commands.arguments.TraitArgumentType;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
@@ -22,7 +23,7 @@ public class TraitsCommand implements Command<CommandSourceStack> {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("set-trait")
-                .then(Commands.argument("players", EntityArgument.players())
+                .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("trait", TraitArgumentType.traitArgumentType())
                                 .executes(CMD)));
     }
@@ -43,7 +44,6 @@ public class TraitsCommand implements Command<CommandSourceStack> {
             source.sendFailure(Component.translatable(RMessages.SET_TRAIT_ERROR, playerText, traitText));
             return 0;
         }
-
         // If the player has a RegenerationData instance, set the current trait and sync the data to the clients.
         // Send a success message to the command source.
         RegenerationData.get(player).ifPresent((data) -> {

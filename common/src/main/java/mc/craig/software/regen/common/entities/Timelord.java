@@ -415,8 +415,7 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
         Laser laser = new Laser(REntities.LASER.get(), this, level());
         laser.setDamage(isPistol ? 4 : 10);
-        Registry<DamageType> damageTypeRegistry = target.level().registryAccess().registry(Registries.DAMAGE_TYPE).get();
-        laser.setDamageSource(isPistol ? new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_STASER)) : new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_RIFLE)));
+        laser.setDamageSource(isPistol ? new DamageSource(RegenDamageTypes.getHolder(level(), RegenDamageTypes.REGEN_DMG_STASER)) : new DamageSource(RegenDamageTypes.getHolder(level(), RegenDamageTypes.REGEN_DMG_RIFLE)));
         double d0 = target.getEyeY() - (double) 1.1F;
         double d1 = target.getX() - this.getX();
         double d2 = d0 - laser.getY();

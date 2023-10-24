@@ -73,7 +73,7 @@ public class ChaliceItem extends Item {
         RegenerationData.get(entityLiving).ifPresent(regenData -> {
             if (regenData.canRegenerate()) {
                 regenData.setNextTrait(getTrait(stack));
-                entityLiving.hurt(new DamageSource(worldIn.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(RegenDamageTypes.REGEN_DMG_FORCED)), Integer.MAX_VALUE);
+                entityLiving.die(new DamageSource(RegenDamageTypes.getHolder(worldIn, RegenDamageTypes.REGEN_DMG_FORCED)));
 
                 if(entityLiving instanceof Player player){
                     if(!player.isCreative()){

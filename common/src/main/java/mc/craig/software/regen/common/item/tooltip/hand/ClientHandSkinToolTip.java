@@ -50,7 +50,6 @@ public class ClientHandSkinToolTip implements ClientTooltipComponent {
     public void renderImage(Font font, int mouseX, int mouseY, GuiGraphics guiGraphics) {
         guiGraphics.pose().pushPose();
         IncarnationScreen.currentTexture = Arrays.equals(skin, new byte[0]) ? (isAlex ? ALEX_SKIN_LOCATION : STEVE_SKIN_LOCATION) : VisualManipulator.loadImage(VisualManipulator.genSkinNative(getSkin()));
-        RenderSystem.setShaderTexture(0, IncarnationScreen.currentTexture);
         guiGraphics.blit(IncarnationScreen.currentTexture, mouseX, mouseY, 8, 8, 8, 8, 64, 64);
         guiGraphics.blit(IncarnationScreen.currentTexture, mouseX, mouseY, 40, 8, 8, 8, 64, 64);
         guiGraphics.pose().popPose();

@@ -55,8 +55,7 @@ public class GunItem extends Item {
                 if (!worldIn.isClientSide) {
                     Laser laserProjectile = new Laser(REntities.LASER.get(), playerIn, worldIn);
                     laserProjectile.setDamage(damage);
-                    Registry<DamageType> damageTypeRegistry = worldIn.registryAccess().registry(Registries.DAMAGE_TYPE).get();
-                    laserProjectile.setDamageSource(isPistol ? new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_STASER)) : new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_RIFLE)));
+                    laserProjectile.setDamageSource(isPistol ? new DamageSource(RegenDamageTypes.getHolder(worldIn, RegenDamageTypes.REGEN_DMG_STASER)) : new DamageSource(RegenDamageTypes.getHolder(worldIn, RegenDamageTypes.REGEN_DMG_RIFLE)));
                     laserProjectile.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
                     entityLiving.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
                     worldIn.addFreshEntity(laserProjectile);

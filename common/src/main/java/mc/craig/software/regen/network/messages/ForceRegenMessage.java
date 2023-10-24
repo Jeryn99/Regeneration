@@ -24,7 +24,7 @@ public class ForceRegenMessage extends MessageC2S {
         RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
             if (cap.regenState() == RegenStates.ALIVE || cap.regenState().isGraceful()) {
                 if (cap.canRegenerate()) {
-                    cap.getLiving().hurt(new DamageSource(cap.getLiving().level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_FORCED)), Integer.MAX_VALUE);
+                    cap.getLiving().die(new DamageSource(RegenDamageTypes.getHolder(context.getPlayer(), RegenDamageTypes.REGEN_DMG_FORCED)));
                 }
             }
         });

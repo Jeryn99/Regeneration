@@ -34,6 +34,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -368,7 +369,7 @@ public class RegenerationData implements IRegen {
     @Override
     public void forceRegeneration() {
         if (livingEntity != null) {
-            livingEntity.hurt(new DamageSource(livingEntity.level().registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_FORCED)), Integer.MAX_VALUE);
+            livingEntity.die(new DamageSource(RegenDamageTypes.getHolder(livingEntity, RegenDamageTypes.REGEN_DMG_FORCED)));
         }
     }
 
@@ -685,8 +686,7 @@ public class RegenerationData implements IRegen {
             nextTransition = null;
             handGlowTimer = null;
             transitionType.onFinishRegeneration(RegenerationData.this);
-            Registry<DamageType> damageTypeRegistry = livingEntity.level().registryAccess().registry(Registries.DAMAGE_TYPE).get();
-            livingEntity.hurt(isGrace ? new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_CRITICAL)) : new DamageSource(damageTypeRegistry.getHolderOrThrow(RegenDamageTypes.REGEN_DMG_KILLED)), Integer.MAX_VALUE);
+            livingEntity.hurt(isGrace ? new DamageSource(RegenDamageTypes.getHolder(livingEntity, RegenDamageTypes.REGEN_DMG_CRITICAL)) : new DamageSource(RegenDamageTypes.getHolder(livingEntity, RegenDamageTypes.REGEN_DMG_KILLED)), Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }

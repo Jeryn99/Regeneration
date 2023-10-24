@@ -141,6 +141,9 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RMessages.SET_REGEN_INVALID_ENTITY, "Could not set %s Regenerations for %s, it is not a Living Entity");
         add(RMessages.SET_REGEN_CONFIG_DISABLED, "Could not set Regenerations for %s, the Config Option %s is set to %s");
 
+        // === ArgumentTypes ===
+        add("argument.regeneration.trait.invalid", "Invalid trait!");
+
         // === Config ===
         //Skin
         addConfig(RegenConfig.CLIENT.downloadTrendingSkins, "Download Trending Skins?");

@@ -54,25 +54,23 @@ public class RegenerationOverlay {
 
             // Render head & hat piece for use in post regeneration state
             if (currentState == RegenStates.POST) {
-                RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
                 guiGraphics.blit(player.getSkinTextureLocation(), 8, 10, 8, 8, 8, 8, 64, 64);
                 guiGraphics.blit(player.getSkinTextureLocation(), 8, 10, 40, 8, 8, 8, 64, 64);
             }
 
             // Render Regeneration Status Icon
-            RenderSystem.setShaderTexture(0, BACKGROUND);
             guiGraphics.blit(BACKGROUND, 4, 4, cap.regenState().getSpriteSheet().getUOffset(), cap.regenState().getSpriteSheet().getYOffset(), 16, 16, 256, 256);
 
             // Alert User that their hand is glowing
             if (cap.glowing()) {
                 RConstants.SpriteSheet handGlow = RConstants.SpriteSheet.HAND_GLOW;
-                guiGraphics.blit(player.getSkinTextureLocation(),Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
+                guiGraphics.blit(BACKGROUND,Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
             }
 
             if (cap.handState() != IRegen.Hand.NOT_CUT) {
                 RConstants.SpriteSheet handGlow = RConstants.SpriteSheet.MISSING_ARM;
                 int positionOffset = player.getMainArm() == HumanoidArm.RIGHT ? Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 91 - 29 : Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + 101;
-                guiGraphics.blit(player.getSkinTextureLocation(), positionOffset, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 19, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
+                guiGraphics.blit(BACKGROUND, positionOffset, Minecraft.getInstance().getWindow().getGuiScaledHeight() - 19, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
             }
 
             if (currentState == RegenStates.REGENERATING) {

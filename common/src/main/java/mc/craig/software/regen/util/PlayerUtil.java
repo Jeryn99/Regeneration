@@ -160,7 +160,7 @@ public class PlayerUtil {
     public static void explodeKill(Entity exploder, Level world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof PathfinderMob && entity.canChangeDimensions()) || (entity instanceof Player)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.hurt(new DamageSource(world.registryAccess().registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION)), 3.5F);
+                entity.hurt(new DamageSource(RegenDamageTypes.getHolder(world, RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION)), 3.5F);
         });
     }
 
