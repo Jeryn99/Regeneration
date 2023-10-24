@@ -3,12 +3,12 @@ package mc.craig.software.regen.common.objects;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import mc.craig.software.regen.util.constants.RConstants;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 public class RSounds {
-    public static final DeferredRegistry<SoundEvent> SOUNDS = DeferredRegistry.create(RConstants.MODID, Registry.SOUND_EVENT_REGISTRY);
+    public static final DeferredRegistry<SoundEvent> SOUNDS = DeferredRegistry.create(RConstants.MODID, Registries.SOUND_EVENT);
 
     public static final RegistrySupplier<SoundEvent> FOB_WATCH = SOUNDS.register("fob_watch", () -> setUpSound("fob_watch"));
     public static final RegistrySupplier<SoundEvent> CRITICAL_STAGE = SOUNDS.register("critical_stage", () -> setUpSound("critical_stage"));
@@ -38,8 +38,9 @@ public class RSounds {
     //Cyber
     public static final RegistrySupplier<SoundEvent> CYBER_WALK = SOUNDS.register("cyber_walk", () -> setUpSound("cyber_walk"));
     public static final RegistrySupplier<SoundEvent> CYBER_FIRE = SOUNDS.register("cyber_fire", () -> setUpSound("cyber_fire"));
+
     private static SoundEvent setUpSound(String soundName) {
-        return new SoundEvent(new ResourceLocation(RConstants.MODID, soundName));
+        return SoundEvent.createVariableRangeEvent(new ResourceLocation(RConstants.MODID, soundName));
     }
 
 

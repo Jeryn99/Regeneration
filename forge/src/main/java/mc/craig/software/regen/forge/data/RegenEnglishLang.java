@@ -10,18 +10,19 @@ import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.RegenSources;
+import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class RegenEnglishLang extends LanguageProvider {
 
-    public RegenEnglishLang(DataGenerator gen) {
-        super(gen, RConstants.MODID, "en_us");
+    public RegenEnglishLang(PackOutput output) {
+        super(output, RConstants.MODID, "en_us");
     }
 
     @Override
@@ -81,13 +82,13 @@ public class RegenEnglishLang extends LanguageProvider {
         add("item.regen.chalice_of", "Chalice of");
 
         // === Damages Sources ===
-        add(RegenSources.REGEN_DMG_CRITICAL, "%s died from holding in their regeneration for too long");
-        add(RegenSources.REGEN_DMG_FORCED, "%s forced themselves to regenerate!");
-        add(RegenSources.REGEN_DMG_HAND, "%s died from blood loss!");
-        add(RegenSources.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
-        add(RegenSources.REGEN_DMG_STASER, "%s was shot dead with a Staser");
-        add(RegenSources.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
-        add(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
+        add(RegenDamageTypes.REGEN_DMG_CRITICAL, "%s died from holding in their regeneration for too long");
+        add(RegenDamageTypes.REGEN_DMG_FORCED, "%s forced themselves to regenerate!");
+        add(RegenDamageTypes.REGEN_DMG_HAND, "%s died from blood loss!");
+        add(RegenDamageTypes.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
+        add(RegenDamageTypes.REGEN_DMG_STASER, "%s was shot dead with a Staser");
+        add(RegenDamageTypes.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
+        add(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
 
         // === Timelords ===
         addTimelordtype(SpawnItem.Timelord.GUARD, "Timelord Guard");
@@ -103,10 +104,10 @@ public class RegenEnglishLang extends LanguageProvider {
         add(TransitionTypes.BLAZE.getTranslationKey(), "Blaze");
         add(TransitionTypes.TRISTIS_IGNIS.getTranslationKey(), "Tristis Ignis");
         add(TransitionTypes.SNEEZE.getTranslationKey(), "'Sneeze'");
+        add(TransitionTypes.DRINK.getTranslationKey(), "'Drink'");
 
         // === Item Group ===
         add("itemGroup.regen", "Regeneration");
-        add("itemGroup.regen.regen", "Regeneration");
 
         // === Sound Schemes ===
         addSoundScheme(IRegen.TimelordSound.HUM, "Graceful Hum");
@@ -140,6 +141,9 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RMessages.SET_REGEN_INVALID_ENTITY, "Could not set %s Regenerations for %s, it is not a Living Entity");
         add(RMessages.SET_REGEN_CONFIG_DISABLED, "Could not set Regenerations for %s, the Config Option %s is set to %s");
 
+        // === ArgumentTypes ===
+        add("argument.regeneration.trait.invalid", "Invalid trait!");
+
         // === Config ===
         //Skin
         addConfig(RegenConfig.CLIENT.downloadTrendingSkins, "Download Trending Skins?");
@@ -157,20 +161,20 @@ public class RegenEnglishLang extends LanguageProvider {
         addConfig(RegenConfig.COMMON.sendRegenDeathMessages, "Send Regeneration death chat messages?");
         addConfig(RegenConfig.COMMON.postRegenerationDuration, "Post Regeneration Duration", 2);
         addConfig(RegenConfig.COMMON.postRegenerationLevel, "Post Regeneration Level", 2);
-        addConfig(RegenConfig.COMMON.resetHunger, "Reset Hunger?",2);
-        addConfig(RegenConfig.COMMON.resetOxygen, "Reset Air?",2);
+        addConfig(RegenConfig.COMMON.resetHunger, "Reset Hunger?", 2);
+        addConfig(RegenConfig.COMMON.resetOxygen, "Reset Air?", 2);
         addConfig(RegenConfig.COMMON.regenFireImmune, "Fire immunity?");
-        addConfig(RegenConfig.COMMON.regenerationKnocksbackPlayers, "Knocks back players?",2);
-        addConfig(RegenConfig.COMMON.absorbtionLevel, "Absorption Level?",2);
+        addConfig(RegenConfig.COMMON.regenerationKnocksbackPlayers, "Knocks back players?", 2);
+        addConfig(RegenConfig.COMMON.absorbtionLevel, "Absorption Level?", 2);
         addConfig(RegenConfig.COMMON.gracePhaseLength, "Grace Period Length", 2);
-        addConfig(RegenConfig.COMMON.criticalPhaseLength, "Critical Period Length",2);
-        addConfig(RegenConfig.COMMON.criticalDamageChance, "Critical Damage Chance",2);
-        addConfig(RegenConfig.COMMON.handGlowInterval, "Hand Glow Interval",2);
-        addConfig(RegenConfig.COMMON.handGlowTriggerDelay, "Hand Trigger Delay",2);
-        addConfig(RegenConfig.COMMON.regenerativeKillRange, "Regeneration hurt range",2);
-        addConfig(RegenConfig.COMMON.regenerativeKnockback, "Knockback Radius",2);
-        addConfig(RegenConfig.COMMON.regenKnockbackRange, "Knockback Range",2);
-        addConfig(RegenConfig.COMMON.allowUpwardsMotion, "Upwards motion?",2);
+        addConfig(RegenConfig.COMMON.criticalPhaseLength, "Critical Period Length", 2);
+        addConfig(RegenConfig.COMMON.criticalDamageChance, "Critical Damage Chance", 2);
+        addConfig(RegenConfig.COMMON.handGlowInterval, "Hand Glow Interval", 2);
+        addConfig(RegenConfig.COMMON.handGlowTriggerDelay, "Hand Trigger Delay", 2);
+        addConfig(RegenConfig.COMMON.regenerativeKillRange, "Regeneration hurt range", 2);
+        addConfig(RegenConfig.COMMON.regenerativeKnockback, "Knockback Radius", 2);
+        addConfig(RegenConfig.COMMON.regenKnockbackRange, "Knockback Range", 2);
+        addConfig(RegenConfig.COMMON.allowUpwardsMotion, "Upwards motion?", 2);
 
 
         // === Skin Types ===
@@ -280,8 +284,8 @@ public class RegenEnglishLang extends LanguageProvider {
         add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".description", description);
     }
 
-    public void add(DamageSource damageSource, String message) {
-        add("death.attack." + damageSource.getMsgId(), message);
-        add("death.attack." + damageSource.getMsgId() + ".player", message);
+    public void add(ResourceKey<DamageType> damagetype, String message) {
+        add("death.attack." + damagetype.location().getPath(), message);
+        add("death.attack." + damagetype.location().getPath() + ".player", message);
     }
 }

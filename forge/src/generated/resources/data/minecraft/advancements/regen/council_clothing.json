@@ -25,5 +25,6 @@
     [
       "council_clothing"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

@@ -1,4 +1,4 @@
-package mc.craig.software.regen.compat;
+/*package mc.craig.software.regen.compat;
 
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.acting.Acting;
@@ -91,3 +91,4 @@ public class TardisRefinedCompat implements Acting {
         return serverLevel.dimensionTypeId() == DimensionTypes.TARDIS;
     }
 }
+*/

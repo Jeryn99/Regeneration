@@ -21,23 +21,21 @@ loom {
         dataGen {
             mod "regen"
         }
-
     }
 
-       launches {
+    runs {
         data {
-            arg "--existing", project(":common").file("src/main/resources/").absolutePath
+            programArgs "--existing", project(":common").file("src/main/resources/").absolutePath
         }
     }
 }
 
-
 unifiedPublishing {
     project {
-        displayName = "[Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
+        displayName = "❤️‍🔥 [NeoForge] - Regeneration - $rootProject.minecraft_version - v$project.version"
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
-        gameVersions = ["1.19.2"]
+        gameVersions = ["1.20.1"]
         mainPublication tasks.remapJar
         gameLoaders = ["forge"]
         relations {
@@ -45,28 +43,21 @@ unifiedPublishing {
         }
 
         var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge") ?: ""
-        if (CURSE_API_KEY != "") {
-            curseforge {
-                token = CURSE_API_KEY
-                id = "274275"
-                gameVersions.addAll "Java 17", "1.19.2"
-            }
+        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
+
+        curseforge {
+            token = CURSE_API_KEY
+            id = "274275"
+            gameVersions.addAll "Java 17", "1.20.1"
         }
 
-        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
-        if (MODRINTH_TOKEN != "") {
-            modrinth {
-                token = MODRINTH_TOKEN
-                id = "8gkWtwQu"
-                version = "$project.version+$project.name"
-            }
+        modrinth {
+            token = MODRINTH_TOKEN
+            id = "8gkWtwQu"
+            version = "$project.version+$project.name"
         }
     }
 }
-
-
-
-
 
 configurations {
     common
@@ -77,7 +68,7 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    forge "net.neoforged:forge:${rootProject.forge_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -96,17 +87,17 @@ shadowJar {
     exclude "regen.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier = null
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {

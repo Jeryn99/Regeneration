@@ -2,7 +2,7 @@ package mc.craig.software.regen.client.rendering.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
@@ -27,7 +27,7 @@ public class RenderRegenLayer extends RenderLayer {
         RegenerationData.get((LivingEntity) entityPlayer).ifPresent(iRegen -> {
             poseStack.pushPose();
             for (int i = 0; i < 10; i++) {
-                poseStack.mulPose(Vector3f.YP.rotation(entityPlayer.tickCount * 4 + i * 45));
+                poseStack.mulPose(Axis.YP.rotation(entityPlayer.tickCount * 4 + i * 45));
                 poseStack.scale(1.0f, 1.0f, 0.65f);
                 float alpha = Mth.clamp(Mth.sin((entityPlayer.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 float red = (float) color.x, green = (float) color.y, blue = (float) color.z;

@@ -27,11 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 public class JarBlock extends Block implements EntityBlock {
@@ -39,7 +38,7 @@ public class JarBlock extends Block implements EntityBlock {
     public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
 
     public JarBlock() {
-        super(Properties.of(Material.METAL).noOcclusion());
+        super(Properties.of().mapColor(MapColor.METAL).noOcclusion());
         registerDefaultState(defaultBlockState().setValue(CampfireBlock.WATERLOGGED, false));
     }
 

@@ -1,7 +1,7 @@
 package mc.craig.software.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.client.rendering.types.RenderTypes;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -28,7 +28,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = 0;
                 poseStack.translate(0, 0.1, 0);
-                poseStack.mulPose(Vector3f.XN.rotationDegrees(90));
+                poseStack.mulPose(Axis.XN.rotationDegrees(90));
             }
         });
     }

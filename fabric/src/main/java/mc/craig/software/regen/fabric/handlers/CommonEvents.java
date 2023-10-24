@@ -41,7 +41,6 @@ public class CommonEvents {
             RegenUtil.spawnHandIfPossible(player, player.getItemInHand(InteractionHand.MAIN_HAND));
             return InteractionResultHolder.pass(player.getItemInHand(InteractionHand.MAIN_HAND));
         });
-
     }
 
 }

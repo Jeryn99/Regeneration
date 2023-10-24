@@ -22,7 +22,7 @@ public class RTextHelper {
      * The text will be displayed in green, and hovering over it will show the tooltip text.
      * Clicking on the text will also copy the tooltip text to the clipboard.
      *
-     * @param text the text to be displayed
+     * @param text        the text to be displayed
      * @param tooltipText the text to be displayed in the tooltip and copied to the clipboard
      * @return a MutableComponent with the given text and tooltip
      */
@@ -46,7 +46,7 @@ public class RTextHelper {
      * will show "OFFLINE Player" as the name.
      *
      * @param world the world in which the player exists
-     * @param id the player's UUID
+     * @param id    the player's UUID
      * @return a text component with the player's name and UUID as a tooltip
      */
     public static MutableComponent getPlayerTextObject(ServerLevel world, UUID id) {
@@ -62,7 +62,7 @@ public class RTextHelper {
      * Gets a text component representing an entity in the world.
      *
      * @param world the world containing the entity
-     * @param id the UUID of the entity
+     * @param id    the UUID of the entity
      * @return a text component with the entity's name and a tooltip with the entity's UUID
      */
     public static MutableComponent getEntityTextObject(ServerLevel world, UUID id) {
@@ -76,11 +76,11 @@ public class RTextHelper {
     }
 
     /**
-
-     Formats the given trait's name by capitalizing the first letter of each word and removing underscores.
-     @param trait the trait to format
-     @return the formatted trait name, or "null" if the trait is null
-     @throws NullPointerException if the trait is null
+     * Formats the given trait's name by capitalizing the first letter of each word and removing underscores.
+     *
+     * @param trait the trait to format
+     * @return the formatted trait name, or "null" if the trait is null
+     * @throws NullPointerException if the trait is null
      */
     public static String formatTraitName(TraitBase trait) {
         if (trait == null) {

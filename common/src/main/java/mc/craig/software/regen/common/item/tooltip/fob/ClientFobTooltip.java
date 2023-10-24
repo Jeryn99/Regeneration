@@ -1,14 +1,12 @@
 package mc.craig.software.regen.common.item.tooltip.fob;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import org.joml.Matrix4f;
 
 public class ClientFobTooltip implements ClientTooltipComponent {
 
@@ -38,11 +36,11 @@ public class ClientFobTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int mouseX, int mouseY, PoseStack poseStack, ItemRenderer itemRenderer, int blitOffset) {
+    public void renderImage(Font font, int mouseX, int mouseY, GuiGraphics guiGraphics) {
         for (int i = 0; i < 12 - regenerations; i++) {
             RenderSystem.setShaderTexture(0, RegenerationOverlay.CUSTOM_ICONS);
-            GuiComponent.blit(poseStack, mouseX + (i * 10), mouseY, 34, 0, 9, 9, 256, 256);
-            GuiComponent.blit(poseStack, mouseX + (i * 10), mouseY, 52, 0, 9, 9, 256, 256);
+            guiGraphics.blit(RegenerationOverlay.CUSTOM_ICONS, mouseX + (i * 10), mouseY, 34, 0, 9, 9, 256, 256);
+            guiGraphics.blit(RegenerationOverlay.CUSTOM_ICONS, mouseX + (i * 10), mouseY, 52, 0, 9, 9, 256, 256);
         }
     }
 }

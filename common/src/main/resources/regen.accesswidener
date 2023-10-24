@@ -3,15 +3,13 @@ transitive-accessible class net/minecraft/world/level/block/entity/BlockEntityTy
 accessible method net/minecraft/world/entity/SpawnPlacements register (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/SpawnPlacements$Type;Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/world/entity/SpawnPlacements$SpawnPredicate;)V
 accessible field net/minecraft/client/player/AbstractClientPlayer playerInfo Lnet/minecraft/client/multiplayer/PlayerInfo;
 accessible field net/minecraft/client/multiplayer/PlayerInfo skinModel Ljava/lang/String;
-accessible method net/minecraft/world/damagesource/DamageSource bypassArmor ()Lnet/minecraft/world/damagesource/DamageSource;
 accessible method net/minecraft/advancements/CriteriaTriggers register (Lnet/minecraft/advancements/CriterionTrigger;)Lnet/minecraft/advancements/CriterionTrigger;
 accessible method net/minecraft/client/multiplayer/PlayerInfo registerTextures ()V
-accessible method net/minecraft/client/gui/screens/Screen render (Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V
 transitive-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 transitive-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible method net/minecraft/world/entity/LivingEntity checkTotemDeathProtection (Lnet/minecraft/world/damagesource/DamageSource;)Z
 accessible field net/minecraft/client/gui/screens/inventory/InventoryScreen widthTooNarrow Z
-accessible method net/minecraft/client/gui/Gui renderTextureOverlay (Lnet/minecraft/resources/ResourceLocation;F)V
+accessible method net/minecraft/client/gui/Gui renderTextureOverlay (Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/resources/ResourceLocation;F)V
 accessible field net/minecraft/client/Minecraft itemColors Lnet/minecraft/client/color/item/ItemColors;
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
 accessible method net/minecraft/client/renderer/ScreenEffectRenderer renderFire (Lnet/minecraft/client/Minecraft;Lcom/mojang/blaze3d/vertex/PoseStack;)V

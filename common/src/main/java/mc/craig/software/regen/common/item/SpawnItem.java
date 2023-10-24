@@ -1,18 +1,15 @@
 package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.common.objects.REntities;
-import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.RegenerationData;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -22,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class SpawnItem extends Item {
 
     public SpawnItem() {
-        super(new Properties().tab(RItems.MAIN));
+        super(new Properties());
     }
 
     public static void setType(ItemStack stack, Timelord type) {
@@ -35,17 +32,6 @@ public class SpawnItem extends Item {
         String timelordType = tag.getString("type");
         timelordType = timelordType.isEmpty() ? SpawnItem.Timelord.FEMALE_COUNCIL.name() : timelordType;
         return SpawnItem.Timelord.valueOf(timelordType);
-    }
-
-    @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items) {
-        if (allowedIn(group)) {
-            for (Timelord timelordType : SpawnItem.Timelord.values()) {
-                ItemStack itemstack = new ItemStack(this);
-                setType(itemstack, timelordType);
-                items.add(itemstack);
-            }
-        }
     }
 
     @Override

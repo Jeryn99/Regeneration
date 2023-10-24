@@ -21,7 +21,7 @@ public class FireTrait extends TraitBase {
 
     @Override
     public void tick(LivingEntity livingEntity, IRegen data) {
-        if(livingEntity.isOnFire()){
+        if (livingEntity.isOnFire()) {
             livingEntity.clearFire();
         }
     }

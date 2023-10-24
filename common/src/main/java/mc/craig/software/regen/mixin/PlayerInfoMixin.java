@@ -1,10 +1,7 @@
 package mc.craig.software.regen.mixin;
 
 import com.mojang.authlib.GameProfile;
-import mc.craig.software.regen.client.screen.IncarnationScreen;
-import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.util.ClientUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;

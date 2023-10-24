@@ -83,8 +83,8 @@ public class SkinRetriever {
     /**
      * Determines whether the pixel at the specified coordinates in the given image has an alpha value.
      *
-     * @param x the x coordinate of the pixel
-     * @param y the y coordinate of the pixel
+     * @param x     the x coordinate of the pixel
+     * @param y     the y coordinate of the pixel
      * @param image the image containing the pixel
      * @return true if the pixel has an alpha value, false otherwise
      */
@@ -97,7 +97,7 @@ public class SkinRetriever {
     /**
      * Downloads a skin pack from the given URL and saves it to the specified directory.
      *
-     * @param url the URL of the skin pack to download
+     * @param url      the URL of the skin pack to download
      * @param filename the filename to use when saving the skin pack
      * @param specific the directory to save the skin pack to
      */
@@ -150,8 +150,7 @@ public class SkinRetriever {
         for (JsonElement skin : SkinApi.interalApiSkins()) {
             // Get the link and ID of the current skin
             String link = skin.getAsJsonObject().get("link").getAsString();
-            String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
-
+            String id = skin.getAsJsonObject().get("name").getAsString();
             // Download the skin from the given link and save it to the specified directories
             downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
         }
@@ -160,9 +159,9 @@ public class SkinRetriever {
     /**
      * Downloads a skin from the given URL and saves it to the specified directory.
      *
-     * @param url the URL of the skin to download
+     * @param url      the URL of the skin to download
      * @param filename the name to give the downloaded skin file
-     * @param alexDir the directory to save Alex skins to
+     * @param alexDir  the directory to save Alex skins to
      * @param steveDir the directory to save Steve skins to
      * @throws IOException if there is an error while downloading or saving the skin
      */
@@ -247,7 +246,7 @@ public class SkinRetriever {
 
         timelord();
 
-        if(isClient) {
+        if (isClient) {
             remoteSkins();
             internalSkins();
         }
@@ -271,7 +270,7 @@ public class SkinRetriever {
             return false;
         }
 
-        if(!json.has("update_interval")){
+        if (!json.has("update_interval")) {
             return true;
         }
 
@@ -305,9 +304,9 @@ public class SkinRetriever {
     /**
      * Chooses a random skin from the given skin directory.
      *
-     * @param random the random source to use for choosing the skin
+     * @param random     the random source to use for choosing the skin
      * @param isTimelord whether to choose a Timelord skin
-     * @param isAlex whether to choose an Alex skin
+     * @param isAlex     whether to choose an Alex skin
      * @return a file representing the chosen skin
      */
     public static File chooseRandomSkin(RandomSource random, boolean isTimelord, boolean isAlex) {
@@ -320,7 +319,7 @@ public class SkinRetriever {
         Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
-        if(folderFiles.size() == 0){
+        if (folderFiles.size() == 0) {
             return null;
         }
 

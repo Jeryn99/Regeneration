@@ -8,7 +8,6 @@ import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.world.RFeatures;
-import mc.craig.software.regen.compat.TardisRefinedCompat;
 import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.Platform;
 import org.slf4j.Logger;
@@ -27,12 +26,11 @@ public class Regeneration {
         RBlocks.BLOCKS.register();
         REntities.ENTITY_TYPES.register();
         RTiles.TILES.register();
-        RFeatures.CONFIGURED_FEATURES.register();
-        RFeatures.PLACED_FEATURES.register();
         RFeatures.DEFERRED_REGISTRY_STRUCTURE.register();
         RParticles.TYPES.register();
         TraitRegistry.TRAITS.register();
         RMotives.TYPES.register();
+        RTabs.TABS.register();
         TransitionTypes.init();
         DownloadSkinsThread skinsThread = new DownloadSkinsThread(Platform.isClient());
         skinsThread.setName("Skins Downloader");
@@ -40,7 +38,7 @@ public class Regeneration {
         TriggerManager.init();
 
         if (Platform.isModLoaded("tardis_refined")) {
-            TardisRefinedCompat.init();
+            //TardisRefinedCompat.init();
         }
     }
 }

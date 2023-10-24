@@ -1,12 +1,11 @@
 package mc.craig.software.regen.client.screen.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -44,7 +43,7 @@ public class ColorWidget extends AbstractWidget {
     }
 
     @Override
-    public void render(@NotNull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             for (int x = -radius; x < radius; x++) {
                 for (int y = -radius; y < radius; y++) {
@@ -60,20 +59,20 @@ public class ColorWidget extends AbstractWidget {
                     float hue = (float) (degrees < 0 ? 360 + degrees : degrees);
                     float saturation = (float) (distance / radius);
 
-                    fill(matrixStack, x + radius + this.x, y + radius + this.y, x + radius + 1 + this.x, y + radius + 1 + this.y, hsv2rgb(hue, saturation, 1));
+                    guiGraphics.fill(x + radius + this.getX(), y + radius + this.getY(), x + radius + 1 + this.getX(), y + radius + 1 + this.getY(), hsv2rgb(hue, saturation, 1));
                 }
             }
         }
-        text.render(matrixStack, mouseX, mouseY, partialTicks);
-        fill(matrixStack, x + width - textHeight - 1, y + width + 9, x + width, y + width + 10 + textHeight + 1, 0xFF9E9E9E);
-        fill(matrixStack, x + width - textHeight, y + width + 10, x + width - 1, y + width + 10 + textHeight, color);
+        text.render(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.fill(getX() + width - textHeight - 1, getY() + width + 9, getX() + width, getY() + width + 10 + textHeight + 1, 0xFF9E9E9E);
+        guiGraphics.fill(getX() + width - textHeight, getY() + width + 10, getX() + width - 1, getY() + width + 10 + textHeight, color);
     }
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        double distance = sqrt(pow(mouseX - x - radius, 2) + pow(mouseY - y - radius, 2));
+        double distance = sqrt(pow(mouseX - getX() - radius, 2) + pow(mouseY - getY() - radius, 2));
         if (distance <= radius) {
-            double angle = atan2(mouseY - y - radius, mouseX - x - radius);
+            double angle = atan2(mouseY - getY() - radius, mouseX - getX() - radius);
             double degrees = toDegrees(angle);
 
             float hue = (float) (degrees < 0 ? 360 + degrees : degrees);
@@ -147,7 +146,7 @@ public class ColorWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
     }
 }

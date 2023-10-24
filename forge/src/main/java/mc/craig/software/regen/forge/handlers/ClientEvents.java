@@ -1,6 +1,5 @@
 package mc.craig.software.regen.forge.handlers;
 
-import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.client.visual.FogTracker;
@@ -17,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
@@ -39,7 +37,6 @@ public class ClientEvents {
             }
         });
     }
-
 
 
     @SubscribeEvent
@@ -86,7 +83,7 @@ public class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderOverlay(RenderGuiOverlayEvent.Pre event) {
-        RegenerationOverlay.renderUi(event.getPoseStack());
+        RegenerationOverlay.renderUi(event.getGuiGraphics());
     }
 
     @SubscribeEvent

@@ -3,7 +3,7 @@ package mc.craig.software.regen.common.item;
 import mc.craig.software.regen.common.objects.RItems;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
@@ -15,28 +15,24 @@ public class RMaterials {
 
     public static ArmorMaterial TIMELORD = new ArmorMaterial() {
         @Override
-        public int getDurabilityForSlot(EquipmentSlot slotIn) {
-            switch (slotIn) {
-                case HEAD:
+        public int getDurabilityForType(ArmorItem.Type type) {
+            switch (type) {
+                case HELMET:
                     return 390;
-                case CHEST:
+                case CHESTPLATE:
                     return 550;
-                case LEGS:
+                case LEGGINGS:
                     return 510;
-                case FEET:
+                case BOOTS:
                     return 450;
-                case MAINHAND:
-                case OFFHAND:
-                    break;
                 default:
                     return 300;
             }
-            return 300;
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlot slotIn) {
-            return DMG_TIME[slotIn.getIndex()];
+        public int getDefenseForType(ArmorItem.Type type) {
+            return DMG_TIME[type.getSlot().getIndex()];
         }
 
         @Override

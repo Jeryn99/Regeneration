@@ -2,8 +2,7 @@ package mc.craig.software.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import net.minecraft.client.Minecraft;
@@ -16,6 +15,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
 
 import java.util.Random;
 
@@ -77,12 +77,12 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
                 matrixStackIn.translate(0.0D, 0.5D, 0);
 
                 for (int i = 0; (float) i < (f5 + f5 * f5) / 2.0F * 60.0F; ++i) {
-                    matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
+                    matrixStackIn.mulPose(Axis.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Axis.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Axis.ZP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Axis.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Axis.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrixStackIn.mulPose(Axis.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
                     float randomFloat = random.nextFloat() * 20.0F + 5.0F + f7 * 10.0F;
                     float randomFloat2 = random.nextFloat() * 2.0F + 1.0F + f7 * 2.0F;
                     Matrix4f matrix4f = matrixStackIn.last().pose();

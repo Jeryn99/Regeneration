@@ -7,7 +7,8 @@ import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.constants.RConstants;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -36,25 +37,27 @@ public class RegenUtil {
     public static TagKey<Block> ZINC = makeBlock("forge", "ores/zinc");
     public static TagKey<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
     public static TagKey<Biome> TIMELORD_SETTLEMENT = makeBiome("has_structure/timelord_settlement");
+    public static TagKey<Biome> IS_OVERWORLD = makeBiome("overworld_ore");
+
     public static TagKey<MobEffect> POST_REGEN_POTIONS = makeMobEffects("post_regen");
 
     public static RandomSource RAND = RandomSource.create();
     public static String[] USERNAMES = new String[]{};
 
     public static TagKey<Block> makeBlock(String domain, String path) {
-        return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(domain, path));
+        return TagKey.create(Registries.BLOCK, new ResourceLocation(domain, path));
     }
 
     private static TagKey<Biome> makeBiome(String name) {
-        return TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(RConstants.MODID, name));
+        return TagKey.create(Registries.BIOME, new ResourceLocation(RConstants.MODID, name));
     }
 
     private static TagKey<MobEffect> makeMobEffects(String name) {
-        return TagKey.create(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(RConstants.MODID, name));
+        return TagKey.create(Registries.MOB_EFFECT, new ResourceLocation(RConstants.MODID, name));
     }
 
     public static TagKey<Item> makeItem(String domain, String path) {
-        return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(domain, path));
+        return TagKey.create(Registries.ITEM, new ResourceLocation(domain, path));
     }
 
     public static double round(float value, int scale) {
@@ -67,7 +70,7 @@ public class RegenUtil {
                 EquipmentSlot.LEGS,
                 EquipmentSlot.FEET};
         for (EquipmentSlot equipmentSlotType : equipmentSlotTypes) {
-            if (!Registry.ITEM.getKey(serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem()).getPath().contains("robes")) {
+            if (!BuiltInRegistries.ITEM.getKey(serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem()).getPath().contains("robes")) {
                 return false;
             }
         }

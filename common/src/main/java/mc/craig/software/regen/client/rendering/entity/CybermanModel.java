@@ -10,7 +10,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.world.entity.Entity;
 
 public class CybermanModel extends HumanoidModel<Cyberman> {
 
@@ -74,6 +73,6 @@ public class CybermanModel extends HumanoidModel<Cyberman> {
     public void setupAnim(Cyberman entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
-            rightArm.xRot = (float) Math.toRadians(-90);
+        rightArm.xRot = (float) Math.toRadians(-90);
     }
 }

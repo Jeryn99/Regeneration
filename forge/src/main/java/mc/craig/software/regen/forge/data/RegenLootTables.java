@@ -1,53 +1,57 @@
 package mc.craig.software.regen.forge.data;
 
-import com.mojang.datafixers.util.Pair;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
+import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.registry.RegistrySupplier;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.BlockLoot;
-import net.minecraft.data.loot.EntityLoot;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootDataId;
+import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class RegenLootTables extends LootTableProvider {
-
-    public RegenLootTables(DataGenerator dataGenerator) {
-        super(dataGenerator);
+    public RegenLootTables(PackOutput output, Set<ResourceLocation> requiredTables, List<SubProviderEntry> subProviders) {
+        super(output, requiredTables, subProviders);
     }
 
     @Override
-    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-        return List.of(Pair.of(ModEntityLoot::new, LootContextParamSets.ENTITY), Pair.of(ModBlockLoot::new, LootContextParamSets.BLOCK));
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext) {
+        map.forEach((arg, arg2) -> {
+            arg2.validate(validationcontext.setParams(arg2.getParamSet()).enterElement("{" + arg + "}", new LootDataId(LootDataType.TABLE, arg)));
+        });
     }
 
-    @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationContext) {
-        for (Map.Entry<ResourceLocation, LootTable> entry : map.entrySet())
-            LootTables.validate(validationContext, entry.getKey(), entry.getValue());
-    }
+    public static class ModBlockLoot extends BlockLootSubProvider {
+        public ModBlockLoot(Set<Item> explosionResistant, FeatureFlagSet enabledFeatures) {
+            super(explosionResistant, enabledFeatures);
+        }
 
-    public static class ModBlockLoot extends BlockLoot {
+        public ModBlockLoot() {
+            super(Collections.emptySet(), FeatureFlags.VANILLA_SET);
+        }
+
         @Override
-        protected void addTables() {
-            for (Block block : getKnownBlocks()) {
-                dropSelf(block);
-            }
+        protected void generate() {
+            this.add(RBlocks.ZINC_ORE.get(), (block) -> createOreDrop(block, RItems.ZINC.get()));
+            this.add(RBlocks.ZINC_ORE_DEEPSLATE.get(), (block) -> createOreDrop(block, RItems.ZINC.get()));
+            dropSelf(RBlocks.ZERO_ROUNDEL.get());
+            dropSelf(RBlocks.BIO_CONTAINER.get());
+            dropSelf(RBlocks.AZBANTIUM.get());
+            dropSelf(RBlocks.ZERO_ROOM_FULL.get());
         }
 
         @Override
@@ -60,19 +64,27 @@ public class RegenLootTables extends LootTableProvider {
         }
     }
 
-    public static class ModEntityLoot extends EntityLoot {
+    public static class ModEntityLoot extends EntityLootSubProvider {
+        public ModEntityLoot(FeatureFlagSet enabledFeatures) {
+            super(enabledFeatures);
+        }
+
+        public ModEntityLoot() {
+            super(FeatureFlags.VANILLA_SET);
+        }
+
         @Override
-        protected void addTables() {
+        public void generate() {
             add(REntities.TIMELORD.get(), LootTable.lootTable());
         }
 
         @Override
-        protected Iterable<EntityType<?>> getKnownEntities() {
-            ArrayList<EntityType<?>> entityTypes = new ArrayList<>();
+        protected Stream<EntityType<?>> getKnownEntityTypes() {
+            Stream.Builder<EntityType<?>> entityTypes = Stream.builder();
             for (RegistrySupplier<EntityType<?>> entry : REntities.ENTITY_TYPES.getEntries()) {
                 entityTypes.add(entry.get());
             }
-            return entityTypes;
+            return entityTypes.build();
         }
     }
 }

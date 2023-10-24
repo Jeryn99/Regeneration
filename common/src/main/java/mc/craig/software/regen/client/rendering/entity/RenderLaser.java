@@ -2,7 +2,7 @@ package mc.craig.software.regen.client.rendering.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.common.entities.Laser;
 import mc.craig.software.regen.util.RenderHelp;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -36,9 +36,9 @@ public class RenderLaser extends EntityRenderer<Laser> {
         double diff = Mth.sqrt((float) (x_ * x_ + z_ * z_));
         float yaw = (float) (Math.atan2(z_, x_) * 180.0D / 3.141592653589793D) - 90.0F;
         float pitch = (float) -(Math.atan2(y_, diff) * 180.0D / 3.141592653589793D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(pitch));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-yaw));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
         VertexConsumer vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
         RenderHelp.drawGlowingLine(matrixStack, vertexBuilder, 1F, 0.05F, (float) entity.getColor().x, (float) entity.getColor().y, (float) entity.getColor().z, 1F, 15728640);
         matrixStack.popPose();

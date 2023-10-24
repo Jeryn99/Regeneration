@@ -1,7 +1,7 @@
 package mc.craig.software.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.regen.RegenerationData;
@@ -75,7 +75,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
 
                 matrixStackIn.pushPose();
-                matrixStackIn.mulPose(Vector3f.YN.rotation(rotate / 50)); //
+                matrixStackIn.mulPose(Axis.YN.rotation(rotate / 50)); //
                 matrixStackIn.translate(0, -0.2, 0);
                 matrixStackIn.translate(0, opacity, 0);
 
@@ -97,7 +97,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                         case 2:
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(-1, 0, 0);
-                            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
+                            matrixStackIn.mulPose(Axis.YP.rotationDegrees(-180));
                             matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
                             FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
                             matrixStackIn.popPose();
@@ -106,14 +106,14 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(0, 0, -1);
                             matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-                            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+                            matrixStackIn.mulPose(Axis.YP.rotationDegrees(90));
                             FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
                             matrixStackIn.popPose();
                             break;
                         case 4:
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(0, 0, 1);
-                            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+                            matrixStackIn.mulPose(Axis.YP.rotationDegrees(-90));
                             matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
                             FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
                             matrixStackIn.popPose();

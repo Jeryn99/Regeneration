@@ -1,6 +1,5 @@
 package mc.craig.software.regen.util;
 
-import com.mojang.math.Vector3f;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -8,6 +7,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AnimationState;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;

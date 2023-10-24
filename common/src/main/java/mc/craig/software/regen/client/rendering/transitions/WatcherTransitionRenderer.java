@@ -1,7 +1,7 @@
 package mc.craig.software.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.client.rendering.types.RenderTypes;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -29,7 +29,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = 0;
                 poseStack.translate(0, 0.1, 0);
-                poseStack.mulPose(Vector3f.XN.rotationDegrees(90));
+                poseStack.mulPose(Axis.XN.rotationDegrees(90));
             }
         });
     }
@@ -65,7 +65,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
 
                 if (iRegen.updateTicks() < 150) {
                     matrixStackIn.pushPose();
-                    matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
+                    matrixStackIn.mulPose(Axis.XN.rotationDegrees(-90));
                     matrixStackIn.translate(0, -1.5, 1);
                     FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vec3(1, 1, 1), (bipedModel1, livingEntity, limbSwing1, limbSwingAmount1, ageInTicks1, netHeadYaw1, headPitch1) -> {
                         bipedModel1.head.xRot = (float) Math.toRadians(40);

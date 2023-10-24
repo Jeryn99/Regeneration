@@ -27,6 +27,11 @@ public abstract class NetworkManager {
         throw new AssertionError();
     }
 
+    @ExpectPlatform
+    public static Packet<?> spawnPacket(Entity livingEntity) {
+        throw new RuntimeException("This isn't where you get the packet! tut tut!");
+    }
+
     public MessageType registerS2C(String id, MessageDecoder<MessageS2C> decoder) {
         var msgType = new MessageType(id, this, decoder, false);
         this.toClient.put(id, msgType);
@@ -49,12 +54,6 @@ public abstract class NetworkManager {
                 this.sendToPlayer((ServerPlayer) player, message);
             }
         }
-    }
-
-
-    @ExpectPlatform
-    public static Packet<?> spawnPacket(Entity livingEntity) {
-        throw new RuntimeException("This isn't where you get the packet! tut tut!");
     }
 
     @FunctionalInterface

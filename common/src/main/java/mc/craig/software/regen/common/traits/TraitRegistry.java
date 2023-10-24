@@ -28,7 +28,7 @@ public class TraitRegistry {
     public static RegistrySupplier<TraitBase> SLOW_FALL = TRAITS.register("slow_fall", SlowFallingTrait::new);
     public static RegistrySupplier<TraitBase> JUMP_BOOST = TRAITS.register("jump_boost", JumpBoostTrait::new);
 
-    public static Optional<TraitBase> getRandomTrait(){
+    public static Optional<TraitBase> getRandomTrait() {
         Collection<TraitBase> values = TRAITS_REGISTRY.getValues();
         return values.stream().skip((int) (values.size() * Math.random())).findFirst();
     }

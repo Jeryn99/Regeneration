@@ -15,7 +15,7 @@ import mc.craig.software.regen.network.messages.SkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -37,15 +37,15 @@ public class ClientActing implements Acting {
     @Override
     public void onEnterGrace(IRegen cap) {
         if (!Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) return;
-            SoundEvent ambientSound = cap.getTimelordSound().getSound();
-            ClientUtil.playSound(cap.getLiving(), Registry.SOUND_EVENT.getKey(RSounds.HEART_BEAT.get()), SoundSource.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F, cap.getLiving().getRandom());
-            ClientUtil.playSound(cap.getLiving(), Registry.SOUND_EVENT.getKey(ambientSound), SoundSource.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F, cap.getLiving().getRandom());
+        SoundEvent ambientSound = cap.getTimelordSound().getSound();
+        ClientUtil.playSound(cap.getLiving(), BuiltInRegistries.SOUND_EVENT.getKey(RSounds.HEART_BEAT.get()), SoundSource.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F, cap.getLiving().getRandom());
+        ClientUtil.playSound(cap.getLiving(), BuiltInRegistries.SOUND_EVENT.getKey(ambientSound), SoundSource.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F, cap.getLiving().getRandom());
     }
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
         if (cap.getLiving().getType() == EntityType.PLAYER) {
-            ClientUtil.playSound(cap.getLiving(), Registry.SOUND_EVENT.getKey(RSounds.HAND_GLOW.get()), SoundSource.PLAYERS, true, () -> !cap.glowing(), 1.0F, cap.getLiving().getRandom());
+            ClientUtil.playSound(cap.getLiving(), BuiltInRegistries.SOUND_EVENT.getKey(RSounds.HAND_GLOW.get()), SoundSource.PLAYERS, true, () -> !cap.glowing(), 1.0F, cap.getLiving().getRandom());
         }
     }
 
@@ -67,28 +67,28 @@ public class ClientActing implements Acting {
     public void onRegenTrigger(IRegen cap) {
         if (!Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) return;
 
-            // Don't change skin if player has it disabled locally
-            if (!RegenConfig.CLIENT.changeMySkin.get()) {
-                VisualManipulator.sendResetMessage();
-                return;
-            }
+        // Don't change skin if player has it disabled locally
+        if (!RegenConfig.CLIENT.changeMySkin.get()) {
+            VisualManipulator.sendResetMessage();
+            return;
+        }
 
-            // Set players stored "next skin" if one is stored
-            if (cap.isNextSkinValid()) {
-                new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()).send();
-                Regeneration.LOGGER.info("Skin chosen from saved data");
-                return;
-            }
+        // Set players stored "next skin" if one is stored
+        if (cap.isNextSkinValid()) {
+            new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()).send();
+            Regeneration.LOGGER.info("Skin chosen from saved data");
+            return;
+        }
 
-            // Find and send random skin
-            Minecraft.getInstance().submit(() -> {
-                if (!cap.isNextSkinValid()) {
-                    File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.getLiving().getType() == REntities.TIMELORD.get(), cap.preferredModel().isAlex());
-                    boolean isAlex = file.getAbsolutePath().contains("slim");
-                    Regeneration.LOGGER.info("Chosen Skin: {} - Slim Model: {}", file.getAbsolutePath(), isAlex);
-                    new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();
-                }
-            });
+        // Find and send random skin
+        Minecraft.getInstance().submit(() -> {
+            if (!cap.isNextSkinValid()) {
+                File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.getLiving().getType() == REntities.TIMELORD.get(), cap.preferredModel().isAlex());
+                boolean isAlex = file.getAbsolutePath().contains("slim");
+                Regeneration.LOGGER.info("Chosen Skin: {} - Slim Model: {}", file.getAbsolutePath(), isAlex);
+                new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();
+            }
+        });
     }
 
     @Override
@@ -96,7 +96,7 @@ public class ClientActing implements Acting {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
                 ClientUtil.createToast(Component.translatable("toast.regen.enter_critical"), Component.translatable("toast.regen.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
-                ClientUtil.playSound(cap.getLiving(), Registry.SOUND_EVENT.getKey(RSounds.CRITICAL_STAGE.get()), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F, RandomSource.create());
+                ClientUtil.playSound(cap.getLiving(), BuiltInRegistries.SOUND_EVENT.getKey(RSounds.CRITICAL_STAGE.get()), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F, RandomSource.create());
             }
         }
     }

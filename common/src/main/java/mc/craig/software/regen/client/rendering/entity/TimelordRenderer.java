@@ -43,7 +43,7 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
     public TimelordRenderer(EntityRendererProvider.Context entityRendererManager) {
         super(entityRendererManager, new ModifiedPlayerModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.MOD_PLAYER), true), 0.1F);
         addLayer(new RenderRegenLayer(this));
-        addLayer(new HumanoidArmorLayer(this, new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR))));
+        addLayer(new HumanoidArmorLayer(this, new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidModel(entityRendererManager.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR)), entityRendererManager.getModelManager()));
         addLayer(new HandLayer(this));
         this.addLayer(new ItemInHandLayer<>(this, entityRendererManager.getItemInHandRenderer()) {
 
@@ -67,7 +67,7 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
             return TIMELORDS.get(timelord.getUUID());
         }
 
-        if(TIMELORDS.get(timelord.getUUID()) == DefaultPlayerSkin.getDefaultSkin()){
+        if (TIMELORDS.get(timelord.getUUID()) == DefaultPlayerSkin.getDefaultSkin()) {
             TIMELORDS.remove(timelord.getUUID());
             return DefaultPlayerSkin.getDefaultSkin();
         }

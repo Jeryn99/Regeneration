@@ -2,7 +2,6 @@ package mc.craig.software.regen.common.item;
 
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.item.tooltip.fob.FobTooltip;
-import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
@@ -10,11 +9,9 @@ import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.ClientUtil;
 import mc.craig.software.regen.util.PlayerUtil;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +22,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -40,7 +36,7 @@ import java.util.Optional;
 public class FobWatchItem extends Item {
 
     public FobWatchItem() {
-        super(new Item.Properties().tab(RItems.MAIN).stacksTo(1).durability(12));
+        super(new Item.Properties().stacksTo(1).durability(12));
     }
 
     /**
@@ -65,6 +61,7 @@ public class FobWatchItem extends Item {
 
         return stackTag;
     }
+
     public static boolean getEngrave(ItemStack stack) {
         return getStackTag(stack).getBoolean("is_gold");
     }
@@ -79,18 +76,6 @@ public class FobWatchItem extends Item {
 
     public static void setOpen(ItemStack stack, boolean isOpen) {
         getStackTag(stack).putBoolean("is_open", isOpen);
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab category, NonNullList<ItemStack> items) {
-        if (this.allowedIn(category)) {
-            ItemStack fobGold = new ItemStack(RItems.FOB.get());
-            ItemStack fobSilver = new ItemStack(RItems.FOB.get());
-            FobWatchItem.setEngrave(fobGold, true);
-            FobWatchItem.setEngrave(fobSilver, false);
-            items.add(fobGold);
-            items.add(fobSilver);
-        }
     }
 
     @Override

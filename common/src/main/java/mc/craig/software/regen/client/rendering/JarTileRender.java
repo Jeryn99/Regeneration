@@ -2,8 +2,7 @@ package mc.craig.software.regen.client.rendering;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import mc.craig.software.regen.client.rendering.model.ArmModel;
 import mc.craig.software.regen.client.rendering.model.ContainerModel;
 import mc.craig.software.regen.client.rendering.model.RModels;
@@ -23,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 
@@ -59,7 +59,7 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
             Matrix4f matrix4f = poseStack.last().pose();
             Font fontrenderer = Minecraft.getInstance().font;
             float f2 = (float) (-fontrenderer.width(Component.translatable(String.valueOf(round(blockEntity.getLindos(), 2)))) / 2);
-            fontrenderer.drawInBatch(Component.translatable(String.valueOf(round(blockEntity.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
+            fontrenderer.drawInBatch(Component.translatable(String.valueOf(round(blockEntity.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, Font.DisplayMode.NORMAL, 0, combinedLightIn);
             poseStack.popPose();
         }
 
@@ -74,8 +74,8 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
             poseStack.translate(0.5D, 0, 0.5D);
             boolean isAlex = HandItem.isAlex(blockEntity.getHand());
             ArmModel mainModel = isAlex ? alexArm : steveArm;
-            poseStack.mulPose(Vector3f.ZP.rotationDegrees(180));
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+            poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
             poseStack.scale(0.8F, 0.8F, 0.8F);
             poseStack.translate(0, -1.5F, -0.02);
             mainModel.renderToBuffer(poseStack, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(blockEntity))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
@@ -86,11 +86,11 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
 
         // Render Block
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+        poseStack.mulPose(Axis.YP.rotationDegrees(90));
         poseStack.translate(0.5, -1.5, 0.5);
         poseStack.translate(-1, 0, -1);
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(rotation));
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
         jarModel.animate(blockEntity);
         jarModel.renderToBuffer(poseStack, bufferIn.getBuffer(RenderType.entityTranslucent(ContainerModel.CONTAINER_TEXTURE)), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         poseStack.popPose();

@@ -9,8 +9,13 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.forge.command.RegenArgumentsForge;
 import mc.craig.software.regen.forge.data.*;
 import mc.craig.software.regen.util.ClientUtil;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -21,6 +26,9 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Mod(Regeneration.MOD_ID)
 public class RegenerationForge {
@@ -54,16 +62,24 @@ public class RegenerationForge {
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
-        generator.addProvider(true, new RegenEnglishLang(generator));
-        generator.addProvider(true, new RegenLootTables(generator));
-        RegenBlockTags blockTags = new RegenBlockTags(generator, existingFileHelper);
+        PackOutput packOutput = generator.getPackOutput();
+
+        CompletableFuture<HolderLookup.Provider> lookupProvider = e.getLookupProvider();
+        generator.addProvider(true, new RegenEnglishLang(packOutput));
+        generator.addProvider(e.includeServer(),
+                new RegenLootTables(generator.getPackOutput(),
+                        BuiltInLootTables.all(), List.of(
+                        new LootTableProvider.SubProviderEntry(RegenLootTables.ModBlockLoot::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(RegenLootTables.ModEntityLoot::new, LootContextParamSets.ENTITY))));
+        RegenBlockTags blockTags = new RegenBlockTags(packOutput, lookupProvider, existingFileHelper);
         generator.addProvider(true, blockTags);
-        generator.addProvider(true, new RegenItemTags(generator, blockTags, existingFileHelper));
-        generator.addProvider(true, new RegenMobEffectsTags(generator, Registry.MOB_EFFECT, existingFileHelper));
-        generator.addProvider(true, new RegenRecipes(generator));
-        generator.addProvider(true, new RegenBiomeModifiers(generator));
-        generator.addProvider(true, new RegenAdvancementsProvider(generator, existingFileHelper));
-        generator.addProvider(true, new RegenBiomeTags(generator, existingFileHelper));
+        generator.addProvider(true, new RegenItemTags(packOutput, lookupProvider, blockTags.contentsGetter(), existingFileHelper));
+        generator.addProvider(true, new RegenMobEffectsTags(packOutput, Registries.MOB_EFFECT, lookupProvider, existingFileHelper));
+        generator.addProvider(true, new RegenRecipes(packOutput));
+        generator.addProvider(true, new RegenAdvancementsProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(true, new RegenBiomeTags(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(true, new RegenDamageTags(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(true, new RegenDatapackProvider(packOutput, lookupProvider));
     }
 
 }

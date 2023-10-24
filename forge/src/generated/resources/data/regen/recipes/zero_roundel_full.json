@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "regen",
   "key": {
     "I": {
@@ -16,5 +17,6 @@
   ],
   "result": {
     "item": "regen:zero_roundel_full"
-  }
+  },
+  "show_notification": true
 }

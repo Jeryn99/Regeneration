@@ -45,7 +45,7 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
                     cap.setRegens(amount);
                     cap.syncToClients(null);
                 });
-                context.getSource().sendSuccess(Component.translatable(RMessages.SET_REGEN_SUCCESS, entityText, amount), false);
+                context.getSource().sendSuccess(() -> Component.translatable(RMessages.SET_REGEN_SUCCESS, entityText, amount), false);
                 return Command.SINGLE_SUCCESS;
             } else {//Send error message if the config option doesn't allow for it
                 String configOptionKey = "config.regen.mobsHaveRegens";

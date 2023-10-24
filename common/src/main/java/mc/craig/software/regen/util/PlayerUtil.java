@@ -7,13 +7,14 @@ import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import static net.minecraft.core.BlockPos.betweenClosedStream;
 
@@ -40,32 +41,26 @@ public class PlayerUtil {
      * @return true if the player is above a Zero Room, false otherwise
      */
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
-        // Get the block position below the player
         BlockPos livingPos = playerEntity.blockPosition().below();
-
-        // Create an axis-aligned bounding box that covers the area below the player
         AABB grid = new AABB(livingPos.north().west(), livingPos.south().east());
 
-        // Iterate over all blocks in the grid
-        for (BlockPos pos : betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).toList()) {
+        Stream<BlockPos> blockPositions = betweenClosedStream(
+                new BlockPos((int) grid.maxX, (int) grid.maxY, (int) grid.maxZ),
+                new BlockPos((int) grid.minX, (int) grid.minY, (int) grid.minZ)
+        );
 
-            // Check if the block at this position is not a Zero Room block
-            BlockState state = playerEntity.level.getBlockState(pos);
-            if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() &&
-                    state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
+        boolean allZeroRoomBlocks = blockPositions.allMatch(pos -> {
+            BlockState state = playerEntity.level().getBlockState(pos);
+            return state.getBlock() == RBlocks.ZERO_ROOM_FULL.get() || state.getBlock() == RBlocks.ZERO_ROUNDEL.get();
+        });
 
-                // If the block is not a Zero Room block, return false
-                return false;
-            }
-        }
-
-        // If all blocks in the grid are Zero Room blocks, trigger the Zero Room trigger
-        // and return true
-        if (playerEntity instanceof ServerPlayer serverPlayer) {
+        if (allZeroRoomBlocks && playerEntity instanceof ServerPlayer serverPlayer) {
             TriggerManager.ZERO_ROOM.trigger(serverPlayer);
         }
-        return true;
+
+        return allZeroRoomBlocks;
     }
+
 
     /**
      * Handles the effects of a Zero Room on the given player.
@@ -74,7 +69,7 @@ public class PlayerUtil {
      */
     public static void handleZeroGrid(LivingEntity playerEntity) {
         // Get the set of mob effects that are tagged with the POST_REGEN_POTIONS tag
-        HolderSet.Named<MobEffect> mobEffects = Registry.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
+        HolderSet.Named<MobEffect> mobEffects = BuiltInRegistries.MOB_EFFECT.getTag(RegenUtil.POST_REGEN_POTIONS).get();
 
         // Iterate over all mob effects in the set
         for (Holder<MobEffect> mobEffect : mobEffects) {
@@ -90,7 +85,7 @@ public class PlayerUtil {
     /**
      * Sends the given message to all players on the given server.
      *
-     * @param body the message to send
+     * @param body   the message to send
      * @param server the server to send the message to
      */
     public static void globalMessage(Component body, MinecraftServer server) {
@@ -111,14 +106,14 @@ public class PlayerUtil {
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof Player player)) return;
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide) {
             player.displayClientMessage(Component.translatable(message), hotBar);
         }
     }
 
     public static void sendMessage(LivingEntity livingEntity, MutableComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof Player player)) return;
-        if (!player.level.isClientSide) {
+        if (!player.level().isClientSide) {
             player.displayClientMessage(translation, hotBar);
         }
     }
@@ -152,14 +147,14 @@ public class PlayerUtil {
     }
 
     public static void regenerationExplosion(LivingEntity player) {
-        explodeKnockback(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
-        explodeKill(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKillRange.get());
+        explodeKnockback(player, player.level(), player.blockPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+        explodeKill(player, player.level(), player.blockPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
     }
 
     public static void explodeKill(Entity exploder, Level world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof PathfinderMob && entity.canChangeDimensions()) || (entity instanceof Player)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.hurt(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
+                entity.hurt(new DamageSource(RegenDamageTypes.getHolder(world, RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION)), 3.5F);
         });
     }
 
@@ -176,9 +171,9 @@ public class PlayerUtil {
     /**
      * Checks if the given item is in the given hand of the given entity.
      *
-     * @param hand the hand to check
+     * @param hand   the hand to check
      * @param holder the entity to check the hand of
-     * @param item the item to check for
+     * @param item   the item to check for
      * @return true if the given item is in the given hand of the given entity, false otherwise
      */
     public static boolean isInHand(InteractionHand hand, LivingEntity holder, Item item) {

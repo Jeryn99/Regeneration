@@ -24,5 +24,6 @@
     [
       "severed_hand"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

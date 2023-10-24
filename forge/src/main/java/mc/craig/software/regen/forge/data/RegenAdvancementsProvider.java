@@ -9,35 +9,34 @@ import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class RegenAdvancementsProvider extends AdvancementProvider {
+public class RegenAdvancementsProvider extends ForgeAdvancementProvider {
 
-    private final List<Consumer<Consumer<Advancement>>> tabs = ImmutableList.of(new RegenAdvancements());
-
-    public RegenAdvancementsProvider(DataGenerator generatorIn, ExistingFileHelper fileHelperIn) {
-        super(generatorIn, fileHelperIn);
+    public RegenAdvancementsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
+        super(output, registries, existingFileHelper, ImmutableList.of(new RegenAdvancements()));
     }
 
-    @Override
-    protected void registerAdvancements(Consumer<Advancement> consumer, ExistingFileHelper fileHelper) {
-        for (Consumer<Consumer<Advancement>> advancementConsumer : this.tabs) {
-            advancementConsumer.accept(consumer);
+    public static class RegenAdvancements implements AdvancementGenerator {
+        public static String getTitleTranslation(String name) {
+            return "advancements." + name + ".title";
         }
-    }
 
-    public static class RegenAdvancements implements Consumer<Consumer<Advancement>> {
+        public static String getDescriptionTranslation(String name) {
+            return "advancements." + name + ".description";
+        }
 
         @Override
-        public void accept(Consumer<Advancement> advancementConsumer) {
+        public void generate(HolderLookup.Provider arg, Consumer<Advancement> advancementConsumer, ExistingFileHelper existingFileHelper) {
             Advancement rootAdvancement = Advancement.Builder.advancement().display(RItems.FOB.get(), Component.translatable(getTitleTranslation("fob_watch")), Component.translatable(getDescriptionTranslation("fob_watch")), new ResourceLocation(RConstants.MODID, "textures/block/zero_roundel_half.png"), FrameType.GOAL, false, true, false).addCriterion("obtained_fob_watch", InventoryChangeTrigger.TriggerInstance.hasItems(RItems.FOB.get())).save(advancementConsumer, "regen/root");
 
             Advancement firstRegeneration = Advancement.Builder.advancement().parent(rootAdvancement).display(Blocks.PLAYER_HEAD, Component.translatable(getTitleTranslation("first_regeneration")), Component.translatable(getDescriptionTranslation("first_regeneration")), null, FrameType.TASK, false, true, false).addCriterion("regenerated", new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId())).save(advancementConsumer, "regen/regenerated");
@@ -53,15 +52,6 @@ public class RegenAdvancementsProvider extends AdvancementProvider {
             Advancement gallifreyanSoldier = Advancement.Builder.advancement().parent(timelordTrade).display(RItems.GUARD_CHEST.get(), Component.translatable(getTitleTranslation("gallifreyan_soldier")), Component.translatable(getDescriptionTranslation("gallifreyan_soldier")), null, FrameType.TASK, false, true, false).addCriterion("gallifreyan_soldier", InventoryChangeTrigger.TriggerInstance.hasItems(() -> RItems.GUARD_HELMET.get(), () -> RItems.GUARD_CHEST.get(), () -> RItems.GUARD_FEET.get(), () -> RItems.GUARD_LEGS.get())).save(advancementConsumer, "regen/gallifreyan_soldier");
 
         }
-
-        public static String getTitleTranslation(String name) {
-            return "advancements." + name + ".title";
-        }
-
-        public static String getDescriptionTranslation(String name) {
-            return "advancements." + name + ".description";
-        }
-
     }
 
 
