@@ -30,20 +30,16 @@ unifiedPublishing {
         def CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge") ?: ""
         def MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
 
-        if (CURSE_API_KEY != null) {
-            curseforge {
-                token = CURSE_API_KEY
-                id = "274275"
-                gameVersions.addAll "Java 17", "1.20.1"
-            }
+        curseforge {
+            token = CURSE_API_KEY
+            id = "274275"
+            gameVersions.addAll "Java 17", "1.20.1"
         }
 
-        if (MODRINTH_TOKEN != null) {
-            modrinth {
-                token = MODRINTH_TOKEN
-                id = "8gkWtwQu"
-                version = "$project.version+$project.name"
-            }
+        modrinth {
+            token = MODRINTH_TOKEN
+            id = "8gkWtwQu"
+            version = "$project.version+$project.name"
         }
     }
 }
@@ -63,7 +59,7 @@ dependencies {
     // Forge Config API Port
     modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
     include "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
-    
+
     // Cardinal Components
     modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${rootProject.cardinal_components_version}"
     modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${rootProject.cardinal_components_version}"
@@ -77,7 +73,6 @@ dependencies {
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${rootProject.cardinal_components_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${rootProject.cardinal_components_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${rootProject.cardinal_components_version}"
-
 
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }

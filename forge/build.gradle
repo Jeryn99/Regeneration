@@ -32,7 +32,7 @@ loom {
 
 unifiedPublishing {
     project {
-        displayName = "❤️‍🔥 [Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
+        displayName = "❤️‍🔥 [NeoForge] - Regeneration - $rootProject.minecraft_version - v$project.version"
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
         gameVersions = ["1.20.1"]
@@ -45,20 +45,16 @@ unifiedPublishing {
         var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge") ?: ""
         var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth") ?: ""
 
-        if (CURSE_API_KEY != null) {
-            curseforge {
-                token = CURSE_API_KEY
-                id = "274275"
-                gameVersions.addAll "Java 17", "1.20.1"
-            }
+        curseforge {
+            token = CURSE_API_KEY
+            id = "274275"
+            gameVersions.addAll "Java 17", "1.20.1"
         }
 
-        if (MODRINTH_TOKEN != null) {
-            modrinth {
-                token = MODRINTH_TOKEN
-                id = "8gkWtwQu"
-                version = "$project.version+$project.name"
-            }
+        modrinth {
+            token = MODRINTH_TOKEN
+            id = "8gkWtwQu"
+            version = "$project.version+$project.name"
         }
     }
 }
