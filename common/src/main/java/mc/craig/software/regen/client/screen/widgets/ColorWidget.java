@@ -1,13 +1,11 @@
 package mc.craig.software.regen.client.screen.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -61,13 +59,13 @@ public class ColorWidget extends AbstractWidget {
                     float hue = (float) (degrees < 0 ? 360 + degrees : degrees);
                     float saturation = (float) (distance / radius);
 
-                    guiGraphics.fill( x + radius + this.getX(), y + radius + this.getY(), x + radius + 1 + this.getX(), y + radius + 1 + this.getY(), hsv2rgb(hue, saturation, 1));
+                    guiGraphics.fill(x + radius + this.getX(), y + radius + this.getY(), x + radius + 1 + this.getX(), y + radius + 1 + this.getY(), hsv2rgb(hue, saturation, 1));
                 }
             }
         }
         text.render(guiGraphics, mouseX, mouseY, partialTicks);
-        guiGraphics.fill( getX() + width - textHeight - 1, getY() + width + 9, getX() + width, getY() + width + 10 + textHeight + 1, 0xFF9E9E9E);
-        guiGraphics.fill( getX() + width - textHeight, getY() + width + 10, getX() + width - 1, getY() + width + 10 + textHeight, color);
+        guiGraphics.fill(getX() + width - textHeight - 1, getY() + width + 9, getX() + width, getY() + width + 10 + textHeight + 1, 0xFF9E9E9E);
+        guiGraphics.fill(getX() + width - textHeight, getY() + width + 10, getX() + width - 1, getY() + width + 10 + textHeight, color);
     }
 
     @Override

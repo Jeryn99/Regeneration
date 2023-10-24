@@ -1,7 +1,6 @@
 package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.screen.widgets.ColorWidget;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
@@ -121,7 +120,7 @@ public class ColorScreen extends Screen {
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
             String str = Component.translatable("gui.regen.primary").getString();
             int length = Minecraft.getInstance().font.width(str);
-            guiGraphics.drawString(this.font, Component.literal(str).getString(),  cx + 55 - length / 2, cy + 19, 4210752);
+            guiGraphics.drawString(this.font, Component.literal(str).getString(), cx + 55 - length / 2, cy + 19, 4210752);
             str = Component.translatable("gui.regen.secondary").getString();
             length = font.width(str);
             guiGraphics.drawString(this.font, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);

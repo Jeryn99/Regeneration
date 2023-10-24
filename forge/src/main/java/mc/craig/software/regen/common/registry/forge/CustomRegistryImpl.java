@@ -1,7 +1,6 @@
 package mc.craig.software.regen.common.registry.forge;
 
 import mc.craig.software.regen.common.registry.CustomRegistry;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +17,7 @@ public class CustomRegistryImpl<T> extends CustomRegistry<T> {
 
     private final Supplier<IForgeRegistry<T>> parent;
     private final ResourceKey<? extends Registry<T>> resourceKey;
+
     public CustomRegistryImpl(ResourceLocation id, Supplier<IForgeRegistry<T>> parent) {
         this.parent = parent;
         this.resourceKey = ResourceKey.createRegistryKey(id);

@@ -1,7 +1,5 @@
 package mc.craig.software.regen.forge.data;
 
-import com.google.common.collect.Sets;
-import com.google.common.collect.UnmodifiableIterator;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
@@ -30,10 +28,18 @@ public class RegenLootTables extends LootTableProvider {
         super(output, requiredTables, subProviders);
     }
 
+    @Override
+    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext) {
+        map.forEach((arg, arg2) -> {
+            arg2.validate(validationcontext.setParams(arg2.getParamSet()).enterElement("{" + arg + "}", new LootDataId(LootDataType.TABLE, arg)));
+        });
+    }
+
     public static class ModBlockLoot extends BlockLootSubProvider {
         public ModBlockLoot(Set<Item> explosionResistant, FeatureFlagSet enabledFeatures) {
             super(explosionResistant, enabledFeatures);
         }
+
         public ModBlockLoot() {
             super(Collections.emptySet(), FeatureFlags.VANILLA_SET);
         }
@@ -63,7 +69,7 @@ public class RegenLootTables extends LootTableProvider {
             super(enabledFeatures);
         }
 
-        public ModEntityLoot(){
+        public ModEntityLoot() {
             super(FeatureFlags.VANILLA_SET);
         }
 
@@ -80,12 +86,5 @@ public class RegenLootTables extends LootTableProvider {
             }
             return entityTypes.build();
         }
-    }
-
-    @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext) {
-        map.forEach((arg, arg2) -> {
-            arg2.validate(validationcontext.setParams(arg2.getParamSet()).enterElement("{" + arg + "}", new LootDataId(LootDataType.TABLE, arg)));
-        });
     }
 }

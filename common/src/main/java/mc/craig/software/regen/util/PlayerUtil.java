@@ -7,9 +7,7 @@ import mc.craig.software.regen.network.messages.ModelMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -91,7 +89,7 @@ public class PlayerUtil {
     /**
      * Sends the given message to all players on the given server.
      *
-     * @param body the message to send
+     * @param body   the message to send
      * @param server the server to send the message to
      */
     public static void globalMessage(Component body, MinecraftServer server) {
@@ -177,9 +175,9 @@ public class PlayerUtil {
     /**
      * Checks if the given item is in the given hand of the given entity.
      *
-     * @param hand the hand to check
+     * @param hand   the hand to check
      * @param holder the entity to check the hand of
-     * @param item the item to check for
+     * @param item   the item to check for
      * @return true if the given item is in the given hand of the given entity, false otherwise
      */
     public static boolean isInHand(InteractionHand hand, LivingEntity holder, Item item) {

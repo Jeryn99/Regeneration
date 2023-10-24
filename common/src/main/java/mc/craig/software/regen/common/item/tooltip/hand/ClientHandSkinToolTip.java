@@ -1,14 +1,12 @@
 package mc.craig.software.regen.common.item.tooltip.hand;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.screen.IncarnationScreen;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
@@ -16,9 +14,8 @@ import java.util.Arrays;
 
 public class ClientHandSkinToolTip implements ClientTooltipComponent {
 
-
-    private static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
-    private static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/alex.png");
+    private static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/player/slim/steve.png");
+    private static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/player/slim/alex.png");
     private byte[] skin = new byte[0];
     private boolean isAlex = false;
 

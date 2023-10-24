@@ -6,7 +6,9 @@ import mc.craig.software.regen.common.advancement.TriggerManager;
 import mc.craig.software.regen.common.entities.ai.TimelordAttackGoal;
 import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.item.SpawnItem;
-import mc.craig.software.regen.common.objects.*;
+import mc.craig.software.regen.common.objects.REntities;
+import mc.craig.software.regen.common.objects.RItems;
+import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -14,13 +16,11 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.network.messages.RemoveTimelordSkinMessage;
 import mc.craig.software.regen.util.Platform;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.RegenDamageTypes;
 import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -38,7 +38,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -341,18 +340,18 @@ public class Timelord extends PathfinderMob implements RangedAttackMob, Merchant
 
     protected void updateTrades() {
         if (getTimelordType() != TimelordType.COUNCIL) return;
-            MerchantOffers merchantoffers = this.getOffers();
+        MerchantOffers merchantoffers = this.getOffers();
 
-            for (int i = random.nextInt(7); i > 0; i--) {
-                TraitRegistry.getRandomTrait().ifPresent(traitBase -> {
-                    ItemStack chalice = new ItemStack(RItems.GAUNTLET.get());
-                    ChaliceItem.setTrait(chalice, traitBase);
-                    BuiltInRegistries.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).flatMap(potentialCurrency -> potentialCurrency.getRandomElement(random)).ifPresent(itemHolder -> {
-                        TimelordTrade[] trades = new TimelordTrade[]{new TimelordTrade(new ItemStack(itemHolder.value(), Mth.clamp(random.nextInt(10), 6, 20)), chalice, random.nextInt(7), 5)};
-                        this.addOffersFromItemListings(merchantoffers, trades, 5);
-                    });
+        for (int i = random.nextInt(7); i > 0; i--) {
+            TraitRegistry.getRandomTrait().ifPresent(traitBase -> {
+                ItemStack chalice = new ItemStack(RItems.GAUNTLET.get());
+                ChaliceItem.setTrait(chalice, traitBase);
+                BuiltInRegistries.ITEM.getTag(RegenUtil.TIMELORD_CURRENCY).flatMap(potentialCurrency -> potentialCurrency.getRandomElement(random)).ifPresent(itemHolder -> {
+                    TimelordTrade[] trades = new TimelordTrade[]{new TimelordTrade(new ItemStack(itemHolder.value(), Mth.clamp(random.nextInt(10), 6, 20)), chalice, random.nextInt(7), 5)};
+                    this.addOffersFromItemListings(merchantoffers, trades, 5);
                 });
-            }
+            });
+        }
 
         TimelordTrade[] baseTrades = new TimelordTrade[]{
                 new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),

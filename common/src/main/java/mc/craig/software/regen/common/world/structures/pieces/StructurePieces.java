@@ -3,7 +3,6 @@ package mc.craig.software.regen.common.world.structures.pieces;
 import mc.craig.software.regen.common.world.structures.TimelordSettlementHut;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
 import java.util.Locale;

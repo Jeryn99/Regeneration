@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 
 import static mc.craig.software.regen.client.rendering.layers.RenderRegenLayer.renderColorCone;
 
-public class DrinkTransitionRenderer extends FieryTransitionRenderer{
+public class DrinkTransitionRenderer extends FieryTransitionRenderer {
 
     public static final DrinkTransitionRenderer INSTANCE = new DrinkTransitionRenderer();
 

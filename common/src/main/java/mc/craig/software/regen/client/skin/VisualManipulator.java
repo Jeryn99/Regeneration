@@ -34,7 +34,7 @@ public class VisualManipulator {
             UUID uuid = playerEntity.getUUID();
 
             boolean validSkin = iRegen.isSkinValidForUse();
-            if(!validSkin){
+            if (!validSkin) {
                 PLAYER_SKINS.remove(uuid);
                 setPlayerSkinType(playerEntity, mojangIsAlex(playerEntity));
                 return;
@@ -55,7 +55,7 @@ public class VisualManipulator {
 
     public static boolean mojangIsAlex(AbstractClientPlayer abstractClientPlayerEntity) {
 
-        if(MOJANG_BACKUP.containsKey(abstractClientPlayerEntity.getUUID())){
+        if (MOJANG_BACKUP.containsKey(abstractClientPlayerEntity.getUUID())) {
             return MOJANG_BACKUP.get(abstractClientPlayerEntity.getUUID());
         }
 
@@ -78,7 +78,7 @@ public class VisualManipulator {
 
         if (playerInfo == null) return;
 
-        if(!MOJANG_BACKUP.containsKey(player.getUUID())) {
+        if (!MOJANG_BACKUP.containsKey(player.getUUID())) {
             boolean skinType = (playerInfo.getModelName() == null || playerInfo.getModelName().isEmpty());
             MOJANG_BACKUP.put(player.getUUID(), !skinType);
         }

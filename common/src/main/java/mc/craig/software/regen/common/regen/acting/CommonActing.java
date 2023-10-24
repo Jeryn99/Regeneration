@@ -14,16 +14,13 @@ import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -193,7 +190,7 @@ public class CommonActing implements Acting {
 
         cap.getCurrentTrait().onRemoved(living, cap);
 
-        if(cap.getNextTrait() != TraitRegistry.HUMAN.get()){
+        if (cap.getNextTrait() != TraitRegistry.HUMAN.get()) {
             cap.setCurrentTrait(cap.getNextTrait());
             cap.setNextTrait(TraitRegistry.HUMAN.get());
         } else {

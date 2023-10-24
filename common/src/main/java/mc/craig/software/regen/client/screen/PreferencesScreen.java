@@ -1,8 +1,6 @@
 package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
@@ -21,8 +19,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
 
 import java.awt.*;
 import java.util.function.Function;
@@ -30,10 +26,11 @@ import java.util.function.Function;
 public class PreferencesScreen extends Screen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/preferences.png");
+    private static final int deactivatedColor = Color.RED.getRGB();
+    private static final int activatedColor = Color.GREEN.getRGB();
     private static PlayerUtil.SkinType skinType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
     private static TransitionType transitionType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound soundScheme = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
-
     protected int imageWidth, imageHeight = 0;
     private int leftPos, topPos;
 
@@ -110,9 +107,6 @@ public class PreferencesScreen extends Screen {
 
         transitionType = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     }
-
-    private static final int deactivatedColor = Color.RED.getRGB();
-    private static final int activatedColor = Color.GREEN.getRGB();
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {

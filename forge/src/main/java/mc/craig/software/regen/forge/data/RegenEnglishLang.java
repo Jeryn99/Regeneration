@@ -161,20 +161,20 @@ public class RegenEnglishLang extends LanguageProvider {
         addConfig(RegenConfig.COMMON.sendRegenDeathMessages, "Send Regeneration death chat messages?");
         addConfig(RegenConfig.COMMON.postRegenerationDuration, "Post Regeneration Duration", 2);
         addConfig(RegenConfig.COMMON.postRegenerationLevel, "Post Regeneration Level", 2);
-        addConfig(RegenConfig.COMMON.resetHunger, "Reset Hunger?",2);
-        addConfig(RegenConfig.COMMON.resetOxygen, "Reset Air?",2);
+        addConfig(RegenConfig.COMMON.resetHunger, "Reset Hunger?", 2);
+        addConfig(RegenConfig.COMMON.resetOxygen, "Reset Air?", 2);
         addConfig(RegenConfig.COMMON.regenFireImmune, "Fire immunity?");
-        addConfig(RegenConfig.COMMON.regenerationKnocksbackPlayers, "Knocks back players?",2);
-        addConfig(RegenConfig.COMMON.absorbtionLevel, "Absorption Level?",2);
+        addConfig(RegenConfig.COMMON.regenerationKnocksbackPlayers, "Knocks back players?", 2);
+        addConfig(RegenConfig.COMMON.absorbtionLevel, "Absorption Level?", 2);
         addConfig(RegenConfig.COMMON.gracePhaseLength, "Grace Period Length", 2);
-        addConfig(RegenConfig.COMMON.criticalPhaseLength, "Critical Period Length",2);
-        addConfig(RegenConfig.COMMON.criticalDamageChance, "Critical Damage Chance",2);
-        addConfig(RegenConfig.COMMON.handGlowInterval, "Hand Glow Interval",2);
-        addConfig(RegenConfig.COMMON.handGlowTriggerDelay, "Hand Trigger Delay",2);
-        addConfig(RegenConfig.COMMON.regenerativeKillRange, "Regeneration hurt range",2);
-        addConfig(RegenConfig.COMMON.regenerativeKnockback, "Knockback Radius",2);
-        addConfig(RegenConfig.COMMON.regenKnockbackRange, "Knockback Range",2);
-        addConfig(RegenConfig.COMMON.allowUpwardsMotion, "Upwards motion?",2);
+        addConfig(RegenConfig.COMMON.criticalPhaseLength, "Critical Period Length", 2);
+        addConfig(RegenConfig.COMMON.criticalDamageChance, "Critical Damage Chance", 2);
+        addConfig(RegenConfig.COMMON.handGlowInterval, "Hand Glow Interval", 2);
+        addConfig(RegenConfig.COMMON.handGlowTriggerDelay, "Hand Trigger Delay", 2);
+        addConfig(RegenConfig.COMMON.regenerativeKillRange, "Regeneration hurt range", 2);
+        addConfig(RegenConfig.COMMON.regenerativeKnockback, "Knockback Radius", 2);
+        addConfig(RegenConfig.COMMON.regenKnockbackRange, "Knockback Range", 2);
+        addConfig(RegenConfig.COMMON.allowUpwardsMotion, "Upwards motion?", 2);
 
 
         // === Skin Types ===

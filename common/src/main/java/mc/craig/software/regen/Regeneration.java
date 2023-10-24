@@ -8,7 +8,6 @@ import mc.craig.software.regen.common.regen.acting.ActingForwarder;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.world.RFeatures;
-//import mc.craig.software.regen.compat.TardisRefinedCompat;
 import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.Platform;
 import org.slf4j.Logger;

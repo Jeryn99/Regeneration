@@ -99,9 +99,11 @@ public interface IRegen extends Serializable<CompoundTag> {
     void toggleTrait();
 
     TraitBase getCurrentTrait();
+
     void setCurrentTrait(TraitBase trait);
 
     TraitBase getNextTrait();
+
     void setNextTrait(TraitBase trait);
 
     enum RegenAnimation {

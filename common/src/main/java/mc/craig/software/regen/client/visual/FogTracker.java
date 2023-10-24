@@ -4,7 +4,6 @@ import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +20,7 @@ public class FogTracker {
         AtomicReference<Vec3> vec3Color = new AtomicReference<>();
         vec3Color.set(null);
 
-        if(renderView instanceof LivingEntity livingEntity){
+        if (renderView instanceof LivingEntity livingEntity) {
             RegenerationData.get(livingEntity).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.GRACE_CRIT) {
                     vec3Color.set(new Vec3(0.5F, 0.5F, 0.5F));

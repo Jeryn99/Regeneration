@@ -1,13 +1,11 @@
 package mc.craig.software.regen.common.item.tooltip.fob;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.screen.overlay.RegenerationOverlay;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import org.joml.Matrix4f;
 
 public class ClientFobTooltip implements ClientTooltipComponent {

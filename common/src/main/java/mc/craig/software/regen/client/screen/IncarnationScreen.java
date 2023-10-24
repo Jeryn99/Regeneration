@@ -1,8 +1,6 @@
 package mc.craig.software.regen.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import mc.craig.software.regen.client.screen.widgets.RCheckbox;
 import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
@@ -16,9 +14,9 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,15 +24,12 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 
 public class IncarnationScreen extends Screen {
@@ -47,10 +42,9 @@ public class IncarnationScreen extends Screen {
     private static List<File> skins = null;
     private static int position = 0;
     public boolean postRenderedPlayer;
+    protected int imageWidth, imageHeight = 0;
     private RCheckbox excludeTrending;
     private EditBox searchField;
-
-    protected int imageWidth, imageHeight = 0;
     private int leftPos, topPos;
 
     public IncarnationScreen() {
@@ -70,11 +64,6 @@ public class IncarnationScreen extends Screen {
         }
     }
 
-    @Override
-    public boolean isPauseScreen() {
-        return true;
-    }
-
     /**
      * @param text  - The text you'd like to draw
      * @param width - The max width of the text, scales to maintain this width if larger than it
@@ -88,6 +77,17 @@ public class IncarnationScreen extends Screen {
         guiGraphics.pose().scale(scale, scale, scale);
         guiGraphics.drawCenteredString(Minecraft.getInstance().font, text, 0, 0, color);
         guiGraphics.pose().popPose();
+    }
+
+    private static void checkForMissingSkins() {
+        if (skins.isEmpty()) {
+            Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
+        }
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return true;
     }
 
     private void stripTrending() {
@@ -239,9 +239,9 @@ public class IncarnationScreen extends Screen {
         Button btnOpenFolder = Button.builder(Component.translatable("gui.regen.open_folder"), button -> Util.getPlatform().openFile(SkinRetriever.SKINS_DIR)).bounds(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2).tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.open_folder"))).build();
 
         Button btnSave = Button.builder(Component.translatable("gui.regen.save"), button -> {
-            updateModels();
-            new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
-        }).bounds(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2)
+                    updateModels();
+                    new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex).send();
+                }).bounds(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2)
                 .tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.save_skin"))).build();
 
         Button btnResetSkin = Button.builder(Component.translatable("gui.regen.reset_skin"), button -> VisualManipulator.sendResetMessage()).bounds(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2).tooltip(Tooltip.create(Component.translatable("button_tooltip.regen.reset_mojang"))).build();
@@ -275,12 +275,6 @@ public class IncarnationScreen extends Screen {
         excludeTrending.active = true;
 
 
-    }
-
-    private static void checkForMissingSkins() {
-        if (skins.isEmpty()) {
-            Minecraft.getInstance().setScreen(new RErrorScreen(Component.translatable("No Skins for " + Component.translatable("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), Component.translatable("Please place skins in the local Directory")));
-        }
     }
 
 }

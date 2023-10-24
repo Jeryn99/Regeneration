@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.phys.Vec3;
@@ -35,7 +34,8 @@ public class SadFieryTransition extends TransitionType {
 
         if (livingEntity.level().isClientSide) return;
 
-        if (livingEntity.getType() == EntityType.PLAYER && capability.updateTicks() > 280 && capability.updateTicks() < 560) {;
+        if (livingEntity.getType() == EntityType.PLAYER && capability.updateTicks() > 280 && capability.updateTicks() < 560) {
+            ;
             if (livingEntity.level().getBlockState(livingEntity.blockPosition()).getBlock() instanceof FireBlock)
                 livingEntity.level().removeBlock(livingEntity.blockPosition(), false);
 

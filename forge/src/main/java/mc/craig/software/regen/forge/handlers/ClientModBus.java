@@ -25,7 +25,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.function.Function;
 
@@ -33,7 +32,7 @@ import java.util.function.Function;
 public class ClientModBus {
 
     @SubscribeEvent
-    public static void onItemColors(RegisterColorHandlersEvent.Item item){
+    public static void onItemColors(RegisterColorHandlersEvent.Item item) {
         item.getItemColors().register((arg, i) -> {
             if (i == 0) {
                 return ChaliceItem.getTrait(arg).getPotionColor();

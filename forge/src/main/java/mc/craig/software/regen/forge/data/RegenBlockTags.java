@@ -4,7 +4,6 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;

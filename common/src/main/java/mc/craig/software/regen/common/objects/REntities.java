@@ -8,7 +8,6 @@ import mc.craig.software.regen.common.entities.Watcher;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
 import mc.craig.software.regen.util.constants.RConstants;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

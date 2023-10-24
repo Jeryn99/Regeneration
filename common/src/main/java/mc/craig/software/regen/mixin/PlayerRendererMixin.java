@@ -30,6 +30,7 @@ public class PlayerRendererMixin {
             cir.setReturnValue(resourceLocation);
         }
     }
+
     @Inject(at = @At("TAIL"), method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V")
     protected void setupRotations(AbstractClientPlayer abstractClientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
         RegenerationData.get(abstractClientPlayer).ifPresent(iRegen -> {

@@ -206,13 +206,13 @@ public class ClientUtil {
         }
     }
 
-    public static ResourceLocation redirectSkin(UUID uuid){
+    public static ResourceLocation redirectSkin(UUID uuid) {
         if (Minecraft.getInstance().screen instanceof IncarnationScreen screen) {
             return IncarnationScreen.currentTexture;
         }
 
         if (VisualManipulator.PLAYER_SKINS.containsKey(uuid)) {
-           return VisualManipulator.PLAYER_SKINS.get(uuid);
+            return VisualManipulator.PLAYER_SKINS.get(uuid);
         }
         return null;
     }
@@ -261,7 +261,7 @@ public class ClientUtil {
     /**
      * Gets the armor model for the specified item stack and living entity.
      *
-     * @param itemStack the item stack
+     * @param itemStack    the item stack
      * @param livingEntity the living entity
      * @return the armor model
      */
@@ -270,7 +270,7 @@ public class ClientUtil {
         if (livingEntity instanceof AbstractClientPlayer player) {
 
             PlayerInfo playerInfo = player.playerInfo;
-            if(playerInfo == null) getHumanoidModel(itemStack, true);
+            if (playerInfo == null) getHumanoidModel(itemStack, true);
 
             boolean isSlim = false;
             if (playerInfo != null && playerInfo.skinModel != null) {
@@ -288,12 +288,11 @@ public class ClientUtil {
     }
 
 
-
     /**
      * Gets the humanoid model for the specified item stack and model type.
      *
      * @param itemStack the item stack
-     * @param trySteve whether to try to get the Steve model, or the default model
+     * @param trySteve  whether to try to get the Steve model, or the default model
      * @return the humanoid model, or null if no model was found
      */
     private static HumanoidModel<?> getHumanoidModel(ItemStack itemStack, boolean trySteve) {
@@ -318,12 +317,12 @@ public class ClientUtil {
     }
 
     @ExpectPlatform
-    public static void renderers(){
+    public static void renderers() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void itemPredicates(){
+    public static void itemPredicates() {
         throw new AssertionError();
     }
 
@@ -342,8 +341,8 @@ public class ClientUtil {
     /**
      * Plays the specified positioned sound record.
      *
-     * @param sound the sound to play
-     * @param pitch the pitch of the sound
+     * @param sound  the sound to play
+     * @param pitch  the pitch of the sound
      * @param volume the volume of the sound
      */
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
@@ -353,13 +352,13 @@ public class ClientUtil {
     /**
      * Plays the specified sound.
      *
-     * @param entity the entity associated with the sound
-     * @param soundName the name of the sound
-     * @param category the sound category
-     * @param repeat whether the sound should repeat
+     * @param entity        the entity associated with the sound
+     * @param soundName     the name of the sound
+     * @param category      the sound category
+     * @param repeat        whether the sound should repeat
      * @param stopCondition a supplier that determines when the sound should stop
-     * @param volume the volume of the sound
-     * @param randomSource the random source for the sound
+     * @param volume        the volume of the sound
+     * @param randomSource  the random source for the sound
      */
     public static void playSound(Object entity, ResourceLocation soundName, SoundSource category, boolean repeat, Supplier<Boolean> stopCondition, float volume, RandomSource randomSource) {
         Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, SoundEvent.createVariableRangeEvent(soundName), category, repeat, stopCondition, volume, randomSource));
@@ -368,7 +367,7 @@ public class ClientUtil {
     /**
      * Creates a toast with the specified title and subtitle.
      *
-     * @param title the title of the toast
+     * @param title    the title of the toast
      * @param subtitle the subtitle of the toast
      */
     public static void createToast(MutableComponent title, MutableComponent subtitle) {
@@ -376,20 +375,21 @@ public class ClientUtil {
     }
 
     /**
-
-     Sets the player's perspective based on the specified point of view.
-     @param pointOfView the point of view to set the player's perspective to
+     * Sets the player's perspective based on the specified point of view.
+     *
+     * @param pointOfView the point of view to set the player's perspective to
      */
     public static void setPlayerPerspective(String pointOfView) {
         if (RegenConfig.CLIENT.changePerspective.get()) {
             Minecraft.getInstance().options.setCameraType(CameraType.valueOf(pointOfView));
         }
     }
-    /**
 
-     Gets the player info for the specified player.
-     @param player the player
-     @return the player info for the player
+    /**
+     * Gets the player info for the specified player.
+     *
+     * @param player the player
+     * @return the player info for the player
      */
     public static PlayerInfo getPlayerInfo(AbstractClientPlayer player) {
         return player.playerInfo;

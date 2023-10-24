@@ -7,7 +7,6 @@ import mc.craig.software.regen.network.MessageContext;
 import mc.craig.software.regen.network.MessageType;
 import mc.craig.software.regen.network.RegenNetwork;
 import mc.craig.software.regen.util.RegenDamageTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;

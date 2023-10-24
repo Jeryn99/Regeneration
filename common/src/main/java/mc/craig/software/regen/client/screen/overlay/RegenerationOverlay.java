@@ -1,7 +1,5 @@
 package mc.craig.software.regen.client.screen.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Transformation;
 import mc.craig.software.regen.common.regen.IRegen;
@@ -14,7 +12,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
 
@@ -64,7 +61,7 @@ public class RegenerationOverlay {
             // Alert User that their hand is glowing
             if (cap.glowing()) {
                 RConstants.SpriteSheet handGlow = RConstants.SpriteSheet.HAND_GLOW;
-                guiGraphics.blit(BACKGROUND,Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
+                guiGraphics.blit(BACKGROUND, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - 8, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 23, handGlow.getUOffset(), handGlow.getYOffset(), 16, 16, 256, 256);
             }
 
             if (cap.handState() != IRegen.Hand.NOT_CUT) {

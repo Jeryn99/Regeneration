@@ -4,7 +4,6 @@ import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.network.NetworkManager;
 import mc.craig.software.regen.util.ViewUtil;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.protocol.Packet;

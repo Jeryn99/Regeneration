@@ -1,14 +1,12 @@
 package mc.craig.software.regen.common.traits.trait;
 
 import mc.craig.software.regen.common.regen.IRegen;
-import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
-public class WaterBreathingTrait extends TraitBase{
+public class WaterBreathingTrait extends TraitBase {
     @Override
     public int getPotionColor() {
         return 1950417;

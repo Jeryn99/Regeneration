@@ -1,10 +1,7 @@
 package mc.craig.software.regen.config;
 
-import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
 
 public class RegenConfig {
     public static Common COMMON;

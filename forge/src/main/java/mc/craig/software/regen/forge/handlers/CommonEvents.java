@@ -71,7 +71,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void playerCloneEvent(final PlayerEvent.Clone event) {
-        if(event.isWasDeath()){
+        if (event.isWasDeath()) {
             Player player = event.getOriginal();
             player.reviveCaps();
 

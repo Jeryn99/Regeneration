@@ -32,7 +32,7 @@ loom {
 
 unifiedPublishing {
     project {
-        displayName = "[Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
+        displayName = "❤️‍🔥 [Forge] - Regeneration - $rootProject.minecraft_version - v$project.version"
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
         gameVersions = ["1.20.1"]
@@ -72,7 +72,7 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    forge "net.neoforged:forge:${rootProject.forge_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

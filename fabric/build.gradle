@@ -14,7 +14,7 @@ loom {
 
 unifiedPublishing {
     project {
-        displayName = "[Fabric] - Regeneration - $rootProject.minecraft_version - v$project.version"
+        displayName = "❤️‍🔥 [Fabric] - Regeneration - $rootProject.minecraft_version - v$project.version"
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
         gameVersions = ["1.20.1"]

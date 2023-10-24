@@ -2,7 +2,6 @@ package mc.craig.software.regen.common.entities;
 
 import mc.craig.software.regen.util.RegenDamageTypes;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;

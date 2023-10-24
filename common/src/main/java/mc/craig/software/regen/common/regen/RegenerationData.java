@@ -17,11 +17,6 @@ import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
 import mc.craig.software.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -31,10 +26,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -57,11 +50,10 @@ public class RegenerationData implements IRegen {
     private final LivingEntity livingEntity;
     public AnimationState regen = new AnimationState();
     public AnimationState grace = new AnimationState();
+    public boolean areHandsGlowing = false, nextSkinTypeAlex = false, isAlex = false;
     //Don't save to disk
     private boolean didSetup = false, traitActive = true;
     private int regensLeft = 0, animationTicks = 0;
-    public boolean areHandsGlowing = false, nextSkinTypeAlex = false, isAlex = false;
-
     // ===== Skin Data =====
     private byte[] nextSkin = new byte[0], skinArray = new byte[0];
     ;
@@ -91,8 +83,7 @@ public class RegenerationData implements IRegen {
         this.currentTrait = TraitRegistry.HUMAN.get();
         if (!livingEntity.level().isClientSide) {
             this.stateManager = new RegenerationData.StateManager();
-        }
-        else
+        } else
             this.stateManager = null;
     }
 
@@ -464,7 +455,9 @@ public class RegenerationData implements IRegen {
     }
 
     @Override
-    public boolean isTraitActive() { return traitActive; }
+    public boolean isTraitActive() {
+        return traitActive;
+    }
 
     @Override
     public void toggleTrait() {

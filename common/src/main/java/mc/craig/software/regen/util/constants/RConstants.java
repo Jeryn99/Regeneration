@@ -46,6 +46,7 @@ public class RConstants {
             this.offsetX = texOffsetX;
             this.offsetY = texOffsetY;
         }
+
         public float getYOffset() {
             return this.offsetY;
         }

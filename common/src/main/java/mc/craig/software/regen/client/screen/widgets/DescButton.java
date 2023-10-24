@@ -12,6 +12,7 @@ public class DescButton extends Button {
     public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction, CreateNarration createNarration) {
         super(x, y, width, height, title, pressedAction, createNarration);
     }
+
     public ArrayList<Component> getDescription() {
         return description;
     }

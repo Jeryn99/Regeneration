@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.commands.arguments.TraitArgumentType;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.traits.trait.TraitBase;

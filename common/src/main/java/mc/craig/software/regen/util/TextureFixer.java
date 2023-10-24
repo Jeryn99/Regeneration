@@ -59,10 +59,10 @@ public class TextureFixer {
      * transparency from pixels with an alpha value of 128 or higher in the given
      * region of the image.
      *
-     * @param image The image to apply the hack to.
-     * @param x The x-coordinate of the region to apply the hack to.
-     * @param y The y-coordinate of the region to apply the hack to.
-     * @param width The width of the region to apply the hack to.
+     * @param image  The image to apply the hack to.
+     * @param x      The x-coordinate of the region to apply the hack to.
+     * @param y      The y-coordinate of the region to apply the hack to.
+     * @param width  The width of the region to apply the hack to.
      * @param height The height of the region to apply the hack to.
      */
     private static void doNotchTransparencyHack(NativeImage image, int x, int y, int width, int height) {
@@ -89,10 +89,10 @@ public class TextureFixer {
     /**
      * Removes the transparency from the pixels in the given region of the image.
      *
-     * @param image The image to remove the transparency from.
-     * @param x The x-coordinate of the region to remove transparency from.
-     * @param y The y-coordinate of the region to remove transparency from.
-     * @param width The width of the region to remove transparency from.
+     * @param image  The image to remove the transparency from.
+     * @param x      The x-coordinate of the region to remove transparency from.
+     * @param y      The y-coordinate of the region to remove transparency from.
+     * @param width  The width of the region to remove transparency from.
      * @param height The height of the region to remove transparency from.
      */
     private static void setNoAlpha(NativeImage image, int x, int y, int width, int height) {

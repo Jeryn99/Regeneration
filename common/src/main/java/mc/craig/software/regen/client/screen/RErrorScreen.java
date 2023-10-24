@@ -1,6 +1,5 @@
 package mc.craig.software.regen.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import mc.craig.software.regen.client.skin.SkinRetriever;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -29,7 +28,7 @@ public class RErrorScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.fillGradient( 0, 0, this.width, this.height, -12574688, -11530224);
+        guiGraphics.fillGradient(0, 0, this.width, this.height, -12574688, -11530224);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 90, 16777215);
         guiGraphics.drawCenteredString(this.font, this.message, this.width / 2, 110, 16777215);
         super.render(guiGraphics, mouseX, mouseY, partialTick);

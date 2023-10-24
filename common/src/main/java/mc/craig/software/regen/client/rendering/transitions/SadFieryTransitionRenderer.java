@@ -24,7 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-
 import static mc.craig.software.regen.client.rendering.layers.RenderRegenLayer.renderColorCone;
 
 public class SadFieryTransitionRenderer implements TransitionRenderer {

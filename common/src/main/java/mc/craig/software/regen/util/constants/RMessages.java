@@ -27,6 +27,7 @@ public class RMessages {
     public static String createMessage(String message) {
         return "message.regen." + message;
     }
+
     public static String createCommand(String message) {
         return "command.regen." + message;
     }

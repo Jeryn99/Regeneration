@@ -5,7 +5,6 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.RegenDamageTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -75,8 +74,8 @@ public class ChaliceItem extends Item {
                 regenData.setNextTrait(getTrait(stack));
                 entityLiving.die(new DamageSource(RegenDamageTypes.getHolder(worldIn, RegenDamageTypes.REGEN_DMG_FORCED)));
 
-                if(entityLiving instanceof Player player){
-                    if(!player.isCreative()){
+                if (entityLiving instanceof Player player) {
+                    if (!player.isCreative()) {
                         stack.shrink(1);
                     }
                 }

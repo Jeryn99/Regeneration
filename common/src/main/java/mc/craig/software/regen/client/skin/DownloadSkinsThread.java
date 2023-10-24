@@ -7,7 +7,7 @@ public class DownloadSkinsThread extends Thread {
     public static boolean hasStarted = false;
     public static boolean isClient = false;
 
-    public DownloadSkinsThread(boolean isClient){
+    public DownloadSkinsThread(boolean isClient) {
         DownloadSkinsThread.isClient = isClient;
     }
 

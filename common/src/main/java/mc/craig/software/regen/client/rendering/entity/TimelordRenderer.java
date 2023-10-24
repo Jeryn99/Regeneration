@@ -67,7 +67,7 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
             return TIMELORDS.get(timelord.getUUID());
         }
 
-        if(TIMELORDS.get(timelord.getUUID()) == DefaultPlayerSkin.getDefaultSkin()){
+        if (TIMELORDS.get(timelord.getUUID()) == DefaultPlayerSkin.getDefaultSkin()) {
             TIMELORDS.remove(timelord.getUUID());
             return DefaultPlayerSkin.getDefaultSkin();
         }
