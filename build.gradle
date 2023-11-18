@@ -133,7 +133,7 @@ dependencies {
     implementation fg.deobf("curse.maven:configured-457570:3244520")
     implementation fg.deobf("curse.maven:terraforged-363820:3451426")
     implementation fg.deobf("curse.maven:jei-238222:3519343")
-    implementation fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_version}")
+    implementation fg.deobf('com.gitlab.mistersecret312:TardisMod:1.5.5-beta')
 }
 
 

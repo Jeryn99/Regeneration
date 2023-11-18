@@ -23,14 +23,15 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.tardis.mod.ars.ConsoleRoom;
 import net.tardis.mod.entity.hostile.dalek.DalekEntity;
+import net.tardis.mod.enums.EnumSubsystemType;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.helper.WorldHelper;
 import net.tardis.mod.misc.CrashType;
 import net.tardis.mod.sounds.TSounds;
-import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.tileentities.ConsoleTile;
 import net.tardis.mod.world.dimensions.TDimensions;
 
+import java.util.Arrays;
 import java.util.List;
 
 /* Created by Craig on 20/03/2021 */
@@ -84,9 +85,10 @@ public class TardisMod implements Acting {
                     return;
                 }
 
-                List<Subsystem> subsystems = console.getSubSystems();
-                if (!subsystems.isEmpty()) {
-                    Subsystem randomSubsystem = subsystems.get(world.random.nextInt(subsystems.size()));
+                EnumSubsystemType[] values = EnumSubsystemType.values();
+                int rand = world.getRandom().nextInt(values.length-2);
+
+                console.getSubsystem(values[rand]).ifPresent(sys -> {
                     if (world.random.nextBoolean()) {
                         for (int i = 0; i < 18; ++i) {
                             double angle = Math.toRadians(i * 20);
@@ -96,11 +98,27 @@ public class TardisMod implements Acting {
                             world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), TSounds.ELECTRIC_SPARK.get(), SoundCategory.BLOCKS, 0.05F, 1.0F, false);
                             world.addParticle(ParticleTypes.LAVA, (double) pos.getX() + 0.5D + x, (double) pos.getY() + world.random.nextDouble(), (double) pos.getZ() + 0.5D + z, 0.0D, 0.0D, 0.0D);
                         }
-                        if (randomSubsystem.getHealth() > 0) {
-                            randomSubsystem.damage(null, world.random.nextInt(5));
+                        if (sys.getDamage(sys.getItem(console)) > 0) {
+                            sys.damage(null, world.random.nextInt(5), console);
                         }
                     }
-                }
+                });
+
+                console.getSubsystem(values[rand]).ifPresent(sys -> {
+                    if (world.random.nextBoolean()) {
+                        for (int i = 0; i < 18; ++i) {
+                            double angle = Math.toRadians(i * 20);
+                            double x = Math.sin(angle);
+                            double z = Math.cos(angle);
+                            BlockPos pos = new BlockPos(0, 128, 0);
+                            world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), TSounds.ELECTRIC_SPARK.get(), SoundCategory.BLOCKS, 0.05F, 1.0F, false);
+                            world.addParticle(ParticleTypes.LAVA, (double) pos.getX() + 0.5D + x, (double) pos.getY() + world.random.nextDouble(), (double) pos.getZ() + 0.5D + z, 0.0D, 0.0D, 0.0D);
+                        }
+                        if (sys.getDamage(sys.getItem(console)) > 0) {
+                            sys.damage(null, world.random.nextInt(5), console);
+                        }
+                    }
+                });
             }
         }
     }
