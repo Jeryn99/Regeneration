@@ -44,12 +44,13 @@ public class IncarnationScreen extends Screen {
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
     private static int position = 0;
-    public boolean postRenderedPlayer;
+
     private RCheckbox excludeTrending;
     private EditBox searchField;
 
     protected int imageWidth, imageHeight = 0;
     private int leftPos, topPos;
+    private static Button btnReport;
 
     public IncarnationScreen() {
         super(Component.literal("Next Incarnation"));
@@ -63,6 +64,9 @@ public class IncarnationScreen extends Screen {
             isAlex = skins.get(position).getAbsolutePath().contains("slim");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
             currentTexture = SkinRetriever.fileToTexture(skins.get(position));
+            if(btnReport != null) {
+                btnReport.visible = skins.get(position).getAbsolutePath().contains("web_");
+            }
         } else {
             checkForMissingSkins();
         }
@@ -98,10 +102,8 @@ public class IncarnationScreen extends Screen {
         matrixStack.pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
         boolean backupSkinType = ClientUtil.isAlex(player);
-        postRenderedPlayer = true;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-        postRenderedPlayer = false;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }
@@ -277,10 +279,23 @@ public class IncarnationScreen extends Screen {
         RegenerationData.get(minecraft.player).ifPresent((data) -> currentSkinType = data.preferredModel());
 
         RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.preferredModel());
-        updateModels();
 
         excludeTrending.active = true;
 
+        // Report Button
+        btnReport = new Button(cx + 165, cy + 155 - buttonOffset, btnW, btnH + 2, Component.translatable("gui.regen.report"), button -> {
+            if (position < skins.size() && skins.get(position).getName().startsWith("web_")) {
+                SkinRetriever.reportSkin(Minecraft.getInstance().getUser().getName(), Minecraft.getInstance().getUser().getUuid(), skins.get(position).getName());
+                Minecraft.getInstance().player.sendSystemMessage(Component.translatable("gui.regen.reported_skin"));
+            }
+        }, (button, poseStack, i, j) -> {
+            if (button.isHoveredOrFocused()) {
+                this.renderTooltip(poseStack, List.of(Component.translatable("button_tooltip.regen.report_skin")), Optional.empty(), i, j);
+            }
+        });
+
+        addRenderableWidget(btnReport);
+        updateModels();
 
     }
 

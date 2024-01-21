@@ -10,7 +10,6 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenSources;
 import mc.craig.software.regen.util.RegenUtil;
-import mc.craig.software.regen.util.constants.RConstants;
 import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,6 +17,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -162,5 +162,13 @@ public class CommonEvents {
         RegenUtil.spawnHandIfPossible(event.getEntity(), event.getItemStack());
     }
 
+    @SubscribeEvent
+    public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            RegenerationData.get(serverPlayer).ifPresent(regenerationData -> {
+                regenerationData.syncToClients(null);
+            });
+        }
+    }
 
 }

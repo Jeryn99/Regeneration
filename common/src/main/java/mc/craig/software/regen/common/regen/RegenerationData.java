@@ -116,6 +116,10 @@ public class RegenerationData implements IRegen {
         AnimationState regenAnimState = getAnimationState(IRegen.RegenAnimation.REGEN);
         AnimationState graceAnimState = getAnimationState(IRegen.RegenAnimation.GRACE);
 
+        if(!livingEntity.level.isClientSide && livingEntity.tickCount > 10 && livingEntity.tickCount < 60){
+            syncToClients(null);
+        }
+
         if (traitActive && getCurrentTrait() != null) {
             getCurrentTrait().tick(getLiving(), this);
         }

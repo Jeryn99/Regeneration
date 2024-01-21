@@ -336,7 +336,7 @@ public class ClientUtil {
         TransitionTypeRenderers.add(TransitionTypes.BLAZE, BlazeTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.ENDER_DRAGON, EnderDragonTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.SNEEZE, SneezeTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.DRINK, DrinkTransitionRenderer.INSTANCE);
+      //  TransitionTypeRenderers.add(TransitionTypes.DRINK, DrinkTransitionRenderer.INSTANCE);
     }
 
     /**

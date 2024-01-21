@@ -44,12 +44,12 @@ public class BipedBodyMixin {
                 callbackInfo.cancel();
             }
 
-            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.DRINK) {
+        /*    if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.DRINK) {
                 AnimationUtil.animate(bipedModel, data.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.MCGANN_REGEN, ageInTicks, 1);
                 correctPlayerModel(bipedModel);
                 callbackInfo.cancel();
             }
-
+*/
             // "Sneeze" animation
             if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.SNEEZE) {
                 AnimationUtil.animate(bipedModel, data.getAnimationState(IRegen.RegenAnimation.REGEN), AnimationManipulation.REGEN_11_12, ageInTicks, 1);

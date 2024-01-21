@@ -42,7 +42,8 @@ public class VisualManipulator {
 
             // Only time a skin update should occur is if the player does not have a skin cached or the player is mid-regeneration
             boolean isHalfWay = iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2);
-            if (iRegen.regenState() == RegenStates.REGENERATING && isHalfWay || iRegen.regenState() != RegenStates.REGENERATING && !hasPlayerSkin(uuid)) {
+            boolean isPlayerYoung = playerEntity.tickCount < 120;
+            if (isPlayerYoung || iRegen.regenState() == RegenStates.REGENERATING && isHalfWay || iRegen.regenState() != RegenStates.REGENERATING && !hasPlayerSkin(uuid)) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
                     boolean isAlex = iRegen.currentlyAlex();

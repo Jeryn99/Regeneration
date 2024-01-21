@@ -29,7 +29,7 @@ allprojects {
     apply plugin: "maven-publish"
 
     archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
+    version = "${rootProject.minecraft_version}-${rootProject.mod_version}"
     group = rootProject.maven_group
 
   repositories {
@@ -64,11 +64,6 @@ allprojects {
       }
 
       maven {
-          name = 'Ladysnake Mods'
-          url = 'https://ladysnake.jfrog.io/artifactory/mods'
-      }
-
-      maven {
           url = 'https://maven.theillusivec4.top/'
       }
 
@@ -79,7 +74,7 @@ allprojects {
 
       maven {
           name = 'Ladysnake Libs'
-          url = 'https://ladysnake.jfrog.io/artifactory/mods'
+          url = uri("https://maven.ladysnake.org/releases")
       }
 
       maven {
@@ -90,14 +85,11 @@ allprojects {
           }
       }
 
-      flatDir {
-          dirs '../libs'
-      }
-
       maven {
           name = "Fuzs Mod Resources"
           url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
       }
+
 
   }
 

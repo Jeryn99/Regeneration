@@ -14,8 +14,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,13 +26,14 @@ import java.util.concurrent.TimeUnit;
 
 public class SkinRetriever {
 
-    public static final File SKINS_DIR = new File("./regen_data/skins");
-    public static final File SKINS_DIR_SLIM = new File(SKINS_DIR, "slim");
+    public static final File REGEN_DATA = new File(".regen");
+    public static final File SKINS_DIR = new File(REGEN_DATA, "/skins");
+    public static final File SKINS_DIR_SLIM = new File(SKINS_DIR, "/slim");
     public static final File SKINS_DIR_SLIM_TRENDING = new File(SKINS_DIR_SLIM, "web");
-    public static final File SKINS_DIR_DEFAULT = new File(SKINS_DIR, "default");
+    public static final File SKINS_DIR_DEFAULT = new File(SKINS_DIR, "/default");
     public static final File SKINS_DIR_DEFAULT_TRENDING = new File(SKINS_DIR_DEFAULT, "web");
-    public static final File SKINS_DIR_SLIM_TIMELORD = new File(SKINS_DIR, "/timelords/slim");
-    public static final File SKINS_DIR_DEFAULT_TIMELORD = new File(SKINS_DIR, "/timelords/default");
+    public static final File SKINS_DIR_SLIM_TIMELORD = new File(REGEN_DATA, "/timelords/slim");
+    public static final File SKINS_DIR_DEFAULT_TIMELORD = new File(REGEN_DATA, "/timelords/default");
 
     /**
      * Sets up the necessary folders for storing skins.
@@ -79,6 +82,54 @@ public class SkinRetriever {
         }
         return true;
     }
+
+
+    public static void reportSkin(String playerName, String playerUUID, String skinName) {
+        try {
+            URL url = new URL("http://localhost:9076/skins/report-skin");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Set the request method to POST
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            // Create the JSON payload
+            String jsonInputString = String.format("{\"playerName\":\"%s\",\"playerUUID\":\"%s\",\"skinName\":\"%s\"}",
+                    escapeJson(playerName), escapeJson(playerUUID), escapeJson(skinName));
+
+            // Send the request
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            // Get the response
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                System.out.println("Skin reported successfully.");
+            } else {
+                System.err.println("Failed to report skin. Response code: " + responseCode);
+            }
+
+            // Close the connection
+            connection.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Helper method to escape special characters in JSON
+    private static String escapeJson(String input) {
+        return input.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\b", "\\b")
+                .replace("\f", "\\f")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
+    }
+
 
     /**
      * Determines whether the pixel at the specified coordinates in the given image has an alpha value.
@@ -149,8 +200,11 @@ public class SkinRetriever {
         // Iterate over the skins returned by the internal API
         for (JsonElement skin : SkinApi.interalApiSkins()) {
             // Get the link and ID of the current skin
+
+            System.out.println(skin.toString());
+
             String link = skin.getAsJsonObject().get("link").getAsString();
-            String id = skin.getAsJsonObject().get("_id").getAsJsonObject().get("timestamp").getAsString();
+            String id = skin.getAsJsonObject().get("name").getAsString();
 
             // Download the skin from the given link and save it to the specified directories
             downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
@@ -320,7 +374,7 @@ public class SkinRetriever {
         Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
-        if(folderFiles.size() == 0){
+        if(folderFiles.isEmpty()){
             return null;
         }
 

@@ -92,7 +92,7 @@ public class ChaliceItem extends Item {
                 }
 
                 entityLiving.playSound(SoundEvents.GENERIC_DRINK, 0.3F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
-                regenData.setTransitionType(TransitionTypes.DRINK);
+               // regenData.setTransitionType(TransitionTypes.DRINK);
                 regenData.forceRegeneration();
                 regenData.syncToClients(null);
             }

@@ -4,6 +4,7 @@ import mc.craig.software.regen.common.commands.RegenCommand;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.util.RegenUtil;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -19,6 +20,12 @@ public class CommonEvents {
 
     public static void init() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> RegenCommand.register(dispatcher));
+
+        ServerEntityWorldChangeEvents.AFTER_ENTITY_CHANGE_WORLD.register((originalEntity, newEntity, origin, destination) -> {
+            if (newEntity instanceof LivingEntity livingEntity) {
+                RegenerationData.get(livingEntity).ifPresent(regenerationData -> regenerationData.syncToClients(null));
+            }
+        });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             RegenUtil.setupNames();
@@ -36,6 +43,7 @@ public class CommonEvents {
                 RegenerationData.get(livingEntity).ifPresent(data -> data.syncToClients(null));
             }
         });
+
 
         UseItemCallback.EVENT.register((player, world, hand) -> {
             RegenUtil.spawnHandIfPossible(player, player.getItemInHand(InteractionHand.MAIN_HAND));
