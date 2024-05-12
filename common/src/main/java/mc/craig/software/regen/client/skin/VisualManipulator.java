@@ -13,6 +13,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
@@ -25,7 +26,6 @@ public class VisualManipulator {
 
     //Skin Storage
     public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
-    public static final HashMap<UUID, Boolean> MOJANG_BACKUP = new HashMap<>();
 
     public static void tick(AbstractClientPlayer playerEntity) {
         RegenerationData.get(playerEntity).ifPresent(iRegen -> {
@@ -54,37 +54,26 @@ public class VisualManipulator {
     }
 
     public static boolean mojangIsAlex(AbstractClientPlayer abstractClientPlayerEntity) {
-
-        if (MOJANG_BACKUP.containsKey(abstractClientPlayerEntity.getUUID())) {
-            return MOJANG_BACKUP.get(abstractClientPlayerEntity.getUUID());
-        }
-
         if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null) return false;
         PlayerInfo info = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
 
+        if (info.getSkin() == null) {
+            return false;
+        }
 
-        info.registerTextures();
-        if (info.getModelName() == null) {
-            return false;
-        }
-        if (info.getModelName().isEmpty()) {
-            return false;
-        }
-        return info.getModelName().contentEquals("slim");
+        PlayerSkin.Model model = info.getSkin().model();
+
+        return model == PlayerSkin.Model.SLIM;
     }
 
     public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
         PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
-
         if (playerInfo == null) return;
 
-        if (!MOJANG_BACKUP.containsKey(player.getUUID())) {
-            boolean skinType = (playerInfo.getModelName() == null || playerInfo.getModelName().isEmpty());
-            MOJANG_BACKUP.put(player.getUUID(), !skinType);
-        }
-
-        playerInfo.skinModel = isAlex ? "slim" : "default";
+      //TODO  playerInfo.skinModel = isAlex ? "slim" : "default";
     }
+
+
 
     public static void sendResetMessage() {
         LocalPlayer player = Minecraft.getInstance().player;

@@ -36,7 +36,7 @@ public class IncarnationScreen extends Screen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     public static boolean isAlex = true;
-    public static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
+    public static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultTexture();
     private static PlayerUtil.SkinType currentSkinType = RegenerationData.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private static List<File> skins = null;
@@ -102,7 +102,7 @@ public class IncarnationScreen extends Screen {
         boolean backupSkinType = ClientUtil.isAlex(player);
         postRenderedPlayer = true;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - mouseX, (float) (topPos + 75 - 25) - mouseY, Minecraft.getInstance().player);
+       //TODO InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - mouseX, (float) (topPos + 75 - 25) - mouseY, Minecraft.getInstance().player);
         postRenderedPlayer = false;
         VisualManipulator.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         guiGraphics.pose().popPose();
@@ -147,7 +147,7 @@ public class IncarnationScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
         RenderSystem.setShaderTexture(0, screenBackground);
         guiGraphics.blit(screenBackground, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         renderSkinToGui(guiGraphics, mouseX, mouseY);
@@ -182,9 +182,10 @@ public class IncarnationScreen extends Screen {
         skins = SkinRetriever.listAllSkins(PlayerUtil.SkinType.EITHER);
         checkForMissingSkins();
 
-        this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
+        //TODO
+      /*  this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
             Minecraft.getInstance().setScreen(null);
-        }));
+        }));*/
 
         this.searchField = new EditBox(this.font, cx + 10, cy + 30 + buttonOffset, cx - 15, 20, this.searchField, Component.translatable("skins.search"));
 

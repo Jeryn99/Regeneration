@@ -109,7 +109,7 @@ public class Watcher extends Mob {
     }
 
     @Override
-    protected @NotNull AABB getBoundingBoxForPose(@NotNull Pose pose) {
+    protected AABB getHitbox() {
         return new AABB(0, 0, 0, 0, 0, 0);
     }
 

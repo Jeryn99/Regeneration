@@ -50,9 +50,10 @@ public class ColorScreen extends Screen {
 
         final int btnW = 60, btnH = 18;
 
-        this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
+        //TODO!
+      /*  this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
             Minecraft.getInstance().setScreen(null);
-        }));
+        }));*/
 
         // Reset Style Button
         this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.undo"), button -> {
@@ -104,7 +105,7 @@ public class ColorScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         if (this.minecraft != null) {
             RenderSystem.setShaderTexture(0, BACKGROUND);

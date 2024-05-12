@@ -4,14 +4,12 @@ import mc.craig.software.regen.common.registry.CustomRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class CustomRegistryImpl<T> extends CustomRegistry<T> {
 

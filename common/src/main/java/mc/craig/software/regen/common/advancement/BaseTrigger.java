@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,14 +45,7 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
         RL = parRL;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.advancements.ICriterionTrigger#getId()
-     */
-    @Override
-    public @NotNull ResourceLocation getId() {
-        return RL;
-    }
+
 
     /*
      * (non-Javadoc)
@@ -95,7 +87,7 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
 
     @Override
     public @NotNull Instance createInstance(@NotNull JsonObject p_230307_1_, @NotNull DeserializationContext p_230307_2_) {
-        return new BaseTrigger.Instance(getId());
+        return new BaseTrigger.Instance(RL);
     }
 
     /**
@@ -133,13 +125,9 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
             return true;
         }
 
-        @Override
-        public @NotNull ResourceLocation getCriterion() {
-            return id;
-        }
 
         @Override
-        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext p_230240_1_) {
+        public JsonObject serializeToJson() {
             return new JsonObject();
         }
     }
@@ -193,7 +181,7 @@ public class BaseTrigger implements CriterionTrigger<BaseTrigger.Instance> {
             ArrayList<CriterionTrigger.Listener<BaseTrigger.Instance>> list = null;
 
             for (CriterionTrigger.Listener<BaseTrigger.Instance> listener : listeners) {
-                if (listener.getTriggerInstance().test()) {
+                if (listener.trigger().test()) {
                     if (list == null) {
                         list = Lists.newArrayList();
                     }

@@ -3,7 +3,7 @@ package mc.craig.software.regen.client.rendering.model.forge;
 import com.google.common.base.Supplier;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

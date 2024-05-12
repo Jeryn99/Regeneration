@@ -7,6 +7,7 @@ import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.util.constants.RConstants;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -14,13 +15,13 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeAdvancementProvider;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class RegenAdvancementsProvider extends ForgeAdvancementProvider {
+public class RegenAdvancementsProvider extends AdvancementProvider {
 
     public RegenAdvancementsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
         super(output, registries, existingFileHelper, ImmutableList.of(new RegenAdvancements()));
@@ -35,8 +36,9 @@ public class RegenAdvancementsProvider extends ForgeAdvancementProvider {
             return "advancements." + name + ".description";
         }
 
+
         @Override
-        public void generate(HolderLookup.Provider arg, Consumer<Advancement> advancementConsumer, ExistingFileHelper existingFileHelper) {
+        public void generate(HolderLookup.Provider arg, Consumer<AdvancementHolder> advancementConsumer, ExistingFileHelper existingFileHelper) {
             Advancement rootAdvancement = Advancement.Builder.advancement().display(RItems.FOB.get(), Component.translatable(getTitleTranslation("fob_watch")), Component.translatable(getDescriptionTranslation("fob_watch")), new ResourceLocation(RConstants.MODID, "textures/block/zero_roundel_half.png"), FrameType.GOAL, false, true, false).addCriterion("obtained_fob_watch", InventoryChangeTrigger.TriggerInstance.hasItems(RItems.FOB.get())).save(advancementConsumer, "regen/root");
 
             Advancement firstRegeneration = Advancement.Builder.advancement().parent(rootAdvancement).display(Blocks.PLAYER_HEAD, Component.translatable(getTitleTranslation("first_regeneration")), Component.translatable(getDescriptionTranslation("first_regeneration")), null, FrameType.TASK, false, true, false).addCriterion("regenerated", new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId())).save(advancementConsumer, "regen/regenerated");

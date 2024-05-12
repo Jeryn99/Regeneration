@@ -14,13 +14,13 @@ public class TriggerManager {
     public static final BaseTrigger COUNCIL = new BaseTrigger(RConstants.MODID, "council");
 
     public static void init() {
-        CriteriaTriggers.register(FIRST_REGENERATION);
-        CriteriaTriggers.register(CHANGE_REFUSAL);
-        CriteriaTriggers.register(CRITICAL);
-        CriteriaTriggers.register(TIMELORD_TRADE);
-        CriteriaTriggers.register(HAND_CUT);
-        CriteriaTriggers.register(ZERO_ROOM);
-        CriteriaTriggers.register(COUNCIL);
+        CriteriaTriggers.register("first_regeneration", FIRST_REGENERATION);
+        CriteriaTriggers.register("change_refusal", CHANGE_REFUSAL);
+        CriteriaTriggers.register("critical", CRITICAL);
+        CriteriaTriggers.register("timelord_trade", TIMELORD_TRADE);
+        CriteriaTriggers.register("hand_cut", HAND_CUT);
+        CriteriaTriggers.register("zero_room", ZERO_ROOM);
+        CriteriaTriggers.register("council", COUNCIL);
     }
 
 }

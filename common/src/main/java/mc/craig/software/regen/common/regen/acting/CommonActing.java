@@ -157,8 +157,8 @@ public class CommonActing implements Acting {
         player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
         cap.setNextSkin(new byte[0]);
 
-        player.getAttribute(Attributes.MAX_HEALTH).removeModifier(heartModifier);
-        player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier);
+        player.getAttribute(Attributes.MAX_HEALTH).removeModifier(heartModifier.getId());
+        player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier.getId());
     }
 
     @Override

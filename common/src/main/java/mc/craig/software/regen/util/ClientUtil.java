@@ -28,6 +28,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
@@ -117,12 +118,12 @@ public class ClientUtil {
             PlayerInfo playerInfo = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
 
             // Return false if the PlayerInfo is null or the skin model is empty
-            if (playerInfo == null || playerInfo.skinModel == null || playerInfo.skinModel.isEmpty()) {
+            if (playerInfo == null || playerInfo.getSkin() == null || playerInfo.getSkin().model() == null) {
                 return false;
             }
 
             // Return true if the skin model is "slim" (which corresponds to the Alex skin type)
-            return Objects.equals(playerInfo.skinModel, "slim");
+            return Objects.equals(playerInfo.getSkin(), PlayerSkin.Model.SLIM);
         }
 
         // If the given entity is not an AbstractClientPlayer, return false
@@ -182,8 +183,6 @@ public class ClientUtil {
         // If the level is null, clear the texture caches and release the textures
         if (level == null) {
             TextureManager textureManager = minecraft.getTextureManager();
-
-            VisualManipulator.MOJANG_BACKUP.clear();
 
             // Release the textures in the player skins cache and clear the cache
             if (!VisualManipulator.PLAYER_SKINS.isEmpty()) {
@@ -273,8 +272,8 @@ public class ClientUtil {
             if (playerInfo == null) getHumanoidModel(itemStack, true);
 
             boolean isSlim = false;
-            if (playerInfo != null && playerInfo.skinModel != null) {
-                isSlim = (Objects.equals(playerInfo.skinModel, "slim"));
+            if (playerInfo != null && playerInfo.getSkin() != null) {
+                isSlim = (Objects.equals(playerInfo.getSkin().model(), PlayerSkin.Model.SLIM));
             }
 
             // If the player has a slim model, return the slim armor model for the item stack

@@ -51,8 +51,8 @@ public class RegenerationOverlay {
 
             // Render head & hat piece for use in post regeneration state
             if (currentState == RegenStates.POST) {
-                guiGraphics.blit(player.getSkinTextureLocation(), 8, 10, 8, 8, 8, 8, 64, 64);
-                guiGraphics.blit(player.getSkinTextureLocation(), 8, 10, 40, 8, 8, 8, 64, 64);
+                guiGraphics.blit(player.getSkin().texture(), 8, 10, 8, 8, 8, 8, 64, 64);
+                guiGraphics.blit(player.getSkin().texture(), 8, 10, 40, 8, 8, 8, 64, 64);
             }
 
             // Render Regeneration Status Icon

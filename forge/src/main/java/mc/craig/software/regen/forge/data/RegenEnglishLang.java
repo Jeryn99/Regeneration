@@ -16,8 +16,7 @@ import mc.craig.software.regen.util.constants.RMessages;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class RegenEnglishLang extends LanguageProvider {
 

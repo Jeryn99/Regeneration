@@ -59,6 +59,8 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
     public static ResourceLocation getTimelordTexture(Timelord timelord) {
         IRegen data = RegenerationData.get(timelord).orElseGet(null);
 
+        ResourceLocation defaultTexture = DefaultPlayerSkin.getDefaultTexture();
+
         if (data.updateTicks() > 100 && data.updateTicks() < 105) {
             TIMELORDS.remove(timelord.getUUID());
         }
@@ -67,9 +69,9 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
             return TIMELORDS.get(timelord.getUUID());
         }
 
-        if (TIMELORDS.get(timelord.getUUID()) == DefaultPlayerSkin.getDefaultSkin()) {
+        if (TIMELORDS.get(timelord.getUUID()) == defaultTexture) {
             TIMELORDS.remove(timelord.getUUID());
-            return DefaultPlayerSkin.getDefaultSkin();
+            return defaultTexture;
         }
 
         NativeImage nativeImage = null;
@@ -81,7 +83,7 @@ public class TimelordRenderer extends MobRenderer<Timelord, PlayerModel<Timelord
             e.printStackTrace();
         }
         if (nativeImage == null) {
-            return DefaultPlayerSkin.getDefaultSkin();
+            return defaultTexture;
         }
         ResourceLocation location = Minecraft.getInstance().getTextureManager().register("timelord_", new DynamicTexture(nativeImage));
         TIMELORDS.put(timelord.getUUID(), location);

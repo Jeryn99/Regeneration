@@ -19,10 +19,11 @@ public abstract class InventoryScreenMixin {
     public void init(CallbackInfo ci) {
         Screen screen = (Screen) (Object) this;
 
-        if (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
+        //TOOO!
+       /* if (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen) {
             screen.addRenderableWidget(new ImageButton(4, 4, 19, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
                 Minecraft.getInstance().setScreen(new PreferencesScreen());
             }));
-        }
+        }*/
     }
 }

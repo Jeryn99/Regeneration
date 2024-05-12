@@ -136,7 +136,7 @@ public class ColorWidget extends AbstractWidget {
 
 
     public void tick() {
-        text.tick();
+        //TODO seems to no longer be needed? text.tick();
     }
 
     @Override

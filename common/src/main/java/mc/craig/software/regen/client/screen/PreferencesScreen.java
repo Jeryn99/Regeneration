@@ -54,10 +54,11 @@ public class PreferencesScreen extends Screen {
 
         final int btnW = 66, btnH = 20;
 
-        this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
+        //TODO
+   /*     this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
             Minecraft.getInstance().setScreen(null);
         }));
-
+*/
         Button btnClose = Button.builder(Component.translatable("gui.regen.close"), onPress -> Minecraft.getInstance().setScreen(null))
                 .bounds(width / 2 - 109, cy + 145, 71, btnH).build();
 
@@ -110,14 +111,14 @@ public class PreferencesScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
         RenderSystem.setShaderTexture(0, screenBackground);
         IRegen data = RegenerationData.get(Minecraft.getInstance().player).orElseGet(null);
         guiGraphics.blit(screenBackground, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - mouseX, (float) (topPos + 75 - 50) - mouseY, Minecraft.getInstance().player);
+      //TODO?  InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - mouseX, (float) (topPos + 75 - 50) - mouseY, Minecraft.getInstance().player);
         String str = Component.translatable("gui.regen.remaining_regens.status", data.regens()).getString();
         guiGraphics.drawString(font, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 

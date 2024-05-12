@@ -5,29 +5,21 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge();
 }
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
-    forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-
-        mixinConfig "regen-common.mixins.json"
-        mixinConfig "regen.mixins.json"
-
-        dataGen {
-            mod "regen"
-        }
-    }
-
     runs {
         data {
+            data()
+            programArgs "--all", "--mod", "regeneration"
+            programArgs "--output", project(":forge").file("src/generated/resources").absolutePath
             programArgs "--existing", project(":common").file("src/main/resources/").absolutePath
         }
     }
+
 }
 
 unifiedPublishing {
@@ -35,7 +27,7 @@ unifiedPublishing {
         displayName = "❤️‍🔥 [NeoForge] - Regeneration - $rootProject.minecraft_version - v$project.version"
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
-        gameVersions = ["1.20.1"]
+        gameVersions = ["1.20.2"]
         mainPublication tasks.remapJar
         gameLoaders = ["forge"]
         relations {
@@ -64,14 +56,14 @@ configurations {
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
+    developmentNeoForge.extendsFrom common
 }
 
 dependencies {
-    forge "net.neoforged:forge:${rootProject.forge_version}"
+    neoForge "net.neoforged:neoforge:${rootProject.forge_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
 processResources {

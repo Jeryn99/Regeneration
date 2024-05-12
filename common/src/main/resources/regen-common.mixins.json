@@ -8,7 +8,7 @@
     "FogRendererMixin",
     "GuiMixin",
     "InventoryScreenMixin",
-    "PlayerInfoMixin",
+    "PlayerSkinMixin",
     "PlayerRendererMixin",
     "SoundSourceMixin"
   ],
