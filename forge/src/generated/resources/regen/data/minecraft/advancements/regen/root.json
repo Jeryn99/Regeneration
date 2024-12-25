@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "obtained_fob_watch": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "regen:fobwatch"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "regen:textures/block/zero_roundel_half.png",
+    "description": {
+      "translate": "advancements.fob_watch.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "regen:fobwatch",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.fob_watch.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtained_fob_watch"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

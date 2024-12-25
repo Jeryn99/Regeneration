@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:regen/timelord_trade",
+  "criteria": {
+    "ready_for_war": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "regen:staser"
+            ]
+          },
+          {
+            "items": [
+              "regen:rifle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.ready_for_war.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:rifle",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.ready_for_war.title"
+    }
+  },
+  "requirements": [
+    [
+      "ready_for_war"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

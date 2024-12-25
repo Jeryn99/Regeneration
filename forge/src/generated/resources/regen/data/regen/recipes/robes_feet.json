@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "regen",
+  "key": {
+    "I": {
+      "item": "regen:zinc"
+    },
+    "Z": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "   ",
+    "Z Z",
+    "I I"
+  ],
+  "result": {
+    "item": "regen:robes_feet"
+  },
+  "show_notification": true
+}

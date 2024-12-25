@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:regen/change_refusal",
+  "criteria": {
+    "severed_hand": {
+      "trigger": "regen:hand_cut"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.severed_hand.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:hand"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.severed_hand.title"
+    }
+  },
+  "requirements": [
+    [
+      "severed_hand"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

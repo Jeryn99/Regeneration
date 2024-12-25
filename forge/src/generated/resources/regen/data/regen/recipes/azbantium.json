@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "Z": {
+      "item": "regen:zinc"
+    }
+  },
+  "pattern": [
+    "ZZZ",
+    "Z Z",
+    "ZZZ"
+  ],
+  "result": {
+    "count": 2,
+    "item": "regen:azbantium"
+  },
+  "show_notification": true
+}

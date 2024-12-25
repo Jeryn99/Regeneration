@@ -1,0 +1,11 @@
+{
+  "values": [
+    "minecraft:slowness",
+    "minecraft:mining_fatigue",
+    "minecraft:nausea",
+    "minecraft:hunger",
+    "minecraft:weakness",
+    "minecraft:poison",
+    "minecraft:darkness"
+  ]
+}

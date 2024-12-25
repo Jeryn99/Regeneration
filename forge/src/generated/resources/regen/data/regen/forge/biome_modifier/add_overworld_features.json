@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#regen:overworld_ore",
+  "features": [
+    "regen:ore_zinc",
+    "regen:ore_zinc_small"
+  ],
+  "step": "underground_ores"
+}

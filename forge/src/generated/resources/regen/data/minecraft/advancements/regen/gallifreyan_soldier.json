@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:regen/timelord_trade",
+  "criteria": {
+    "gallifreyan_soldier": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "regen:guard_helmet"
+            ]
+          },
+          {
+            "items": [
+              "regen:guard_chest"
+            ]
+          },
+          {
+            "items": [
+              "regen:guard_feet"
+            ]
+          },
+          {
+            "items": [
+              "regen:guard_legs"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.gallifreyan_soldier.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:guard_chest",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.gallifreyan_soldier.title"
+    }
+  },
+  "requirements": [
+    [
+      "gallifreyan_soldier"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

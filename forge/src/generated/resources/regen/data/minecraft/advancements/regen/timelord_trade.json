@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:regen/root",
+  "criteria": {
+    "timelord_trade": {
+      "trigger": "regen:timelord_trade"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.timelord_trade.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:timelord"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.timelord_trade.title"
+    }
+  },
+  "requirements": [
+    [
+      "timelord_trade"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

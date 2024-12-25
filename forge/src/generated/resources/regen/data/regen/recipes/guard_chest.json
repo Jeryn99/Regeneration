@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "regen",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Z": {
+      "item": "regen:zinc"
+    }
+  },
+  "pattern": [
+    "Z Z",
+    "ZIZ",
+    "ZZZ"
+  ],
+  "result": {
+    "item": "regen:guard_chest"
+  },
+  "show_notification": true
+}

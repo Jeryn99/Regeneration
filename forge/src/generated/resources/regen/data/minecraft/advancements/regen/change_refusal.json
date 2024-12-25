@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:regen/root",
+  "criteria": {
+    "change_refusal": {
+      "trigger": "regen:change_refusal"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.change_refusal.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:bio_container"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.change_refusal.title"
+    }
+  },
+  "requirements": [
+    [
+      "change_refusal"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

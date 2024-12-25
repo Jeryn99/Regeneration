@@ -1,0 +1,8 @@
+// 1.20.1	2024-12-25T20:54:23.0744192	Loot Tables
+178c9733191af74c73c873bcd473821bae983c03 data/regen/loot_tables/blocks/azbantium.json
+fd6eb41531463711d3ca6d648dc6b9a92f0836a3 data/regen/loot_tables/blocks/bio_container.json
+900d517468d6edfca223d3d41eb3cdcc9e0127f2 data/regen/loot_tables/blocks/deepslate_zinc_ore.json
+442b2fd5fc78568fc9e1deb1cbdd3e7f35fae39f data/regen/loot_tables/blocks/zero_roundel_full.json
+22c8f162a4960326ad7af68a120602a0c3b38d9d data/regen/loot_tables/blocks/zero_roundel_half.json
+d691885935dccb4e2615a66c5a6dfd19311ec04f data/regen/loot_tables/blocks/zinc_ore.json
+df5f46fe05231f4f2c4d6add8de2268ccd8ded17 data/regen/loot_tables/entities/timelord.json

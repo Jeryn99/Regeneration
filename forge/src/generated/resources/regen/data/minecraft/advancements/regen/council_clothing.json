@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:regen/timelord_trade",
+  "criteria": {
+    "council_clothing": {
+      "trigger": "regen:council"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.council_clothing.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "regen:f_robes_chest",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.council_clothing.title"
+    }
+  },
+  "requirements": [
+    [
+      "council_clothing"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
