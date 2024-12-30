@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -32,6 +33,15 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onServerStart(ServerStartingEvent serverStartingEvent) {
         RegenUtil.setupNames();
+    }
+
+    @SubscribeEvent
+    public static void onLevelJoin(EntityJoinLevelEvent event){
+        if(event.getEntity() instanceof ServerPlayer serverPlayer){
+            RegenerationData.get(serverPlayer).ifPresent(regenerationData -> {
+                regenerationData.syncToClients(null);
+            });
+        }
     }
 
     @SubscribeEvent

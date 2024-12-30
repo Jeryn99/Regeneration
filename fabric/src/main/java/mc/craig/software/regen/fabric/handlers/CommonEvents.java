@@ -4,10 +4,13 @@ import mc.craig.software.regen.common.commands.RegenCommand;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.util.RegenUtil;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,6 +22,8 @@ public class CommonEvents {
 
     public static void init() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> RegenCommand.register(dispatcher));
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> RegenerationData.get(player).ifPresent(regenerationData -> regenerationData.syncToClients(null)));
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             RegenUtil.setupNames();

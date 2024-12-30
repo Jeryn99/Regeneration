@@ -155,7 +155,9 @@ allprojects {
 }
 
 task publishMeEverywhere(){
+    dependsOn ':build'
     dependsOn ':forge:publishUnified'
     dependsOn ':fabric:publishUnified'
+    dependsOn ':githubRelease'
 }
 
