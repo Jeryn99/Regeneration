@@ -1,6 +1,8 @@
 package mc.craig.software.regen.client.skin;
 
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -13,11 +15,15 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class VisualManipulator {
@@ -33,10 +39,9 @@ public class VisualManipulator {
             byte[] skin = iRegen.skin();
             UUID uuid = playerEntity.getUUID();
 
-            boolean validSkin = iRegen.isSkinValidForUse();
-            if (!validSkin) {
-                PLAYER_SKINS.remove(uuid);
-                setPlayerSkinType(playerEntity, mojangIsAlex(playerEntity));
+            if (!iRegen.isSkinValidForUse()) {
+                PlayerSkinInfo playerInfo = getRenderTypeAndModel(playerEntity.getGameProfile());
+                setPlayerSkinType(playerEntity, playerInfo.model.contains("slim"));
                 return;
             }
 
@@ -118,5 +123,31 @@ public class VisualManipulator {
     public static void removePlayerSkin(UUID uuid) {
         PLAYER_SKINS.remove(uuid);
     }
+
+
+    public record PlayerSkinInfo(ResourceLocation skinLocation, String model) {
+    }
+
+    public static PlayerSkinInfo getRenderTypeAndModel(@Nullable GameProfile gameProfile) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfile);
+        ResourceLocation skinLocation;
+        String model;
+
+        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+            MinecraftProfileTexture skinTexture = map.get(MinecraftProfileTexture.Type.SKIN);
+            skinLocation = minecraft.getSkinManager().registerTexture(skinTexture, MinecraftProfileTexture.Type.SKIN);
+            model = skinTexture.getMetadata("model");
+            if (model == null) {
+                model = "default";
+            }
+        } else {
+            skinLocation = DefaultPlayerSkin.getDefaultSkin(UUIDUtil.getOrCreatePlayerUUID(gameProfile));
+            model = DefaultPlayerSkin.getSkinModelName(UUIDUtil.getOrCreatePlayerUUID(gameProfile));
+        }
+
+        return new PlayerSkinInfo(skinLocation, model);
+    }
+
 
 }

@@ -56,7 +56,6 @@ public class RegenerationData implements IRegen {
     private int regensLeft = 0, animationTicks = 0;
     // ===== Skin Data =====
     private byte[] nextSkin = new byte[0], skinArray = new byte[0];
-    ;
 
     // ===== Enums =====
     private TransitionType transitionType = TransitionTypes.TRISTIS_IGNIS;

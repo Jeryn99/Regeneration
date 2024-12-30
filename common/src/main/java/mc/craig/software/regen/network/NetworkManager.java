@@ -24,7 +24,7 @@ public abstract class NetworkManager {
 
     @ExpectPlatform
     public static NetworkManager create(ResourceLocation channelName) {
-        throw new AssertionError();
+        throw new RuntimeException("RUH ROH");
     }
 
     @ExpectPlatform

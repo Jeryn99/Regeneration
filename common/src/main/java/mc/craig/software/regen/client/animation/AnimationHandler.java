@@ -9,9 +9,11 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypeRenderers;
 import mc.craig.software.regen.util.PlayerUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.Item;
 
@@ -79,6 +81,7 @@ public class AnimationHandler {
         }
     }
 
+    // false means hide, true means show
     public static boolean hideModelPartIf(LivingEntity livingEntity, Item[] items, PlayerModelPart playerModelPart, EquipmentSlot equipmentSlot) {
         // Check if the player is wearing one of the specified items
         for (Item item : items) {
@@ -88,7 +91,10 @@ public class AnimationHandler {
             }
         }
 
-        // If the player is not wearing the item, show the model part
+        if(livingEntity instanceof AbstractClientPlayer player){
+            return player.isModelPartShown(playerModelPart);
+        }
+
         return true;
     }
 

@@ -3,13 +3,15 @@ package mc.craig.software.regen.client.skin;
 import com.google.gson.*;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.util.*;
+import mc.craig.software.regen.util.PlayerUtil;
+import mc.craig.software.regen.util.RegenUtil;
+import mc.craig.software.regen.util.SkinApi;
+import mc.craig.software.regen.util.TextureFixer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,40 +31,16 @@ public class SkinRetriever {
     public static final File SKINS_DIR_SLIM_TRENDING = new File(SKINS_DIR_SLIM, "web");
     public static final File SKINS_DIR_DEFAULT = new File(SKINS_DIR, "default");
     public static final File SKINS_DIR_DEFAULT_TRENDING = new File(SKINS_DIR_DEFAULT, "web");
-    public static final File SKINS_DIR_SLIM_TIMELORD = new File(SKINS_DIR, "/timelords/slim");
-    public static final File SKINS_DIR_DEFAULT_TIMELORD = new File(SKINS_DIR, "/timelords/default");
 
     /**
      * Sets up the necessary folders for storing skins.
      */
     public static void folderSetup() {
-        createFolder(SKINS_DIR, SKINS_DIR_DEFAULT_TIMELORD, SKINS_DIR_SLIM_TIMELORD);
-
-        if (Platform.isClient()) {
-            createFolder(SKINS_DIR_DEFAULT, SKINS_DIR_SLIM, SKINS_DIR_DEFAULT_TRENDING, SKINS_DIR_SLIM_TRENDING);
-        }
+        createFolder(SKINS_DIR);
+        createFolder(SKINS_DIR_DEFAULT, SKINS_DIR_SLIM, SKINS_DIR_DEFAULT_TRENDING, SKINS_DIR_SLIM_TRENDING);
     }
 
 
-    /**
-     * Downloads and cleans the Timelord skins.
-     *
-     * @throws IOException if an error occurs while downloading or cleaning the skins
-     */
-    public static void timelord() throws IOException {
-        FileUtils.cleanDirectory(SKINS_DIR_DEFAULT_TIMELORD);
-        FileUtils.cleanDirectory(SKINS_DIR_SLIM_TIMELORD);
-        Regeneration.LOGGER.warn("Refreshing Timelord skins");
-
-        String[] genders = new String[]{"male", "female", "girl", "boy"};
-        for (String gender : genders) {
-
-            ArrayList<String> result = SkinApi.searchSkins(gender);
-            for (String skin : result) {
-                downloadSkinToDirectory(new URL(skin), "timelord_" + gender + "_" + RandomStringUtils.random(5, true, false), gender.equals("male") ? SKINS_DIR_DEFAULT_TIMELORD : SKINS_DIR_SLIM_TIMELORD);
-            }
-        }
-    }
 
     /**
      * Determines whether the given image represents an Alex model skin.
@@ -243,13 +221,8 @@ public class SkinRetriever {
     public static void doDownloads(boolean isClient) throws IOException {
         folderSetup();
         writeTime();
-
-        timelord();
-
-        if (isClient) {
-            remoteSkins();
-            internalSkins();
-        }
+        remoteSkins();
+        internalSkins();
     }
 
     public static boolean shouldUpdateSkins() throws FileNotFoundException {
@@ -305,12 +278,11 @@ public class SkinRetriever {
      * Chooses a random skin from the given skin directory.
      *
      * @param random     the random source to use for choosing the skin
-     * @param isTimelord whether to choose a Timelord skin
      * @param isAlex     whether to choose an Alex skin
      * @return a file representing the chosen skin
      */
-    public static File chooseRandomSkin(RandomSource random, boolean isTimelord, boolean isAlex) {
-        File skins = isTimelord ? (isAlex ? SKINS_DIR_SLIM_TIMELORD : SKINS_DIR_DEFAULT_TIMELORD) : (isAlex ? SKINS_DIR_SLIM : SKINS_DIR_DEFAULT);
+    public static File chooseRandomSkin(RandomSource random, boolean isAlex) {
+        File skins = isAlex ? SKINS_DIR_SLIM : SKINS_DIR_DEFAULT;
 
         if (!skins.exists()) {
             folderSetup();

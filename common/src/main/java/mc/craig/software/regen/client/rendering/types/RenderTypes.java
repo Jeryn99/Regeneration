@@ -23,6 +23,7 @@ public class RenderTypes extends RenderType {
             .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
             .setLayeringState(VIEW_OFFSET_Z_LAYERING)
             .createCompositeState(true));
+
     private static final Function<ResourceLocation, RenderType> GLOWING = Util.memoize((resourceLocation) -> {
         RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new TextureStateShard(resourceLocation, false, false)).setTransparencyState(NO_TRANSPARENCY).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setOverlayState(OVERLAY).setLayeringState(VIEW_OFFSET_Z_LAYERING).createCompositeState(true);
         return create(RConstants.MODID + ":glowing", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, compositeState);
