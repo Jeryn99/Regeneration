@@ -19,7 +19,7 @@ public class SkinApi {
 
     private static final String USER_AGENT = "Regeneration MC Mod/1.0";
     private static final String URL = "https://api.mineskin.org";
-    private static final String API_ENDPOINT = "https://mc.craig.software/api/skin/random-skins";
+    private static final String API_ENDPOINT = "https://api.jeryn.dev/mc/skins/random";
 
     /**
      * Retrieves a list of skin URLs from a given page number.

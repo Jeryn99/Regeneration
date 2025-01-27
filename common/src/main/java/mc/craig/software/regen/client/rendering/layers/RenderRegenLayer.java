@@ -29,8 +29,9 @@ public class RenderRegenLayer extends RenderLayer {
             for (int i = 0; i < 10; i++) {
                 poseStack.mulPose(Axis.YP.rotation(entityPlayer.tickCount * 4 + i * 45));
                 poseStack.scale(1.0f, 1.0f, 0.65f);
-                float alpha = Mth.clamp(Mth.sin((entityPlayer.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
+                //float alpha = Mth.clamp(Mth.sin((entityPlayer.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 float red = (float) color.x, green = (float) color.y, blue = (float) color.z;
+                float alpha = 1;
                 vertexBuilder.vertex(poseStack.last().pose(), 0.0F, 0.0F, 0.0F).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
                 vertexBuilder.vertex(poseStack.last().pose(), -0.266F * scale, scale, -0.5F * scale).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
                 vertexBuilder.vertex(poseStack.last().pose(), 0.266F * scale, scale, -0.5F * scale).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();

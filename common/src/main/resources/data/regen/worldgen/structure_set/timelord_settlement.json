@@ -2,13 +2,13 @@
   "structures": [
     {
       "structure": "regen:timelord_settlement",
-      "weight": 1
+      "weight": 3
     }
   ],
   "placement": {
     "salt": 1234353780,
-    "spacing": 2600,
-    "separation": 2578,
+    "spacing": 1200,
+    "separation": 1078,
     "type": "minecraft:random_spread"
   }
 }

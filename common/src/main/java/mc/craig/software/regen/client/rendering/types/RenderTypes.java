@@ -13,7 +13,9 @@ import java.util.function.Function;
 public class RenderTypes extends RenderType {
 
 
-    public static final RenderType REGEN_FLAMES = RenderTypes.lightning();
+    public static final RenderType REGEN_FLAMES = RenderType.create("dragon_rays", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES, 1536, false, false, CompositeState.builder().setShaderState(RENDERTYPE_LIGHTNING_SHADER).setWriteMaskState(COLOR_WRITE).setTransparencyState(LIGHTNING_TRANSPARENCY).createCompositeState(false));
+
+
     public static final RenderType LASER = create(RConstants.MODID + ":laser", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
             .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
             .setTextureState(NO_TEXTURE)

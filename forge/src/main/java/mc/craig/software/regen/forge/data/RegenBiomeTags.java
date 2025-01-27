@@ -19,7 +19,7 @@ public class RegenBiomeTags extends BiomeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(RegenUtil.IS_OVERWORLD).addTags(BiomeTags.IS_OVERWORLD, Tags.Biomes.IS_UNDERGROUND);
+        this.tag(RegenUtil.IS_OVERWORLD).addTags(BiomeTags.IS_OVERWORLD);
         this.tag(RegenUtil.TIMELORD_SETTLEMENT).addTags(BiomeTags.IS_FOREST, BiomeTags.HAS_WOODLAND_MANSION, BiomeTags.IS_TAIGA, BiomeTags.IS_HILL);
     }
 }

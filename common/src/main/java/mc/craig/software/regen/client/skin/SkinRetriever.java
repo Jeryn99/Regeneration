@@ -130,7 +130,7 @@ public class SkinRetriever {
             String link = skin.getAsJsonObject().get("link").getAsString();
             String id = skin.getAsJsonObject().get("name").getAsString();
             // Download the skin from the given link and save it to the specified directories
-            downloadSkins(new URL(link), "web_" + id, SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
+            downloadSkins(new URL(link), "web_" + id.replace("Skin_", ""), SKINS_DIR_SLIM_TRENDING, SKINS_DIR_DEFAULT_TRENDING);
         }
     }
 
@@ -174,12 +174,12 @@ public class SkinRetriever {
     public static void internalSkins() throws IOException {
         //if(!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
         Regeneration.LOGGER.warn("Re-downloading internal skins");
-        String packsUrl = "https://mc-api.craig.software/skins";
+        String packsUrl = "https://api.jeryn.dev/mc/skins/random";
         JsonElement links = SkinApi.getApiData(packsUrl);
 
         // Check if the links element is a JSON object
         if (links.isJsonObject()) {
-            JsonArray data = links.getAsJsonObject().getAsJsonArray("data");
+            JsonArray data = links.getAsJsonArray();
             for (JsonElement jsonElement : data) {
                 JsonObject currentSkin = jsonElement.getAsJsonObject();
 
