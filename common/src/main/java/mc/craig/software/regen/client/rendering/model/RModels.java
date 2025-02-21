@@ -27,7 +27,6 @@ public class RModels {
         // Armor
         COUNCIL_ROBES = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "robes"), "robes"), ArmorModel::createAlex);
         COUNCIL_ROBES_STEVE = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "council_robes_steve"), "council_robes_steve"), ArmorModel::createSteve);
-        CONTAINER = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "container"), "container"), ContainerModel::createBodyLayer);
         CYBERMAN = register(new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "cyberman"), "cyberman"), CybermanModel::createBodyLayer);
 
     }

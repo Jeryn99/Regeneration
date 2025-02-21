@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,18 +17,13 @@ public class RMaterials {
     public static ArmorMaterial TIMELORD = new ArmorMaterial() {
         @Override
         public int getDurabilityForType(ArmorItem.Type type) {
-            switch (type) {
-                case HELMET:
-                    return 390;
-                case CHESTPLATE:
-                    return 550;
-                case LEGGINGS:
-                    return 510;
-                case BOOTS:
-                    return 450;
-                default:
-                    return 300;
-            }
+            return switch (type) {
+                case HELMET -> 390;
+                case CHESTPLATE -> 550;
+                case LEGGINGS -> 510;
+                case BOOTS -> 450;
+                default -> 300;
+            };
         }
 
         @Override
@@ -47,7 +43,7 @@ public class RMaterials {
 
         @Override
         public @NotNull Ingredient getRepairIngredient() {
-            return Ingredient.of(RItems.ZINC.get());
+            return Ingredient.of(Items.NETHERITE_INGOT);
         }
 
         //ClientSide only variable

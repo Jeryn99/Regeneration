@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.types.RenderTypes;
-import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.util.constants.RConstants;
@@ -53,7 +52,6 @@ public class DrinkTransitionRenderer extends FieryTransitionRenderer {
 
             //Render player overlay
             if (entitylivingbaseIn.hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING && iRegen.updateTicks() > 260 && iRegen.updateTicks() < 560) {
-                if (entitylivingbaseIn instanceof Timelord) return;
                 float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());

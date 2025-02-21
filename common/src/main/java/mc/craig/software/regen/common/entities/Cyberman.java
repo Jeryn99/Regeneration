@@ -30,6 +30,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static mc.craig.software.regen.common.entities.Watcher.createAttributes;
+
 public class Cyberman extends PathfinderMob implements RangedAttackMob {
 
     public Cyberman(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -78,7 +80,6 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Timelord.class, true));
     }
 
     @Override
@@ -98,7 +99,7 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
 
     @Override
     public @NotNull AttributeMap getAttributes() {
-        return new AttributeMap(Timelord.createAttributes().build());
+        return new AttributeMap(createAttributes().build());
     }
 
     @Override

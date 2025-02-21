@@ -2,15 +2,9 @@ package mc.craig.software.regen.common.objects;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.item.FobWatchItem;
-import mc.craig.software.regen.common.item.HandItem;
-import mc.craig.software.regen.common.item.SpawnItem;
-import mc.craig.software.regen.common.traits.TraitRegistry;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
-import mc.craig.software.regen.util.PlayerUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.CreativeModeTab;
@@ -37,27 +31,6 @@ public class RTabs {
                 FobWatchItem.setEngrave(fobSilver, false);
                 output.accept(fobGold);
                 output.accept(fobSilver);
-            } else if (item == RItems.GAUNTLET) {
-                for (TraitBase trait : TraitRegistry.TRAITS_REGISTRY.getValues()) {
-                    ItemStack stack = new ItemStack(RItems.GAUNTLET.get());
-                    ChaliceItem.setTrait(stack, trait);
-                    output.accept(stack);
-                }
-            } else if (item == RItems.HAND) {
-                for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
-                    if (skinType != PlayerUtil.SkinType.EITHER) {
-                        ItemStack itemstack = new ItemStack(RItems.HAND.get());
-                        HandItem.setSkinType(skinType, itemstack);
-                        HandItem.setTrait(TraitRegistry.HUMAN.get(), itemstack);
-                        output.accept(itemstack);
-                    }
-                }
-            } else if (item == RItems.SPAWN_ITEM) {
-                for (SpawnItem.Timelord timelordType : SpawnItem.Timelord.values()) {
-                    ItemStack itemstack = new ItemStack(RItems.SPAWN_ITEM.get());
-                    SpawnItem.setType(itemstack, timelordType);
-                    output.accept(itemstack);
-                }
             } else {
                 output.accept(item.get());
             }

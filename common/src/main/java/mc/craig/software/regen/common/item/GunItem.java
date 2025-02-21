@@ -95,12 +95,6 @@ public class GunItem extends Item {
         return UseAnim.NONE;
     }
 
-
-    @Override
-    public boolean isValidRepairItem(@NotNull ItemStack p_82789_1_, ItemStack p_82789_2_) {
-        return p_82789_2_.getItem() == RItems.ZINC.get();
-    }
-
     @Override
     public boolean canAttackBlock(@NotNull BlockState p_41441_, @NotNull Level p_41442_, @NotNull BlockPos p_41443_, @NotNull Player p_41444_) {
         return false;

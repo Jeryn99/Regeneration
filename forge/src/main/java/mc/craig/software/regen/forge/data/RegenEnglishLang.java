@@ -1,13 +1,10 @@
 package mc.craig.software.regen.forge.data;
 
-import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.common.traits.TraitRegistry;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenDamageTypes;
@@ -28,18 +25,6 @@ public class RegenEnglishLang extends LanguageProvider {
     @Override
     protected void addTranslations() {
 
-        // === Traits ===
-        addTrait(TraitRegistry.FIRE_RESISTANCE.get(), "Ignis Resistentia", "Grants immunity to damage from fire");
-        addTrait(TraitRegistry.SPEED.get(), "Celeritas", "Move swifter throughout the world");
-        addTrait(TraitRegistry.HUMAN.get(), "Mane homo", "Nothing - just plain human");
-        addTrait(TraitRegistry.WATER_BREATHING.get(), "Humanum Piscium", "Breathe forever underwater");
-        addTrait(TraitRegistry.STRENGTH.get(), "Fortis Human", "Grants super human strength");
-        addTrait(TraitRegistry.ARROW_DODGE.get(), "Fracti sagitta", "Arrow Damage will be negated");
-        addTrait(TraitRegistry.PHOTOSYNTHETIC.get(), "Sol comedentis", "Being out in the world feeds you");
-        addTrait(TraitRegistry.SLOW_FALL.get(), "Non volans", "Gracely fall to the ground");
-        addTrait(TraitRegistry.KNOCKBACK.get(), "Simia nulla musca", "Negate knockback effects");
-        addTrait(TraitRegistry.JUMP_BOOST.get(), "Lepus Humanus", "Get a extra spring in your step");
-
         // === Advancements ===
         addAdvancement("fob_watch", "This watch, is me!", "Obtain a Fob Watch");
         addAdvancement("critical_grace", "Your song is ending...", "Refuse to Regenerate up till the point of near death...");
@@ -53,18 +38,15 @@ public class RegenEnglishLang extends LanguageProvider {
         addAdvancement("gallifreyan_soldier", "Chancellery Guard", "Wear all Timelord Guard Armor");
 
         // === Block ===
-        add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");
         add(RBlocks.ZERO_ROUNDEL.get(), "Zero Roundel (Half)");
         add(RBlocks.ZERO_ROOM_FULL.get(), "Zero Roundel (Full)");
         add(RBlocks.AZBANTIUM.get(), "Azbantium");
-        add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
-        add(RBlocks.ZINC_ORE_DEEPSLATE.get(), "Deepslate Zinc Ore");
+
 
         // === Items ===
         add(RItems.FOB.get(), "Fob Watch");
         add(RItems.PISTOL.get(), "Staser");
         add(RItems.RIFLE.get(), "Staser Rifle");
-        add(RItems.HAND.get(), "Hand");
         add(RItems.PLASMA_CARTRIDGE.get(), "Plasma Cartridge");
         add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
         add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
@@ -77,7 +59,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
         add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
         add(RItems.GUARD_FEET.get(), "Timelord Boots");
-        add(RItems.ZINC.get(), "Zinc Ingot");
+        add(RItems.ZINC.get(), "Gallifreyan Zinc Ingot");
         add("item.regen.hand_with_name", "%s Hand");
         add("item.regen.chalice_of", "Chalice of");
 
@@ -89,11 +71,6 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RegenDamageTypes.REGEN_DMG_STASER, "%s was shot dead with a Staser");
         add(RegenDamageTypes.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
         add(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
-
-        // === Timelords ===
-        addTimelordtype(SpawnItem.Timelord.GUARD, "Timelord Guard");
-        addTimelordtype(SpawnItem.Timelord.FEMALE_COUNCIL, "Timelord Council (Female)");
-        addTimelordtype(SpawnItem.Timelord.MALE_COUNCIL, "Timelord Council (Male)");
 
         // === Regeneration Transtions ===
         add(TransitionTypes.ENDER_DRAGON.getTranslationKey(), "Ender-Dragon");
@@ -115,7 +92,6 @@ public class RegenEnglishLang extends LanguageProvider {
         addSoundScheme(IRegen.TimelordSound.SAXON_ENGLAND, "Saxons England");
 
         // === Entity ===
-        add(REntities.TIMELORD.get(), "Timelord");
         add(REntities.WATCHER.get(), "Watcher");
 
         // === Messages ===
@@ -273,15 +249,6 @@ public class RegenEnglishLang extends LanguageProvider {
 
     public void addConfig(ForgeConfigSpec.ConfigValue waConfiguration, String message, int index) {
         add("config.regen." + waConfiguration.getPath().get(index), message);
-    }
-
-    public void addTimelordtype(SpawnItem.Timelord type, String translation) {
-        add("regen.timelord_type." + type.name().toLowerCase(), translation);
-    }
-
-    public void addTrait(TraitBase traitBase, String title, String description) {
-        add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".title", title);
-        add("trait." + TraitRegistry.TRAITS_REGISTRY.getKey(traitBase).getPath() + ".description", description);
     }
 
     public void add(ResourceKey<DamageType> damagetype, String message) {

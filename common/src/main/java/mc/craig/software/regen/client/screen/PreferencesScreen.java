@@ -128,16 +128,6 @@ public class PreferencesScreen extends Screen {
             guiGraphics.blit(RegenerationOverlay.CUSTOM_ICONS, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 + (i * 10) - 10, Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2 - 45, 52, 0, 9, 9, 256, 256);
         }
 
-
-        boolean isTraitActivated = data.isTraitActive();
-
-        int color = isTraitActivated ? activatedColor : deactivatedColor;
-
-        Component traitLang = data.getCurrentTrait().getTitle();
-        IncarnationScreen.renderWidthScaledText(traitLang.getString(), guiGraphics, font, width / 2 + 120 - 70, cy + 135, color, 100);
-        Component traitLangDesc = data.getCurrentTrait().getDescription();
-        IncarnationScreen.renderWidthScaledText(traitLangDesc.getString(), guiGraphics, font, width / 2 + 120 - 70, cy + 145, color, 100);
-
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 

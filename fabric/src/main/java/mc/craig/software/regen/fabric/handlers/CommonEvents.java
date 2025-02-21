@@ -42,10 +42,6 @@ public class CommonEvents {
             }
         });
 
-        UseItemCallback.EVENT.register((player, world, hand) -> {
-            RegenUtil.spawnHandIfPossible(player, player.getItemInHand(InteractionHand.MAIN_HAND));
-            return InteractionResultHolder.pass(player.getItemInHand(InteractionHand.MAIN_HAND));
-        });
     }
 
 }

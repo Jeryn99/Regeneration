@@ -3,13 +3,10 @@ package mc.craig.software.regen.common.regen.acting;
 import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
-import mc.craig.software.regen.common.item.ChaliceItem;
-import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
@@ -52,10 +49,6 @@ public class ClientActing implements Acting {
     @Override
     public void onRegenFinish(IRegen cap) {
         if (!Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) return;
-        TraitBase trait = cap.getCurrentTrait();
-        ItemStack chaliceStack = new ItemStack(RItems.GAUNTLET.get());
-        ChaliceItem.setTrait(chaliceStack, trait);
-        Minecraft.getInstance().gameRenderer.displayItemActivation(chaliceStack);
     }
 
     @Override

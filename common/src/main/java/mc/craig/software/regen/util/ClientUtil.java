@@ -2,8 +2,6 @@ package mc.craig.software.regen.util;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.craig.software.regen.client.RKeybinds;
-import mc.craig.software.regen.client.rendering.JarTileRender;
-import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.ArmorModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
@@ -189,18 +187,6 @@ public class ClientUtil {
             if (!VisualManipulator.PLAYER_SKINS.isEmpty()) {
                 VisualManipulator.PLAYER_SKINS.forEach((uuid, texture) -> textureManager.release(texture));
                 VisualManipulator.PLAYER_SKINS.clear();
-            }
-
-            if (!TimelordRenderer.TIMELORDS.isEmpty()) {
-                // Release the textures in the timelords cache and clear the cache
-                TimelordRenderer.TIMELORDS.forEach((uuid, texture) -> textureManager.release(texture));
-                TimelordRenderer.TIMELORDS.clear();
-            }
-
-            if (!JarTileRender.TEXTURES.isEmpty()) {
-                // Release the textures in the jar tile render cache and clear the cache
-                JarTileRender.TEXTURES.forEach((uuid, texture) -> textureManager.release(texture));
-                JarTileRender.TEXTURES.clear();
             }
 
         }

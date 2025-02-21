@@ -7,8 +7,6 @@ import mc.craig.software.regen.common.regen.state.IStateManager;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
 import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
-import mc.craig.software.regen.common.traits.TraitRegistry;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SyncMessage;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -52,7 +50,8 @@ public class RegenerationData implements IRegen {
     public AnimationState grace = new AnimationState();
     public boolean areHandsGlowing = false, nextSkinTypeAlex = false, isAlex = false;
     //Don't save to disk
-    private boolean didSetup = false, traitActive = true;
+    private boolean didSetup = false;
+    private boolean wasPreviouslyATimelord = false;
     private int regensLeft = 0, animationTicks = 0;
     // ===== Skin Data =====
     private byte[] nextSkin = new byte[0], skinArray = new byte[0];
@@ -68,9 +67,6 @@ public class RegenerationData implements IRegen {
     private float primaryRed = 0.69411767f, primaryGreen = 0.74509805f, primaryBlue = 0.23529412f;
     private float secondaryRed = 0.7137255f, secondaryGreen = 0.75686276f, secondaryBlue = 0.25490198f;
 
-    // ===== Trait =====
-    private TraitBase currentTrait, nextTrait = TraitRegistry.HUMAN.get();
-
     public RegenerationData() {
         this.livingEntity = null;
         this.stateManager = null;
@@ -78,8 +74,6 @@ public class RegenerationData implements IRegen {
 
     public RegenerationData(LivingEntity livingEntity) {
         this.livingEntity = livingEntity;
-        this.nextTrait = TraitRegistry.HUMAN.get();
-        this.currentTrait = TraitRegistry.HUMAN.get();
         if (!livingEntity.level().isClientSide) {
             this.stateManager = new RegenerationData.StateManager();
         } else
@@ -113,10 +107,6 @@ public class RegenerationData implements IRegen {
     public void tick() {
         AnimationState regenAnimState = getAnimationState(IRegen.RegenAnimation.REGEN);
         AnimationState graceAnimState = getAnimationState(IRegen.RegenAnimation.GRACE);
-
-        if (traitActive && getCurrentTrait() != null) {
-            getCurrentTrait().tick(getLiving(), this);
-        }
 
         if (livingEntity instanceof ServerPlayer serverPlayer) {
 
@@ -276,16 +266,7 @@ public class RegenerationData implements IRegen {
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
-        compoundNBT.putBoolean(RConstants.IS_TRAIT_ACTIVE, traitActive);
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
-
-        if (currentTrait != null) {
-            compoundNBT.putString(RConstants.CURRENT_TRAIT, TraitRegistry.TRAITS_REGISTRY.getKey(currentTrait).toString());
-        }
-
-        if (nextTrait != null) {
-            compoundNBT.putString(RConstants.NEXT_TRAIT, TraitRegistry.TRAITS_REGISTRY.getKey(nextTrait).toString());
-        }
 
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skin());
@@ -302,19 +283,30 @@ public class RegenerationData implements IRegen {
         }
 
         compoundNBT.put(RConstants.COLORS, getOrWriteStyle());
+        compoundNBT.putBoolean("wasPreviouslyATimelord", wasPreviouslyATimelord);
 
         return compoundNBT;
     }
 
     @Override
+    public boolean isWasPreviouslyATimelord() {
+        return wasPreviouslyATimelord;
+    }
+
+    @Override
+    public void setWasPreviouslyATimelord(boolean wasPreviouslyATimelord) {
+        this.wasPreviouslyATimelord = wasPreviouslyATimelord;
+    }
+
+    @Override
     public void deserializeNBT(CompoundTag nbt) {
+        setWasPreviouslyATimelord(nbt.getBoolean("wasPreviouslyATimelord"));
         setRegens(nbt.getInt(RConstants.REGENS_LEFT));
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setUpdateTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
         setSkin(nbt.getByteArray(RConstants.SKIN));
         setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
-        traitActive = nbt.getBoolean(RConstants.IS_TRAIT_ACTIVE);
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         if (nbt.contains(RConstants.SOUND_SCHEME)) {
             setTimelordSound(IRegen.TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
@@ -332,9 +324,6 @@ public class RegenerationData implements IRegen {
         if (nbt.contains(RConstants.TRANSITION_TYPE)) {
             transitionType = TransitionTypes.TRANSITION_TYPES.get(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
         }
-
-        setCurrentTrait(TraitRegistry.TRAITS_REGISTRY.get(new ResourceLocation(nbt.getString(RConstants.CURRENT_TRAIT))));
-        setNextTrait(TraitRegistry.TRAITS_REGISTRY.get(new ResourceLocation(nbt.getString(RConstants.NEXT_TRAIT))));
 
         //State Manager
         if (nbt.contains(RConstants.STATE_MANAGER)) if (stateManager != null) {
@@ -451,36 +440,6 @@ public class RegenerationData implements IRegen {
     @Override
     public void setHandState(IRegen.Hand handState) {
         this.handState = handState;
-    }
-
-    @Override
-    public boolean isTraitActive() {
-        return traitActive;
-    }
-
-    @Override
-    public void toggleTrait() {
-        this.traitActive = !traitActive;
-    }
-
-    @Override
-    public TraitBase getCurrentTrait() {
-        return currentTrait;
-    }
-
-    @Override
-    public void setCurrentTrait(TraitBase trait) {
-        this.currentTrait = trait;
-    }
-
-    @Override
-    public TraitBase getNextTrait() {
-        return nextTrait;
-    }
-
-    @Override
-    public void setNextTrait(TraitBase trait) {
-        this.nextTrait = trait;
     }
 
     public class StateManager implements IStateManager {
@@ -682,7 +641,6 @@ public class RegenerationData implements IRegen {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }
-            setCurrentTrait(TraitRegistry.HUMAN.get());
             setSkin(new byte[0]);
             syncToClients(null);
         }

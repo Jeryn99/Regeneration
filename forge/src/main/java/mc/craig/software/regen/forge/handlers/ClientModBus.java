@@ -7,7 +7,6 @@ import mc.craig.software.regen.client.rendering.layers.RenderRegenLayer;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.forge.RModelsImpl;
 import mc.craig.software.regen.client.sound.SoundReverbListener;
-import mc.craig.software.regen.common.item.ChaliceItem;
 import mc.craig.software.regen.common.item.tooltip.fob.ClientFobTooltip;
 import mc.craig.software.regen.common.item.tooltip.fob.FobTooltip;
 import mc.craig.software.regen.common.item.tooltip.hand.ClientHandSkinToolTip;

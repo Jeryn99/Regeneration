@@ -2,7 +2,6 @@ package mc.craig.software.regen.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import mc.craig.software.regen.common.item.HandItem;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
@@ -134,15 +133,6 @@ public class RegenUtil {
         return "#" + hex;
     }
 
-    public static void spawnHandIfPossible(LivingEntity livingEntity, ItemStack itemStack) {
-        if (itemStack.getItem() instanceof DiggerItem || itemStack.getItem() instanceof SwordItem) {
-            RegenerationData.get(livingEntity).ifPresent((data) -> {
-                if (data.regenState() == RegenStates.POST && livingEntity.isShiftKeyDown() & data.handState() == IRegen.Hand.NOT_CUT) {
-                    HandItem.createHand(livingEntity);
-                }
-            });
-        }
-    }
 
     public interface IEnum<E extends Enum<E>> {
         int ordinal();

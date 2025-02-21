@@ -1,12 +1,8 @@
 package mc.craig.software.regen.util.forge;
 
-import mc.craig.software.regen.client.rendering.JarTileRender;
 import mc.craig.software.regen.client.rendering.entity.CybermanRenderer;
 import mc.craig.software.regen.client.rendering.entity.RenderLaser;
-import mc.craig.software.regen.client.rendering.entity.TimelordRenderer;
 import mc.craig.software.regen.client.rendering.entity.WatcherRenderer;
-import mc.craig.software.regen.common.item.HandItem;
-import mc.craig.software.regen.common.item.SpawnItem;
 import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;

@@ -1,7 +1,6 @@
 package mc.craig.software.regen.forge;
 
 import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.entities.Watcher;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.world.structures.pieces.StructurePieces;

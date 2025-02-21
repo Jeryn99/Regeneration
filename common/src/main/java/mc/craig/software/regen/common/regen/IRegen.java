@@ -3,7 +3,6 @@ package mc.craig.software.regen.common.regen;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.common.regen.transitions.TransitionType;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.Serializable;
@@ -51,6 +50,10 @@ public interface IRegen extends Serializable<CompoundTag> {
 
     void syncToClients(@Nullable ServerPlayer serverPlayerEntity);
 
+    boolean isWasPreviouslyATimelord();
+
+    void setWasPreviouslyATimelord(boolean wasPreviouslyATimelord);
+
     TransitionType transitionType();
 
     void setTransitionType(TransitionType transitionType);
@@ -93,18 +96,6 @@ public interface IRegen extends Serializable<CompoundTag> {
     Hand handState();
 
     void setHandState(Hand handState);
-
-    boolean isTraitActive();
-
-    void toggleTrait();
-
-    TraitBase getCurrentTrait();
-
-    void setCurrentTrait(TraitBase trait);
-
-    TraitBase getNextTrait();
-
-    void setNextTrait(TraitBase trait);
 
     enum RegenAnimation {
         REGEN, GRACE

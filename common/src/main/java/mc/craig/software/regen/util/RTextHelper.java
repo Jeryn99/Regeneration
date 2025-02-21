@@ -1,8 +1,6 @@
 package mc.craig.software.regen.util;
 
 import com.mojang.authlib.GameProfile;
-import mc.craig.software.regen.common.traits.TraitRegistry;
-import mc.craig.software.regen.common.traits.trait.TraitBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -75,40 +73,5 @@ public class RTextHelper {
         return createTextComponentWithTip(entityName, id.toString());
     }
 
-    /**
-     * Formats the given trait's name by capitalizing the first letter of each word and removing underscores.
-     *
-     * @param trait the trait to format
-     * @return the formatted trait name, or "null" if the trait is null
-     * @throws NullPointerException if the trait is null
-     */
-    public static String formatTraitName(TraitBase trait) {
-        if (trait == null) {
-            return "null";
-        }
-        String original = TraitRegistry.TRAITS_REGISTRY.getKey(trait).getPath().trim().replace(" ", "").replace("_", " ");
-        return Arrays.stream(original.split("\s+"))
-                .map(t -> t.substring(0, 1).toUpperCase() + t.substring(1))
-                .collect(Collectors.joining(" "));
-    }
 
-    /**
-     * Returns a text component for the given trait. The text component will have the
-     * trait's name formatted in title case and will have a tooltip showing the trait's
-     * registry name.
-     *
-     * @param trait the trait to create a text component for
-     * @return a text component for the given trait
-     */
-    public static MutableComponent getTraitTextObject(TraitBase trait) {
-        if (trait != null) {
-            // Format the trait name in title case
-            String formattedName = formatTraitName(trait);
-
-            // Create the text component with a tooltip showing the trait's registry name
-            return createTextComponentWithTip(formattedName, TraitRegistry.TRAITS_REGISTRY.getKey(trait).toString());
-        }
-        // Return a text component for a "null" trait
-        return createTextComponentWithTip("Null Trait", "Null");
-    }
 }

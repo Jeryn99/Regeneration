@@ -1,7 +1,6 @@
 package mc.craig.software.regen.common.world.structures;
 
 import com.mojang.serialization.Codec;
-import mc.craig.software.regen.common.entities.Timelord;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.world.RFeatures;
@@ -95,19 +94,6 @@ public class TimelordSettlementHut extends Structure {
 
         @Override
         protected void handleDataMarker(@NotNull String function, @NotNull BlockPos pos, @NotNull ServerLevelAccessor worldIn, @NotNull RandomSource rand, @NotNull BoundingBox p_73687_) {
-            if ("timelord".equals(function)) {
-                Timelord timelord = REntities.TIMELORD.get().create(worldIn.getLevel());
-                RegenerationData.get(timelord).ifPresent(iRegen -> {
-                    timelord.initSkin(iRegen);
-                    timelord.genName();
-                    iRegen.setRegens(rand.nextInt(12));
-                    timelord.moveTo(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
-                    worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-                    iRegen.syncToClients(null);
-                    worldIn.addFreshEntity(timelord);
-                });
-            }
-
             if ("chest_stone".equals(function)) {
                 RandomizableContainerBlockEntity.setLootTable(worldIn, rand, pos.above(), BuiltInLootTables.STRONGHOLD_LIBRARY);
                 worldIn.setBlock(pos, Blocks.STONE.defaultBlockState(), 2);

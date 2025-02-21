@@ -55,7 +55,6 @@ public class RegenerationFabricClient implements ClientModInitializer {
         RModels.init();
         KeyBindingHelper.registerKeyBinding(RKeybinds.FORCE_REGEN);
         KeyBindingHelper.registerKeyBinding(RKeybinds.REGEN_GUI);
-        KeyBindingHelper.registerKeyBinding(RKeybinds.TOGGLE_TRAIT);
         register(PackType.CLIENT_RESOURCES, new SoundReverbListener());
         register(PackType.CLIENT_RESOURCES, new ArmorModelManager());
         ParticleFactoryRegistry.getInstance().register(RParticles.CONTAINER.get(), JarParticle.Factory::new);

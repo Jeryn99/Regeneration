@@ -1,11 +1,8 @@
 package mc.craig.software.regen.common.regen.acting;
 
 import mc.craig.software.regen.common.advancement.TriggerManager;
-import mc.craig.software.regen.common.block.JarBlock;
-import mc.craig.software.regen.common.blockentity.BioContainerBlockEntity;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.transitions.WatcherTransition;
-import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.network.messages.SFXMessage;
 import mc.craig.software.regen.util.PlayerUtil;
@@ -74,26 +71,6 @@ public class CommonActing implements Acting {
                 float dm = Math.max(1, (livingEntity.level().getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 livingEntity.heal(stateProgress * 0.3F * dm);
                 livingEntity.setArrowCount(0);
-
-                AABB box = livingEntity.getBoundingBox().inflate(25);
-                for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos((int) box.maxX, (int) box.maxY, (int) box.maxZ), new BlockPos((int) box.minX, (int) box.minY, (int) box.minZ)).iterator(); iterator.hasNext(); ) {
-                    BlockPos pos = iterator.next();
-                    ServerLevel serverWorld = (ServerLevel) livingEntity.level();
-                    BlockState blockState = serverWorld.getBlockState(pos);
-                    if (blockState.getBlock() instanceof JarBlock) {
-                        BioContainerBlockEntity bioContainerBlockEntity = (BioContainerBlockEntity) serverWorld.getBlockEntity(pos);
-                        if (!bioContainerBlockEntity.isValid(BioContainerBlockEntity.Action.ADD)) {
-                            continue;
-                        }
-                        if (livingEntity.level().random.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
-                            bioContainerBlockEntity.setLindos(bioContainerBlockEntity.getLindos() + 0.7F);
-                        }
-                        bioContainerBlockEntity.sendUpdates();
-                        return;
-                    }
-                }
-
-
                 break;
 
             case GRACE_CRIT:
@@ -187,17 +164,6 @@ public class CommonActing implements Acting {
         if (RegenConfig.COMMON.resetOxygen.get()) living.setAirSupply(300);
 
         cap.extractRegens(1);
-
-        cap.getCurrentTrait().onRemoved(living, cap);
-
-        if (cap.getNextTrait() != TraitRegistry.HUMAN.get()) {
-            cap.setCurrentTrait(cap.getNextTrait());
-            cap.setNextTrait(TraitRegistry.HUMAN.get());
-        } else {
-            TraitRegistry.getRandomTrait().ifPresent(cap::setCurrentTrait);
-        }
-
-        cap.getCurrentTrait().onAdded(living, cap);
         cap.syncToClients(null);
 
     }
