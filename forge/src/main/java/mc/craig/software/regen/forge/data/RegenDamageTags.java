@@ -22,7 +22,6 @@ public class RegenDamageTags extends DamageTypeTagsProvider {
         this.tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(RegenDamageTypes.REGEN_DMG_CRITICAL.location());
         this.tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(RegenDamageTypes.REGEN_DMG_KILLED.location());
         this.tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(RegenDamageTypes.REGEN_DMG_FORCED.location());
-        this.tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(RegenDamageTypes.REGEN_DMG_RIFLE.location());
         this.tag(DamageTypeTags.BYPASSES_ARMOR).addOptional(RegenDamageTypes.REGEN_DMG_HAND.location());
 
         this.tag(DamageTypeTags.BYPASSES_INVULNERABILITY).addOptional(RegenDamageTypes.REGEN_DMG_CRITICAL.location());

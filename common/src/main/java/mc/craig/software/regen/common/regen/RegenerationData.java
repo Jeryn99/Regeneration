@@ -462,12 +462,12 @@ public class RegenerationData implements IRegen {
         }
 
         private void scheduleTransitionInTicks(RegenStates.Transition transition, long inTicks) {
-            if (nextTransition != null && nextTransition.getTicksLeft() > 0)
+         /*   if (nextTransition != null && nextTransition.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting non-completed/cancelled transition: " + "\n Attempted Transition: " + transition.name() + "\n Current: " + nextTransition.transition.name() + "\n Affected Player: " + livingEntity.getName());
 
             if (transition == RegenStates.Transition.HAND_GLOW_START || transition == RegenStates.Transition.HAND_GLOW_TRIGGER)
                 throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
-
+*/
             nextTransition = new RegenScheduledAction(transition, livingEntity, transitionCallbacks.get(transition), inTicks);
         }
 

@@ -53,7 +53,6 @@ public class RegenerationForge {
     }
 
     public void onAttributeAssign(EntityAttributeCreationEvent event) {
-        event.put(REntities.TIMELORD.get(), Timelord.createAttributes().build());
         event.put(REntities.WATCHER.get(), Watcher.createAttributes().build());
     }
 

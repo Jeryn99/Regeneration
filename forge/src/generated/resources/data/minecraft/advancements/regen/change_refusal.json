@@ -13,7 +13,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "regen:bio_container"
+      "item": "regen:fobwatch",
+      "nbt": "{Damage:0}"
     },
     "show_toast": false,
     "title": {

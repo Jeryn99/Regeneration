@@ -33,7 +33,6 @@ public class RegenItemTags extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        add(RegenUtil.TIMELORD_CURRENCY, Items.GOLD_INGOT, Items.BONE, Items.EMERALD, RItems.ZINC.get(), Items.IRON_INGOT);
         add(RegenUtil.ZINC_INGOT, RItems.ZINC.get());
     }
 }

@@ -102,20 +102,19 @@ public class FobWatchItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         IRegen cap = RegenerationData.get(player).orElseGet(null);
 
-        if (!player.isShiftKeyDown()) {
-            if (stack.getDamageValue() == getMaxDamage())
+        if (!player.isShiftKeyDown()) { // Transferring from watch to player
+            if (stack.getDamageValue() == getMaxDamage()) {
                 return msgUsageFailed(player, RMessages.TRANSFER_EMPTY_WATCH, stack);
-            else if (cap.regens() == getMaxDamage())
+            } else if (cap.regens() >= getMaxDamage()) { // Prevents exceeding max regens
                 return msgUsageFailed(player, RMessages.TRANSFER_MAX_REGENS, stack);
+            }
 
             int supply = getMaxDamage() - stack.getDamageValue();
             int needed = getMaxDamage() - cap.regens();
-            int used;
+            int used = Math.min(supply, needed);
 
             if (cap.isWasPreviouslyATimelord()) {
-                used = 12; // First time use grants 12 regens
-            } else {
-                used = Math.min(RegenUtil.RAND.nextInt(12) + 1, supply);
+                used = Math.min(12, needed); // First-time use grants up to 12 regens, but not over max
             }
 
             if (cap.canRegenerate()) {
@@ -143,7 +142,32 @@ public class FobWatchItem extends Item {
                 cap.addRegens(used);
                 cap.syncToClients(null);
             }
+        } else { // Prevent storing regens if the player is a Timelord
+
+            if (!cap.canRegenerate()) {
+                return msgUsageFailed(player, RMessages.TRANSFER_NO_REGENERATIONS, stack);
+            }
+
+            if (cap.regenState() != RegenStates.ALIVE) {
+                return msgUsageFailed(player, RMessages.TRANSFER_INVALID_STATE, stack);
+            }
+
+            if (stack.getDamageValue() == 0) {
+                return msgUsageFailed(player, RMessages.TRANSFER_FULL_WATCH, stack);
+            }
+
+            stack.setDamageValue(stack.getDamageValue() - 1);
+            PlayerUtil.sendMessage(player, RMessages.TRANSFER_SUCCESSFUL, true);
+
+            if (world.isClientSide) {
+                ClientUtil.playPositionedSoundRecord(SoundEvents.FIRE_EXTINGUISH, 5.0F, 2.0F);
+            } else {
+                setOpen(stack, true);
+                cap.extractRegens(1);
+                cap.syncToClients(null);
+            }
         }
+
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
 

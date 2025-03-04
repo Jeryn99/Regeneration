@@ -18,8 +18,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 
 public class RegenConfiguredFeatures {
-    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_ZINC = createKey("ore_zinc");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_ZINC_SMALL = createKey("ore_zinc_small");
 
     public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(Regeneration.MOD_ID, name));
@@ -27,20 +25,6 @@ public class RegenConfiguredFeatures {
 
     public static void bootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
 
-        RuleTest stoneReplaceable = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
-        RuleTest deepslateReplaceable = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
-
-        HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
-        register(context, ORE_ZINC, Feature.ORE,
-                new OreConfiguration(
-                        ImmutableList.of(
-                                OreConfiguration.target(stoneReplaceable, RBlocks.ZINC_ORE.get().defaultBlockState()),
-                                OreConfiguration.target(deepslateReplaceable, RBlocks.ZINC_ORE_DEEPSLATE.get().defaultBlockState())), 9));
-        register(context, ORE_ZINC_SMALL, Feature.ORE,
-                new OreConfiguration(
-                        ImmutableList.of(
-                                OreConfiguration.target(stoneReplaceable, RBlocks.ZINC_ORE.get().defaultBlockState()),
-                                OreConfiguration.target(deepslateReplaceable, RBlocks.ZINC_ORE_DEEPSLATE.get().defaultBlockState())), 4));
     }
 
     public static void register(BootstapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> key, Feature<NoneFeatureConfiguration> feature) {

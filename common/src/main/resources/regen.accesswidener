@@ -14,3 +14,7 @@ accessible field net/minecraft/client/Minecraft itemColors Lnet/minecraft/client
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
 accessible method net/minecraft/client/renderer/ScreenEffectRenderer renderFire (Lnet/minecraft/client/Minecraft;Lcom/mojang/blaze3d/vertex/PoseStack;)V
 accessible field net/minecraft/client/multiplayer/PlayerInfo pendingTextures Z
+
+
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen leftPos I

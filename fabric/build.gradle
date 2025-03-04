@@ -74,6 +74,15 @@ dependencies {
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${rootProject.cardinal_components_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${rootProject.cardinal_components_version}"
 
+    modImplementation("folk.sisby:switchy-core:2.9.5+1.20")
+    modImplementation("folk.sisby:switchy-client:2.9.5+1.20")
+    modImplementation("folk.sisby:switchy-ui:2.9.5+1.20")
+    modImplementation("folk.sisby:switchy-cardinal:2.9.5+1.20")
+
+    modImplementation("xyz.nucleoid:server-translations-api:2.0.0+1.20")
+    modImplementation "maven.modrinth:owo-lib:0.11.2+1.20"
+
+
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

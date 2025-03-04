@@ -45,9 +45,6 @@ public class RegenEnglishLang extends LanguageProvider {
 
         // === Items ===
         add(RItems.FOB.get(), "Fob Watch");
-        add(RItems.PISTOL.get(), "Staser");
-        add(RItems.RIFLE.get(), "Staser Rifle");
-        add(RItems.PLASMA_CARTRIDGE.get(), "Plasma Cartridge");
         add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
         add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
         add(RItems.M_ROBES_LEGS.get(), "Timelord Lower Robes (Male)");
@@ -68,8 +65,6 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RegenDamageTypes.REGEN_DMG_FORCED, "%s forced themselves to regenerate!");
         add(RegenDamageTypes.REGEN_DMG_HAND, "%s died from blood loss!");
         add(RegenDamageTypes.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
-        add(RegenDamageTypes.REGEN_DMG_STASER, "%s was shot dead with a Staser");
-        add(RegenDamageTypes.REGEN_DMG_RIFLE, "%s was shot dead with a Rifle");
         add(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
 
         // === Regeneration Transtions ===
@@ -224,8 +219,6 @@ public class RegenEnglishLang extends LanguageProvider {
         add("gui.regen.current_skin", "Select Next Incarnation");
         add("gui.regen.back", "Back");
         add("gui.regen.preferences", "Preferences");
-
-        add(REntities.CYBER.get(), "Cyberlord");
     }
 
     public String capitalize(String text) {

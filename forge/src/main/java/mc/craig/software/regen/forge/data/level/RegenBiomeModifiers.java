@@ -18,11 +18,5 @@ public class RegenBiomeModifiers {
     private static final ResourceKey<BiomeModifier> ADD_OVERWORLD_FEATURES = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(Regeneration.MOD_ID, "add_overworld_features"));
 
     public static void bootstrap(BootstapContext<BiomeModifier> context) {
-        var overworldTag = context.lookup(Registries.BIOME).getOrThrow(RegenUtil.IS_OVERWORLD);
-        HolderGetter<PlacedFeature> placed = context.lookup(Registries.PLACED_FEATURE);
-
-        ForgeBiomeModifiers.AddFeaturesBiomeModifier oreModifer = new ForgeBiomeModifiers.AddFeaturesBiomeModifier(overworldTag, HolderSet.direct(placed.getOrThrow(RegenPlacedFeatures.ORE_ZINC), placed.getOrThrow(RegenPlacedFeatures.ORE_ZINC_SMALL)), GenerationStep.Decoration.UNDERGROUND_ORES);
-
-        context.register(ADD_OVERWORLD_FEATURES, oreModifer);
     }
 }

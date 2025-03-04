@@ -1,11 +1,6 @@
-// 1.20.1	2023-10-22T22:51:32.9871328	Advancements
-81469eb26a3f5b837e1f2dfc8f056a358e1851de data/minecraft/advancements/regen/change_refusal.json
-7a3967d61850667c1c862737156a53213af8412b data/minecraft/advancements/regen/council_clothing.json
+// 1.20.1	2025-03-01T10:50:15.0499369	Advancements
+6f2b1eae90ffe325a1373c980f2ed5cb6afe73da data/minecraft/advancements/regen/change_refusal.json
 11070964a9cdb10d0b72fb0fad46e564daa30d72 data/minecraft/advancements/regen/critical_grace.json
-6109ddde962353104c6e4926b593128ce5f01230 data/minecraft/advancements/regen/gallifreyan_soldier.json
-6f68c7be82bbd16cd68ab81648e6dd0e66665654 data/minecraft/advancements/regen/ready_for_war.json
 4ef161f0e1e8630f10e6830dfe6f528593f4712c data/minecraft/advancements/regen/regenerated.json
 1ee4cab80bc025c5877c670430d410f6d8420ca4 data/minecraft/advancements/regen/root.json
-feb1ebe3190680d6dcef807fb95e267c424b95f9 data/minecraft/advancements/regen/severed_hand.json
-b279d8ca2338ddba2b310dbe692b4f9df0e097c8 data/minecraft/advancements/regen/timelord_trade.json
-9dbff003fd9e0324b930e13a59da11b85199171d data/minecraft/advancements/regen/zero_status.json
+f52980966c6e245a498f660aec2cca49507b28bd data/minecraft/advancements/regen/zero_status.json

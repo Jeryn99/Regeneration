@@ -14,8 +14,6 @@ import net.minecraft.world.level.levelgen.placement.*;
 import java.util.List;
 
 public class RegenPlacedFeatures {
-    public static final ResourceKey<PlacedFeature> ORE_ZINC = createKey("ore_zinc");
-    public static final ResourceKey<PlacedFeature> ORE_ZINC_SMALL = createKey("ore_zinc_small");
 
     public static ResourceKey<PlacedFeature> createKey(String name) {
         return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(Regeneration.MOD_ID, name));
@@ -24,14 +22,6 @@ public class RegenPlacedFeatures {
     public static void bootstrap(BootstapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
-        register(context, ORE_ZINC, configuredFeatures.getOrThrow(RegenConfiguredFeatures.ORE_ZINC),
-                List.copyOf(
-                        commonOrePlacement(10,
-                                HeightRangePlacement.triangle(VerticalAnchor.absolute(-24), VerticalAnchor.absolute(56)))));
-        register(context, ORE_ZINC_SMALL, configuredFeatures.getOrThrow(RegenConfiguredFeatures.ORE_ZINC),
-                List.copyOf(
-                        commonOrePlacement(10,
-                                HeightRangePlacement.triangle(VerticalAnchor.bottom(), VerticalAnchor.absolute(72)))));
     }
 
     private static List<PlacementModifier> orePlacement(PlacementModifier plMod, PlacementModifier plMod2) {

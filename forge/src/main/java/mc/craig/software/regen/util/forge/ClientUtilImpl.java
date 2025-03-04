@@ -1,16 +1,9 @@
 package mc.craig.software.regen.util.forge;
 
-import mc.craig.software.regen.client.rendering.entity.CybermanRenderer;
-import mc.craig.software.regen.client.rendering.entity.RenderLaser;
 import mc.craig.software.regen.client.rendering.entity.WatcherRenderer;
-import mc.craig.software.regen.common.objects.RBlocks;
 import mc.craig.software.regen.common.objects.REntities;
 import mc.craig.software.regen.common.objects.RItems;
-import mc.craig.software.regen.common.objects.RTiles;
 import mc.craig.software.regen.util.constants.RConstants;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -41,37 +34,9 @@ public class ClientUtilImpl {
             return 0.1F;
         });
 
-        ItemProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (itemStack, clientLevel, livingEntity, i) -> {
-            if (livingEntity == null) {
-                return 0;
-            }
-            return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
-        });
-
-        ItemProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (itemStack, clientLevel, livingEntity, i) -> {
-            if (livingEntity == null) {
-                return 0;
-            }
-            return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
-        });
-
-        ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (itemStack, clientLevel, livingEntity, i) -> HandItem.isAlex(itemStack) ? 1 : 0);
-
-
-        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> switch (SpawnItem.getType(itemStack)) {
-            case FEMALE_COUNCIL -> 0.1F;
-            case MALE_COUNCIL -> 0.2F;
-            case GUARD -> 0.3F;
-        });
     }
 
     public static void renderers() {
-        BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
-        ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
-
-        EntityRenderers.register(REntities.TIMELORD.get(), TimelordRenderer::new);
-        EntityRenderers.register(REntities.CYBER.get(), CybermanRenderer::new);
-        EntityRenderers.register(REntities.LASER.get(), RenderLaser::new);
         EntityRenderers.register(REntities.WATCHER.get(), WatcherRenderer::new);
     }
 }

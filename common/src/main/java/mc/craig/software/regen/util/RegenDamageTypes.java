@@ -17,9 +17,7 @@ public class RegenDamageTypes {
             REGEN_DMG_CRITICAL = createKey("critical_period"),
             REGEN_DMG_KILLED = createKey("mid_regeneration"),
             REGEN_DMG_FORCED = createKey("forced_regeneration"),
-            REGEN_DMG_RIFLE = createKey("rifle_shot"),
-            REGEN_DMG_HAND = createKey("severed_arm"),
-            REGEN_DMG_STASER = createKey("staser_shot");
+            REGEN_DMG_HAND = createKey("severed_arm");
 
     public static ResourceKey<DamageType> createKey(String key) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Regeneration.MOD_ID, key));
@@ -42,9 +40,7 @@ public class RegenDamageTypes {
         context.register(REGEN_DMG_CRITICAL, new DamageType("critical_period", DamageScaling.ALWAYS, 1.0F));
         context.register(REGEN_DMG_KILLED, new DamageType("mid_regeneration", DamageScaling.ALWAYS, 1.0F));
         context.register(REGEN_DMG_FORCED, new DamageType("forced_regeneration", DamageScaling.ALWAYS, 1.0F));
-        context.register(REGEN_DMG_RIFLE, new DamageType("rifle_shot", DamageScaling.ALWAYS, 1.0F));
         context.register(REGEN_DMG_HAND, new DamageType("severed_arm", DamageScaling.ALWAYS, 1.0F));
-        context.register(REGEN_DMG_STASER, new DamageType("staser_shot", DamageScaling.ALWAYS, 1.0F));
     }
 
 }

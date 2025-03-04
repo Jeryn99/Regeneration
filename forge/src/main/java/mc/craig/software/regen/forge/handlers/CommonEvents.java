@@ -5,7 +5,6 @@ import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.forge.RegenerationDataImpl;
 import mc.craig.software.regen.common.regen.state.RegenStates;
-import mc.craig.software.regen.common.traits.TraitRegistry;
 import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenDamageTypes;
@@ -60,17 +59,6 @@ public class CommonEvents {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, Component.translatable(RMessages.POST_REDUCED_DAMAGE), true);
             }
-
-            if (data.isTraitActive()) {
-                if (data.getCurrentTrait() == TraitRegistry.FIRE_RESISTANCE.get() && event.getSource().is(DamageTypes.ON_FIRE)) {
-                    event.setCanceled(true);
-                }
-
-                if (data.getCurrentTrait() == TraitRegistry.ARROW_DODGE.get() && event.getSource().getEntity() instanceof Projectile) {
-                    event.setCanceled(true);
-                }
-            }
-
 
             //Handle Death
             if (data.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().is(DamageTypes.ON_FIRE) || data.regenState() == RegenStates.REGENERATING && event.getSource().is(DamageTypes.EXPLOSION)) {
@@ -128,25 +116,6 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onKnockback(LivingKnockBackEvent event) {
-        LivingEntity livingEntity = event.getEntity();
-
-
-        RegenerationData.get(livingEntity).ifPresent((data) -> {
-            boolean isRegenerating = data.regenState() == RegenStates.REGENERATING;
-
-            if (!isRegenerating) {
-                if (data.isTraitActive() && data.getCurrentTrait() == TraitRegistry.KNOCKBACK.get()) {
-                    event.setCanceled(true);
-                    return;
-                }
-            }
-
-            event.setCanceled(isRegenerating);
-        });
-    }
-
-    @SubscribeEvent
     public static void onTrackPlayer(PlayerEvent.StartTracking startTracking) {
         RegenerationData.get(startTracking.getEntity()).ifPresent(iRegen -> iRegen.syncToClients(null));
     }
@@ -165,11 +134,6 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
         RegenCommand.register(event.getDispatcher());
-    }
-
-    @SubscribeEvent
-    public static void onCut(PlayerInteractEvent.RightClickItem event) {
-        RegenUtil.spawnHandIfPossible(event.getEntity(), event.getItemStack());
     }
 
     /*@SubscribeEvent

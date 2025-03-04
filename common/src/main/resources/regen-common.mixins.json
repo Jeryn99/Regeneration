@@ -7,7 +7,6 @@
     "BipedBodyMixin",
     "FogRendererMixin",
     "GuiMixin",
-    "InventoryScreenMixin",
     "PlayerInfoMixin",
     "PlayerRendererMixin",
     "SoundSourceMixin"

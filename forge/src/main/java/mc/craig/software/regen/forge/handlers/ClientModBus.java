@@ -31,16 +31,6 @@ import java.util.function.Function;
 public class ClientModBus {
 
     @SubscribeEvent
-    public static void onItemColors(RegisterColorHandlersEvent.Item item) {
-        item.getItemColors().register((arg, i) -> {
-            if (i == 0) {
-                return ChaliceItem.getTrait(arg).getPotionColor();
-            }
-            return -1;
-        }, RItems.GAUNTLET.get());
-    }
-
-    @SubscribeEvent
     public static void onToolTips(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(HandSkinToolTip.class, (Function<HandSkinToolTip, ClientHandSkinToolTip>) handSkinToolTip -> new ClientHandSkinToolTip(handSkinToolTip.getSkin(), handSkinToolTip.getModel()));
         event.register(FobTooltip.class, (Function<FobTooltip, ClientFobTooltip>) fobTooltip -> new ClientFobTooltip(fobTooltip.getRegenerations()));

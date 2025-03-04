@@ -40,7 +40,7 @@ public class RegenerationDataImpl {
 
     public static boolean canBeGiven(Entity entity) {
         boolean isLiving = entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND;
-        boolean ignoresConfig = entity.getType() == REntities.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
+        boolean ignoresConfig = entity.getType() == EntityType.PLAYER;
 
         if (isLiving && ignoresConfig) {
             return true;

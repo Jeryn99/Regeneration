@@ -45,11 +45,8 @@ public class RegenLootTables extends LootTableProvider {
         }
 
         @Override
-        protected void generate() {
-            this.add(RBlocks.ZINC_ORE.get(), (block) -> createOreDrop(block, RItems.ZINC.get()));
-            this.add(RBlocks.ZINC_ORE_DEEPSLATE.get(), (block) -> createOreDrop(block, RItems.ZINC.get()));
+        public void generate() {
             dropSelf(RBlocks.ZERO_ROUNDEL.get());
-            dropSelf(RBlocks.BIO_CONTAINER.get());
             dropSelf(RBlocks.AZBANTIUM.get());
             dropSelf(RBlocks.ZERO_ROOM_FULL.get());
         }
@@ -75,7 +72,7 @@ public class RegenLootTables extends LootTableProvider {
 
         @Override
         public void generate() {
-            add(REntities.TIMELORD.get(), LootTable.lootTable());
+
         }
 
         @Override

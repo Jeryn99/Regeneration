@@ -13,10 +13,6 @@
       "required": false
     },
     {
-      "id": "regen:rifle_shot",
-      "required": false
-    },
-    {
       "id": "regen:severed_arm",
       "required": false
     }

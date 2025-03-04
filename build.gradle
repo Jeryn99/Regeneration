@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.3.+" apply false
+    id "dev.architectury.loom" version "1.7.+" apply false
     id "com.github.breadmoirai.github-release" version "2.4.1"
 }
 
@@ -69,11 +69,32 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = "Regeneration-v${rootProject.minecraft_version}-${rootProject.mod_version}-${project.name}"
+    archivesBaseName = "Regeneration-Jan-v${rootProject.minecraft_version}-${rootProject.mod_version}-${project.name}"
     version = rootProject.mod_version
     group = rootProject.maven_group
 
   repositories {
+
+      maven {
+          url "https://repo.sleeping.town/"
+          content {
+              includeGroup("folk.sisby")
+          }
+      }
+
+
+
+      maven {
+          url "https://maven.nucleoid.xyz/"
+          content {
+              includeGroup("xyz.nucleoid")
+          }
+      }
+
+      maven { url "https://maven.wispforest.io" } // owo lib
+
+      maven { url = "https://api.modrinth.com/maven" }
+
       maven {
           url = 'https://maven.parchmentmc.net/'
           content {
@@ -138,8 +159,8 @@ allprojects {
       }
 
       maven {
-          name = "Fuzs Mod Resources"
-          url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+          name = "Modrinth"
+          url = "https://api.modrinth.com/maven"
       }
 
   }

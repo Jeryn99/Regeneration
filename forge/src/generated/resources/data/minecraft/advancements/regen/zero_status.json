@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:regen/severed_hand",
+  "parent": "minecraft:regen/regenerated",
   "criteria": {
     "zero_status": {
       "trigger": "regen:zero_room"

@@ -1,8 +1,6 @@
 package mc.craig.software.regen.common.objects;
 
 import com.google.common.base.Supplier;
-import mc.craig.software.regen.common.entities.Cyberman;
-import mc.craig.software.regen.common.entities.Laser;
 import mc.craig.software.regen.common.entities.Watcher;
 import mc.craig.software.regen.registry.DeferredRegistry;
 import mc.craig.software.regen.registry.RegistrySupplier;
@@ -18,13 +16,10 @@ public class REntities {
     public static final DeferredRegistry<EntityType<?>> ENTITY_TYPES = DeferredRegistry.create(RConstants.MODID, Registries.ENTITY_TYPE);
 
     public static final RegistrySupplier<EntityType<Watcher>> WATCHER = ENTITY_TYPES.register("watcher", () -> EntityType.Builder.of((EntityType.EntityFactory<Watcher>) (entityType, level) -> new Watcher(level), MobCategory.MISC).sized(0.6F, 1.95F).updateInterval(10).clientTrackingRange(4).build(RConstants.MODID + ":watcher"));
-    public static final RegistrySupplier<EntityType<Cyberman>> CYBER = ENTITY_TYPES.register("cyber_master", () -> EntityType.Builder.of(Cyberman::new, MobCategory.MISC).sized(0.6F, 1.95F).build(RConstants.MODID + ":cyber"));
 
     public static <T extends Entity> RegistrySupplier<EntityType<T>> register(String id, Supplier<EntityType.Builder<T>> builderSupplier) {
         return ENTITY_TYPES.register(id, () -> builderSupplier.get().build(RConstants.MODID + ":" + id));
     }
-
-    public static final RegistrySupplier<EntityType<Laser>> LASER = ENTITY_TYPES.register("laser", () -> EntityType.Builder.of((EntityType.EntityFactory<Laser>) (entityType, level) -> new Laser(REntities.LASER.get(), level), MobCategory.MISC).sized(0.25F, 0.25F).updateInterval(10).clientTrackingRange(4).build(RConstants.MODID + ":laser"));
 
 
 }

@@ -13,6 +13,5 @@ public class ClientEvents {
     public static void keyMapping(RegisterKeyMappingsEvent event) {
         event.register(RKeybinds.FORCE_REGEN);
         event.register(RKeybinds.REGEN_GUI);
-        event.register(RKeybinds.TOGGLE_TRAIT);
     }
 }
