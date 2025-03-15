@@ -17,37 +17,34 @@ import org.jetbrains.annotations.Nullable;
 
 public class RegenerationModule implements SwitchyModule, SwitchySerializable, SwitchyModuleTransferable, SwitchyEvents.Init {
 
-    private CompoundTag nbt = new CompoundTag();
+    private float absorption = 0;
+    private float health = 0;
+
+    public float getHealth() {
+        return health;
+    }
+
+    public void setHealth(float health) {
+        this.health = health;
+    }
 
     @Override
     public void updateFromPlayer(ServerPlayer player, @Nullable String nextPreset) {
-        RegenerationData.get(player).ifPresent(regenerationData -> {
-            CompoundTag newNbt = regenerationData.serializeNBT();
-            if (!newNbt.isEmpty()) { // Update with new data instead of checking the old one
-                nbt = newNbt;
-                regenerationData.syncToClients(null);
-                Regeneration.LOGGER.info("NBT UPDATE: {}", nbt);
-            }
-        });
+        absorption = player.getAbsorptionAmount();
+        health = player.getHealth();
     }
 
     @Override
     public void applyToPlayer(ServerPlayer player) {
-        RegenerationData.get(player).ifPresent(regenerationData -> {
-            if (!nbt.isEmpty()) {
-                Regeneration.LOGGER.info("NBT APPLIED: {}", nbt);
-                regenerationData.deserializeNBT(nbt);
-                regenerationData.syncToClients(null);
-            } else {
-                Regeneration.LOGGER.info("NBT IS EMPTY, NOT APPLYING: {}", nbt);
-            }
-        });
+        player.setAbsorptionAmount(absorption);
+        player.setHealth(health);
     }
 
     @Override
     public void onInitialize() {
         SwitchyModuleRegistry.registerModule(new ResourceLocation(Regeneration.MOD_ID, "regeneration"), () -> CardinalSerializerModule.from(RegenerationComponents.REGENERATION_DATA, (k, p) -> {
-
+                    RegenerationData.get(p).ifPresent(regenerationData -> regenerationData.syncToClients(null));
+                    new RemoveSkinPlayerMessage(p.getUUID()).sendToAll();
                 }, (k, p) -> {
                     RegenerationData.get(p).ifPresent(regenerationData -> regenerationData.syncToClients(null));
                     new RemoveSkinPlayerMessage(p.getUUID()).sendToAll();
@@ -55,35 +52,50 @@ public class RegenerationModule implements SwitchyModule, SwitchySerializable, S
                 new SwitchyModuleInfo(
                         false,
                         SwitchyModuleEditable.OPERATOR,
-                        Feedback.translatable("switchy.modules.switchy_inventories.regeneration.description"))
-                        .withDescriptionWhenEnabled(Feedback.translatable("switchy.modules.switchy_inventories.regeneration.enabled"))
-                        .withDescriptionWhenDisabled(Feedback.translatable("switchy.modules.switchy_inventories.regeneration.disabled"))
-                        .withDeletionWarning(Feedback.translatable("switchy.modules.switchy_inventories.regeneration.warning"))
+                        Feedback.translatable("switchy.modules.regeneration.description"))
+                        .withDescriptionWhenEnabled(Feedback.translatable("switchy.modules.regeneration.enabled"))
+                        .withDescriptionWhenDisabled(Feedback.translatable("switchy.modules.regeneration.disabled"))
+                        .withDeletionWarning(Feedback.translatable("switchy.modules.regeneration.warning"))
+        );
+
+
+        SwitchyModuleRegistry.registerModule(new ResourceLocation(Regeneration.MOD_ID, "regeneration_additional"), RegenerationModule::new,
+                new SwitchyModuleInfo(
+                        false,
+                        SwitchyModuleEditable.OPERATOR,
+                        Feedback.translatable("switchy.modules.regeneration_additional.description"))
+                        .withDescriptionWhenEnabled(Feedback.translatable("switchy.modules.regeneration_additional.regeneration.enabled"))
+                        .withDescriptionWhenDisabled(Feedback.translatable("switchy.modules.regeneration_additional.regeneration.disabled"))
+                        .withDeletionWarning(Feedback.translatable("switchy.modules.regeneration_additional.regeneration.warning"))
         );
 
     }
 
-    public CompoundTag getNbt() {
-        return nbt;
-    }
-
-    public void setNbt(CompoundTag nbt) {
-        this.nbt = nbt;
-    }
 
     @Override
     public CompoundTag toNbt() {
         CompoundTag compoundTag = new CompoundTag();
-        if (!nbt.isEmpty()) {
-            compoundTag.put("regen_switchy", getNbt());
-        }
+        compoundTag.putFloat("regen_absorption", getAbsorption());
+        compoundTag.putFloat("regen_health", getHealth());
         return compoundTag;
     }
 
     @Override
     public void fillFromNbt(CompoundTag compoundTag) {
-        if (compoundTag.contains("regen_switchy")) {
-            setNbt(compoundTag.getCompound("regen_switchy"));
+        if (compoundTag.contains("regen_absorption")) {
+            setAbsorption(compoundTag.getFloat("regen_absorption"));
         }
+
+        if (compoundTag.contains("regen_health")) {
+            setHealth(compoundTag.getFloat("regen_health"));
+        }
+    }
+
+    public float getAbsorption() {
+        return absorption;
+    }
+
+    public void setAbsorption(float absorption) {
+        this.absorption = absorption;
     }
 }

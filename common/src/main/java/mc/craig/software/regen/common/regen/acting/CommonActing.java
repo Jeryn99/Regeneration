@@ -50,6 +50,7 @@ public class CommonActing implements Acting {
     public void onRegenTick(IRegen cap) {
         LivingEntity livingEntity = cap.getLiving();
         float stateProgress = (float) cap.stateManager().stateProgress();
+        float dm = Math.max(1, (livingEntity.level().getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 
         switch (cap.regenState()) {
             case POST:
@@ -68,7 +69,6 @@ public class CommonActing implements Acting {
                     TriggerManager.FIRST_REGENERATION.trigger(playerEntity);
                 }
 
-                float dm = Math.max(1, (livingEntity.level().getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 livingEntity.heal(stateProgress * 0.3F * dm);
                 livingEntity.setArrowCount(0);
                 break;
@@ -92,6 +92,10 @@ public class CommonActing implements Acting {
                 if (stateProgress > weaknessPercentage) {
                     PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
                 }
+                if(livingEntity.getHealth() < 8) {
+                    livingEntity.heal(stateProgress * 0.3F * dm);
+                }
+
                 break;
             case ALIVE:
                 break;
@@ -149,7 +153,7 @@ public class CommonActing implements Acting {
 
         living.getAttribute(Attributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
-        living.setHealth(Math.max(living.getHealth(), 8));
+        living.heal(1);
         living.setAbsorptionAmount(0);
 
         living.clearFire();

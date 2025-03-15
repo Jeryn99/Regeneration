@@ -26,6 +26,7 @@ public class AnimationHandler {
     public static Item[] BODY_ITEMS = new Item[]{RItems.F_ROBES_CHEST.get(), RItems.GUARD_CHEST.get(), RItems.M_ROBES_CHEST.get()};
 
     public static void setRotationAnglesCallback(HumanoidModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+
         // Get the regeneration data for the living entity
         RegenerationData.get(livingEntity).ifPresent(iRegen -> {
             // Get the transition type

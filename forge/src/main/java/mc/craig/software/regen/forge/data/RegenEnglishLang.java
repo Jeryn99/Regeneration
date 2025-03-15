@@ -56,7 +56,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
         add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
         add(RItems.GUARD_FEET.get(), "Timelord Boots");
-        add(RItems.ZINC.get(), "Gallifreyan Zinc Ingot");
+        add(RItems.ZINC.get(), "Gallifreyan Zinc");
         add("item.regen.hand_with_name", "%s Hand");
         add("item.regen.chalice_of", "Chalice of");
 
@@ -67,7 +67,7 @@ public class RegenEnglishLang extends LanguageProvider {
         add(RegenDamageTypes.REGEN_DMG_KILLED, "%s was killed mid-regeneration...");
         add(RegenDamageTypes.REGEN_DMG_ENERGY_EXPLOSION, "%s was blasted by Regeneration Energy!");
 
-        // === Regeneration Transtions ===
+        // === Regeneration Transitions ===
         add(TransitionTypes.ENDER_DRAGON.getTranslationKey(), "Ender-Dragon");
         add(TransitionTypes.SPARKLE.getTranslationKey(), "Sparkle");
         add(TransitionTypes.WATCHER.getTranslationKey(), "Watcher");

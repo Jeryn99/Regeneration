@@ -120,10 +120,12 @@ public class FobWatchItem extends Item {
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
                 PlayerUtil.sendMessage(player, Component.translatable(RMessages.GAINED_REGENERATIONS, used), true);
+                cap.syncToClients(null);
             } else {
                 if (!world.isClientSide) {
                     setOpen(stack, true);
                     PlayerUtil.sendMessage(player, Component.translatable(RMessages.TIMELORD_STATUS), true);
+                    cap.syncToClients(null);
                 }
             }
 
@@ -131,6 +133,7 @@ public class FobWatchItem extends Item {
                 ServerLevel serverWorld = (ServerLevel) world;
                 BlockPos blockPos = player.blockPosition();
                 serverWorld.sendParticles(RParticles.CONTAINER.get(), blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
+                cap.syncToClients(null);
             }
 
             stack.setDamageValue(stack.getDamageValue() + used);
@@ -144,12 +147,14 @@ public class FobWatchItem extends Item {
             }
         } else { // Prevent storing regens if the player is a Timelord
 
-            if (!cap.canRegenerate()) {
-                return msgUsageFailed(player, RMessages.TRANSFER_NO_REGENERATIONS, stack);
+            if (cap.regenState() != RegenStates.ALIVE) {
+                cap.syncToClients(null);
+                return msgUsageFailed(player, RMessages.TRANSFER_INVALID_STATE, stack);
             }
 
-            if (cap.regenState() != RegenStates.ALIVE) {
-                return msgUsageFailed(player, RMessages.TRANSFER_INVALID_STATE, stack);
+            if (cap.regens() == 0) {
+                cap.syncToClients(null);
+                return msgUsageFailed(player, RMessages.TRANSFER_NO_REGENERATIONS, stack);
             }
 
             if (stack.getDamageValue() == 0) {
@@ -158,6 +163,7 @@ public class FobWatchItem extends Item {
 
             stack.setDamageValue(stack.getDamageValue() - 1);
             PlayerUtil.sendMessage(player, RMessages.TRANSFER_SUCCESSFUL, true);
+            cap.syncToClients(null);
 
             if (world.isClientSide) {
                 ClientUtil.playPositionedSoundRecord(SoundEvents.FIRE_EXTINGUISH, 5.0F, 2.0F);
