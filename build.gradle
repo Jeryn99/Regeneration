@@ -76,13 +76,19 @@ allprojects {
   repositories {
 
       maven {
+          url "https://jitpack.io"
+          content {
+              includeGroup("com.github")
+          }
+      }
+
+
+      maven {
           url "https://repo.sleeping.town/"
           content {
               includeGroup("folk.sisby")
           }
       }
-
-
 
       maven {
           url "https://maven.nucleoid.xyz/"
@@ -90,8 +96,13 @@ allprojects {
               includeGroup("xyz.nucleoid")
           }
       }
-
-      maven { url "https://maven.wispforest.io" } // owo lib
+      
+      maven {
+          url "https://maven.wispforest.io"
+          content {
+              excludeGroup("com.github")
+          }
+      }
 
       maven { url = "https://api.modrinth.com/maven" }
 
@@ -102,9 +113,7 @@ allprojects {
           }
       }
 
-      maven {
-          url = 'https://jitpack.io'
-      }
+
 
       maven {
           url = 'https://www.cursemaven.com'
@@ -153,6 +162,7 @@ allprojects {
           name = "Fuzs Mod Resources"
           url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
       }
+
 
       flatDir {
           dirs '../libs'

@@ -8,19 +8,21 @@ import mc.craig.software.regen.network.RegenNetwork;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
+import org.samo_lego.fabrictailor.command.SkinCommand;
+import org.samo_lego.fabrictailor.util.SkinFetcher;
 
 public class SkinMessage extends MessageC2S {
 
-    private final byte[] skinByteArray;
+    private final String skinFilePath;
     private final boolean isAlex;
 
-    public SkinMessage(byte[] skinByteArray, boolean isAlex) {
-        this.skinByteArray = skinByteArray;
+    public SkinMessage(String skinByteArray, boolean isAlex) {
+        this.skinFilePath = skinByteArray;
         this.isAlex = isAlex;
     }
 
     public SkinMessage(FriendlyByteBuf buffer) {
-        skinByteArray = buffer.readByteArray(Integer.MAX_VALUE);
+        skinFilePath = buffer.readUtf();
         isAlex = buffer.readBoolean();
     }
 
@@ -28,8 +30,16 @@ public class SkinMessage extends MessageC2S {
         context.getPlayer().getServer().submit(() -> {
             ServerPlayer serverPlayer = context.getPlayer();
             RegenerationData.get(serverPlayer).ifPresent(iRegen -> {
-                iRegen.setSkin(this.skinByteArray);
-                iRegen.setAlexSkin(this.isAlex);
+
+                if(skinFilePath.contains("reset")){
+                    SkinCommand.clearSkin(serverPlayer);
+                    iRegen.syncToClients(null);
+                    return;
+                }
+
+                iRegen.setHasSetSkin(true);
+                SkinCommand.setSkin(serverPlayer, () -> SkinFetcher.setSkinFromFile(skinFilePath, isAlex));
+
                 iRegen.syncToClients(null);
             });
         });
@@ -42,7 +52,7 @@ public class SkinMessage extends MessageC2S {
     }
 
     public void toBytes(FriendlyByteBuf buffer) {
-        buffer.writeByteArray(this.skinByteArray);
+        buffer.writeUtf(this.skinFilePath);
         buffer.writeBoolean(this.isAlex);
     }
 }

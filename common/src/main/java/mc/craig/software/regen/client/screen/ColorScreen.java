@@ -19,121 +19,114 @@ import net.minecraft.world.phys.Vec3;
 import java.awt.*;
 
 public class ColorScreen extends Screen {
-
     public static final ResourceLocation PREFERENCES_BUTTON_LOCATION = new ResourceLocation(RConstants.MODID, "textures/gui/preferences_button.png");
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
-    private final int imageWidth;
-    private final int imageHeight;
+    public static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
+
+    private static final int IMAGE_WIDTH = 256;
+    private static final int IMAGE_HEIGHT = 173;
 
     private Vec3 initialPrimary, initialSecondary;
     private ColorWidget colorChooserPrimary, colorChooserSecondary;
-    private int cy;
-    private int cx;
+    private int centerX, centerY;
 
     public ColorScreen() {
         super(Component.translatable("gui.regen.color_gui"));
-        imageWidth = 256;
-        imageHeight = 173;
     }
 
     @Override
     public void init() {
-        super.init();
-        cx = (width - imageWidth) / 2;
-        cy = (height - imageHeight) / 2;
+        centerX = (width - IMAGE_WIDTH) / 2;
+        centerY = (height - IMAGE_HEIGHT) / 2;
 
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent(data -> {
             initialPrimary = data.getPrimaryColors();
             initialSecondary = data.getSecondaryColors();
         });
 
+        addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, PREFERENCES_BUTTON_LOCATION,
+                button -> Minecraft.getInstance().setScreen(null)));
 
-        final int btnW = 60, btnH = 18;
+        addButton("gui.regen.undo", centerX + 100, centerY + 145, this::resetColors);
+        addButton("gui.regen.back", centerX + 25, centerY + 145, () -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
+        addButton("gui.regen.default", centerX + 180, centerY + 145, this::setDefaultColors);
 
-        this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
-            Minecraft.getInstance().setScreen(null);
-        }));
-
-        // Reset Style Button
-        this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.undo"), button -> {
-            Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
-            Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
-            colorChooserPrimary.setColor(primaryColour.getRGB());
-            colorChooserSecondary.setColor(secondaryColour.getRGB());
-            updateScreenAndServer();
-        }).bounds(cx + 100, cy + 145, btnW, btnH + 2).build());
-
-        // Close Button
-        this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.back"),
-                button -> Minecraft.getInstance().setScreen(new PreferencesScreen())).bounds(cx + 25, cy + 145, btnW, btnH + 2).build());
-
-        // Default Button
-        this.addRenderableWidget(Button.builder(Component.translatable("gui.regen.default"), button -> RegenerationData.get(Minecraft.getInstance().player).ifPresent((data) -> {
-            TransitionType regenType = data.transitionType();
-            Vec3 primColor = regenType.getDefaultPrimaryColor();
-            Vec3 secColor = regenType.getDefaultSecondaryColor();
-            Color primaryColour = new Color((float) primColor.x, (float) primColor.y, (float) primColor.z);
-            Color secondaryColour = new Color((float) secColor.x, (float) secColor.y, (float) secColor.z);
-            colorChooserPrimary.setColor(primaryColour.getRGB());
-            colorChooserSecondary.setColor(secondaryColour.getRGB());
-            updateScreenAndServer();
-        })).bounds(cx + (90 * 2), cy + 145, btnW, btnH + 2).build());
-
-        colorChooserPrimary = new ColorWidget(font, cx + 20, cy + 35, 70, 20, Component.literal("Regen"), new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
-
-        colorChooserSecondary = new ColorWidget(font, cx + 150, cy + 35, 70, 20, Component.literal("Regen"), new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
+        colorChooserPrimary = new ColorWidget(font, centerX + 20, centerY + 35, 70, 20, Component.literal("Regen"),
+                getColorRGB(initialPrimary), widget -> updateScreenAndServer());
+        colorChooserSecondary = new ColorWidget(font, centerX + 150, centerY + 35, 70, 20, Component.literal("Regen"),
+                getColorRGB(initialSecondary), widget -> updateScreenAndServer());
 
         addRenderableWidget(colorChooserPrimary);
         addRenderableWidget(colorChooserSecondary);
     }
 
+    private void addButton(String translationKey, int x, int y, Runnable onClick) {
+        addRenderableWidget(Button.builder(Component.translatable(translationKey), button -> onClick.run())
+                .bounds(x, y, 60, 20).build());
+    }
 
-    public void updateScreenAndServer() {
+    private void resetColors() {
+        colorChooserPrimary.setColor(getColorRGB(initialPrimary));
+        colorChooserSecondary.setColor(getColorRGB(initialSecondary));
+        updateScreenAndServer();
+    }
+
+    private void setDefaultColors() {
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent(data -> {
+            TransitionType regenType = data.transitionType();
+            colorChooserPrimary.setColor(getColorRGB(regenType.getDefaultPrimaryColor()));
+            colorChooserSecondary.setColor(getColorRGB(regenType.getDefaultSecondaryColor()));
+            updateScreenAndServer();
+        });
+    }
+
+    private void updateScreenAndServer() {
         CompoundTag nbt = new CompoundTag();
-        Color primary = new Color(colorChooserPrimary.getColor());
-        Color secondary = new Color(colorChooserSecondary.getColor());
-        nbt.putFloat(RConstants.PRIMARY_RED, (float) primary.getRed() / 255F);
-        nbt.putFloat(RConstants.PRIMARY_GREEN, (float) primary.getGreen() / 255F);
-        nbt.putFloat(RConstants.PRIMARY_BLUE, (float) primary.getBlue() / 255F);
-
-        nbt.putFloat(RConstants.SECONDARY_RED, (float) secondary.getRed() / 255F);
-        nbt.putFloat(RConstants.SECONDARY_GREEN, (float) secondary.getGreen() / 255F);
-        nbt.putFloat(RConstants.SECONDARY_BLUE, (float) secondary.getBlue() / 255F);
+        setColorData(nbt, RConstants.PRIMARY_RED, RConstants.PRIMARY_GREEN, RConstants.PRIMARY_BLUE, colorChooserPrimary);
+        setColorData(nbt, RConstants.SECONDARY_RED, RConstants.SECONDARY_GREEN, RConstants.SECONDARY_BLUE, colorChooserSecondary);
         new ColorChangeMessage(nbt).send();
+    }
+
+    private void setColorData(CompoundTag nbt, String redKey, String greenKey, String blueKey, ColorWidget widget) {
+        Color color = new Color(widget.getColor());
+        nbt.putFloat(redKey, color.getRed() / 255F);
+        nbt.putFloat(greenKey, color.getGreen() / 255F);
+        nbt.putFloat(blueKey, color.getBlue() / 255F);
+    }
+
+    private int getColorRGB(Vec3 vec) {
+        return new Color((float) vec.x, (float) vec.y, (float) vec.z).getRGB();
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
-
-        if (this.minecraft != null) {
-            RenderSystem.setShaderTexture(0, BACKGROUND);
-            guiGraphics.blit(BACKGROUND, cx, cy, 0, 0, this.imageWidth, this.imageHeight);
-        }
-
-        int cx = (width - imageWidth) / 2;
-        int cy = (height - imageHeight) / 2;
+        renderBackground(guiGraphics);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
+        guiGraphics.blit(BACKGROUND, centerX, centerY, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 
         colorChooserPrimary.render(guiGraphics, mouseX, mouseY, partialTick);
         colorChooserSecondary.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        RegenerationData.get(Minecraft.getInstance().player).ifPresent((cap) -> {
-            String str = Component.translatable("gui.regen.primary").getString();
-            int length = Minecraft.getInstance().font.width(str);
-            guiGraphics.drawString(this.font, Component.literal(str).getString(), cx + 55 - length / 2, cy + 19, 4210752);
-            str = Component.translatable("gui.regen.secondary").getString();
-            length = font.width(str);
-            guiGraphics.drawString(this.font, Component.literal(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
-        });
+        drawColorLabels(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
 
+    private void drawColorLabels(GuiGraphics guiGraphics) {
+        RegenerationData.get(Minecraft.getInstance().player).ifPresent(data -> {
+            drawCenteredText(guiGraphics, "gui.regen.primary", centerX + 55, centerY + 19);
+            drawCenteredText(guiGraphics, "gui.regen.secondary", centerX + 185, centerY + 19);
+        });
+    }
+
+    private void drawCenteredText(GuiGraphics guiGraphics, String translationKey, int x, int y) {
+        String text = Component.translatable(translationKey).getString();
+        int textWidth = Minecraft.getInstance().font.width(text);
+        guiGraphics.drawString(font, text, x - textWidth / 2, y, Color.white.getRGB());
     }
 
     @Override
     public void tick() {
-        super.tick();
         colorChooserPrimary.tick();
         colorChooserSecondary.tick();
+        super.tick();
     }
-
 }

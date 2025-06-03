@@ -36,7 +36,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
         RegenerationData.get(entityPlayer).ifPresent((data) -> {
             matrixStack.pushPose();
             if (animation == null) {
-                bipedModel.setupAnim(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+               //TODO may cause issues bipedModel.setupAnim(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             } else {
                 animation.animate(bipedModel, entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }

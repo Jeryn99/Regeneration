@@ -45,18 +45,6 @@ public class RegenEnglishLang extends LanguageProvider {
 
         // === Items ===
         add(RItems.FOB.get(), "Fob Watch");
-        add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
-        add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
-        add(RItems.M_ROBES_LEGS.get(), "Timelord Lower Robes (Male)");
-        add(RItems.ROBES_FEET.get(), "Boots");
-        add(RItems.F_ROBES_HEAD.get(), "Timelord Collar Piece (Female)");
-        add(RItems.F_ROBES_CHEST.get(), "Timelord Suit (Female)");
-        add(RItems.F_ROBES_LEGS.get(), "Timelord Lower Robes (Female)");
-        add(RItems.GUARD_HELMET.get(), "Timelord Soldier Helmet");
-        add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
-        add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
-        add(RItems.GUARD_FEET.get(), "Timelord Boots");
-        add(RItems.ZINC.get(), "Gallifreyan Zinc");
         add("item.regen.hand_with_name", "%s Hand");
         add("item.regen.chalice_of", "Chalice of");
 

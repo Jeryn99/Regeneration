@@ -21,7 +21,9 @@ import java.util.UUID;
 @Mixin(PlayerRenderer.class)
 public class PlayerRendererMixin {
 
-    @Inject(at = @At("HEAD"), method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", cancellable = true)
+
+    //TODO
+    /*@Inject(at = @At("HEAD"), method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", cancellable = true)
     public void getTextureLocation(AbstractClientPlayer entity, CallbackInfoReturnable<ResourceLocation> cir) {
         UUID uuid = entity.getUUID();
 
@@ -29,7 +31,7 @@ public class PlayerRendererMixin {
         if (resourceLocation != null) {
             cir.setReturnValue(resourceLocation);
         }
-    }
+    }*/
 
     @Inject(at = @At("TAIL"), method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V")
     protected void setupRotations(AbstractClientPlayer abstractClientPlayer, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {

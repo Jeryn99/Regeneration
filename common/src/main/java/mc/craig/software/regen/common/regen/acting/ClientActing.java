@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import org.samo_lego.fabrictailor.util.SkinFetcher;
 
 import java.io.File;
 
@@ -67,21 +68,22 @@ public class ClientActing implements Acting {
         }
 
         // Set players stored "next skin" if one is stored
-        if (cap.isNextSkinValid()) {
+       //TODO implement next valid skin
+        /* if (cap.isNextSkinValid()) {
             new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()).send();
             Regeneration.LOGGER.info("Skin chosen from saved data");
             return;
-        }
+        }*/
 
         // Find and send random skin
-        Minecraft.getInstance().submit(() -> {
+      /*  Minecraft.getInstance().submit(() -> {
             if (!cap.isNextSkinValid()) {
                 File file = SkinRetriever.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex());
                 boolean isAlex = file.getAbsolutePath().contains("slim");
                 Regeneration.LOGGER.info("Chosen Skin: {} - Slim Model: {}", file.getAbsolutePath(), isAlex);
-                new SkinMessage(RegenUtil.fileToBytes(file), isAlex).send();
+                new SkinMessage(file.getPath(), isAlex).send();
             }
-        });
+        });*/
     }
 
     @Override

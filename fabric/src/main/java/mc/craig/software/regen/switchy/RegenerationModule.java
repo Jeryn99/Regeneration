@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 
-public class RegenerationModule implements SwitchyModule, SwitchySerializable, SwitchyModuleTransferable, SwitchyEvents.Init {
+public class RegenerationModule implements SwitchyModule, SwitchySerializable, SwitchyEvents.Init {
 
     private float absorption = 0;
     private float health = 0;
@@ -30,14 +30,27 @@ public class RegenerationModule implements SwitchyModule, SwitchySerializable, S
 
     @Override
     public void updateFromPlayer(ServerPlayer player, @Nullable String nextPreset) {
-        absorption = player.getAbsorptionAmount();
-        health = player.getHealth();
+        if (isTimelord(player)) {
+            absorption = player.getAbsorptionAmount();
+            health = player.getHealth();
+        }
     }
 
     @Override
     public void applyToPlayer(ServerPlayer player) {
         player.setAbsorptionAmount(absorption);
-        player.setHealth(health);
+
+        if (isTimelord(player)) {
+            player.setHealth(health);
+        } else {
+            player.setHealth(player.getMaxHealth());
+        }
+    }
+
+    private boolean isTimelord(ServerPlayer player) {
+        return RegenerationData.get(player)
+                .map(RegenerationData::canRegenerate)
+                .orElse(false);
     }
 
     @Override

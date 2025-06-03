@@ -10,6 +10,7 @@ import mc.craig.software.regen.common.regen.transitions.TransitionTypes;
 import mc.craig.software.regen.util.AnimationUtil;
 import mc.craig.software.regen.util.PlayerUtil;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -57,12 +58,27 @@ public class BipedBodyMixin {
 
     private static void resetPlayerPositions(HumanoidModel<LivingEntity> bipedModel) {
         bipedModel.head.getAllParts().forEach(ModelPart::resetPose);
+        bipedModel.hat.getAllParts().forEach(ModelPart::resetPose); // Reset second layer
+
         bipedModel.body.getAllParts().forEach(ModelPart::resetPose);
+
         bipedModel.leftArm.getAllParts().forEach(ModelPart::resetPose);
+
         bipedModel.rightArm.getAllParts().forEach(ModelPart::resetPose);
+
         bipedModel.leftLeg.getAllParts().forEach(ModelPart::resetPose);
+
         bipedModel.rightLeg.getAllParts().forEach(ModelPart::resetPose);
+
+        if(bipedModel instanceof PlayerModel<LivingEntity> playerModel){
+            playerModel.rightSleeve.getAllParts().forEach(ModelPart::resetPose);
+            playerModel.leftSleeve.getAllParts().forEach(ModelPart::resetPose);
+            playerModel.leftPants.getAllParts().forEach(ModelPart::resetPose);
+            playerModel.rightPants.getAllParts().forEach(ModelPart::resetPose);
+            playerModel.jacket.getAllParts().forEach(ModelPart::resetPose);
+        }
     }
+
 
     @Inject(at = @At("TAIL"), cancellable = true, method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void setupAnim(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {

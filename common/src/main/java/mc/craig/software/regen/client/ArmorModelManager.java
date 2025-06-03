@@ -16,7 +16,7 @@ public class ArmorModelManager implements ResourceManagerReloadListener {
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
-        ClientUtil.clothingModels();
+
     }
 
 

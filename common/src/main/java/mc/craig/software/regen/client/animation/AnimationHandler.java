@@ -22,8 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AnimationHandler {
 
 
-    public static Item[] LEG_ITEMS = new Item[]{RItems.F_ROBES_LEGS.get(), RItems.M_ROBES_LEGS.get(), RItems.GUARD_LEGS.get(), RItems.ROBES_FEET.get()};
-    public static Item[] BODY_ITEMS = new Item[]{RItems.F_ROBES_CHEST.get(), RItems.GUARD_CHEST.get(), RItems.M_ROBES_CHEST.get()};
 
     public static void setRotationAnglesCallback(HumanoidModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
@@ -34,11 +32,6 @@ public class AnimationHandler {
 
             // Animate the model based on the transition type
             TransitionTypeRenderers.get(type).animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-
-            // If the living entity is not regenerating and is a player, handle the armor
-            if (iRegen.regenState() != RegenStates.REGENERATING && livingEntity.getType() == EntityType.PLAYER) {
-                handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            }
 
             if (livingEntity.getType() == EntityType.PLAYER) {
                 if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && iRegen.regenState() == RegenStates.POST) {
@@ -54,18 +47,6 @@ public class AnimationHandler {
         correctPlayerModel(bipedModel);
     }
 
-    public static void handleArmor(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (bipedModel instanceof PlayerModel playerModel) {
-            // Hide the jacket model part if the player is wearing one of the specified items in the BODY_ITEMS array
-            playerModel.jacket.visible = hideModelPartIf(livingEntity, BODY_ITEMS, PlayerModelPart.JACKET, EquipmentSlot.CHEST);
-            playerModel.leftSleeve.visible = playerModel.rightSleeve.visible = livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() != RItems.GUARD_CHEST.get();
-
-            // Hide the left pants and right pants model parts if the player is wearing one of the specified items in the LEG_ITEMS array
-            playerModel.leftPants.visible = hideModelPartIf(livingEntity, LEG_ITEMS, PlayerModelPart.LEFT_PANTS_LEG, EquipmentSlot.LEGS);
-            playerModel.rightPants.visible = hideModelPartIf(livingEntity, LEG_ITEMS, PlayerModelPart.RIGHT_PANTS_LEG, EquipmentSlot.LEGS);
-        }
-    }
-
     public static boolean showArms(LivingEntity livingEntity) {
         AtomicBoolean show = new AtomicBoolean(true);
         RegenerationData.get(livingEntity).ifPresent(iRegen -> show.set(iRegen.handState() != IRegen.Hand.NOT_CUT));
@@ -79,6 +60,7 @@ public class AnimationHandler {
             playerModel.rightSleeve.copyFrom(playerModel.rightArm);
             playerModel.leftPants.copyFrom(playerModel.leftLeg);
             playerModel.rightPants.copyFrom(playerModel.rightLeg);
+            playerModel.jacket.copyFrom(playerModel.body);
         }
     }
 

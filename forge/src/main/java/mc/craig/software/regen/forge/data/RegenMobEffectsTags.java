@@ -24,7 +24,7 @@ public class RegenMobEffectsTags extends TagsProvider<MobEffect> {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         TagAppender<MobEffect> postRegen = tag(RegenUtil.POST_REGEN_POTIONS);
-        postRegen.add(get(MobEffects.MOVEMENT_SLOWDOWN), get(MobEffects.DIG_SLOWDOWN), get(MobEffects.CONFUSION), get(MobEffects.HUNGER), get(MobEffects.WEAKNESS), get(MobEffects.POISON), get(MobEffects.DARKNESS));
+        postRegen.add(get(MobEffects.MOVEMENT_SLOWDOWN), get(MobEffects.DIG_SLOWDOWN), get(MobEffects.CONFUSION), get(MobEffects.HUNGER), get(MobEffects.WEAKNESS), get(MobEffects.DARKNESS));
     }
 
     public ResourceKey<MobEffect> get(MobEffect mobEffect) {

@@ -54,10 +54,6 @@ public class PreferencesScreen extends Screen {
 
         final int btnW = 66, btnH = 20;
 
-        this.addRenderableWidget(new ImageButton(4, 4, 20, 18, 0, 0, 19, ColorScreen.PREFERENCES_BUTTON_LOCATION, (button) -> {
-            Minecraft.getInstance().setScreen(null);
-        }));
-
         Button btnClose = Button.builder(Component.translatable("gui.regen.close"), onPress -> Minecraft.getInstance().setScreen(null))
                 .bounds(width / 2 - 109, cy + 145, 71, btnH).build();
 
@@ -95,12 +91,9 @@ public class PreferencesScreen extends Screen {
         btnRegenType.setMessage(transitionType.getTranslation());
 
         Button btnColor = Button.builder(Component.translatable("gui.regen.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()))
-                .bounds(width / 2 + 50 - 66, cy + 103, btnW, btnH).build();
-
-        Button btnSkinChoice = Button.builder(Component.translatable("gui.regen.skin_choice"), p_onPress_1_ -> Minecraft.getInstance().setScreen(new IncarnationScreen())).bounds(width / 2 + 50 + 2, cy + 103, btnW - 2, btnH).build();
+                .bounds(width / 2 + 50 - 66, cy + 103, btnW * 2, btnH).build();
 
         addRenderableWidget(btnRegenType);
-        addRenderableWidget(btnSkinChoice);
         addRenderableWidget(btnClose);
         addRenderableWidget(btnColor);
         addRenderableWidget(btnScheme);

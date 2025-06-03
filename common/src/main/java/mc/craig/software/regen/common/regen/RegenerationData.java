@@ -93,6 +93,17 @@ public class RegenerationData implements IRegen {
         };
     }
 
+    private boolean hasSetSkin = false;
+
+    public boolean hasSetSkin() {
+        return hasSetSkin;
+    }
+
+    public void setHasSetSkin(boolean hasSetSkin) {
+        this.hasSetSkin = hasSetSkin;
+    }
+
+
     @Override
     public int regens() {
         return regensLeft;
@@ -105,6 +116,8 @@ public class RegenerationData implements IRegen {
 
     @Override
     public void tick() {
+
+
         AnimationState regenAnimState = getAnimationState(IRegen.RegenAnimation.REGEN);
         AnimationState graceAnimState = getAnimationState(IRegen.RegenAnimation.GRACE);
 
@@ -263,6 +276,7 @@ public class RegenerationData implements IRegen {
 
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
+        compoundNBT.putBoolean("has_set_skin_on_cycle", hasSetSkin());
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
@@ -311,6 +325,8 @@ public class RegenerationData implements IRegen {
         if (nbt.contains(RConstants.SOUND_SCHEME)) {
             setTimelordSound(IRegen.TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
         }
+
+        setHasSetSkin(nbt.getBoolean("has_set_skin_on_cycle"));
 
         if (nbt.contains(RConstants.HAND_STATE)) {
             setHandState(IRegen.Hand.valueOf(nbt.getString(RConstants.HAND_STATE)));
@@ -507,6 +523,7 @@ public class RegenerationData implements IRegen {
 
             switch (currentState) {
                 case ALIVE -> {
+                    setHasSetSkin(false);
                     if (!canRegenerate()) // that's too bad :(
                         return false;
 
@@ -536,6 +553,7 @@ public class RegenerationData implements IRegen {
                 }
                 case POST -> {
                     currentState = RegenStates.ALIVE;
+                    setHasSetSkin(false);
                     nextTransition.cancel();
                     return false;
                 }

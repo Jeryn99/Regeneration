@@ -4,6 +4,7 @@ package mc.craig.software.regen.client.skin;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.NativeImage;
+import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.regen.RegenerationData;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.network.messages.SkinMessage;
@@ -21,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,27 +38,30 @@ public class VisualManipulator {
     public static void tick(AbstractClientPlayer playerEntity) {
         RegenerationData.get(playerEntity).ifPresent(iRegen -> {
 
-            byte[] skin = iRegen.skin();
-            UUID uuid = playerEntity.getUUID();
+            // Check if it's halfway through the regeneration process
+            boolean isHalfWay = iRegen.updateTicks() == (iRegen.transitionType().getAnimationLength() / 2);
 
-            if (!iRegen.isSkinValidForUse()) {
-                PlayerSkinInfo playerInfo = getRenderTypeAndModel(playerEntity.getGameProfile());
-                setPlayerSkinType(playerEntity, playerInfo.model.contains("slim"));
-                return;
+            System.out.println(iRegen.hasSetSkin());
+
+            if (iRegen.regenState() == RegenStates.REGENERATING && isHalfWay && !iRegen.hasSetSkin()) {
+                File file = SkinRetriever.chooseRandomSkin(iRegen.getLiving().getRandom(), iRegen.preferredModel().isAlex());
+                boolean isAlex = file.getAbsolutePath().contains("slim");
+                Regeneration.LOGGER.info("Chosen Skin: {} - Slim Model: {}", file.getAbsolutePath(), isAlex);
+                new SkinMessage(file.getPath(), isAlex).send();
+                iRegen.setHasSetSkin(true); //Just so it skips over trying again during desyncs
             }
 
-            // Only time a skin update should occur is if the player does not have a skin cached or the player is mid-regeneration
-            boolean isHalfWay = iRegen.updateTicks() >= (iRegen.transitionType().getAnimationLength() / 2);
-            if (!hasPlayerSkin(uuid) && iRegen.isSkinValidForUse() || iRegen.regenState() == RegenStates.REGENERATING && isHalfWay || iRegen.regenState() != RegenStates.REGENERATING && !hasPlayerSkin(uuid)) {
-                NativeImage skinImage = genSkinNative(skin);
-                if (skinImage != null) {
-                    boolean isAlex = iRegen.currentlyAlex();
-                    setPlayerSkinType(playerEntity, isAlex);
-                    addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
-                }
+        /*  if (!hasPlayerSkin(uuid) && iRegen.isSkinValidForUse() || iRegen.regenState() == RegenStates.REGENERATING && isHalfWay || iRegen.regenState() != RegenStates.REGENERATING && !hasPlayerSkin(uuid)) {
+            NativeImage skinImage = genSkinNative(skin);
+            if (skinImage != null) {
+                boolean isAlex = iRegen.currentlyAlex();
+                setPlayerSkinType(playerEntity, isAlex);
+                addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
             }
+        } */
         });
     }
+
 
     public static boolean mojangIsAlex(AbstractClientPlayer abstractClientPlayerEntity) {
 
@@ -93,9 +98,10 @@ public class VisualManipulator {
 
     public static void sendResetMessage() {
         LocalPlayer player = Minecraft.getInstance().player;
+
         if (player != null) {
             boolean info = VisualManipulator.mojangIsAlex(player);
-            new SkinMessage(new byte[0], info).send();
+            new SkinMessage("reset", info).send();
         }
     }
 

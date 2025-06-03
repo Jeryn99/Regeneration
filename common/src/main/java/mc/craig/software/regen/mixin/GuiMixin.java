@@ -24,10 +24,7 @@ public class GuiMixin {
 
     @Redirect(method = "renderHeart", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     private void renderHeart(GuiGraphics instance, ResourceLocation atlasLocation, int x, int y, int uOffset, int vOffset, int uWidth, int vHeight) {
-        RegenerationData.get(this.minecraft.player).ifPresent(regenerationData -> {
-            ResourceLocation icon_to_render = regenerationData.regens() > 0 ? CUSTOM_ICONS : GUI_ICONS_LOCATION;
-            instance.blit(icon_to_render, x, y, 0, (float) uOffset, (float) vOffset, uWidth, vHeight, 256, 256);
-        });
+
     }
 
 }

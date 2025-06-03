@@ -5,9 +5,7 @@ import mc.craig.software.regen.client.RKeybinds;
 import mc.craig.software.regen.client.rendering.model.RModels;
 import mc.craig.software.regen.client.rendering.model.armor.ArmorModel;
 import mc.craig.software.regen.client.rendering.transitions.*;
-import mc.craig.software.regen.client.screen.ColorScreen;
 import mc.craig.software.regen.client.screen.IncarnationScreen;
-import mc.craig.software.regen.client.screen.PreferencesScreen;
 import mc.craig.software.regen.client.skin.VisualManipulator;
 import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
@@ -20,11 +18,7 @@ import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.sound.MovingSound;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -209,46 +203,6 @@ public class ClientUtil {
         return null;
     }
 
-
-    public static void clothingModels() {
-
-        if (!ARMOR_MODELS.isEmpty()) return;
-
-/*        ModelPart bakedGuard = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR);
-        GuardArmorModel guardHead = new GuardArmorModel(bakedGuard, EquipmentSlot.HEAD);
-        GuardArmorModel guardChest = new GuardArmorModel(bakedGuard, EquipmentSlot.CHEST);
-        GuardArmorModel guardLegs = new GuardArmorModel(bakedGuard, EquipmentSlot.LEGS);
-        GuardArmorModel guardFeet = new GuardArmorModel(bakedGuard, EquipmentSlot.FEET);*/
-
-        ModelPart bakedRobes = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.COUNCIL_ROBES);
-        ArmorModel robesHead = new ArmorModel(bakedRobes, EquipmentSlot.HEAD);
-        ArmorModel robesChest = new ArmorModel(bakedRobes, EquipmentSlot.CHEST);
-        ArmorModel robesLegs = new ArmorModel(bakedRobes, EquipmentSlot.LEGS);
-        ArmorModel robesFeet = new ArmorModel(bakedRobes, EquipmentSlot.FEET);
-
-        ModelPart bakedRobesSteve = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.COUNCIL_ROBES_STEVE);
-        ArmorModel robesChestSteve = new ArmorModel(bakedRobesSteve, EquipmentSlot.CHEST);
-
-        //Robes
-        ARMOR_MODELS_STEVE.put(RItems.F_ROBES_CHEST.get(), robesChestSteve);
-        ARMOR_MODELS_STEVE.put(RItems.M_ROBES_CHEST.get(), robesChestSteve);
-
-        ARMOR_MODELS.put(RItems.F_ROBES_HEAD.get(), robesHead);
-        ARMOR_MODELS.put(RItems.M_ROBES_HEAD.get(), robesHead);
-        ARMOR_MODELS.put(RItems.F_ROBES_CHEST.get(), robesChest);
-        ARMOR_MODELS.put(RItems.M_ROBES_CHEST.get(), robesChest);
-        ARMOR_MODELS.put(RItems.F_ROBES_LEGS.get(), robesLegs);
-        ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
-        ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
-
-        //Guard
-        ARMOR_MODELS_STEVE.put(RItems.GUARD_CHEST.get(), robesChestSteve);
-        ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), robesHead);
-        ARMOR_MODELS.put(RItems.GUARD_CHEST.get(), robesChest);
-        ARMOR_MODELS.put(RItems.GUARD_LEGS.get(), robesLegs);
-        ARMOR_MODELS.put(RItems.GUARD_FEET.get(), robesFeet);
-
-    }
 
     /**
      * Gets the armor model for the specified item stack and living entity.
