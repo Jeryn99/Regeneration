@@ -1,6 +1,5 @@
 package mc.craig.software.regen.common.item;
 
-import mc.craig.software.regen.Regeneration;
 import mc.craig.software.regen.common.item.tooltip.fob.FobTooltip;
 import mc.craig.software.regen.common.objects.RParticles;
 import mc.craig.software.regen.common.objects.RSounds;
@@ -29,36 +28,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-
-/**
- * Created by Sub on 16/09/2018.
- */
 public class FobWatchItem extends Item {
 
     public FobWatchItem() {
         super(new Item.Properties().stacksTo(1).durability(12));
     }
 
-    /**
-     * Gets the CompoundTag for the given ItemStack.
-     * If the CompoundTag does not exist or does not contain the "is_open" and "is_gold" tags,
-     * then it creates them and initializes them with default values.
-     *
-     * @param stack the ItemStack to get the CompoundTag for
-     * @return the CompoundTag for the given ItemStack
-     */
     public static CompoundTag getStackTag(ItemStack stack) {
         CompoundTag stackTag = stack.getOrCreateTag();
-
-        // Check if the stackTag contains the "is_open" and "is_gold" tags.
-        // If not, create them and initialize them with default values.
-        if (!stackTag.contains("is_open")) {
-            stackTag.putBoolean("is_open", false);
-        }
-        if (!stackTag.contains("is_gold")) {
-            stackTag.putBoolean("is_gold", RegenUtil.RAND.nextBoolean());
-        }
-
+        if (!stackTag.contains("is_open")) stackTag.putBoolean("is_open", false);
+        if (!stackTag.contains("is_gold")) stackTag.putBoolean("is_gold", RegenUtil.RAND.nextBoolean());
         return stackTag;
     }
 
@@ -87,12 +66,8 @@ public class FobWatchItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, @NotNull Level worldIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
-        if (stack.getItem() instanceof FobWatchItem) {
-            if (isOpen(stack)) {
-                if (entityIn.tickCount % 600 == 0) {
-                    setOpen(stack, false);
-                }
-            }
+        if (stack.getItem() instanceof FobWatchItem && isOpen(stack) && entityIn.tickCount % 600 == 0) {
+            setOpen(stack, false);
         }
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
@@ -100,84 +75,63 @@ public class FobWatchItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        IRegen cap = RegenerationData.get(player).orElseGet(null);
+        IRegen cap = RegenerationData.get(player).orElse(null);
+        if (cap == null) return InteractionResultHolder.fail(stack);
 
-        if (!player.isShiftKeyDown()) { // Transferring from watch to player
-            if (stack.getDamageValue() == getMaxDamage()) {
+        if (!player.isShiftKeyDown()) { // Transfer from watch to player
+            if (stack.getDamageValue() == getMaxDamage())
                 return msgUsageFailed(player, RMessages.TRANSFER_EMPTY_WATCH, stack);
-            } else if (cap.regens() >= getMaxDamage()) { // Prevents exceeding max regens
+            if (cap.regens() >= getMaxDamage())
                 return msgUsageFailed(player, RMessages.TRANSFER_MAX_REGENS, stack);
-            }
 
             int supply = getMaxDamage() - stack.getDamageValue();
             int needed = getMaxDamage() - cap.regens();
             int used = Math.min(supply, needed);
 
-            if (cap.isWasPreviouslyATimelord()) {
-                used = Math.min(12, needed); // First-time use grants up to 12 regens, but not over max
-            }
+            if (cap.isWasPreviouslyATimelord()) used = Math.min(12, needed);
 
-            if (cap.canRegenerate()) {
-                setOpen(stack, true);
-                PlayerUtil.sendMessage(player, Component.translatable(RMessages.GAINED_REGENERATIONS, used), true);
-                cap.syncToClients(null);
-            } else {
-                if (!world.isClientSide) {
-                    setOpen(stack, true);
+            if (!world.isClientSide) {
+                if (cap.canRegenerate()) {
+                    cap.addRegens(used);
+                    PlayerUtil.sendMessage(player, Component.translatable(RMessages.GAINED_REGENERATIONS, used), true);
+                } else {
                     PlayerUtil.sendMessage(player, Component.translatable(RMessages.TIMELORD_STATUS), true);
-                    cap.syncToClients(null);
+                    cap.addRegens(12);
                 }
-            }
 
-            if (!world.isClientSide()) {
-                ServerLevel serverWorld = (ServerLevel) world;
-                BlockPos blockPos = player.blockPosition();
-                serverWorld.sendParticles(RParticles.CONTAINER.get(), blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
-                cap.syncToClients(null);
-            }
-
-            stack.setDamageValue(stack.getDamageValue() + used);
-
-            if (world.isClientSide) {
-                ClientUtil.playPositionedSoundRecord(RSounds.FOB_WATCH.get(), 1.0F, 2.0F);
-            } else {
                 setOpen(stack, true);
-                cap.addRegens(used);
                 cap.syncToClients(null);
-            }
-        } else { // Prevent storing regens if the player is a Timelord
 
-            if (cap.regenState() != RegenStates.ALIVE) {
-                cap.syncToClients(null);
-                return msgUsageFailed(player, RMessages.TRANSFER_INVALID_STATE, stack);
-            }
+                ServerLevel serverWorld = (ServerLevel) world;
+                BlockPos pos = player.blockPosition();
+                serverWorld.sendParticles(RParticles.CONTAINER.get(), pos.getX(), pos.getY() + 1D, pos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
 
-            if (cap.regens() == 0) {
-                cap.syncToClients(null);
-                return msgUsageFailed(player, RMessages.TRANSFER_NO_REGENERATIONS, stack);
-            }
-
-            if (stack.getDamageValue() == 0) {
-                return msgUsageFailed(player, RMessages.TRANSFER_FULL_WATCH, stack);
-            }
-
-            stack.setDamageValue(stack.getDamageValue() - 1);
-            PlayerUtil.sendMessage(player, RMessages.TRANSFER_SUCCESSFUL, true);
-            cap.syncToClients(null);
-
-            if (world.isClientSide) {
-                ClientUtil.playPositionedSoundRecord(SoundEvents.FIRE_EXTINGUISH, 5.0F, 2.0F);
+                stack.setDamageValue(stack.getDamageValue() + used);
             } else {
+                ClientUtil.playPositionedSoundRecord(RSounds.FOB_WATCH.get(), 1.0F, 2.0F);
+            }
+
+        } else { // Store regenerations
+            if (cap.regenState() != RegenStates.ALIVE)
+                return msgUsageFailed(player, RMessages.TRANSFER_INVALID_STATE, stack);
+            if (cap.regens() == 0)
+                return msgUsageFailed(player, RMessages.TRANSFER_NO_REGENERATIONS, stack);
+            if (stack.getDamageValue() == 0)
+                return msgUsageFailed(player, RMessages.TRANSFER_FULL_WATCH, stack);
+
+            if (!world.isClientSide) {
+                stack.setDamageValue(stack.getDamageValue() - 1);
                 setOpen(stack, true);
                 cap.extractRegens(1);
                 cap.syncToClients(null);
+                PlayerUtil.sendMessage(player, RMessages.TRANSFER_SUCCESSFUL, true);
+            } else {
+                ClientUtil.playPositionedSoundRecord(SoundEvents.FIRE_EXTINGUISH, 5.0F, 2.0F);
             }
         }
 
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
-
-
 
     private InteractionResultHolder<ItemStack> msgUsageFailed(Player player, String message, ItemStack stack) {
         PlayerUtil.sendMessage(player, message, true);
@@ -198,7 +152,6 @@ public class FobWatchItem extends Item {
     public boolean isValidRepairItem(@NotNull ItemStack toRepair, @NotNull ItemStack repair) {
         return false;
     }
-
 
     @Override
     public boolean canBeDepleted() {

@@ -45,6 +45,7 @@ public class RegenEnglishLang extends LanguageProvider {
 
         // === Items ===
         add(RItems.FOB.get(), "Fob Watch");
+        add(RItems.ZINC.get(), "Gallifreyan Zinc");
         add("item.regen.hand_with_name", "%s Hand");
         add("item.regen.chalice_of", "Chalice of");
 

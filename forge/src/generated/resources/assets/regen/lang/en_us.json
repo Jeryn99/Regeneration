@@ -97,6 +97,7 @@
   "item.regen.hand_with_name": "%s Hand",
   "item.regen.tooltip.energy": "Energy: %s",
   "item.regen.tooltip.trait": "Trait: %s",
+  "item.regen.zinc": "Gallifreyan Zinc",
   "itemGroup.regen": "Regeneration",
   "message.regen.delayed_regeneration": "Regeneration delayed!",
   "message.regen.end_of_process": "Your Regeneration process is now entirely completed!",

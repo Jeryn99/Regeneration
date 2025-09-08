@@ -6,7 +6,6 @@
   "client": [
     "BipedBodyMixin",
     "FogRendererMixin",
-    "GuiMixin",
     "PlayerInfoMixin",
     "PlayerRendererMixin",
     "SoundSourceMixin"

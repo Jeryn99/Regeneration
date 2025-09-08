@@ -41,6 +41,16 @@ import java.util.*;
 import static mc.craig.software.regen.util.RegenUtil.shouldGiveCouncilAdvancement;
 
 public class RegenerationData implements IRegen {
+    private boolean retryGracePeriod = true;
+
+    public boolean shouldRetryGracePeriod() {
+        return retryGracePeriod;
+    }
+
+    public void setRetryGracePeriod(boolean retry) {
+        this.retryGracePeriod = retry;
+    }
+
 
     //State
     private final RegenerationData.StateManager stateManager;
@@ -205,6 +215,10 @@ public class RegenerationData implements IRegen {
         return stateManager;
     }
 
+    public void setCurrentState(RegenStates currentState) {
+        this.currentState = currentState;
+    }
+
     @Override
     public void readStyle(CompoundTag colors) {
         primaryRed = colors.getFloat(RConstants.PRIMARY_RED);
@@ -278,6 +292,7 @@ public class RegenerationData implements IRegen {
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
         compoundNBT.putBoolean("has_set_skin_on_cycle", hasSetSkin());
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());
+        compoundNBT.putBoolean("retry_grace", shouldRetryGracePeriod());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
@@ -325,7 +340,7 @@ public class RegenerationData implements IRegen {
         if (nbt.contains(RConstants.SOUND_SCHEME)) {
             setTimelordSound(IRegen.TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
         }
-
+        setRetryGracePeriod(nbt.getBoolean("retry_grace"));
         setHasSetSkin(nbt.getBoolean("has_set_skin_on_cycle"));
 
         if (nbt.contains(RConstants.HAND_STATE)) {
@@ -487,22 +502,18 @@ public class RegenerationData implements IRegen {
             nextTransition = new RegenScheduledAction(transition, livingEntity, transitionCallbacks.get(transition), inTicks);
         }
 
-        private void scheduleTransitionInSeconds(RegenStates.Transition transition, long inSeconds) {
+        public void scheduleTransitionInSeconds(RegenStates.Transition transition, long inSeconds) {
             scheduleTransitionInTicks(transition, inSeconds * 20);
         }
 
         @SuppressWarnings("deprecation")
         private void scheduleNextHandGlow() {
-            if (currentState.isGraceful() && handGlowTimer.getTicksLeft() > 0)
-                throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
             handGlowTimer = new RegenScheduledAction(RegenStates.Transition.HAND_GLOW_START, livingEntity, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
             syncToClients(null);
         }
 
         @SuppressWarnings("deprecation")
-        private void scheduleHandGlowTrigger() {
-            if (currentState.isGraceful() && handGlowTimer.getTicksLeft() > 0)
-                throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
+        public void scheduleHandGlowTrigger() {
             handGlowTimer = new RegenScheduledAction(RegenStates.Transition.HAND_GLOW_TRIGGER, livingEntity, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
             ActingForwarder.onHandsStartGlowing(RegenerationData.this);
             syncToClients(null);
@@ -512,6 +523,20 @@ public class RegenerationData implements IRegen {
         public boolean onKilled(DamageSource source) {
             if (source.is(DamageTypes.IN_WALL) || source.is(DamageTypes.CRAMMING)) {
                 return false;
+            }
+
+            if (livingEntity.deathTime > 0 && currentState == RegenStates.GRACE) {
+                setHasSetSkin(false);
+                if (!canRegenerate()) // that's too bad :(
+                    return false;
+
+                // We're entering grace period...
+                scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
+                scheduleHandGlowTrigger();
+                currentState = RegenStates.GRACE;
+                syncToClients(null);
+                ActingForwarder.onEnterGrace(RegenerationData.this);
+                return true;
             }
 
             if (source.is(RegenDamageTypes.REGEN_DMG_CRITICAL)) {
@@ -548,7 +573,7 @@ public class RegenerationData implements IRegen {
                         return true;
                     } else {
                         midSequenceKill(true);
-                        return false;
+                        return true;
                     }
                 }
                 case POST -> {

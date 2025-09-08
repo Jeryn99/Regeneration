@@ -1,0 +1,14 @@
+diff --git a/src/main/java/mc/craig/software/regen/common/regen/RegenerationData.java b/src/main/java/mc/craig/software/regen/common/regen/RegenerationData.java
+index 0000000..2222222 100644
+--- a/src/main/java/mc/craig/software/regen/common/regen/RegenerationData.java
++++ b/src/main/java/mc/craig/software/regen/common/regen/RegenerationData.java
+@@     public class StateManager implements IStateManager {
++        LOGGER.info("Initializing StateManager for entity: {}", livingEntity.getName());
+@@ private void scheduleTransitionInTicks(RegenStates.Transition transition, long inTicks) {
++                LOGGER.warn("Overwriting existing transition {} ({} ticks left)", nextTransition.transition, nextTransition.getTicksLeft());
+@@ private void tick() {
++        LOGGER.debug("Current regen state: {}", currentState);
+@@ private void finishRegeneration() {
++        LOGGER.info("Entering POST state for entity: {}", livingEntity.getName());
++        LOGGER.debug("Next transition cleared");
++        LOGGER.debug("Hand glow timer cleared");

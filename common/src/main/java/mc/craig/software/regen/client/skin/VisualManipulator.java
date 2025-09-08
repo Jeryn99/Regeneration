@@ -41,15 +41,23 @@ public class VisualManipulator {
             // Check if it's halfway through the regeneration process
             boolean isHalfWay = iRegen.updateTicks() == (iRegen.transitionType().getAnimationLength() / 2);
 
-            System.out.println(iRegen.hasSetSkin());
-
             if (iRegen.regenState() == RegenStates.REGENERATING && isHalfWay && !iRegen.hasSetSkin()) {
-                File file = SkinRetriever.chooseRandomSkin(iRegen.getLiving().getRandom(), iRegen.preferredModel().isAlex());
-                boolean isAlex = file.getAbsolutePath().contains("slim");
-                Regeneration.LOGGER.info("Chosen Skin: {} - Slim Model: {}", file.getAbsolutePath(), isAlex);
-                new SkinMessage(file.getPath(), isAlex).send();
-                iRegen.setHasSetSkin(true); //Just so it skips over trying again during desyncs
+                File file = SkinRetriever.chooseRandomSkin(
+                        iRegen.getLiving().getRandom(),
+                        iRegen.preferredModel().isAlex(),
+                        iRegen.regens()
+                );
+
+                if (file != null) {
+                    boolean isAlex = file.getAbsolutePath().contains("slim");
+                    Regeneration.LOGGER.info("Chosen Skin: {} - Slim Model: {}", file.getAbsolutePath(), isAlex);
+                    new SkinMessage(file.getPath(), isAlex).send();
+                    iRegen.setHasSetSkin(true); // skip retrying during desyncs
+                } else {
+                    Regeneration.LOGGER.warn("No skin found for regen #{}; skipping skin setup.", iRegen.regens());
+                }
             }
+
 
         /*  if (!hasPlayerSkin(uuid) && iRegen.isSkinValidForUse() || iRegen.regenState() == RegenStates.REGENERATING && isHalfWay || iRegen.regenState() != RegenStates.REGENERATING && !hasPlayerSkin(uuid)) {
             NativeImage skinImage = genSkinNative(skin);
