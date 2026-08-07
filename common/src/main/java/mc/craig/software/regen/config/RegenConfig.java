@@ -28,9 +28,11 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
         public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
         public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
+        public final ForgeConfigSpec.IntValue AAAAAAAAA;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client").push("client");
+            AAAAAAAAA = builder.comment("AAAAAAAAAAAAAA").translation("config.regen.changeMySkin").defineInRange("aaaa", 13, 0, Integer.MAX_VALUE);
             changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regen.changeMySkin").define("changeMySkin", true);
             changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regen.changePerspective").define("changePerspective", true);
             renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regen.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);

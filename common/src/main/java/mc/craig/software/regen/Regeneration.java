@@ -30,9 +30,9 @@ public class Regeneration {
         RMotives.TYPES.register();
         RTabs.TABS.register();
         TransitionTypes.init();
-        DownloadSkinsThread skinsThread = new DownloadSkinsThread(Platform.isClient());
+        /*DownloadSkinsThread skinsThread = new DownloadSkinsThread(Platform.isClient());
         skinsThread.setName("Skins Downloader");
-        skinsThread.start();
+        skinsThread.start();*/
         TriggerManager.init();
 
         if (Platform.isModLoaded("tardis_refined")) {

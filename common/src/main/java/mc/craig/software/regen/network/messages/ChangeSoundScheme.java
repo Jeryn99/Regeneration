@@ -24,10 +24,10 @@ public class ChangeSoundScheme extends MessageC2S {
 
     @Override
     public void handle(MessageContext context) {
-        context.getPlayer().getServer().submit(() -> RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
+     RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
             cap.setTimelordSound(IRegen.TimelordSound.valueOf(this.type));
             cap.syncToClients(null);
-        }));
+        });
     }
 
     @NotNull

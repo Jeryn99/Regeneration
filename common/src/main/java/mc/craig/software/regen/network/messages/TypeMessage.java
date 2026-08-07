@@ -23,11 +23,12 @@ public class TypeMessage extends MessageC2S {
         type = buffer.readUtf(32767);
     }
 
+    @Override
     public void handle(MessageContext context) {
-        context.getPlayer().getServer().submit(() -> RegenerationData.get(context.getPlayer()).ifPresent((cap) -> {
+       RegenerationData.get(context.getPlayer()).ifPresent(cap -> {
             cap.setTransitionType(TransitionTypes.TRANSITION_TYPES.get(new ResourceLocation(this.type)));
             cap.syncToClients(null);
-        }));
+        });
     }
 
     @NotNull
@@ -36,6 +37,7 @@ public class TypeMessage extends MessageC2S {
         return RegenNetwork.TRANSITION_TYPE;
     }
 
+    @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(this.type);
     }

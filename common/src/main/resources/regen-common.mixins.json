@@ -8,7 +8,8 @@
     "FogRendererMixin",
     "PlayerInfoMixin",
     "PlayerRendererMixin",
-    "SoundSourceMixin"
+    "SoundSourceMixin",
+    "GuiMixin"
   ],
   "mixins": [
   ],

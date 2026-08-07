@@ -69,7 +69,7 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = "Regeneration-Jan-v${rootProject.minecraft_version}-${rootProject.mod_version}-${project.name}"
+    archivesBaseName = "regen-commission-${project.name}-mc${rootProject.minecraft_version}"
     version = rootProject.mod_version
     group = rootProject.maven_group
 

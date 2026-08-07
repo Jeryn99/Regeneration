@@ -42,10 +42,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ClientUtil {
@@ -306,8 +303,21 @@ public class ClientUtil {
      * @param volume        the volume of the sound
      * @param randomSource  the random source for the sound
      */
-    public static void playSound(Object entity, ResourceLocation soundName, SoundSource category, boolean repeat, Supplier<Boolean> stopCondition, float volume, RandomSource randomSource) {
-        Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, SoundEvent.createVariableRangeEvent(soundName), category, repeat, stopCondition, volume, randomSource));
+    private static final Set<ResourceLocation> activeSounds = new HashSet<>();
+
+    public static void playSound(Object entity, ResourceLocation soundName, SoundSource category, boolean repeat,
+                                 Supplier<Boolean> stopCondition, float volume, RandomSource randomSource) {
+        if (activeSounds.contains(soundName)) return; // already playing
+
+        MovingSound sound = new MovingSound(entity, SoundEvent.createVariableRangeEvent(soundName),
+                category, repeat, () -> {
+            boolean stop = stopCondition.get();
+            if (stop) activeSounds.remove(soundName);
+            return stop;
+        }, volume, randomSource);
+
+        activeSounds.add(soundName);
+        Minecraft.getInstance().getSoundManager().play(sound);
     }
 
     /**

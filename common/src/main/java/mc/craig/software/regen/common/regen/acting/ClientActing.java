@@ -1,16 +1,11 @@
 package mc.craig.software.regen.common.regen.acting;
 
-import mc.craig.software.regen.Regeneration;
-import mc.craig.software.regen.client.skin.SkinRetriever;
 import mc.craig.software.regen.client.skin.VisualManipulator;
-import mc.craig.software.regen.common.objects.RItems;
 import mc.craig.software.regen.common.objects.RSounds;
 import mc.craig.software.regen.common.regen.IRegen;
 import mc.craig.software.regen.common.regen.state.RegenStates;
 import mc.craig.software.regen.config.RegenConfig;
-import mc.craig.software.regen.network.messages.SkinMessage;
 import mc.craig.software.regen.util.ClientUtil;
-import mc.craig.software.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -18,10 +13,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
-import org.samo_lego.fabrictailor.util.SkinFetcher;
-
-import java.io.File;
 
 public class ClientActing implements Acting {
 

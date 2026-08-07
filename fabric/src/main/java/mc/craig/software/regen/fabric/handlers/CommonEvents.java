@@ -100,7 +100,7 @@ public class CommonEvents {
             AtomicBoolean allowDamage = new AtomicBoolean(true);
 
             // Only trigger regeneration/grace logic if this damage would be lethal
-            if (entity.getHealth() - damageAmount <= 0) {
+            if (entity.getHealth() - damageAmount <= 0.0F) {
                 LOGGER.info("[Regen] ALLOW_DEATH triggered for {} (DamageSource: {}, DamageAmount: {})",
                         entity.getName(), damageSource.getMsgId(), damageAmount);
 
@@ -116,10 +116,12 @@ public class CommonEvents {
 
                         if (data.canRegenerate()) {
                             LOGGER.info("[Regen] {} can regenerate. Entering GRACE state.", entity.getName());
-                            RegenerationData.StateManager stateManager = data.stateManager();
 
-                            stateManager.scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL,
-                                    RegenConfig.COMMON.gracePhaseLength.get());
+                            RegenerationData.StateManager stateManager = data.stateManager();
+                            stateManager.scheduleTransitionInSeconds(
+                                    RegenStates.Transition.ENTER_CRITICAL,
+                                    RegenConfig.COMMON.gracePhaseLength.get()
+                            );
                             stateManager.scheduleHandGlowTrigger();
 
                             data.setCurrentState(RegenStates.GRACE);
@@ -127,6 +129,7 @@ public class CommonEvents {
 
                             ActingForwarder.onEnterGrace(data);
                             allowDamage.set(false);
+
                             LOGGER.info("[Regen] Death cancelled and grace state started for {}", entity.getName());
                             return;
                         }
@@ -138,6 +141,7 @@ public class CommonEvents {
                         LOGGER.info("[Regen] onKilled() result for {}: {}", entity.getName(), notDead);
 
                         if (notDead) {
+                            allowDamage.set(false);
                             LOGGER.info("[Regen] Death cancelled due to active regeneration for {}", entity.getName());
                         } else if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                             LOGGER.info("[Regen] Removing {} regens from {}", data.regens(), entity.getName());
@@ -153,9 +157,9 @@ public class CommonEvents {
                 });
             }
 
-            // Damage is allowed normally if cancelDeath is false
             return allowDamage.get();
         });
+
 
 
 

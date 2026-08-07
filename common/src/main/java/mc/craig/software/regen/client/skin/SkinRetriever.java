@@ -1,8 +1,12 @@
 package mc.craig.software.regen.client.skin;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.NativeImage;
 import mc.craig.software.regen.Regeneration;
+import mc.craig.software.regen.config.RegenConfig;
 import mc.craig.software.regen.util.PlayerUtil;
 import mc.craig.software.regen.util.RegenUtil;
 import mc.craig.software.regen.util.SkinApi;
@@ -18,10 +22,15 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class SkinRetriever {
 
@@ -168,8 +177,8 @@ public class SkinRetriever {
     public static void doDownloads(boolean isClient) throws IOException {
         folderSetup();
         writeTime();
-        remoteSkins();
-        internalSkins();
+        //   remoteSkins();
+        //   internalSkins();
     }
 
     // --------------------- SKIN SELECTION ---------------------
@@ -185,10 +194,19 @@ public class SkinRetriever {
      * If a skin contains the number, it is used. Otherwise, fallback to random.
      */
     public static File chooseSkinForRegen(File dir, int regenCount, RandomSource rand) {
+
+        int currentRegen = RegenConfig.CLIENT.AAAAAAAAA.get() - regenCount;
+        if (regenCount == 13) {
+            currentRegen = -1;
+        }
+
+
+        Regeneration.LOGGER.info("We think you are on your {} regeneration!", currentRegen);
+
         // List all PNG files recursively
         Collection<File> allFiles = FileUtils.listFiles(dir, new String[]{"png"}, true);
-
         File[] skins = allFiles.toArray(new File[0]);
+
         if (skins.length == 0) {
             Regeneration.LOGGER.warn("No skins found in folder: {}", dir);
             return null;
@@ -196,17 +214,30 @@ public class SkinRetriever {
 
         Regeneration.LOGGER.info("Found {} skins in folder {}", skins.length, dir);
 
-        // Try to find skin containing the regen number
+        // Prepare regex to match the exact currentRegen number (e.g., 02)
+        String regex = "(^|[^0-9])" + String.format("%02d", currentRegen) + "([^0-9]|$)";
+        Pattern pattern = Pattern.compile(regex);
+
+        // Collect all skins that match the current regen number exactly
+        List<File> matchingSkins = new ArrayList<>();
         for (File skin : skins) {
-            if (skin.getName().contains(String.valueOf(regenCount))) {
-                Regeneration.LOGGER.info("Found matching skin for regen {}: {}", regenCount, skin.getName());
-                return skin;
+            String nameWithoutExt = skin.getName().replaceFirst("\\.png$", "");
+            if (pattern.matcher(nameWithoutExt).find()) {
+                matchingSkins.add(skin);
             }
+        }
+
+        // If we found multiple, choose one randomly
+        if (!matchingSkins.isEmpty()) {
+            File chosen = matchingSkins.get(rand.nextInt(matchingSkins.size()));
+            Regeneration.LOGGER.info("Found {} matching skins for regen {}. Chosen: {}",
+                    matchingSkins.size(), currentRegen, chosen.getName());
+            return chosen;
         }
 
         // fallback: random skin
         File randomSkin = skins[rand.nextInt(skins.length)];
-        Regeneration.LOGGER.info("No matching skin for regen {}. Choosing random: {}", regenCount, randomSkin.getName());
+        Regeneration.LOGGER.info("No matching skin for regen {}. Choosing random: {}", currentRegen, randomSkin.getName());
         return randomSkin;
     }
 

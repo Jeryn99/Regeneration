@@ -27,7 +27,6 @@ public class SkinMessage extends MessageC2S {
     }
 
     public void handle(MessageContext context) {
-        context.getPlayer().getServer().submit(() -> {
             ServerPlayer serverPlayer = context.getPlayer();
             RegenerationData.get(serverPlayer).ifPresent(iRegen -> {
 
@@ -41,8 +40,8 @@ public class SkinMessage extends MessageC2S {
                 SkinCommand.setSkin(serverPlayer, () -> SkinFetcher.setSkinFromFile(skinFilePath, isAlex));
 
                 iRegen.syncToClients(null);
+
             });
-        });
     }
 
     @NotNull

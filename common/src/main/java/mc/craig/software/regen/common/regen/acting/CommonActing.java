@@ -106,7 +106,6 @@ public class CommonActing implements Acting {
         RegenerationData.get(entity).ifPresent(regenerationData ->
                 regenerationData.setRetryGracePeriod(true));
         if (entity instanceof ServerPlayer serverPlayer) {
-            LOGGER.info("[Regen] Triggering FIRST_REGENERATION advancement for {}", serverPlayer.getGameProfile().getName());
             TriggerManager.FIRST_REGENERATION.trigger(serverPlayer);
         }
 
